@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plugin Konfiguration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header {
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .feature-card {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+        }
+        .feature-card h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .feature-toggle {
+            float: right;
+        }
+        .config-form {
+            max-width: 500px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .success {
+            color: #28a745;
+            margin-top: 10px;
+        }
+        .error {
+            color: #dc3545;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Plugin Konfiguration</h1>
+            <p>Verwalte hier alle Einstellungen und Features des Plugins.</p>
+        </div>
+
+        <div class="section">
+            <h2>Features</h2>
+            <div id="features" class="feature-grid">
+                <!-- Features werden dynamisch geladen -->
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Allgemeine Einstellungen</h2>
+            <form id="configForm" class="config-form">
+                <div class="form-group">
+                    <label for="maxHomes">Maximale Anzahl Homes:</label>
+                    <input type="number" id="maxHomes" name="maxHomes" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="webPort">Web-Server Port:</label>
+                    <input type="number" id="webPort" name="webPort" min="1024" max="65535" required>
+                </div>
+                <button type="submit">Speichern</button>
+                <div id="saveStatus"></div>
+            </form>
+        </div>
+
+        <div class="section">
+            <h2>Plugin-Dokumentation</h2>
+            <div id="documentation">
+                <!-- Dokumentation wird dynamisch geladen -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Authentifizierung
+        let authToken = localStorage.getItem('authToken');
+        if (!authToken) {
+            authToken = prompt('Bitte geben Sie das Konfigurations-Passwort ein:');
+            if (authToken) {
+                localStorage.setItem('authToken', authToken);
+            }
+        }
+
+        // Lade Konfiguration
+        async function loadConfig() {
+            try {
+                const response = await fetch('/api/config', {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                if (response.status === 401) {
+                    localStorage.removeItem('authToken');
+                    location.reload();
+                    return;
+                }
+                const config = await response.json();
+                document.getElementById('maxHomes').value = config.maxHomes;
+                document.getElementById('webPort').value = config.webPort;
+                return config;
+            } catch (error) {
+                console.error('Fehler beim Laden der Konfiguration:', error);
+            }
+        }
+
+        // Lade Features
+        async function loadFeatures() {
+            try {
+                const response = await fetch('/api/features', {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                const data = await response.json();
+                const featuresDiv = document.getElementById('features');
+                featuresDiv.innerHTML = '';
+
+                for (const [feature, enabled] of Object.entries(data.features)) {
+                    const description = data.descriptions[feature] || 'Keine Beschreibung verfügbar';
+                    const card = document.createElement('div');
+                    card.className = 'feature-card';
+                    card.innerHTML = `
+                        <h3>${feature}</h3>
+                        <p>${description}</p>
+                        <label class="feature-toggle">
+                            <input type="checkbox" ${enabled ? 'checked' : ''}
+                                   onchange="toggleFeature('${feature}', this.checked)">
+                        </label>
+                    `;
+                    featuresDiv.appendChild(card);
+                }
+            } catch (error) {
+                console.error('Fehler beim Laden der Features:', error);
+            }
+        }
+
+        // Speichere Konfiguration
+        document.getElementById('configForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const formData = {
+                maxHomes: parseInt(document.getElementById('maxHomes').value),
+                webPort: parseInt(document.getElementById('webPort').value)
+            };
+
+            try {
+                const response = await fetch('/api/config', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(formData)
+                });
+                const result = await response.json();
+                const statusDiv = document.getElementById('saveStatus');
+                if (result.success) {
+                    statusDiv.className = 'success';
+                    statusDiv.textContent = 'Einstellungen erfolgreich gespeichert!';
+                } else {
+                    statusDiv.className = 'error';
+                    statusDiv.textContent = 'Fehler beim Speichern: ' + result.error;
+                }
+            } catch (error) {
+                console.error('Fehler beim Speichern:', error);
+            }
+        };
+
+        // Feature Toggle
+        async function toggleFeature(feature, enabled) {
+            try {
+                const response = await fetch('/api/features', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ feature, enabled })
+                });
+                const result = await response.json();
+                if (!result.success) {
+                    alert('Fehler beim Ändern des Feature-Status: ' + result.error);
+                    location.reload();
+                }
+            } catch (error) {
+                console.error('Fehler beim Toggle:', error);
+            }
+        }
+
+        // Initialisierung
+        loadConfig();
+        loadFeatures();
+    </script>
+</body>
+</html>

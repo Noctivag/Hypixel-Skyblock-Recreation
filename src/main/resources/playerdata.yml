@@ -1,0 +1,8 @@
+# Player data file - used to persist level/exp per player
+# Struktur: players:
+#   <uuid>:
+#     level: 1
+#     exp: 0.0
+
+players: {}
+

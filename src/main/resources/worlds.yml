@@ -1,0 +1,239 @@
+# World Configuration für das Multiwelt-System
+# Diese Datei wird automatisch erstellt, wenn das Plugin zum ersten Mal gestartet wird
+
+worlds:
+  # Skyblock Welten
+  skyblock_hub:
+    name: "skyblock_hub"
+    display_name: "Skyblock Hub"
+    type: "FLAT"
+    generator: "VOID"
+    auto_save: true
+    keep_spawn_in_memory: true
+    description: "Hauptlobby für Skyblock"
+    spawn_location:
+      x: 0
+      y: 100
+      z: 0
+    game_rules:
+      do_daylight_cycle: false
+      do_weather_cycle: false
+      do_mob_spawning: false
+      do_fire_tick: false
+      mob_griefing: false
+    time: 6000  # Mittag
+    
+  skyblock_private:
+    name: "skyblock_private"
+    display_name: "Private Islands"
+    type: "NORMAL"
+    generator: "ISLAND"
+    auto_save: true
+    keep_spawn_in_memory: false
+    description: "Private Spieler-Inseln"
+    spawn_location:
+      x: 0
+      y: 100
+      z: 0
+    game_rules:
+      do_daylight_cycle: true
+      do_weather_cycle: true
+      do_mob_spawning: true
+      do_fire_tick: true
+      mob_griefing: true
+      
+  skyblock_public:
+    name: "skyblock_public"
+    display_name: "Public Islands"
+    type: "NORMAL"
+    generator: "ISLAND"
+    auto_save: true
+    keep_spawn_in_memory: false
+    description: "Öffentliche Inseln"
+    spawn_location:
+      x: 0
+      y: 100
+      z: 0
+    game_rules:
+      do_daylight_cycle: true
+      do_weather_cycle: true
+      do_mob_spawning: true
+      do_fire_tick: true
+      mob_griefing: true
+      
+  skyblock_dungeons:
+    name: "skyblock_dungeons"
+    display_name: "Dungeon Instances"
+    type: "NORMAL"
+    generator: "DUNGEON"
+    auto_save: false
+    keep_spawn_in_memory: false
+    description: "Dungeon-Instanzen"
+    spawn_location:
+      x: 0
+      y: 100
+      z: 0
+    game_rules:
+      do_daylight_cycle: false
+      do_weather_cycle: false
+      do_mob_spawning: true
+      do_fire_tick: true
+      mob_griefing: true
+    time: 18000  # Nacht
+    
+  # Event Welten
+  event_arenas:
+    name: "event_arenas"
+    display_name: "Event Arenas"
+    type: "FLAT"
+    generator: "ARENA"
+    auto_save: true
+    keep_spawn_in_memory: false
+    description: "Event-Arenen"
+    spawn_location:
+      x: 0
+      y: 100
+      z: 0
+    game_rules:
+      do_daylight_cycle: false
+      do_weather_cycle: false
+      do_mob_spawning: false
+      do_fire_tick: false
+      mob_griefing: false
+    time: 6000  # Mittag
+    
+  # PvP Welten
+  pvp_arenas:
+    name: "pvp_arenas"
+    display_name: "PvP Arenas"
+    type: "FLAT"
+    generator: "ARENA"
+    auto_save: true
+    keep_spawn_in_memory: false
+    description: "PvP-Arenen"
+    spawn_location:
+      x: 0
+      y: 100
+      z: 0
+    game_rules:
+      do_daylight_cycle: false
+      do_weather_cycle: false
+      do_mob_spawning: false
+      do_fire_tick: false
+      mob_griefing: false
+    time: 6000  # Mittag
+    
+  # Minigame Welten
+  minigame_worlds:
+    name: "minigame_worlds"
+    display_name: "Minigame Worlds"
+    type: "NORMAL"
+    generator: "MINIGAME"
+    auto_save: true
+    keep_spawn_in_memory: false
+    description: "Minigame-Welten"
+    spawn_location:
+      x: 0
+      y: 100
+      z: 0
+    game_rules:
+      do_daylight_cycle: true
+      do_weather_cycle: false
+      do_mob_spawning: true
+      do_fire_tick: true
+      mob_griefing: true
+
+# Welt-Management Einstellungen
+world_management:
+  # Automatische Welt-Erstellung
+  auto_create_worlds: true
+  
+  # Welt-Validierung
+  validate_worlds_on_startup: true
+  
+  # Backup-Einstellungen
+  backup:
+    enabled: true
+    interval: 3600  # 1 Stunde
+    retention_days: 7
+    compression: true
+    
+  # Performance-Einstellungen
+  performance:
+    # Chunk-Loading
+    chunk_loading:
+      enabled: true
+      radius: 3
+      async: true
+      
+    # Memory-Management
+    memory:
+      unload_unused_worlds: true
+      unload_timeout: 1800  # 30 Minuten
+      
+  # Sicherheit
+  security:
+    # Welt-Schutz
+    protection:
+      enabled: true
+      prevent_breaking: true
+      prevent_placing: false
+      prevent_explosions: true
+      
+    # Zugriffskontrolle
+    access_control:
+      enabled: true
+      require_permission: true
+      permission_prefix: "worlds.access"
+      
+  # Debug-Einstellungen
+  debug:
+    enabled: false
+    log_world_events: false
+    log_chunk_loading: false
+    log_performance: false
+    
+# Welt-spezifische Einstellungen
+world_specific:
+  # Insel-Generierung
+  island_generation:
+    default_size: 100
+    max_size: 1000
+    spacing: 200
+    safe_spawn_height: 100
+    
+  # Dungeon-Instanzen
+  dungeon_instances:
+    max_instances: 50
+    instance_timeout: 3600  # 1 Stunde
+    auto_cleanup: true
+    cleanup_interval: 300   # 5 Minuten
+    
+  # Event-Arenen
+  event_arenas:
+    max_arenas: 10
+    arena_timeout: 7200     # 2 Stunden
+    auto_cleanup: true
+    cleanup_interval: 600   # 10 Minuten
+    
+  # PvP-Arenen
+  pvp_arenas:
+    max_arenas: 10
+    arena_timeout: 3600     # 1 Stunde
+    auto_cleanup: true
+    cleanup_interval: 600   # 10 Minuten
+    
+  # Minigame-Welten
+  minigame_worlds:
+    max_worlds: 20
+    world_timeout: 1800     # 30 Minuten
+    auto_cleanup: true
+    cleanup_interval: 300   # 5 Minuten
+
+# Kompatibilität
+compatibility:
+  version: "1.0.0"
+  min_server_version: "1.20"
+  max_server_version: "1.21"
+  required_plugins: []
+  conflicting_plugins: []

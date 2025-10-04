@@ -1,0 +1,64 @@
+# =============================================================================
+# Hypixel Skyblock Recreation - Development Environment Configuration
+# =============================================================================
+
+# Core Settings
+core:
+  debug: true
+  performance-monitoring: true
+  metrics-interval: 10
+  
+# Database Configuration
+database:
+  type: sqlite
+  path: "data/development.db"
+  pool-size: 5
+  timeout: 30000
+
+# Redis Configuration (Optional)
+redis:
+  enabled: false
+  host: localhost
+  port: 6379
+  password: ""
+  database: 0
+
+# Network Configuration
+network:
+  type: STANDALONE
+  server-name: "Development Server"
+  max-players: 50
+  heartbeat-interval: 5000
+
+# Skyblock Configuration
+skyblock:
+  enabled: true
+  island-size: 100
+  max-islands-per-player: 1
+  starting-coins: 1000
+  starting-level: 1
+
+# Economy Configuration
+economy:
+  enabled: true
+  starting-balance: 1000.0
+  currency-symbol: "₵"
+  max-balance: 999999999.0
+
+# Features
+features:
+  cosmetics: true
+  achievements: true
+  events: true
+  social: true
+  combat: true
+  skills: true
+  collections: true
+  slayers: true
+
+# Logging
+logging:
+  level: DEBUG
+  file: "logs/development.log"
+  max-size: "10MB"
+  max-files: 5

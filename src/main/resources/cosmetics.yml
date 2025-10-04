@@ -1,0 +1,81 @@
+# Cosmetics Configuration
+
+# Global Settings
+settings:
+  save-interval: 300 # Sekunden zwischen Auto-Saves
+  enable-in-combat: false
+  enable-in-pvp: false
+
+# Particle Effects
+particle-effects:
+  enabled: true
+  update-interval: 5 # Ticks zwischen Updates
+  disabled-worlds:
+    - world_nether
+    - world_the_end
+  effects:
+    HEART:
+      permission: "cosmetics.particles.heart"
+      cost: 1000
+      description: "Zeigt Herzen über deinem Kopf"
+    FLAME:
+      permission: "cosmetics.particles.flame"
+      cost: 1500
+      description: "Umgibt dich mit Flammen"
+    PORTAL:
+      permission: "cosmetics.particles.portal"
+      cost: 2000
+      description: "Erzeugt Portal-Partikel"
+    NOTE:
+      permission: "cosmetics.particles.note"
+      cost: 1200
+      description: "Musikalische Noten erscheinen"
+    SPELL_WITCH:
+      permission: "cosmetics.particles.witch"
+      cost: 1800
+      description: "Magische Hexen-Partikel"
+    DRAGON_BREATH:
+      permission: "cosmetics.particles.dragon_breath"
+      cost: 2500
+      description: "Drachenatem-Effekt"
+    HALO:
+      permission: "cosmetics.particles.halo"
+      cost: 1800
+      description: "Ein leuchtender Heiligenschein über deinem Kopf"
+    TRAIL:
+      permission: "cosmetics.particles.trail"
+      cost: 900
+      description: "Hinterlässt eine Partikelspur beim Laufen"
+
+# Wings (special particle feature)
+wings:
+  enabled: true
+  cost: 2000
+  particle: END_ROD
+  interval: 5
+  allow-in-combat: false
+
+# Sound Effects
+sound-effects:
+  enabled: true
+  interval: 40 # Ticks zwischen Sounds
+  volume: 1.0
+  pitch: 1.0
+  disabled-worlds:
+    - world_pvp
+  effects:
+    BLOCK_NOTE_BLOCK_PLING:
+      permission: "cosmetics.sounds.pling"
+      cost: 800
+      description: "Spielt einen hellen Ton"
+    ENTITY_EXPERIENCE_ORB_PICKUP:
+      permission: "cosmetics.sounds.orb"
+      cost: 1000
+      description: "XP-Orb Geräusch"
+    BLOCK_AMETHYST_BLOCK_CHIME:
+      permission: "cosmetics.sounds.chime"
+      cost: 1200
+      description: "Kristallenes Klingeln"
+
+# Player Effects Storage
+effects: {}

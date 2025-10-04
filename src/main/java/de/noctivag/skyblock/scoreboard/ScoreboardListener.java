@@ -1,0 +1,26 @@
+package de.noctivag.skyblock.scoreboard;
+import org.bukkit.inventory.ItemStack;
+
+import de.noctivag.skyblock.Plugin;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+
+public class ScoreboardListener implements Listener {
+    private final ScoreboardManager scoreboardManager;
+
+    public ScoreboardListener(SkyblockPlugin plugin, ScoreboardManager scoreboardManager) {
+        this.scoreboardManager = scoreboardManager;
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        scoreboardManager.setScoreboard(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        scoreboardManager.removeScoreboard(event.getPlayer());
+    }
+}

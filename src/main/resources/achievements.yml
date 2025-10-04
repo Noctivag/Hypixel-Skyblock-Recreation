@@ -1,0 +1,15 @@
+# Achievements configuration
+# Diese Datei wird vom Plugin verwendet um freigeschaltete Erfolge und Fortschritte zu speichern.
+# Standardmäßig ist sie leer und wird zur Laufzeit vom Plugin gefüllt.
+
+# Freigeschaltete Achievements pro Spieler (UUID -> [ACHIEVEMENT_NAME, ...])
+unlocked: {}
+
+# Fortschritt pro Spieler (UUID -> {ACHIEVEMENT_NAME: progress})
+progress: {}
+
+# Nachrichten
+messages:
+  awarded: "&aDu hast einen Erfolg erhalten: %achievement%"
+  already_awarded: "&cDu hast diesen Erfolg bereits erhalten."
+

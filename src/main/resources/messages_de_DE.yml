@@ -1,0 +1,55 @@
+# Deutsche Sprachdatei
+prefix:
+  set: "&aDein Prefix wurde zu {0} gesetzt"
+  remove: "&aDein Prefix wurde entfernt"
+  no-permission: "&cDu hast keine Berechtigung dafür"
+
+nickname:
+  set: "&aDein Nickname wurde zu {0} gesetzt"
+  remove: "&aDein Nickname wurde entfernt"
+  no-permission: "&cDu hast keine Berechtigung dafür"
+
+join-message:
+  set: "&aJoin-Nachricht für {0} wurde gesetzt zu: {1}"
+  remove: "&aJoin-Nachricht für {0} wurde entfernt"
+  enable: "&aJoin-Nachrichten für {0} wurden aktiviert"
+  disable: "&cJoin-Nachrichten für {0} wurden deaktiviert"
+  default-set: "&aStandard Join-Nachricht wurde gesetzt zu: {0}"
+  no-custom: "&cFür {0} existiert keine benutzerdefinierte Join-Nachricht"
+
+commands:
+  players-only: "&cNur Spieler können diesen Befehl nutzen"
+  wrong-usage: "&cFalsche Verwendung. Nutze: {0}"
+
+workbench:
+  no-permission: "&cDu hast keine Berechtigung diese Werkbank zu öffnen"
+
+cosmetics:
+  particle-effect:
+    activated: "&aPartikel-Effekt &e{0} &aaktiviert! &7(Kosten: &6{1} Coins&7)"
+    deactivated: "&aPartikel-Effekt deaktiviert"
+    not-enough-money: "&cDu hast nicht genug Coins für diesen Effekt!"
+    no-permission: "&cDu hast keine Berechtigung für diesen Effekt!"
+  sound-effect:
+    activated: "&aSound-Effekt &e{0} &aaktiviert! &7(Kosten: &6{1} Coins&7)"
+    deactivated: "&aSound-Effekt deaktiviert"
+    not-enough-money: "&cDu hast nicht genug Coins für diesen Effekt!"
+    no-permission: "&cDu hast keine Berechtigung für diesen Effekt!"
+  world:
+    disabled: "&cKosmetische Effekte sind in dieser Welt deaktiviert"
+    enabled: "&aKosmetische Effekte wurden wiederhergestellt"
+
+economy:
+  balance: "&aDein Kontostand: &6{0} Coins"
+  not-enough: "&cDu hast nicht genug Coins! Benötigt: &6{0} Coins"
+  transaction:
+    success: "&aTransaktion erfolgreich! Neuer Kontostand: &6{0} Coins"
+    failed: "&cTransaktion fehlgeschlagen!"
+  first-join: "&aWillkommen! Du erhältst &6{0} Coins &aals Startguthaben!"
+
+general:
+  saved: "&aDaten wurden gespeichert"
+  loaded: "&aDaten wurden geladen"
+  error: "&cEin Fehler ist aufgetreten: {0}"
+  no-permission: "&cDu hast keine Berechtigung dafür"
+  debug-mode: "&7[Debug] {0}"

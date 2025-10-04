@@ -1,0 +1,4 @@
+# Default warps configuration
+# Keep the root key `warps:` so the plugin can load entries.
+warps: {}
+

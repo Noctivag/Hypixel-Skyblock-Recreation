@@ -1,0 +1,296 @@
+# Network Configuration für das Multi-Server-System
+# Diese Datei wird automatisch erstellt, wenn das Plugin zum ersten Mal gestartet wird
+
+network:
+  # Grundlegende Netzwerk-Einstellungen
+  enabled: true
+  server-type: HUB  # HUB, ISLAND, DUNGEON, EVENT, AUCTION, BANK, MINIGAME, PVP
+  
+  # Hub-Server-Konfiguration
+  hub:
+    address: "localhost"
+    port: 25565
+    
+  # Server-Limits
+  limits:
+    max-players-per-server: 100
+    max-islands-per-server: 50
+    max-concurrent-transfers: 10
+    
+  # Timing-Konfiguration
+  timing:
+    server-heartbeat-interval: 1000    # ms
+    data-sync-interval: 5000           # ms
+    transfer-timeout: 30000            # ms
+    conflict-resolution-timeout: 30000 # ms
+    
+  # Redis-Konfiguration (optional - für erweiterte Features)
+  redis:
+    enabled: false
+    host: "localhost"
+    port: 6379
+    password: ""
+    database: 0
+    timeout: 2000
+    pool:
+      max-total: 20
+      max-idle: 10
+      min-idle: 5
+      test-on-borrow: true
+      test-on-return: true
+      test-while-idle: true
+      
+  # MySQL-Konfiguration (optional - für persistente Daten)
+  mysql:
+    enabled: false
+    host: "localhost"
+    port: 3306
+    database: "basics_network"
+    username: "root"
+    password: "password"
+    ssl: false
+    pool:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      
+  # Island-Konfiguration
+  island:
+    size: 100
+    spacing: 200
+    max-members: 10
+    auto-save-interval: 300  # 5 Minuten
+    types:
+      PRIVATE:
+        enabled: true
+        max-members: 5
+      COOP:
+        enabled: true
+        max-members: 10
+      GUILD:
+        enabled: true
+        max-members: 20
+      PUBLIC:
+        enabled: true
+        max-members: 50
+      EVENT:
+        enabled: true
+        max-members: 100
+        auto-cleanup: true
+        cleanup-timeout: 3600  # 1 Stunde
+      DUNGEON:
+        enabled: true
+        max-members: 5
+        instance-timeout: 1800  # 30 Minuten
+        
+  # Dungeon-Konfiguration
+  dungeon:
+    max-instances: 50
+    instance-timeout: 3600  # 1 Stunde
+    auto-cleanup: true
+    cleanup-interval: 300   # 5 Minuten
+    
+  # Event-Konfiguration
+  event:
+    max-events: 10
+    event-timeout: 7200     # 2 Stunden
+    auto-cleanup: true
+    cleanup-interval: 600   # 10 Minuten
+    
+  # Auction-Konfiguration
+  auction:
+    max-auctions: 1000
+    auction-timeout: 86400  # 24 Stunden
+    fee-percentage: 5.0     # 5% Gebühr
+    min-bid-increment: 1.0
+    
+  # Bank-Konfiguration
+  bank:
+    interest-rate: 0.01     # 1% Zinsen pro Tag
+    max-loan-amount: 1000000
+    loan-interest-rate: 0.05 # 5% Zinsen pro Tag
+    transaction-fee: 0.02   # 2% Transaktionsgebühr
+    
+  # Minigame-Konfiguration
+  minigame:
+    max-games: 20
+    game-timeout: 1800      # 30 Minuten
+    auto-cleanup: true
+    cleanup-interval: 300   # 5 Minuten
+    
+  # PvP-Konfiguration
+  pvp:
+    max-arenas: 10
+    arena-timeout: 3600     # 1 Stunde
+    auto-cleanup: true
+    cleanup-interval: 600   # 10 Minuten
+    ranking-system: true
+    tournament-mode: true
+    
+  # Load-Balancing (optional)
+  load-balancing:
+    enabled: false
+    algorithm: "round-robin"  # round-robin, least-connections, weighted
+    health-check-interval: 5000
+    failover-timeout: 30000
+    weights:
+      HUB: 1
+      ISLAND: 2
+      DUNGEON: 1
+      EVENT: 1
+      AUCTION: 1
+      BANK: 1
+      MINIGAME: 1
+      PVP: 1
+      
+  # Monitoring (optional)
+  monitoring:
+    enabled: false
+    metrics:
+      - player-count
+      - server-load
+      - transfer-stats
+      - island-count
+      - dungeon-instances
+      - event-count
+      - auction-count
+      - bank-transactions
+      - minigame-sessions
+      - pvp-matches
+    alerts:
+      - high-cpu-usage
+      - low-memory
+      - transfer-failures
+      - server-offline
+      - high-error-rate
+    thresholds:
+      cpu-usage: 80.0
+      memory-usage: 90.0
+      error-rate: 5.0
+      
+  # Sicherheit
+  security:
+    ssl:
+      enabled: false
+      keystore: "/path/to/keystore.jks"
+      keystore-password: "your-keystore-password"
+      truststore: "/path/to/truststore.jks"
+      truststore-password: "your-truststore-password"
+    rate-limiting:
+      enabled: true
+      max-requests-per-minute: 60
+      max-transfers-per-minute: 10
+      max-commands-per-minute: 30
+    ip-whitelist:
+      enabled: false
+      allowed-ips:
+        - "127.0.0.1"
+        - "192.168.1.0/24"
+        - "10.0.0.0/8"
+        
+  # Debug-Einstellungen
+  debug:
+    enabled: false
+    log-level: "INFO"  # DEBUG, INFO, WARN, ERROR
+    log-network-events: false
+    log-player-transfers: false
+    log-data-sync: false
+    log-island-events: false
+    log-dungeon-events: false
+    log-event-events: false
+    log-auction-events: false
+    log-bank-events: false
+    log-minigame-events: false
+    log-pvp-events: false
+    
+  # Performance-Optimierung
+  performance:
+    async-operations: true
+    batch-size: 100
+    cache-size: 1000
+    cache-timeout: 300  # 5 Minuten
+    connection-pool-size: 10
+    thread-pool-size: 4
+    
+  # Backup-Konfiguration
+  backup:
+    enabled: false
+    interval: 3600      # 1 Stunde
+    retention-days: 7
+    compression: true
+    location: "/opt/minecraft/backups"
+    
+  # Update-Konfiguration
+  updates:
+    auto-check: true
+    check-interval: 86400  # 24 Stunden
+    auto-download: false
+    backup-before-update: true
+    
+  # Feature-Flags
+  features:
+    player-transfer: true
+    island-system: true
+    dungeon-system: true
+    event-system: true
+    auction-system: true
+    bank-system: true
+    minigame-system: true
+    pvp-system: true
+    data-sync: true
+    cross-server-chat: false
+    cross-server-friends: false
+    cross-server-guilds: false
+    
+  # Nachrichten-Konfiguration
+  messages:
+    prefix: "§6§l[Network] §r"
+    success-color: "§a"
+    error-color: "§c"
+    info-color: "§e"
+    warning-color: "§6"
+    debug-color: "§7"
+    
+    # Transfer-Nachrichten
+    transfer-start: "§aTransferring to {server}..."
+    transfer-success: "§aTransfer successful!"
+    transfer-failed: "§cTransfer failed: {reason}"
+    transfer-timeout: "§cTransfer timeout!"
+    
+    # Island-Nachrichten
+    island-created: "§aIsland created successfully!"
+    island-not-found: "§cIsland not found!"
+    island-no-access: "§cYou don't have access to this island!"
+    island-member-added: "§aPlayer added to island!"
+    island-member-removed: "§aPlayer removed from island!"
+    
+    # Server-Nachrichten
+    server-offline: "§cServer is offline!"
+    server-full: "§cServer is full!"
+    server-maintenance: "§cServer is under maintenance!"
+    
+    # Error-Nachrichten
+    command-not-found: "§cCommand not found!"
+    permission-denied: "§cYou don't have permission to use this command!"
+    invalid-arguments: "§cInvalid arguments!"
+    internal-error: "§cAn internal error occurred!"
+    
+  # Kompatibilität
+  compatibility:
+    version: "1.0.0"
+    min-server-version: "1.20"
+    max-server-version: "1.21"
+    required-plugins: []
+    conflicting-plugins: []
+    
+  # Experimentelle Features
+  experimental:
+    enabled: false
+    features:
+      - "advanced-load-balancing"
+      - "real-time-sync"
+      - "distributed-caching"
+      - "auto-scaling"
+      - "health-monitoring"

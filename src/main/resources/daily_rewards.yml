@@ -1,0 +1,32 @@
+# Daily Rewards configuration
+# Legen Sie hier die täglichen Belohnungen fest. Dieses Beispiel ist eine Vorlage
+# und kann an Ihr Plugin angepasst werden.
+
+enabled: true
+# Wenn true, werden zusätzliche Debug-Ausgaben aktiviert
+debug: false
+
+# Belohnungen pro Tag (Tag-Index als String):
+rewards:
+  "1":
+    commands:
+      - "give %player% minecraft:diamond 1"
+    message: "&aTag 1 Belohnung: &eDiamant"
+  "2":
+    commands:
+      - "give %player% minecraft:gold_ingot 2"
+    message: "&aTag 2 Belohnung: &eGoldbarren"
+  "3":
+    commands:
+      - "give %player% minecraft:iron_ingot 3"
+    message: "&aTag 3 Belohnung: &eEisenbarren"
+
+# Globale Nachrichten
+messages:
+  claimed: "&aDu hast deine Tagesbelohnung erhalten!"
+  already_claimed: "&cDu hast die Belohnung bereits für heute eingelöst."
+  no_reward: "&cFür diesen Tag ist keine Belohnung definiert."
+
+# Cooldown für tägliche Belohnungen (z.B. "24h")
+cooldown: "24h"
+

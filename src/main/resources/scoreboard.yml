@@ -1,0 +1,38 @@
+scoreboard:
+  title: "✦ &6Server &e✦"
+  update-interval: 20 # Ticks (20 = 1 Sekunde)
+  features:
+    show-rank: true
+    show-money: true
+    show-online-players: true
+    show-tps: true
+    show-website: true
+
+  lines:
+    - ""
+    - "&e» &fSpieler:"
+    - "&7➥ {player_name}"
+    - ""
+    - "&e» &fRang:"
+    - "&7➥ {player_rank}"
+    - ""
+    - "&e» &fGeld:"
+    - "&7➥ {player_money} Münzen"
+    - ""
+    - "&e» &fServer-Status:"
+    - "&7➥ TPS: {server_tps}"
+    - ""
+    - "&e» &fOnline:"
+    - "&7➥ {online_players}/{max_players}"
+    - ""
+    - "&e» &fWebsite:"
+    - "&7➥ example.com"
+
+  # Platzhalter für verschiedene Statistiken
+  placeholders:
+    player_rank:
+      default: "Spieler"
+      vip: "&6VIP"
+      admin: "&4Admin"
+
+    # Weitere Platzhalter können hier hinzugefügt werden

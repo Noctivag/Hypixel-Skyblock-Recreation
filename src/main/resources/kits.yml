@@ -1,0 +1,17 @@
+kits:
+  starter:
+    permission: 'kit.starter'
+    cooldown: 86400 # 24 Stunden in Sekunden
+    items:
+      - 'STONE_SWORD'
+      - 'LEATHER_CHESTPLATE'
+      - 'BREAD:16'  # 16 Brote
+
+  vip:
+    permission: 'kit.vip'
+    cooldown: 43200 # 12 Stunden in Sekunden
+    items:
+      - 'IRON_SWORD'
+      - 'IRON_CHESTPLATE'
+      - 'GOLDEN_APPLE:3'  # 3 Goldene Äpfel
+

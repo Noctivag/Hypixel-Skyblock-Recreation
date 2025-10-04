@@ -1,0 +1,167 @@
+# Plugin Hauptkonfiguration
+
+# Allgemeine Einstellungen
+settings:
+  language: de_DE
+  auto-save-interval: 300 # Sekunden
+  debug-mode: false
+  check-player-exists: true # Prüft ob Spieler existiert bei /joinmessage set
+
+# Join-Message Einstellungen
+join-messages:
+  default-message: "&7[&a+&7] &e%player% &7hat den Server betreten"
+  format:
+    prefix: "&8[&6Server&8] "
+    allow-colors: true
+    max-length: 100
+  examples:
+    - "&7[&a+&7] &e%player%"
+    - "&8[&6★&8] &6%player%"
+    - "&#FF0000[VIP] &e%player%"
+
+# Event-Einstellungen
+events:
+  dragon:
+    interval: 7200 # Alle 2 Stunden
+    duration: 900 # 15 Minuten
+    min-players: 3
+    rewards:
+      points: 500
+      items:
+        - DRAGON_EGG
+        - ELYTRA
+  wither:
+    interval: 3600 # Jede Stunde
+    duration: 600 # 10 Minuten
+    min-players: 2
+    rewards:
+      points: 300
+      items:
+        - NETHER_STAR
+        - BEACON
+
+# Command-Einstellungen
+commands:
+  heal:
+    cooldown: 300 # 5 Minuten
+    cost: 100 # Economy-Kosten
+  nick:
+    min-length: 3
+    max-length: 16
+    allow-colors: true
+    blocked-names:
+      - Admin
+      - Owner
+      - Staff
+
+# Partikel-Effekte
+particles:
+  update-interval: 5 # Ticks
+  max-particles: 10
+  effects:
+    HEART:
+      permission: "cosmetics.hearts"
+      cost: 1000
+    FLAME:
+      permission: "cosmetics.flame"
+      cost: 1500
+    PORTAL:
+      permission: "cosmetics.portal"
+      cost: 2000
+
+# Nachrichten-Einstellungen
+messages:
+  prefix: "&8[&6Server&8] "
+  join-message: "&7[&a+&7] &e%player%"
+  quit-message: "&7[&c-&7] &e%player%"
+  no-permission: "&cDu hast keine Berechtigung für diese Aktion!"
+
+# Cosmetics-Einstellungen
+cosmetics:
+  particle-effects:
+    update-interval: 5 # Ticks zwischen Partikel-Updates
+    allowed-in-combat: false
+    disabled-worlds:
+      - world_nether
+      - world_the_end
+  restrictions:
+    min-distance-between-players: 3
+
+# Workbench-Einstellungen
+workbench:
+  cooldown:
+    enabled: true
+    duration: 60 # Sekunden zwischen Nutzungen
+  restrictions:
+    disabled-worlds:
+      - world_pvp
+    disabled-in-combat: true
+
+# Chat und Namen
+chat:
+  prefix:
+    max-length: 16
+    min-length: 2
+    allow-colors: true
+    blocked-words: []
+  nick:
+    max-length: 16
+    min-length: 3
+    allow-colors: false
+    preserve-case: true
+
+# Economy-Einstellungen
+economy:
+  starting-balance: 100.0
+  enabled: true
+  currency:
+    name: "Coins"
+    symbol: "⛃"
+  command-costs:
+    nick: 100.0
+    prefix: 200.0
+  rewards:
+    kill:
+      player: 10.0
+      monster: 5.0
+    mining:
+      DIAMOND_ORE: 20.0
+      EMERALD_ORE: 15.0
+  exempt-ranks: []
+
+# Database settings (MySQL / MariaDB) - used by DatabaseManager and multi-server features
+database:
+  enabled: false
+  type: mysql # mysql or mariadb
+  host: 127.0.0.1
+  port: 3306
+  database: basics_plugin
+  username: root
+  password: password
+  max-pool-size: 10
+  connection-timeout: 30000
+  use-ssl: false
+
+# Redis settings (used for network sync / multi-server messaging)
+redis:
+  enabled: false
+  host: localhost
+  port: 6379
+  password: ""
+  timeout: 2000
+
+# Multi-server / network settings
+multiserver:
+  enabled: false
+  server-id: "server-1"
+  sync-interval-ms: 5000
+  redis-channel: "basics:sync"
+
+# Performance / Threading
+performance:
+  async-enabled: true
+  thread-pool-size: 8
+  monitor-tps: true
+  tps-sample-interval-seconds: 5
+
+# Note: Vault integration removed - plugin uses internal economy implementation by default

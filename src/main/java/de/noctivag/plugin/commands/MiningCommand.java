@@ -1,0 +1,219 @@
+package de.noctivag.plugin.commands;
+
+import de.noctivag.plugin.Plugin;
+import de.noctivag.plugin.gui.MiningGUI;
+import de.noctivag.plugin.skyblock.MiningAreaSystem;
+import de.noctivag.plugin.skyblock.SkyblockManager;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import org.bukkit.Location;
+
+public class MiningCommand implements CommandExecutor, TabCompleter {
+    private final Plugin plugin;
+
+    public MiningCommand(Plugin plugin) {
+        this.plugin = plugin;
+    }
+
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage("§cDieser Befehl kann nur von Spielern ausgeführt werden.");
+            return true;
+        }
+
+        if (args.length == 0) {
+            // Open mining GUI
+            new MiningGUI(plugin, player).open(player);
+            return true;
+        }
+
+        String subCommand = args[0].toLowerCase();
+
+        switch (subCommand) {
+            case "gui" -> new MiningGUI(plugin, player).open(player);
+
+            case "teleport", "tp" -> {
+                if (args.length < 2) {
+                    player.sendMessage("§cUsage: /mining teleport <area>");
+                    return true;
+                }
+
+                String areaId = args[1].toLowerCase();
+                MiningAreaSystem mining = plugin.getMiningAreaSystem();
+                if (mining == null) {
+                    player.sendMessage("§cMining system not available.");
+                    return true;
+                }
+
+                MiningAreaSystem.MiningArea area = mining.getMiningArea(areaId);
+
+                if (area == null) {
+                    player.sendMessage("§cUnknown mining area: " + areaId);
+                    return true;
+                }
+
+                // Check if player has required level
+                SkyblockManager sky = plugin.getSkyblockManager();
+                if (sky == null) {
+                    player.sendMessage("§cSkyblock system not available.");
+                    return true;
+                }
+
+                var skills = sky.getSkills(player.getUniqueId());
+                int playerLevel = skills.getLevel(SkyblockManager.SkyblockSkill.MINING);
+                int requiredLevel = getRequiredLevelForArea(area);
+
+                if (playerLevel < requiredLevel) {
+                    player.sendMessage("§cYou need Mining Level " + requiredLevel + " to access this area!");
+                    player.sendMessage("§7Your Mining Level: §e" + playerLevel);
+                    return true;
+                }
+
+                // Teleport to area
+                teleportToArea(player, area);
+            }
+
+            case "list" -> {
+                player.sendMessage("§6§lAvailable Mining Areas:");
+                MiningAreaSystem mining = plugin.getMiningAreaSystem();
+                if (mining == null) {
+                    player.sendMessage("§cMining system not available.");
+                    return true;
+                }
+
+                Map<String, MiningAreaSystem.MiningArea> areas = mining.getAllMiningAreas();
+
+                SkyblockManager sky = plugin.getSkyblockManager();
+                for (Map.Entry<String, MiningAreaSystem.MiningArea> entry : areas.entrySet()) {
+                    MiningAreaSystem.MiningArea area = entry.getValue();
+
+                    int playerLevel = 0;
+                    int requiredLevel = getRequiredLevelForArea(area);
+                    if (sky != null) {
+                        var skills = sky.getSkills(player.getUniqueId());
+                        playerLevel = skills.getLevel(SkyblockManager.SkyblockSkill.MINING);
+                    }
+
+                    boolean canAccess = playerLevel >= requiredLevel;
+                    String status = canAccess ? "§a§l✓" : "§c§l✗";
+
+                    player.sendMessage("§7• " + status + " §e" + area.getName() + " §7(Level " + requiredLevel + ")");
+                }
+            }
+
+            case "stats" -> {
+                SkyblockManager sky = plugin.getSkyblockManager();
+                if (sky == null) {
+                    player.sendMessage("§cSkyblock system not available.");
+                    return true;
+                }
+
+                var skills = sky.getSkills(player.getUniqueId());
+                int miningLevel = skills.getLevel(SkyblockManager.SkyblockSkill.MINING);
+                double miningXP = skills.getXP(SkyblockManager.SkyblockSkill.MINING);
+                double xpToNext = skills.getXPToNextLevel(SkyblockManager.SkyblockSkill.MINING);
+
+                player.sendMessage("§6§lYour Mining Stats:");
+                player.sendMessage("§7Mining Level: §e" + miningLevel);
+                player.sendMessage("§7Mining XP: §e" + miningXP);
+                player.sendMessage("§7XP to Next Level: §e" + xpToNext);
+
+                MiningAreaSystem mining = plugin.getMiningAreaSystem();
+                if (mining == null) {
+                    player.sendMessage("§7Current Area: §cUnknown (mining system unavailable)");
+                    return true;
+                }
+
+                // The API returns a MiningArea object for the player's current area.
+                MiningAreaSystem.MiningArea currentArea = mining.getPlayerCurrentArea(player.getUniqueId());
+                if (currentArea != null) {
+                    player.sendMessage("§7Current Area: §e" + currentArea.getName());
+                } else {
+                    player.sendMessage("§7Current Area: §cNone");
+                }
+            }
+
+            case "help" -> {
+                player.sendMessage("§6§lMining Command Help:");
+                player.sendMessage("§7/mining §e- Open mining GUI");
+                player.sendMessage("§7/mining gui §e- Open mining GUI");
+                player.sendMessage("§7/mining teleport <area> §e- Teleport to mining area");
+                player.sendMessage("§7/mining list §e- List all mining areas");
+                player.sendMessage("§7/mining stats §e- Show your mining stats");
+                player.sendMessage("§7/mining help §e- Show this help");
+            }
+            default -> {
+                player.sendMessage("§cUnknown subcommand: " + subCommand);
+                player.sendMessage("§7Use §e/mining help §7for help");
+            }
+        }
+
+        return true;
+    }
+
+    private int getRequiredLevelForArea(MiningAreaSystem.MiningArea area) {
+        // Get the highest required level for any block in this area
+        int maxLevel = 0;
+        for (int level : area.getRequiredLevels().values()) {
+            if (level > maxLevel) {
+                maxLevel = level;
+            }
+        }
+        return maxLevel;
+    }
+
+    private void teleportToArea(Player player, MiningAreaSystem.MiningArea area) {
+        // Teleport to the center of the mining area (defensive and precise)
+        Location min = area.getMinBound();
+        Location max = area.getMaxBound();
+
+        // Start from a safe clone of min
+        Location center = min.clone();
+        if (center.getWorld() == null) {
+            // fallback to player's world
+            center.setWorld(player.getWorld());
+        }
+
+        double centerX = (min.getX() + max.getX()) / 2.0;
+        double centerZ = (min.getZ() + max.getZ()) / 2.0;
+        double centerY = Math.max(min.getY(), Math.min(max.getY(), min.getY() + 1.0));
+
+        center.setX(centerX);
+        center.setY(centerY);
+        center.setZ(centerZ);
+
+        try {
+            player.teleport(center);
+            player.sendMessage("§a§lTELEPORTED TO MINING AREA!");
+            player.sendMessage("§7Area: §e" + area.getName());
+            player.sendMessage("§7Location: §e" + center.getBlockX() + ", " + center.getBlockY() + ", " + center.getBlockZ());
+        } catch (Exception e) {
+            // If teleport fails for any reason, send user-friendly message
+            player.sendMessage("§cTeleport fehlgeschlagen: " + e.getMessage());
+            plugin.getLogger().warning("Failed to teleport player " + player.getName() + " to mining area " + area.getId() + ": " + e.getMessage());
+        }
+    }
+
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        if (args.length == 1) {
+            return Arrays.asList("gui", "teleport", "tp", "list", "stats", "help");
+        } else if (args.length == 2 && (args[0].equalsIgnoreCase("teleport") || args[0].equalsIgnoreCase("tp"))) {
+            MiningAreaSystem mining = plugin.getMiningAreaSystem();
+            if (mining == null) return new ArrayList<>();
+            // return a mutable list of area ids (keys)
+            return new ArrayList<>(mining.getAllMiningAreas().keySet());
+        }
+        return new ArrayList<>();
+    }
+}

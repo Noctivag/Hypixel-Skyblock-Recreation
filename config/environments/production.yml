@@ -1,0 +1,84 @@
+# =============================================================================
+# Hypixel Skyblock Recreation - Production Environment Configuration
+# =============================================================================
+
+# Core Settings
+core:
+  debug: false
+  performance-monitoring: true
+  metrics-interval: 30
+  
+# Database Configuration
+database:
+  type: mysql
+  host: "mysql-server"
+  port: 3306
+  database: "skyblock_production"
+  username: "skyblock_user"
+  password: "${DB_PASSWORD}"
+  pool-size: 20
+  timeout: 30000
+
+# Redis Configuration
+redis:
+  enabled: true
+  host: "redis-server"
+  port: 6379
+  password: "${REDIS_PASSWORD}"
+  database: 0
+  pool-size: 10
+
+# Network Configuration
+network:
+  type: MULTI_SERVER
+  server-name: "Production Server"
+  max-players: 100
+  heartbeat-interval: 1000
+  auto-scaling: true
+
+# Skyblock Configuration
+skyblock:
+  enabled: true
+  island-size: 200
+  max-islands-per-player: 3
+  starting-coins: 500
+  starting-level: 1
+
+# Economy Configuration
+economy:
+  enabled: true
+  starting-balance: 500.0
+  currency-symbol: "₵"
+  max-balance: 999999999.0
+
+# Features
+features:
+  cosmetics: true
+  achievements: true
+  events: true
+  social: true
+  combat: true
+  skills: true
+  collections: true
+  slayers: true
+
+# Performance
+performance:
+  async-operations: true
+  caching: true
+  batch-operations: true
+  connection-pooling: true
+
+# Security
+security:
+  encryption: true
+  token-timeout: 300
+  max-connections-per-ip: 10
+  rate-limiting: true
+
+# Logging
+logging:
+  level: INFO
+  file: "logs/production.log"
+  max-size: "100MB"
+  max-files: 10

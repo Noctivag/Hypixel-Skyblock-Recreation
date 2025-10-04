@@ -1,0 +1,85 @@
+name: Skyblock
+version: '${project.version}'
+main: de.noctivag.skyblock.SkyblockPlugin
+api-version: 1.21
+author: Noctivag
+description: Advanced Minecraft Skyblock plugin with comprehensive features and systems
+folia-supported: true
+
+commands:
+  enchant:
+    description: Enchantment commands for Hypixel SkyBlock style enchantments
+    usage: /<command> [table|list|info|apply|remove|clear|preview]
+    permission: skyblock.enchant
+    aliases: [enchantments, enchants]
+
+  reforge:
+    description: Reforge commands for Hypixel SkyBlock style reforges
+    usage: /<command> [table|list|info|apply|remove|preview]
+    permission: skyblock.reforge
+    aliases: [reforges]
+
+  vault:
+    description: Comprehensive SkyBlock menu system with all weapons, armor, and features
+    usage: /<command> [weapons|armor|tools|accessories|pets|minions|collections|skills|mobs|economy|events|locations|npcs|dungeons|enchantments|profile|vault|help]
+    permission: skyblock.vault
+    aliases: [menu, skyblock, sb]
+
+  boss:
+    description: Complete Boss System - Spawn and manage all Hypixel SkyBlock bosses
+    usage: /<command> [spawn|list|info|kill|mechanics|help] [bossId]
+    permission: skyblock.boss
+    aliases: [bosses]
+
+  island:
+    description: Manage and visit Skyblock islands (basic integration)
+    usage: /<command> [create|visit|invite|uninvite|trustlist|hub|profile]
+    permission: skyblock.island
+    aliases: [is]
+
+  mining:
+    description: Mining system commands (open GUI, teleport, list, stats)
+    usage: /<command> [gui|teleport|tp|list|stats|help]
+    permission: skyblock.mining
+    aliases: [mine]
+
+permissions:
+  skyblock.enchant:
+    description: Allows access to enchantment commands
+    default: true
+
+  skyblock.reforge:
+    description: Allows access to reforge commands
+    default: true
+
+  skyblock.enchant.admin:
+    description: Allows admin enchantment operations
+    default: op
+
+  skyblock.reforge.admin:
+    description: Allows admin reforge operations
+    default: op
+
+  skyblock.vault:
+    description: Allows access to the comprehensive SkyBlock vault menu system
+    default: true
+
+  skyblock.vault.admin:
+    description: Allows admin vault operations
+    default: op
+
+  skyblock.boss:
+    description: Allows access to boss commands
+    default: true
+
+  skyblock.boss.admin:
+    description: Allows admin boss operations
+    default: op
+
+  skyblock.island:
+    description: Allows access to island commands
+    default: true
+
+  skyblock.mining:
+    description: Allows access to mining commands
+    default: true

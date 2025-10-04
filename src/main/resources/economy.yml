@@ -1,0 +1,46 @@
+# Economy Configuration
+
+# Enable/disable economy system
+enabled: true
+
+# Default starting balance for new players
+starting-balance: 100.0
+
+# Ranks that are exempt from all costs (VIP, Premium, etc.)
+exempt-ranks:
+  - "vip"
+  - "premium"
+  - "admin"
+  - "owner"
+
+# Currency settings
+currency:
+  name: "Coins"
+  symbol: "⛃"
+  decimal-places: 2
+
+# Transaction settings
+transactions:
+  # Minimum amount that can be transferred
+  min-amount: 1.0
+  # Maximum amount that can be transferred
+  max-amount: 1000000.0
+  # Tax percentage on transactions (0.0 to disable)
+  tax: 0.0
+
+# Command costs
+command-costs:
+  nick: 100.0
+  prefix: 200.0
+
+# Reward settings
+rewards:
+  kill:
+    player: 10.0
+    monster: 5.0
+  block-break:
+    DIAMOND_ORE: 20.0
+    EMERALD_ORE: 15.0
+
+# Initial balances (will be populated automatically)
+balances: {}

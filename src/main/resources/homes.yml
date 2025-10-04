@@ -1,0 +1,4 @@
+# Default homes configuration
+# Keep the root key `homes:` so the plugin can load entries.
+homes: {}
+
