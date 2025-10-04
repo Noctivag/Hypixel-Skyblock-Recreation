@@ -1,0 +1,401 @@
+# Hypixel Skyblock Recreation - Distributed Microservice Architecture Configuration
+# This configuration implements the distributed architecture as specified in the requirements
+
+# =============================================================================
+# SERVER CONFIGURATION
+# =============================================================================
+server:
+  # Minestom server configuration
+  minestom:
+    address: "0.0.0.0"
+    port: 25565
+    max-players: 1000
+    motd: "&6Hypixel Skyblock Recreation &7- &aDistributed Architecture"
+    
+    # Multi-threaded configuration
+    thread-pools:
+      game-tick:
+        core-size: 8
+        max-size: 16
+        queue-size: 1000
+      io:
+        core-size: 8
+        max-size: 16
+        queue-size: 500
+      world-generation:
+        core-size: 4
+        max-size: 8
+        queue-size: 200
+      async:
+        core-size: 16
+        max-size: 32
+        queue-size: 1000
+      scheduled:
+        core-size: 4
+        max-size: 8
+
+# =============================================================================
+# MONGODB CONFIGURATION (Persistent Storage)
+# =============================================================================
+mongodb:
+  # Connection string for MongoDB cluster
+  connection-string: "mongodb://localhost:27017"
+  database-name: "hypixel_skyblock_recreation"
+  
+  # Connection pool settings
+  connection-pool:
+    max-pool-size: 100
+    min-pool-size: 10
+    max-wait-time: 120000
+    max-connection-idle-time: 60000
+    
+  # Embedded document schema configuration
+  schema:
+    player-profiles:
+      collection: "player_profiles"
+      indexes:
+        - field: "username"
+          type: "ascending"
+        - field: "lastLogin"
+          type: "descending"
+        - field: "skillXP.combat"
+          type: "descending"
+    
+    bazaar-orders:
+      collection: "bazaar_orders"
+      indexes:
+        - fields: ["itemId", "isBuyOrder", "price"]
+          type: "compound"
+        - field: "playerUUID"
+          type: "ascending"
+        - field: "status"
+          type: "ascending"
+    
+    auction-house:
+      collection: "auction_house"
+      indexes:
+        - fields: ["itemId", "price"]
+          type: "compound"
+        - field: "sellerUUID"
+          type: "ascending"
+        - field: "endTime"
+          type: "descending"
+
+# =============================================================================
+# REDIS CLUSTER CONFIGURATION (High-Frequency Cache)
+# =============================================================================
+redis:
+  # Redis cluster configuration (minimum 3 nodes for Redlock)
+  cluster:
+    enabled: true
+    nodes:
+      - host: "localhost"
+        port: 7000
+      - host: "localhost"
+        port: 7001
+      - host: "localhost"
+        port: 7002
+      - host: "localhost"
+        port: 7003
+      - host: "localhost"
+        port: 7004
+      - host: "localhost"
+        port: 7005
+    
+    # Connection settings
+    connection:
+      pool-size: 100
+      timeout: 5000
+      max-attempts: 3
+      retry-delay: 1000
+  
+  # Fallback single Redis instance
+  fallback:
+    enabled: true
+    host: "localhost"
+    port: 6379
+    password: ""
+    
+  # Cache TTL settings
+  cache-ttl:
+    player-progression: 300  # 5 minutes
+    bazaar-prices: 60       # 1 minute
+    server-status: 30       # 30 seconds
+    instance-load: 10       # 10 seconds
+
+# =============================================================================
+# DATAMUTEX SERVICE CONFIGURATION (Distributed Locking)
+# =============================================================================
+datamutex:
+  # Redlock algorithm configuration
+  redlock:
+    min-nodes: 3
+    lock-timeout: 30        # seconds
+    max-extensions: 3
+    retry-interval: 100     # milliseconds
+    max-retry-attempts: 10
+    
+  # Lock types and their configurations
+  lock-types:
+    player:
+      prefix: "lock:player:"
+      timeout: 30
+      auto-extend: true
+    bazaar-item:
+      prefix: "lock:bazaar_item:"
+      timeout: 15
+      auto-extend: false
+    auction:
+      prefix: "lock:auction:"
+      timeout: 60
+      auto-extend: true
+    guild:
+      prefix: "lock:guild:"
+      timeout: 45
+      auto-extend: true
+    global:
+      prefix: "lock:global:"
+      timeout: 120
+      auto-extend: false
+
+# =============================================================================
+# GLOBAL INSTANCE MANAGER (GIM) CONFIGURATION
+# =============================================================================
+gim:
+  # Auto-scaling configuration
+  auto-scaling:
+    enabled: true
+    check-interval: 30      # seconds
+    scale-up-threshold: 0.8
+    scale-down-threshold: 0.3
+    
+  # Instance type configurations
+  instance-types:
+    persistent-public:
+      min-instances: 2
+      max-instances: 10
+      scale-up-threshold: 0.8
+      scale-down-threshold: 0.3
+      
+    temporary-private:
+      min-instances: 0
+      max-instances: 100
+      scale-up-threshold: 0.9
+      scale-down-threshold: 0.1
+      
+    combat-zone:
+      min-instances: 1
+      max-instances: 50
+      scale-up-threshold: 0.7
+      scale-down-threshold: 0.2
+      
+    mining-zone:
+      min-instances: 1
+      max-instances: 30
+      scale-up-threshold: 0.8
+      scale-down-threshold: 0.2
+      
+    special-event:
+      min-instances: 0
+      max-instances: 20
+      scale-up-threshold: 0.9
+      scale-down-threshold: 0.1
+      
+    dungeon-instance:
+      min-instances: 0
+      max-instances: 50
+      scale-up-threshold: 0.8
+      scale-down-threshold: 0.1
+      
+    guild-island:
+      min-instances: 0
+      max-instances: 100
+      scale-up-threshold: 0.9
+      scale-down-threshold: 0.1
+      
+    player-island:
+      min-instances: 0
+      max-instances: 1000
+      scale-up-threshold: 0.9
+      scale-down-threshold: 0.05
+  
+  # Instance categories for progression-based routing
+  instance-categories:
+    beginner:
+      min-instances: 2
+      max-instances: 50
+      level-range: [1, 10]
+      
+    intermediate:
+      min-instances: 1
+      max-instances: 30
+      level-range: [11, 30]
+      
+    advanced:
+      min-instances: 1
+      max-instances: 20
+      level-range: [31, 50]
+      
+    endgame:
+      min-instances: 1
+      max-instances: 10
+      level-range: [51, 60]
+      
+    special:
+      min-instances: 0
+      max-instances: 5
+      level-range: [1, 60]
+  
+  # Cleanup configuration
+  cleanup:
+    enabled: true
+    interval: 60            # seconds
+    inactive-threshold: 300 # 5 minutes
+    cleanup-types:
+      - "temporary-private"
+      - "player-island"
+      - "guild-island"
+
+# =============================================================================
+# INTELLIGENT LOAD BALANCER (ILB) CONFIGURATION
+# =============================================================================
+load-balancer:
+  # Progression-based routing configuration
+  progression-routing:
+    enabled: true
+    check-interval: 30      # seconds
+    
+  # Load balancing thresholds
+  thresholds:
+    high-load: 0.8
+    low-load: 0.3
+    max-players-per-instance: 20
+    
+  # Routing strategies
+  routing-strategies:
+    # Skill-based routing
+    skill-based:
+      combat-threshold: 10
+      mining-threshold: 10
+      farming-threshold: 10
+      foraging-threshold: 10
+      fishing-threshold: 10
+      
+    # Level-based routing
+    level-based:
+      beginner-max: 10
+      intermediate-max: 30
+      advanced-max: 50
+      endgame-min: 51
+      
+    # Anti-camping mechanisms
+    anti-camping:
+      enabled: true
+      max-time-in-zone: 3600  # 1 hour
+      cooldown-period: 1800   # 30 minutes
+  
+  # Load monitoring
+  monitoring:
+    enabled: true
+    interval: 10             # seconds
+    metrics-retention: 300   # 5 minutes
+
+# =============================================================================
+# STATE SYNCHRONIZATION LAYER CONFIGURATION
+# =============================================================================
+state-sync:
+  # Real-time synchronization settings
+  real-time:
+    enabled: true
+    sync-interval: 1         # seconds
+    
+  # Data structures configuration
+  data-structures:
+    # Sorted Sets for Bazaar orderbook
+    bazaar-orderbook:
+      enabled: true
+      key-pattern: "bazaar:orderbook:{itemId}:{orderType}"
+      
+    # Hashes for player stats
+    player-stats:
+      enabled: true
+      key-pattern: "player:stats:{playerUUID}"
+      ttl: 300               # 5 minutes
+      
+    # Sets for server status
+    server-status:
+      enabled: true
+      key-pattern: "server:status:{serverId}"
+      ttl: 30                # 30 seconds
+  
+  # Transaction safety
+  transaction-safety:
+    enabled: true
+    max-retries: 3
+    retry-delay: 100         # milliseconds
+
+# =============================================================================
+# PERFORMANCE MONITORING
+# =============================================================================
+monitoring:
+  # Performance metrics
+  metrics:
+    enabled: true
+    collection-interval: 10  # seconds
+    
+  # Key metrics to monitor
+  key-metrics:
+    - "tps"
+    - "memory-usage"
+    - "cpu-usage"
+    - "network-io"
+    - "database-connections"
+    - "redis-connections"
+    - "lock-contention"
+    - "instance-load"
+    
+  # Alerting thresholds
+  alerts:
+    tps-low: 15.0
+    memory-high: 85.0
+    cpu-high: 80.0
+    lock-contention-high: 10
+
+# =============================================================================
+# SECURITY CONFIGURATION
+# =============================================================================
+security:
+  # Rate limiting
+  rate-limiting:
+    enabled: true
+    requests-per-minute: 1000
+    burst-limit: 100
+    
+  # Anti-cheat measures
+  anti-cheat:
+    enabled: true
+    detection-interval: 5    # seconds
+    
+  # Data validation
+  data-validation:
+    enabled: true
+    strict-mode: true
+
+# =============================================================================
+# DEVELOPMENT/DEBUGGING
+# =============================================================================
+debug:
+  # Debug logging
+  logging:
+    enabled: false
+    level: "FINE"
+    
+  # Performance profiling
+  profiling:
+    enabled: false
+    sample-rate: 0.1
+    
+  # Metrics collection
+  metrics:
+    enabled: false
+    export-interval: 60      # seconds

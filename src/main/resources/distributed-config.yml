@@ -1,0 +1,151 @@
+# Hypixel Skyblock Recreation - Distributed Architecture Configuration
+
+# Server Configuration
+server:
+  address: "0.0.0.0"
+  port: 25565
+  max-players: 1000
+  motd: "&6Hypixel Skyblock Recreation &7- &aDistributed Architecture"
+
+# Redis Cluster Configuration
+redis:
+  cluster:
+    enabled: true
+    nodes:
+      - host: "localhost"
+        port: 7000
+      - host: "localhost"
+        port: 7001
+      - host: "localhost"
+        port: 7002
+  fallback:
+    enabled: true
+    host: "localhost"
+    port: 6379
+  connection:
+    pool-size: 100
+    timeout: 5000
+    max-attempts: 3
+
+# Database Configuration
+database:
+  type: "sqlite" # sqlite, mysql, mariadb
+  url: "jdbc:sqlite:data/skyblock.db"
+  username: "skyblock"
+  password: ""
+  pool-size: 10
+  connection-timeout: 30000
+  idle-timeout: 600000
+  max-lifetime: 1800000
+
+# Thread Pool Configuration
+thread-pools:
+  game-tick:
+    core-size: 8
+    max-size: 16
+    queue-size: 1000
+  io:
+    core-size: 8
+    max-size: 16
+    queue-size: 500
+  world-generation:
+    core-size: 4
+    max-size: 8
+    queue-size: 200
+  async:
+    core-size: 16
+    max-size: 32
+    queue-size: 1000
+  scheduled:
+    core-size: 4
+    max-size: 8
+
+# Global Instance Manager Configuration
+gim:
+  auto-scaling:
+    enabled: true
+    check-interval: 30 # seconds
+    scale-up-threshold: 0.8
+    scale-down-threshold: 0.3
+  instance-types:
+    persistent-public:
+      min-instances: 2
+      max-instances: 10
+      scale-up-threshold: 0.8
+      scale-down-threshold: 0.3
+    temporary-private:
+      min-instances: 0
+      max-instances: 100
+      scale-up-threshold: 0.9
+      scale-down-threshold: 0.1
+    combat-zone:
+      min-instances: 1
+      max-instances: 50
+      scale-up-threshold: 0.7
+      scale-down-threshold: 0.2
+    mining-zone:
+      min-instances: 1
+      max-instances: 30
+      scale-up-threshold: 0.8
+      scale-down-threshold: 0.2
+    special-event:
+      min-instances: 0
+      max-instances: 20
+      scale-up-threshold: 0.9
+      scale-down-threshold: 0.1
+
+# Load Balancer Configuration
+load-balancer:
+  enabled: true
+  max-players-per-instance: 20
+  load-threshold-high: 0.8
+  load-threshold-low: 0.3
+  progression-check-interval: 30 # seconds
+  routing-strategy: "progression-based" # simple, progression-based, hybrid
+
+# State Synchronization Configuration
+state-sync:
+  cache:
+    local-cache-size: 1000
+    default-ttl: 300000 # 5 minutes
+    cleanup-interval: 60000 # 1 minute
+  bazaar:
+    price-update-interval: 60 # seconds
+    price-ttl: 60 # seconds
+  server-status:
+    heartbeat-interval: 30 # seconds
+    status-ttl: 30 # seconds
+
+# Performance Monitoring
+monitoring:
+  enabled: true
+  metrics-interval: 30 # seconds
+  thread-pool-monitoring: true
+  instance-load-monitoring: true
+  redis-performance-monitoring: true
+  database-performance-monitoring: true
+
+# Logging Configuration
+logging:
+  level: "INFO" # DEBUG, INFO, WARN, ERROR
+  distributed-architecture: true
+  thread-pool-metrics: true
+  instance-management: true
+  load-balancing: true
+  state-synchronization: true
+
+# Security Configuration
+security:
+  redis-password: ""
+  database-ssl: false
+  connection-encryption: false
+  rate-limiting:
+    enabled: true
+    max-requests-per-minute: 1000
+
+# Development Configuration
+development:
+  debug-mode: false
+  performance-profiling: false
+  detailed-logging: false
+  mock-external-services: false

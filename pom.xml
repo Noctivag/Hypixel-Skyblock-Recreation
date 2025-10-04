@@ -167,9 +167,30 @@
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
+        <repository>
+            <id>minestom-repo</id>
+            <url>https://repo.minestom.net/repository/maven-public/</url>
+        </repository>
     </repositories>
 
     <dependencies>
+        <!-- Minestom - Modern multi-threaded Minecraft server framework -->
+        <dependency>
+            <groupId>net.minestom</groupId>
+            <artifactId>minestom-core</artifactId>
+            <version>1.21.1</version>
+        </dependency>
+        <dependency>
+            <groupId>net.minestom</groupId>
+            <artifactId>minestom-data</artifactId>
+            <version>1.21.1</version>
+        </dependency>
+        <dependency>
+            <groupId>net.minestom</groupId>
+            <artifactId>minestom-ce</artifactId>
+            <version>1.21.1</version>
+        </dependency>
+        <!-- Keep Paper API for compatibility during migration -->
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
@@ -201,6 +222,23 @@
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
             <version>4.4.3</version>
+        </dependency>
+        
+        <!-- MongoDB Driver for distributed persistent storage -->
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-sync</artifactId>
+            <version>4.11.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-core</artifactId>
+            <version>4.11.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>bson</artifactId>
+            <version>4.11.1</version>
         </dependency>
         <!-- Add a simple SLF4J binding so libraries that use SLF4J produce logs instead of NOP -->
         <dependency>

@@ -1,0 +1,811 @@
+{
+  "weapon": {
+    "sharp": {
+      "displayName": "Sharp",
+      "color": "§c",
+      "description": "Increases damage and critical chance",
+      "stats": {
+        "common": {
+          "health": 0,
+          "defense": 0,
+          "strength": 15,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "uncommon": {
+          "health": 0,
+          "defense": 0,
+          "strength": 20,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "rare": {
+          "health": 0,
+          "defense": 0,
+          "strength": 25,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "epic": {
+          "health": 0,
+          "defense": 0,
+          "strength": 30,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "legendary": {
+          "health": 0,
+          "defense": 0,
+          "strength": 35,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "mythic": {
+          "health": 0,
+          "defense": 0,
+          "strength": 40,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        }
+      }
+    },
+    "heavy": {
+      "displayName": "Heavy",
+      "color": "§8",
+      "description": "Increases damage and defense",
+      "stats": {
+        "common": {
+          "health": 0,
+          "defense": 10,
+          "strength": 10,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "uncommon": {
+          "health": 0,
+          "defense": 15,
+          "strength": 15,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "rare": {
+          "health": 0,
+          "defense": 20,
+          "strength": 20,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "epic": {
+          "health": 0,
+          "defense": 25,
+          "strength": 25,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "legendary": {
+          "health": 0,
+          "defense": 30,
+          "strength": 30,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "mythic": {
+          "health": 0,
+          "defense": 35,
+          "strength": 35,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        }
+      }
+    },
+    "light": {
+      "displayName": "Light",
+      "color": "§f",
+      "description": "Increases speed and critical chance",
+      "stats": {
+        "common": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 0,
+          "speed": 20,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "uncommon": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 0,
+          "speed": 25,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "rare": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 0,
+          "speed": 30,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "epic": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 0,
+          "speed": 35,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "legendary": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 0,
+          "speed": 40,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "mythic": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 0,
+          "speed": 45,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        }
+      }
+    },
+    "wise": {
+      "displayName": "Wise",
+      "color": "§b",
+      "description": "Increases intelligence and ability damage",
+      "stats": {
+        "common": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 20,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "uncommon": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 25,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "rare": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 30,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "epic": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 35,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "legendary": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 40,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "mythic": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 45,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        }
+      }
+    },
+    "pure": {
+      "displayName": "Pure",
+      "color": "§d",
+      "description": "Increases critical chance and critical damage",
+      "stats": {
+        "common": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 5,
+          "critDamage": 10,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "uncommon": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 7,
+          "critDamage": 15,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "rare": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 10,
+          "critDamage": 20,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "epic": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 12,
+          "critDamage": 25,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "legendary": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 15,
+          "critDamage": 30,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "mythic": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 18,
+          "critDamage": 35,
+          "attackSpeed": 0,
+          "ferocity": 0
+        }
+      }
+    },
+    "fierce": {
+      "displayName": "Fierce",
+      "color": "§4",
+      "description": "Increases strength and critical damage",
+      "stats": {
+        "common": {
+          "health": 0,
+          "defense": 0,
+          "strength": 10,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 15,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "uncommon": {
+          "health": 0,
+          "defense": 0,
+          "strength": 15,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 20,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "rare": {
+          "health": 0,
+          "defense": 0,
+          "strength": 20,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 25,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "epic": {
+          "health": 0,
+          "defense": 0,
+          "strength": 25,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 30,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "legendary": {
+          "health": 0,
+          "defense": 0,
+          "strength": 30,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 35,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "mythic": {
+          "health": 0,
+          "defense": 0,
+          "strength": 35,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 40,
+          "attackSpeed": 0,
+          "ferocity": 0
+        }
+      }
+    }
+  },
+  "armor": {
+    "pure": {
+      "displayName": "Pure",
+      "color": "§d",
+      "description": "Increases critical chance and critical damage",
+      "stats": {
+        "common": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 3,
+          "critDamage": 8,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "uncommon": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 5,
+          "critDamage": 12,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "rare": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 7,
+          "critDamage": 16,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "epic": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 10,
+          "critDamage": 20,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "legendary": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 12,
+          "critDamage": 24,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "mythic": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 15,
+          "critDamage": 28,
+          "attackSpeed": 0,
+          "ferocity": 0
+        }
+      }
+    },
+    "heavy": {
+      "displayName": "Heavy",
+      "color": "§8",
+      "description": "Increases defense and health",
+      "stats": {
+        "common": {
+          "health": 0,
+          "defense": 15,
+          "strength": 0,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "uncommon": {
+          "health": 0,
+          "defense": 20,
+          "strength": 0,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "rare": {
+          "health": 0,
+          "defense": 25,
+          "strength": 0,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "epic": {
+          "health": 0,
+          "defense": 30,
+          "strength": 0,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "legendary": {
+          "health": 0,
+          "defense": 35,
+          "strength": 0,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "mythic": {
+          "health": 0,
+          "defense": 40,
+          "strength": 0,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        }
+      }
+    },
+    "wise": {
+      "displayName": "Wise",
+      "color": "§b",
+      "description": "Increases intelligence and mana",
+      "stats": {
+        "common": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 15,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "uncommon": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 20,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "rare": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 25,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "epic": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 30,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "legendary": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 35,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "mythic": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 40,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        }
+      }
+    }
+  },
+  "accessory": {
+    "bizarre": {
+      "displayName": "Bizarre",
+      "color": "§5",
+      "description": "Increases intelligence and ability damage",
+      "stats": {
+        "common": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 10,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "uncommon": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 15,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "rare": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 20,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "epic": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 25,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "legendary": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 30,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "mythic": {
+          "health": 0,
+          "defense": 0,
+          "strength": 0,
+          "intelligence": 35,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        }
+      }
+    },
+    "forceful": {
+      "displayName": "Forceful",
+      "color": "§c",
+      "description": "Increases strength and damage",
+      "stats": {
+        "common": {
+          "health": 0,
+          "defense": 0,
+          "strength": 8,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "uncommon": {
+          "health": 0,
+          "defense": 0,
+          "strength": 12,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "rare": {
+          "health": 0,
+          "defense": 0,
+          "strength": 16,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "epic": {
+          "health": 0,
+          "defense": 0,
+          "strength": 20,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "legendary": {
+          "health": 0,
+          "defense": 0,
+          "strength": 24,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        },
+        "mythic": {
+          "health": 0,
+          "defense": 0,
+          "strength": 28,
+          "intelligence": 0,
+          "speed": 0,
+          "critChance": 0,
+          "critDamage": 0,
+          "attackSpeed": 0,
+          "ferocity": 0
+        }
+      }
+    }
+  }
+}
