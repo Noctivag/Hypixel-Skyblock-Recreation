@@ -756,8 +756,8 @@ public final class SkyblockPlugin extends JavaPlugin {
         return null; // TODO: Implement SimpleWorldManager
     }
 
-    public Object getWorldManager() {
-        return null; // TODO: Implement WorldManager
+    public ThreadSafeWorldManager getWorldManager() {
+        return worldManager;
     }
 
     public Object getAdvancedMinionSystem() {

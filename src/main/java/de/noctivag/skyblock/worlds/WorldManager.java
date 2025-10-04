@@ -1,7 +1,8 @@
 package de.noctivag.skyblock.worlds;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.utils.FileUtils;
 import de.noctivag.skyblock.worlds.generators.VoidGenerator;
 import de.noctivag.skyblock.worlds.generators.IslandGenerator;
 import de.noctivag.skyblock.worlds.generators.DungeonGenerator;
@@ -12,15 +13,22 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
+import org.bukkit.entity.Player;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.WorldInfo;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Consumer;
 // import org.bukkit.util.TriState; // Not available in this Bukkit version
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 /**
@@ -32,6 +40,8 @@ import java.util.logging.Level;
  * - Welt-Konfiguration
  * - Backup und Restore
  * - Performance-Optimierung
+ * - Rolling-Restart-System für öffentliche Welten
+ * - On-Demand-Loading für private Inseln
  */
 public class WorldManager {
 
@@ -39,9 +49,20 @@ public class WorldManager {
     private final Map<String, WorldConfig> worldConfigs = new HashMap<>();
     private final Map<String, World> managedWorlds = new HashMap<>();
     private boolean isInitialized = false;
+    
+    // Rolling-Restart-System für öffentliche Welten
+    private final Map<String, String> liveWorldAliases = new ConcurrentHashMap<>();
+    private final Map<String, BukkitTask> restartTasks = new HashMap<>();
+    private final File privateIslandsContainer;
 
     public WorldManager(SkyblockPlugin plugin) {
         this.plugin = plugin;
+        this.privateIslandsContainer = new File(plugin.getServer().getWorldContainer(), "private_islands");
+        
+        if (!privateIslandsContainer.exists()) {
+            privateIslandsContainer.mkdirs();
+        }
+        
         initializeWorldConfigs();
     }
 
@@ -576,6 +597,187 @@ public class WorldManager {
         isInitialized = false;
 
         plugin.getLogger().info("WorldManager shutdown complete");
+    }
+
+    // ==================== ROLLING-RESTART-SYSTEM ====================
+
+    /**
+     * Richtet ein öffentliches Welt-Paar mit Rolling-Restart ein
+     */
+    public void setupPublicWorldPair(String alias) {
+        String worldNameA = alias + "_a";
+        String worldNameB = alias + "_b";
+
+        loadOrCopyWorld(worldNameA, "oeffentlich");
+        loadOrCopyWorld(worldNameB, "oeffentlich");
+
+        liveWorldAliases.put(alias, worldNameA);
+        plugin.getLogger().info("'" + worldNameA + "' ist jetzt die LIVE-Instanz für den Alias '" + alias + "'.");
+        
+        scheduleNextSwap(alias);
+    }
+
+    /**
+     * Führt einen Welt-Swap durch
+     */
+    private void performSwap(String alias) {
+        String currentLiveName = liveWorldAliases.get(alias);
+        String nextLiveName = currentLiveName.endsWith("_a") ? alias + "_b" : alias + "_a";
+        
+        World currentLiveWorld = Bukkit.getWorld(currentLiveName);
+        World nextLiveWorld = Bukkit.getWorld(nextLiveName);
+
+        if (currentLiveWorld == null || nextLiveWorld == null) {
+            plugin.getLogger().severe("Konnte den Welt-Swap für '" + alias + "' nicht durchführen: Eine der Welten ist nicht geladen!");
+            scheduleNextSwap(alias);
+            return;
+        }
+
+        plugin.getLogger().info("Starte Welt-Swap für '" + alias + "'. Neue LIVE-Instanz: '" + nextLiveName + "'.");
+
+        for (Player player : currentLiveWorld.getPlayers()) {
+            player.sendMessage("§e[Skyblock] §7Diese Welt wird zurückgesetzt. Du wirst zur neuen Instanz teleportiert.");
+            player.teleport(nextLiveWorld.getSpawnLocation());
+        }
+
+        liveWorldAliases.put(alias, nextLiveName);
+        resetWorldAsync(currentLiveName, "oeffentlich");
+        scheduleNextSwap(alias);
+    }
+
+    /**
+     * Plant den nächsten Welt-Swap
+     */
+    private void scheduleNextSwap(String alias) {
+        if (restartTasks.containsKey(alias)) restartTasks.get(alias).cancel();
+
+        long fourHoursInTicks = 4 * 60 * 60 * 20;
+        
+        BukkitTask task = new BukkitRunnable() {
+            @Override
+            public void run() {
+                performSwap(alias);
+            }
+        }.runTaskLater(plugin, fourHoursInTicks);
+
+        restartTasks.put(alias, task);
+        plugin.getLogger().info("Nächster Reset für '" + alias + "' geplant in 4 Stunden.");
+    }
+
+    /**
+     * Gibt die aktuelle Live-Welt für einen Alias zurück
+     */
+    public World getLiveWorld(String alias) {
+        String liveWorldName = liveWorldAliases.get(alias);
+        return liveWorldName != null ? Bukkit.getWorld(liveWorldName) : null;
+    }
+    
+    /**
+     * Beendet alle Rolling-Restart-Tasks
+     */
+    public void cancelAllTasks() {
+        restartTasks.values().forEach(BukkitTask::cancel);
+        restartTasks.clear();
+    }
+
+    // ==================== ON-DEMAND-LOADING FÜR PRIVATE INSELN ====================
+
+    /**
+     * Lädt eine private Insel on-demand
+     */
+    public World loadPrivateIsland(UUID playerUUID) {
+        File islandFolder = new File(privateIslandsContainer, playerUUID.toString());
+        
+        if (!islandFolder.exists()) {
+            plugin.getLogger().info("Erstelle neue private Insel für " + playerUUID);
+            loadOrCopyWorld(playerUUID.toString(), "privat", "standard_insel", privateIslandsContainer);
+        }
+        
+        return Bukkit.createWorld(new WorldCreator(islandFolder.getName()).generator(new IslandGenerator()));
+    }
+    
+    /**
+     * Entlädt eine private Insel
+     */
+    public void unloadPrivateIsland(UUID playerUUID) {
+        String worldName = playerUUID.toString();
+        World world = Bukkit.getWorld(worldName);
+
+        if (world != null) {
+            if (!world.getPlayers().isEmpty()) {
+                plugin.getLogger().warning("Versuch, eine bewohnte Insel zu entladen: " + worldName);
+                return;
+            }
+            world.save();
+            Bukkit.unloadWorld(world, true);
+            plugin.getLogger().info("Private Insel für " + playerUUID + " gespeichert und entladen.");
+        }
+    }
+
+    // ==================== HILFSMETHODEN ====================
+
+    /**
+     * Lädt oder kopiert eine Welt aus einer Vorlage
+     */
+    private void loadOrCopyWorld(String worldName, String templateSubfolder, String templateName, File parentContainer) {
+        File worldFolder = new File(parentContainer, worldName);
+        String templatePath = "vorlagen/" + templateSubfolder + "/" + templateName + ".zip";
+
+        if (!worldFolder.exists()) {
+            try (InputStream templateStream = plugin.getResource(templatePath)) {
+                if (templateStream == null) {
+                    plugin.getLogger().severe("Vorlage nicht gefunden: " + templatePath);
+                    return;
+                }
+                FileUtils.unzip(templateStream, worldFolder);
+                plugin.getLogger().info("Welt '" + worldName + "' erfolgreich aus Vorlage erstellt.");
+            } catch (IOException e) {
+                plugin.getLogger().log(Level.SEVERE, "Fehler beim Erstellen der Welt '" + worldName + "'", e);
+            }
+        }
+    }
+    
+    /**
+     * Überladene Methode für öffentliche Welten
+     */
+    private void loadOrCopyWorld(String worldName, String templateSubfolder) {
+        loadOrCopyWorld(worldName, templateSubfolder, worldName, plugin.getServer().getWorldContainer());
+        Bukkit.createWorld(new WorldCreator(worldName));
+    }
+    
+    /**
+     * Setzt eine Welt asynchron zurück
+     */
+    private void resetWorldAsync(String worldName, String templateSubfolder) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        World world = Bukkit.getWorld(worldName);
+                        if (world != null) Bukkit.unloadWorld(world, false);
+                        
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                File worldFolder = new File(plugin.getServer().getWorldContainer(), worldName);
+                                FileUtils.deleteDirectory(worldFolder);
+                                loadOrCopyWorld(worldName, templateSubfolder);
+                                
+                                new BukkitRunnable() {
+                                    @Override
+                                    public void run() {
+                                        Bukkit.createWorld(new WorldCreator(worldName));
+                                        plugin.getLogger().info("'" + worldName + "' wurde zurückgesetzt und ist als STANDBY bereit.");
+                                    }
+                                }.runTask(plugin);
+                            }
+                        }.runTaskAsynchronously(plugin);
+                    }
+                }.runTask(plugin);
+            }
+        }.runTask(plugin);
     }
 
     /**

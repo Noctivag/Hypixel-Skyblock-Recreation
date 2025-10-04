@@ -32,10 +32,16 @@ commands:
     aliases: [bosses]
 
   island:
-    description: Manage and visit Skyblock islands (basic integration)
-    usage: /<command> [create|visit|invite|uninvite|trustlist|hub|profile]
+    description: Manage and visit Skyblock islands with on-demand loading
+    usage: /<command> [home|go|unload|reload]
     permission: skyblock.island
     aliases: [is]
+
+  hub:
+    description: Teleport to the hub using rolling-restart system
+    usage: /<command>
+    permission: skyblock.hub
+    aliases: [lobby, spawn]
 
   mining:
     description: Mining system commands (open GUI, teleport, list, stats)
@@ -82,4 +88,8 @@ permissions:
 
   skyblock.mining:
     description: Allows access to mining commands
+    default: true
+
+  skyblock.hub:
+    description: Allows access to hub teleportation
     default: true
