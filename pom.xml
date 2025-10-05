@@ -77,6 +77,22 @@
                                     <pattern>com.google.gson</pattern>
                                     <shadedPattern>de.noctivag.skyblock.libs.gson</shadedPattern>
                                 </relocation>
+                                <relocation>
+                                    <pattern>com.zaxxer.hikari</pattern>
+                                    <shadedPattern>de.noctivag.skyblock.libs.hikari</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.mongodb</pattern>
+                                    <shadedPattern>de.noctivag.skyblock.libs.mongodb</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.mongodb</pattern>
+                                    <shadedPattern>de.noctivag.skyblock.libs.mongodb</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.bson</pattern>
+                                    <shadedPattern>de.noctivag.skyblock.libs.bson</shadedPattern>
+                                </relocation>
                             </relocations>
                             <filters>
                                 <filter>

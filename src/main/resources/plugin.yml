@@ -49,6 +49,30 @@ commands:
     permission: skyblock.mining
     aliases: [mine]
 
+  skills:
+    description: Zeigt deine Skills an
+    usage: /<command>
+    permission: skyblock.skills
+    aliases: [skill]
+
+  collections:
+    description: Zeigt deine Collections an
+    usage: /<command>
+    permission: skyblock.collections
+    aliases: [collection]
+
+  pets:
+    description: Öffnet das Pet-Menü
+    usage: /<command>
+    permission: skyblock.pets
+    aliases: [pet]
+
+  combat:
+    description: Zeigt Kampf-Statistiken
+    usage: /<command>
+    permission: skyblock.combat
+    aliases: [fight]
+
 permissions:
   skyblock.enchant:
     description: Allows access to enchantment commands
@@ -92,4 +116,20 @@ permissions:
 
   skyblock.hub:
     description: Allows access to hub teleportation
+    default: true
+
+  skyblock.skills:
+    description: Allows access to skills commands
+    default: true
+
+  skyblock.collections:
+    description: Allows access to collections commands
+    default: true
+
+  skyblock.pets:
+    description: Allows access to pets commands
+    default: true
+
+  skyblock.combat:
+    description: Allows access to combat commands
     default: true
