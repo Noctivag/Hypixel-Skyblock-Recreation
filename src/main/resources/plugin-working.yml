@@ -1,0 +1,19 @@
+name: Skyblock
+version: '${project.version}'
+main: de.noctivag.skyblock.SkyblockPluginWorking
+api-version: 1.21
+author: Noctivag
+description: Working Skyblock plugin with core features
+folia-supported: true
+
+commands:
+  hub:
+    description: Teleport to the hub
+    usage: /<command>
+    permission: skyblock.hub
+    aliases: [lobby, spawn]
+
+permissions:
+  skyblock.hub:
+    description: Allows access to hub teleportation
+    default: true

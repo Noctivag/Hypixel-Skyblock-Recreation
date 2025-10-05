@@ -276,4 +276,60 @@ public class BazaarService {
         public boolean isSuccess() { return success; }
         public String getMessage() { return message; }
     }
+    
+    /**
+     * Holt die aktuellen Instant-Buy-Preise für ein Item
+     * @param itemId Das Item-ID
+     * @return Map mit Preis-Informationen
+     */
+    public Map<String, Double> getInstantBuyPrices(String itemId) {
+        Map<String, Double> prices = new HashMap<>();
+        List<SellOrder> orders = sellOrders.get(itemId);
+        
+        if (orders != null && !orders.isEmpty()) {
+            // Sortiere nach Preis (niedrigster zuerst)
+            orders.sort(Comparator.comparing(SellOrder::getPricePerUnit));
+            
+            double lowestPrice = orders.get(0).getPricePerUnit();
+            double totalAvailable = orders.stream()
+                .mapToDouble(SellOrder::getAmount)
+                .sum();
+            
+            prices.put("price", lowestPrice);
+            prices.put("available", totalAvailable);
+        } else {
+            prices.put("price", 0.0);
+            prices.put("available", 0.0);
+        }
+        
+        return prices;
+    }
+    
+    /**
+     * Holt die aktuellen Instant-Sell-Preise für ein Item
+     * @param itemId Das Item-ID
+     * @return Map mit Preis-Informationen
+     */
+    public Map<String, Double> getInstantSellPrices(String itemId) {
+        Map<String, Double> prices = new HashMap<>();
+        List<BuyOrder> orders = buyOrders.get(itemId);
+        
+        if (orders != null && !orders.isEmpty()) {
+            // Sortiere nach Preis (höchster zuerst)
+            orders.sort(Comparator.comparing(BuyOrder::getPricePerUnit).reversed());
+            
+            double highestPrice = orders.get(0).getPricePerUnit();
+            double totalDemand = orders.stream()
+                .mapToDouble(BuyOrder::getAmount)
+                .sum();
+            
+            prices.put("price", highestPrice);
+            prices.put("demand", totalDemand);
+        } else {
+            prices.put("price", 0.0);
+            prices.put("demand", 0.0);
+        }
+        
+        return prices;
+    }
 }

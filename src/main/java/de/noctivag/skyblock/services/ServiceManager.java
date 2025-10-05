@@ -53,8 +53,12 @@ public class ServiceManager {
             plugin.getLogger().info("Rolling-Restart system is disabled in settings. WorldResetService not registered.");
         }
 
-        // Teleport Service (depends on WorldResetService and PlayerProfileService)
-        TeleportService teleportService = new TeleportService(plugin, playerProfileService, getService(WorldResetService.class));
+        // World Management Service (depends on RollingRestartWorldManager)
+        WorldManagementService worldManagementService = new WorldManagementService(plugin, rollingRestartWorldManager);
+        registerService(WorldManagementService.class, worldManagementService);
+
+        // Teleport Service (depends on WorldManagementService)
+        TeleportService teleportService = new TeleportService(plugin, worldManagementService);
         registerService(TeleportService.class, teleportService);
 
         // Magical Power Service (depends on SettingsConfig)
@@ -115,6 +119,11 @@ public class ServiceManager {
                 ZoneMobService zoneMobService = new ZoneMobService(plugin);
                 registerService(ZoneMobService.class, zoneMobService);
                 plugin.getLogger().info("ZoneMobService registered.");
+
+                // Minion Manager
+                MinionManager minionManager = new MinionManager(plugin);
+                registerService(MinionManager.class, minionManager);
+                plugin.getLogger().info("MinionManager registered.");
 
                 plugin.getLogger().info("All services registered.");
     }

@@ -91,7 +91,7 @@ public class MagicalPowerService {
         int totalMP = 0;
         AccessoryBag accessoryBag = profile.getAccessoryBag();
         
-        for (Map.Entry<String, Rarity> entry : accessoryBag.getAccessories().entrySet()) {
+        for (Map.Entry<String, Rarity> entry : accessoryBag.getAllAccessoriesWithRarity().entrySet()) {
             Rarity rarity = entry.getValue();
             int mp = magicalPowerPerRarity.getOrDefault(rarity, 0);
             totalMP += mp;

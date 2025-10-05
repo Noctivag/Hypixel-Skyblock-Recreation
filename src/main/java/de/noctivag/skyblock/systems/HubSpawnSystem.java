@@ -1,6 +1,6 @@
 package de.noctivag.skyblock.systems;
 
-import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPluginRefactored;
 import de.noctivag.skyblock.worlds.RollingRestartWorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -22,10 +22,10 @@ import net.kyori.adventure.text.format.NamedTextColor;
  */
 public class HubSpawnSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPluginRefactored plugin;
     private final RollingRestartWorldManager rollingRestartManager;
     
-    public HubSpawnSystem(SkyblockPlugin plugin) {
+    public HubSpawnSystem(SkyblockPluginRefactored plugin) {
         this.plugin = plugin;
         this.rollingRestartManager = plugin.getRollingRestartWorldManager();
         

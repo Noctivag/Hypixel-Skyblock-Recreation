@@ -1,10 +1,10 @@
 package de.noctivag.skyblock.performance;
 
-import de.noctivag.skyblock.SkyblockPlugin;
-import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPluginRefactored;
+import de.noctivag.skyblock.SkyblockPluginRefactored;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPluginRefactored;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -12,15 +12,23 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class AdvancedPerformanceManager {
-    private final SkyblockPlugin SkyblockPlugin;
+    private final SkyblockPluginRefactored SkyblockPlugin;
     private final Map<String, Object> metrics = new ConcurrentHashMap<>();
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
     private boolean monitoring = false;
 
-    public AdvancedPerformanceManager(SkyblockPlugin SkyblockPlugin) {
+    public AdvancedPerformanceManager(SkyblockPluginRefactored SkyblockPlugin) {
         this.SkyblockPlugin = SkyblockPlugin;
         initializeMetrics();
         // Defer monitoring start to avoid "this"-escape
+        SkyblockPlugin.getLogger().info("AdvancedPerformanceManager initialized");
+    }
+
+    /**
+     * Initialisiert den Performance Manager
+     */
+    public void initialize() {
+        initializeMetrics();
         SkyblockPlugin.getLogger().info("AdvancedPerformanceManager initialized");
     }
     

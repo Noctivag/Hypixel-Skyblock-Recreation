@@ -265,7 +265,7 @@ public class BrewingGUI {
         // Auto-brew toggle
         ItemStack autoBrewButton = new ItemStack(Material.REDSTONE);
         ItemMeta autoBrewMeta = autoBrewButton.getItemMeta();
-        autoBrewMeta.setDisplayName("§6§lAuto-Brew: §cDisabled");
+        autoBrewMeta.displayName(net.kyori.adventure.text.Component.text("§6§lAuto-Brew: §cDisabled"));
         autoBrewMeta.setLore(Arrays.asList(
             "§7Toggle automatic brewing",
             "§7when ingredients are available"

@@ -2,31 +2,35 @@ package de.noctivag.skyblock.enums;
 
 import org.bukkit.Material;
 
+/**
+ * Enum für verschiedene Dungeon-Klassen
+ */
 public enum DungeonClass {
-    ARCHER(Material.BOW, "§aBogenschütze", "§7Erhöhte Fernkampf-Schäden"),
-    MAGE(Material.BLAZE_ROD, "§bMagier", "§7Erhöhte Magie-Schäden"),
-    BERSERKER(Material.IRON_SWORD, "§cBerserker", "§7Erhöhte Nahkampf-Schäden"),
-    HEALER(Material.GOLDEN_APPLE, "§dHeiler", "§7Heilt Team-Mitglieder"),
-    TANK(Material.SHIELD, "§6Tank", "§7Erhöhte Verteidigung");
-
-    private final Material icon;
+    
+    ARCHER("§aArcher", Material.BOW, "Bogen-spezialisierte Klasse mit hohem Crit-Schaden"),
+    MAGE("§bMage", Material.BLAZE_ROD, "Magie-spezialisierte Klasse mit AoE-Schaden"),
+    BERSERKER("§cBerserker", Material.DIAMOND_AXE, "Nahkampf-spezialisierte Klasse mit hohem Schaden"),
+    HEALER("§dHealer", Material.GOLDEN_APPLE, "Heilung-spezialisierte Klasse mit Support-Fähigkeiten"),
+    TANK("§eTank", Material.SHIELD, "Verteidigung-spezialisierte Klasse mit hoher Lebenskraft");
+    
     private final String displayName;
+    private final Material icon;
     private final String description;
-
-    DungeonClass(Material icon, String displayName, String description) {
-        this.icon = icon;
+    
+    DungeonClass(String displayName, Material icon, String description) {
         this.displayName = displayName;
+        this.icon = icon;
         this.description = description;
     }
-
-    public Material getIcon() {
-        return icon;
-    }
-
+    
     public String getDisplayName() {
         return displayName;
     }
-
+    
+    public Material getIcon() {
+        return icon;
+    }
+    
     public String getDescription() {
         return description;
     }

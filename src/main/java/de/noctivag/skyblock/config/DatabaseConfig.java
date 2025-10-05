@@ -1,6 +1,6 @@
 package de.noctivag.skyblock.config;
 
-import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPluginRefactored;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -13,7 +13,7 @@ import java.io.IOException;
  */
 public class DatabaseConfig {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPluginRefactored plugin;
     private FileConfiguration databaseConfig;
     private File databaseFile;
     
@@ -39,7 +39,7 @@ public class DatabaseConfig {
     private int maxReconnects;
     private long reconnectDelay;
     
-    public DatabaseConfig(SkyblockPlugin plugin) {
+    public DatabaseConfig(SkyblockPluginRefactored plugin) {
         this.plugin = plugin;
         this.databaseFile = new File(plugin.getDataFolder(), "database.yml");
     }

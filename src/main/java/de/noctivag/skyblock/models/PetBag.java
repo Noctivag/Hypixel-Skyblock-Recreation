@@ -81,6 +81,14 @@ public class PetBag {
                 .filter(Pet::isActive)
                 .toList();
     }
+
+    /**
+     * Gibt das aktive Pet zurück
+     * @return Das aktive Pet oder null
+     */
+    public Pet getActivePet() {
+        return activePet;
+    }
     
     public int getTotalPets() {
         return pets.size();

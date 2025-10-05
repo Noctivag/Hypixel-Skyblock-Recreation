@@ -1,77 +1,88 @@
 package de.noctivag.skyblock.skyblock;
-import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
+import java.util.UUID;
 import java.util.Map;
+import java.util.HashMap;
 
+/**
+ * Skyblock Bank - Player's banking data
+ */
 public class SkyblockBank {
+    
+    private final UUID playerId;
     private double balance;
     private double interestRate;
-    private long lastInterestTime;
-    private final Map<String, Double> transactionHistory = new HashMap<>();
+    private long lastInterest;
+    private Map<String, Double> transactions;
     
-    public SkyblockBank() {
+    public SkyblockBank(UUID playerId) {
+        this.playerId = playerId;
         this.balance = 0.0;
         this.interestRate = 0.02; // 2% interest rate
-        this.lastInterestTime = java.lang.System.currentTimeMillis();
+        this.lastInterest = System.currentTimeMillis();
+        this.transactions = new HashMap<>();
     }
     
-    public void deposit(double amount) {
-        this.balance += amount;
-        addTransaction("DEPOSIT", amount);
-    }
+    // Getters and setters
+    public UUID getPlayerId() { return playerId; }
     
-    public boolean withdraw(double amount) {
-        if (this.balance >= amount) {
-            this.balance -= amount;
-            addTransaction("WITHDRAW", -amount);
+    public double getBalance() { return balance; }
+    public void setBalance(double balance) { this.balance = balance; }
+    
+    public double getInterestRate() { return interestRate; }
+    public void setInterestRate(double interestRate) { this.interestRate = interestRate; }
+    
+    public long getLastInterest() { return lastInterest; }
+    public void setLastInterest(long lastInterest) { this.lastInterest = lastInterest; }
+    
+    public Map<String, Double> getTransactions() { return transactions; }
+    public void setTransactions(Map<String, Double> transactions) { this.transactions = transactions; }
+    
+    /**
+     * Deposit money
+     */
+    public boolean deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+            addTransaction("deposit", amount);
             return true;
         }
         return false;
     }
     
-    public void addInterest() {
-        long currentTime = java.lang.System.currentTimeMillis();
-        long timeDiff = currentTime - lastInterestTime;
-        
-        // Add interest every hour (3600000 ms)
-        if (timeDiff >= 3600000) {
-            double interest = balance * interestRate;
-            balance += interest;
-            addTransaction("INTEREST", interest);
-            lastInterestTime = currentTime;
+    /**
+     * Withdraw money
+     */
+    public boolean withdraw(double amount) {
+        if (amount > 0 && balance >= amount) {
+            balance -= amount;
+            addTransaction("withdraw", -amount);
+            return true;
         }
+        return false;
     }
     
+    /**
+     * Add transaction
+     */
     private void addTransaction(String type, double amount) {
-        String timestamp = String.valueOf(java.lang.System.currentTimeMillis());
-        transactionHistory.put(timestamp, amount);
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        transactions.put(timestamp + "_" + type, amount);
+    }
+    
+    /**
+     * Calculate interest
+     */
+    public double calculateInterest() {
+        long timeSinceLastInterest = System.currentTimeMillis() - lastInterest;
+        long hours = timeSinceLastInterest / (1000 * 60 * 60);
         
-        // Keep only last 100 transactions
-        if (transactionHistory.size() > 100) {
-            String oldestKey = transactionHistory.keySet().iterator().next();
-            transactionHistory.remove(oldestKey);
+        if (hours >= 24) { // Daily interest
+            double interest = balance * interestRate;
+            lastInterest = System.currentTimeMillis();
+            return interest;
         }
-    }
-    
-    public double getBalance() {
-        return balance;
-    }
-    
-    public double getInterestRate() {
-        return interestRate;
-    }
-    
-    public void setInterestRate(double interestRate) {
-        this.interestRate = interestRate;
-    }
-    
-    public Map<String, Double> getTransactionHistory() {
-        return new HashMap<>(transactionHistory);
-    }
-    
-    public void save() {
-        // Save bank data
-        // Implementation would go here
+        
+        return 0.0;
     }
 }

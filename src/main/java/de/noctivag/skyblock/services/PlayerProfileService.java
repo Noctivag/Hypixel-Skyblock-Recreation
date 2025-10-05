@@ -1,6 +1,6 @@
 package de.noctivag.skyblock.services;
 
-import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPluginRefactored;
 import de.noctivag.skyblock.cache.PlayerProfileCache;
 import de.noctivag.skyblock.models.PlayerProfile;
 
@@ -15,16 +15,34 @@ import java.util.concurrent.Executors;
  */
 public class PlayerProfileService {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPluginRefactored plugin;
     private final PlayerProfileCache cache;
     private final ExecutorService executorService;
     
-    public PlayerProfileService(SkyblockPlugin plugin) {
+    public PlayerProfileService(SkyblockPluginRefactored plugin, PlayerProfileCache cache, Object databaseManager) {
+        this.plugin = plugin;
+        this.cache = cache;
+        this.executorService = Executors.newFixedThreadPool(4);
+        
+        plugin.getLogger().info("PlayerProfileService initialized with async loading enabled");
+    }
+    
+    // Alternative Konstruktor für einfache Initialisierung
+    public PlayerProfileService(SkyblockPluginRefactored plugin) {
         this.plugin = plugin;
         this.cache = new PlayerProfileCache(plugin);
         this.executorService = Executors.newFixedThreadPool(4);
         
-        plugin.getLogger().info("PlayerProfileService initialized with async loading enabled");
+        plugin.getLogger().info("PlayerProfileService initialized with default cache");
+    }
+    
+    /**
+     * Holt ein Spielerprofil aus dem Cache
+     * @param uuid Spieler-UUID
+     * @return PlayerProfile oder null wenn nicht im Cache
+     */
+    public PlayerProfile getCachedProfile(UUID uuid) {
+        return cache.getProfile(uuid);
     }
     
     /**

@@ -46,6 +46,22 @@ public enum Rarity {
     public String getGermanName() {
         return germanName;
     }
+
+    /**
+     * Gibt die Farbe zurück (Alias für getTextColor)
+     * @return TextColor
+     */
+    public TextColor getColor() {
+        return textColor;
+    }
+
+    /**
+     * Gibt den Anzeigenamen zurück (Alias für getGermanName)
+     * @return String
+     */
+    public String getDisplayName() {
+        return germanName;
+    }
     
     /**
      * Gibt die nächste Seltenheitsstufe zurück

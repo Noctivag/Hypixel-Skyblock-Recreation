@@ -221,7 +221,7 @@ public class RevenantHorror extends SlayerBoss {
         }
         
         // Verlangsame den Spieler
-        targetPlayer.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 100, 2));
+        targetPlayer.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 100, 2));
         targetPlayer.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 100, 1));
         
         // Benachrichtige Spieler
@@ -289,7 +289,7 @@ public class RevenantHorror extends SlayerBoss {
             case 2:
                 // Phase 2: Wird unverwundbar und schwebt
                 bossZombie.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 200, 1));
-                bossZombie.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 200, 2));
+                bossZombie.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 200, 2));
                 break;
             case 3:
                 // Phase 3: Wirft explosiven Kuchen

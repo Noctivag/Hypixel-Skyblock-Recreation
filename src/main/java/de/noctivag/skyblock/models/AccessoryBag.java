@@ -83,6 +83,14 @@ public class AccessoryBag {
     public Set<String> getAllAccessories() {
         return accessories.keySet();
     }
+
+    /**
+     * Gibt alle Accessoires zurück (Alias für getAllAccessories)
+     * @return Set aller Accessoire-Namen
+     */
+    public Set<String> getAccessories() {
+        return accessories.keySet();
+    }
     
     /**
      * Gibt alle Accessoires mit ihrer Seltenheitsstufe zurück

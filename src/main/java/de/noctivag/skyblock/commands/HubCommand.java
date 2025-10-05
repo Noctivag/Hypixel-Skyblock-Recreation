@@ -1,6 +1,6 @@
 package de.noctivag.skyblock.commands;
 
-import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPluginRefactored;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -15,9 +15,9 @@ import net.kyori.adventure.text.Component;
  */
 public class HubCommand implements CommandExecutor {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPluginRefactored plugin;
     
-    public HubCommand(SkyblockPlugin plugin) {
+    public HubCommand(SkyblockPluginRefactored plugin) {
         this.plugin = plugin;
     }
     

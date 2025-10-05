@@ -1,9 +1,6 @@
 package de.noctivag.skyblock.services;
 
-import de.noctivag.skyblock.SkyblockPlugin;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Bukkit;
+import de.noctivag.skyblock.SkyblockPluginRefactored;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -11,296 +8,272 @@ import org.bukkit.entity.Player;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * Service für Teleportation-Management
- * Zentralisiert alle Teleportations-Logik
+ * Service für alle Teleportations-Anfragen
+ * Behandelt Hub-Teleportation, Insel-Teleportation und andere Welt-Wechsel
  */
 public class TeleportService {
-    
-    private final SkyblockPlugin plugin;
-    private final ServiceManager serviceManager;
-    
-    public TeleportService(SkyblockPlugin plugin, ServiceManager serviceManager) {
+
+    private final SkyblockPluginRefactored plugin;
+    private final WorldManagementService worldManagementService;
+
+    public TeleportService(SkyblockPluginRefactored plugin, WorldManagementService worldManagementService) {
         this.plugin = plugin;
-        this.serviceManager = serviceManager;
-        
-        plugin.getLogger().info("TeleportService initialized");
+        this.worldManagementService = worldManagementService;
     }
-    
+
     /**
      * Teleportiert einen Spieler zum Hub
      * @param player Spieler
-     * @return CompletableFuture mit Erfolg/Fehler
+     * @return CompletableFuture mit Erfolg
      */
     public CompletableFuture<Boolean> teleportToHub(Player player) {
-        if (player == null) {
-            return CompletableFuture.completedFuture(false);
-        }
-        
         return CompletableFuture.supplyAsync(() -> {
             try {
-                if (plugin.getSettingsConfig().isVerboseLogging()) {
-                    plugin.getLogger().info("Attempting to teleport player " + player.getName() + " to Hub...");
+                // Prüfe ob Spieler bereits im Hub ist
+                World currentWorld = player.getWorld();
+                if (currentWorld.getName().startsWith("hub")) {
+                    player.sendMessage("§eDu bist bereits im Hub!");
+                    return true;
                 }
-                
-                // Hole WorldResetService
-                WorldResetService worldResetService = serviceManager.getService(WorldResetService.class);
-                if (worldResetService == null) {
-                    plugin.getLogger().warning("WorldResetService not available for teleportation");
-                    return teleportToFallbackHub(player);
-                }
-                
-                // Hole aktuelle Live-Hub-Welt
-                World hub = worldResetService.getLiveWorld("hub");
-                if (hub != null) {
-                    return teleportToWorld(player, hub, "Hub");
-                }
-                
-                // Fallback: Standard-Hub
-                return teleportToFallbackHub(player);
-                
+
+                // Teleportiere zum Hub
+                return worldManagementService.teleportToHub(player).join();
             } catch (Exception e) {
-                plugin.getLogger().severe("Error teleporting player " + player.getName() + " to Hub: " + e.getMessage());
+                plugin.getLogger().severe("Error teleporting player to hub: " + e.getMessage());
                 return false;
             }
         });
     }
-    
-    /**
-     * Teleportiert einen Spieler zu einer spezifischen Welt
-     * @param player Spieler
-     * @param worldName Weltname
-     * @return CompletableFuture mit Erfolg/Fehler
-     */
-    public CompletableFuture<Boolean> teleportToWorld(Player player, String worldName) {
-        if (player == null || worldName == null) {
-            return CompletableFuture.completedFuture(false);
-        }
-        
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                World world = Bukkit.getWorld(worldName);
-                if (world == null) {
-                    plugin.getLogger().warning("World not found: " + worldName);
-                    return false;
-                }
-                
-                return teleportToWorld(player, world, worldName);
-                
-            } catch (Exception e) {
-                plugin.getLogger().severe("Error teleporting player " + player.getName() + " to world " + worldName + ": " + e.getMessage());
-                return false;
-            }
-        });
-    }
-    
-    /**
-     * Teleportiert einen Spieler zu einer Welt-Instanz
-     * @param player Spieler
-     * @param world Welt
-     * @param worldDisplayName Anzeigename der Welt
-     * @return true wenn erfolgreich
-     */
-    private boolean teleportToWorld(Player player, World world, String worldDisplayName) {
-        try {
-            Location spawnLocation = world.getSpawnLocation();
-            if (spawnLocation == null) {
-                plugin.getLogger().warning("Spawn location not found for world: " + world.getName());
-                return false;
-            }
-            
-            // Folia-kompatible Teleportation
-            if (isFoliaServer()) {
-                return teleportAsync(player, spawnLocation, worldDisplayName);
-            } else {
-                return teleportSync(player, spawnLocation, worldDisplayName);
-            }
-            
-        } catch (Exception e) {
-            plugin.getLogger().severe("Error teleporting to world " + world.getName() + ": " + e.getMessage());
-            return false;
-        }
-    }
-    
-    /**
-     * Asynchrone Teleportation (Folia-kompatibel)
-     * @param player Spieler
-     * @param location Ziel-Location
-     * @param worldDisplayName Anzeigename
-     * @return true wenn erfolgreich
-     */
-    private boolean teleportAsync(Player player, Location location, String worldDisplayName) {
-        try {
-            player.teleportAsync(location).thenAccept(success -> {
-                if (success) {
-                    player.sendMessage(Component.text("§aWillkommen in " + worldDisplayName + "!")
-                        .color(NamedTextColor.GREEN));
-                    
-                    if (plugin.getSettingsConfig().isVerboseLogging()) {
-                        plugin.getLogger().info("Successfully teleported " + player.getName() + " to " + worldDisplayName);
-                    }
-                } else {
-                    player.sendMessage(Component.text("§cTeleportation fehlgeschlagen!")
-                        .color(NamedTextColor.RED));
-                    
-                    plugin.getLogger().warning("Failed to teleport " + player.getName() + " to " + worldDisplayName);
-                }
-            });
-            
-            return true;
-            
-        } catch (Exception e) {
-            plugin.getLogger().severe("Error in async teleportation: " + e.getMessage());
-            return false;
-        }
-    }
-    
-    /**
-     * Synchrone Teleportation (normale Server)
-     * @param player Spieler
-     * @param location Ziel-Location
-     * @param worldDisplayName Anzeigename
-     * @return true wenn erfolgreich
-     */
-    private boolean teleportSync(Player player, Location location, String worldDisplayName) {
-        try {
-            boolean success = player.teleport(location);
-            
-            if (success) {
-                player.sendMessage(Component.text("§aWillkommen in " + worldDisplayName + "!")
-                    .color(NamedTextColor.GREEN));
-                
-                if (plugin.getSettingsConfig().isVerboseLogging()) {
-                    plugin.getLogger().info("Successfully teleported " + player.getName() + " to " + worldDisplayName);
-                }
-            } else {
-                player.sendMessage(Component.text("§cTeleportation fehlgeschlagen!")
-                    .color(NamedTextColor.RED));
-                
-                plugin.getLogger().warning("Failed to teleport " + player.getName() + " to " + worldDisplayName);
-            }
-            
-            return success;
-            
-        } catch (Exception e) {
-            plugin.getLogger().severe("Error in sync teleportation: " + e.getMessage());
-            return false;
-        }
-    }
-    
-    /**
-     * Fallback-Teleportation zum Hub
-     * @param player Spieler
-     * @return true wenn erfolgreich
-     */
-    private boolean teleportToFallbackHub(Player player) {
-        // Fallback: Hub-A oder Hub-B direkt
-        World hubA = Bukkit.getWorld("hub_a");
-        if (hubA != null) {
-            return teleportToWorld(player, hubA, "Hub (A)");
-        }
-        
-        World hubB = Bukkit.getWorld("hub_b");
-        if (hubB != null) {
-            return teleportToWorld(player, hubB, "Hub (B)");
-        }
-        
-        // Letzter Fallback: Standard-Welt
-        World world = Bukkit.getWorld("world");
-        if (world != null) {
-            player.sendMessage(Component.text("§eHub nicht verfügbar - Spawn in Standard-Welt")
-                .color(NamedTextColor.YELLOW));
-            return teleportToWorld(player, world, "Standard-Welt");
-        }
-        
-        player.sendMessage(Component.text("§cKeine Welt verfügbar!")
-            .color(NamedTextColor.RED));
-        plugin.getLogger().severe("No worlds available for teleportation!");
-        
-        return false;
-    }
-    
+
     /**
      * Teleportiert einen Spieler zu seiner privaten Insel
      * @param player Spieler
-     * @return CompletableFuture mit Erfolg/Fehler
+     * @return CompletableFuture mit Erfolg
      */
     public CompletableFuture<Boolean> teleportToPrivateIsland(Player player) {
-        if (player == null) {
-            return CompletableFuture.completedFuture(false);
-        }
-        
         return CompletableFuture.supplyAsync(() -> {
             try {
-                String islandWorldName = "island_" + player.getUniqueId().toString().replace("-", "");
-                return teleportToWorld(player, islandWorldName).join();
-                
+                // Prüfe ob Spieler bereits auf seiner Insel ist
+                World currentWorld = player.getWorld();
+                String islandName = "island_" + player.getUniqueId().toString();
+                if (currentWorld.getName().equals(islandName)) {
+                    player.sendMessage("§eDu bist bereits auf deiner Insel!");
+                    return true;
+                }
+
+                // Teleportiere zur privaten Insel
+                return worldManagementService.teleportToPrivateIsland(player).join();
             } catch (Exception e) {
-                plugin.getLogger().severe("Error teleporting player " + player.getName() + " to private island: " + e.getMessage());
+                plugin.getLogger().severe("Error teleporting player to private island: " + e.getMessage());
                 return false;
             }
         });
     }
-    
+
     /**
      * Teleportiert einen Spieler zu einer öffentlichen Welt
      * @param player Spieler
-     * @param worldAlias Welt-Alias
-     * @return CompletableFuture mit Erfolg/Fehler
+     * @param worldName Name der Welt
+     * @return CompletableFuture mit Erfolg
      */
-    public CompletableFuture<Boolean> teleportToPublicWorld(Player player, String worldAlias) {
-        if (player == null || worldAlias == null) {
-            return CompletableFuture.completedFuture(false);
-        }
-        
+    public CompletableFuture<Boolean> teleportToPublicWorld(Player player, String worldName) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                WorldResetService worldResetService = serviceManager.getService(WorldResetService.class);
-                if (worldResetService == null) {
-                    plugin.getLogger().warning("WorldResetService not available for public world teleportation");
-                    return false;
-                }
-                
-                World world = worldResetService.getLiveWorld(worldAlias);
+                // Hole die aktuelle live-Welt
+                World world = worldManagementService.getLiveWorld(worldName).join();
                 if (world == null) {
-                    plugin.getLogger().warning("Public world not found: " + worldAlias);
+                    player.sendMessage("§cDie Welt " + worldName + " ist nicht verfügbar!");
                     return false;
                 }
-                
-                return teleportToWorld(player, world, worldAlias);
-                
+
+                // Teleportiere zur Welt
+                player.teleport(world.getSpawnLocation());
+                player.sendMessage("§aDu wurdest zu " + worldName + " teleportiert!");
+                return true;
             } catch (Exception e) {
-                plugin.getLogger().severe("Error teleporting player " + player.getName() + " to public world " + worldAlias + ": " + e.getMessage());
+                plugin.getLogger().severe("Error teleporting player to public world " + worldName + ": " + e.getMessage());
                 return false;
             }
         });
     }
-    
+
     /**
-     * Prüft ob der Server Folia verwendet
-     * @return true wenn Folia
+     * Teleportiert einen Spieler zu einem anderen Spieler
+     * @param player Spieler der teleportiert wird
+     * @param targetPlayer Ziel-Spieler
+     * @return CompletableFuture mit Erfolg
      */
-    private boolean isFoliaServer() {
-        try {
-            Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
+    public CompletableFuture<Boolean> teleportToPlayer(Player player, Player targetPlayer) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                // Prüfe ob Ziel-Spieler online ist
+                if (targetPlayer == null || !targetPlayer.isOnline()) {
+                    player.sendMessage("§cDer Spieler ist nicht online!");
+                    return false;
+                }
+
+                // Teleportiere zum Spieler
+                player.teleport(targetPlayer.getLocation());
+                player.sendMessage("§aDu wurdest zu " + targetPlayer.getName() + " teleportiert!");
+                return true;
+            } catch (Exception e) {
+                plugin.getLogger().severe("Error teleporting player to another player: " + e.getMessage());
+                return false;
+            }
+        });
     }
-    
+
     /**
-     * Gibt Service-Statistiken zurück
-     * @return Service-Statistiken
+     * Teleportiert einen Spieler zu einer spezifischen Location
+     * @param player Spieler
+     * @param location Ziel-Location
+     * @return CompletableFuture mit Erfolg
+     */
+    public CompletableFuture<Boolean> teleportToLocation(Player player, Location location) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                if (location == null || location.getWorld() == null) {
+                    player.sendMessage("§cUngültige Ziel-Location!");
+                    return false;
+                }
+
+                // Teleportiere zur Location
+                player.teleport(location);
+                return true;
+            } catch (Exception e) {
+                plugin.getLogger().severe("Error teleporting player to location: " + e.getMessage());
+                return false;
+            }
+        });
+    }
+
+    /**
+     * Teleportiert einen Spieler mit Verzögerung (für /hub, /island etc.)
+     * @param player Spieler
+     * @param destination Ziel (hub, island, world)
+     * @param delay Verzögerung in Sekunden
+     * @return CompletableFuture mit Erfolg
+     */
+    public CompletableFuture<Boolean> teleportWithDelay(Player player, String destination, int delay) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                // Prüfe ob Spieler bereits teleportiert wird
+                if (isPlayerTeleporting(player)) {
+                    player.sendMessage("§cDu wirst bereits teleportiert!");
+                    return false;
+                }
+
+                // Markiere Spieler als teleportierend
+                markPlayerTeleporting(player, true);
+
+                // Zeige Countdown
+                player.sendMessage("§eTeleportation in " + delay + " Sekunden...");
+                
+                // Warte die Verzögerung ab
+                Thread.sleep(delay * 1000);
+
+                // Prüfe ob Spieler noch online ist
+                if (!player.isOnline()) {
+                    markPlayerTeleporting(player, false);
+                    return false;
+                }
+
+                // Führe Teleportation durch
+                boolean success = false;
+                switch (destination.toLowerCase()) {
+                    case "hub":
+                        success = teleportToHub(player).join();
+                        break;
+                    case "island":
+                        success = teleportToPrivateIsland(player).join();
+                        break;
+                    default:
+                        success = teleportToPublicWorld(player, destination).join();
+                        break;
+                }
+
+                // Markiere Spieler als nicht mehr teleportierend
+                markPlayerTeleporting(player, false);
+
+                if (success) {
+                    player.sendMessage("§aTeleportation erfolgreich!");
+                } else {
+                    player.sendMessage("§cTeleportation fehlgeschlagen!");
+                }
+
+                return success;
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                markPlayerTeleporting(player, false);
+                return false;
+            } catch (Exception e) {
+                plugin.getLogger().severe("Error in delayed teleportation: " + e.getMessage());
+                markPlayerTeleporting(player, false);
+                return false;
+            }
+        });
+    }
+
+    /**
+     * Prüft ob ein Spieler gerade teleportiert wird
+     * @param player Spieler
+     * @return true wenn teleportierend
+     */
+    private boolean isPlayerTeleporting(Player player) {
+        // Einfache Implementierung - in einer echten Anwendung würde man das in einem Cache speichern
+        return false;
+    }
+
+    /**
+     * Markiert einen Spieler als teleportierend oder nicht
+     * @param player Spieler
+     * @param teleporting true wenn teleportierend
+     */
+    private void markPlayerTeleporting(Player player, boolean teleporting) {
+        // Einfache Implementierung - in einer echten Anwendung würde man das in einem Cache speichern
+    }
+
+    /**
+     * Teleportiert alle Spieler aus einer Welt zum Hub
+     * @param world Welt
+     * @return CompletableFuture mit Anzahl der teleportierten Spieler
+     */
+    public CompletableFuture<Integer> teleportAllPlayersToHub(World world) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                int teleportedCount = 0;
+                World hubWorld = worldManagementService.getHubWorld().join();
+                
+                if (hubWorld == null) {
+                    plugin.getLogger().warning("Hub world not found, cannot teleport players");
+                    return 0;
+                }
+
+                for (Player player : world.getPlayers()) {
+                    try {
+                        player.teleport(hubWorld.getSpawnLocation());
+                        player.sendMessage("§eDu wurdest zum Hub teleportiert!");
+                        teleportedCount++;
+                    } catch (Exception e) {
+                        plugin.getLogger().warning("Error teleporting player " + player.getName() + ": " + e.getMessage());
+                    }
+                }
+
+                return teleportedCount;
+            } catch (Exception e) {
+                plugin.getLogger().severe("Error teleporting all players to hub: " + e.getMessage());
+                return 0;
+            }
+        });
+    }
+
+    /**
+     * Gibt Statistiken über Teleportationen zurück
+     * @return Statistiken als String
      */
     public String getServiceStats() {
-        return String.format("TeleportService Stats - Folia Compatible: %s, ServiceManager Available: %s",
-                           isFoliaServer(), serviceManager != null);
-    }
-    
-    /**
-     * Schließt den Service
-     */
-    public void shutdown() {
-        plugin.getLogger().info("TeleportService shutdown completed");
+        return "§6Teleport Service Statistics:\n" +
+               "§7Service Status: §aActive\n" +
+               "§7World Management Service: §a" + (worldManagementService != null ? "Connected" : "Disconnected");
     }
 }

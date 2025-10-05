@@ -1,136 +1,104 @@
 package de.noctivag.skyblock.skyblock;
+
 import java.util.UUID;
-import org.bukkit.inventory.ItemStack;
+import java.util.Map;
+import java.util.HashMap;
 
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-
-import java.io.File;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+/**
+ * Skyblock Profile - Player's main profile data
+ */
 public class SkyblockProfile {
-    private static final Logger LOGGER = Logger.getLogger("BasicsPlugin");
-    private final UUID uuid;
-    private final String playerName;
-    private final LocalDateTime createdAt;
-    private LocalDateTime lastPlayed;
-    private int playtime; // in minutes
+    
+    private final UUID playerId;
+    private String playerName;
+    private long firstJoin;
+    private long lastLogin;
+    private long totalPlayTime;
+    private int level;
     private double coins;
-    private int islandLevel;
-    private boolean firstJoin;
-
-    public SkyblockProfile(UUID uuid, String playerName) {
-        this.uuid = uuid;
-        this.playerName = playerName;
-        this.createdAt = LocalDateTime.now();
-        this.lastPlayed = LocalDateTime.now();
-        this.playtime = 0;
-        this.coins = 1000.0; // Starting coins
-        this.islandLevel = 1;
-        this.firstJoin = true;
+    private Map<String, Integer> skills;
+    private Map<String, Integer> collections;
+    
+    public SkyblockProfile(UUID playerId) {
+        this.playerId = playerId;
+        this.firstJoin = System.currentTimeMillis();
+        this.lastLogin = System.currentTimeMillis();
+        this.totalPlayTime = 0;
+        this.level = 1;
+        this.coins = 0.0;
+        this.skills = new HashMap<>();
+        this.collections = new HashMap<>();
+        
+        // Initialize default skills
+        initializeDefaultSkills();
     }
-
-    public void updateLastPlayed() {
-        this.lastPlayed = LocalDateTime.now();
+    
+    /**
+     * Initialize default skills
+     */
+    private void initializeDefaultSkills() {
+        skills.put("mining", 0);
+        skills.put("foraging", 0);
+        skills.put("enchanting", 0);
+        skills.put("farming", 0);
+        skills.put("combat", 0);
+        skills.put("fishing", 0);
+        skills.put("alchemy", 0);
+        skills.put("taming", 0);
     }
-
-    public void addPlaytime(int minutes) {
-        this.playtime += minutes;
-    }
-
-    public void addCoins(double amount) {
-        this.coins += amount;
-    }
-
-    public boolean removeCoins(double amount) {
-        if (this.coins >= amount) {
-            this.coins -= amount;
-            return true;
-        }
-        return false;
-    }
-
-    public void levelUpIsland() {
-        this.islandLevel++;
-    }
-
-    public void setFirstJoin(boolean firstJoin) {
-        this.firstJoin = firstJoin;
-    }
-
-    // Getters
-    public UUID getUuid() { return uuid; }
+    
+    // Getters and setters
+    public UUID getPlayerId() { return playerId; }
+    
     public String getPlayerName() { return playerName; }
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public LocalDateTime getLastPlayed() { return lastPlayed; }
-    public int getPlaytime() { return playtime; }
+    public void setPlayerName(String playerName) { this.playerName = playerName; }
+    
+    public long getFirstJoin() { return firstJoin; }
+    public void setFirstJoin(long firstJoin) { this.firstJoin = firstJoin; }
+    
+    public long getLastLogin() { return lastLogin; }
+    public void setLastLogin(long lastLogin) { this.lastLogin = lastLogin; }
+    
+    public long getTotalPlayTime() { return totalPlayTime; }
+    public void setTotalPlayTime(long totalPlayTime) { this.totalPlayTime = totalPlayTime; }
+    
+    public int getLevel() { return level; }
+    public void setLevel(int level) { this.level = level; }
+    
     public double getCoins() { return coins; }
-    public int getIslandLevel() { return islandLevel; }
-    public boolean isFirstJoin() { return firstJoin; }
-
-    public void save() {
-        try {
-            File dir = new File("plugins/BasicsPlugin/skyblock/profiles/");
-            if (!dir.exists()) {
-                boolean ok = dir.mkdirs();
-                if (!ok && !dir.exists()) {
-                    LOGGER.warning("Could not create profiles directory: " + dir.getAbsolutePath());
-                }
-            }
-
-            File file = new File(dir, uuid.toString() + ".yml");
-
-            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-            config.set("playerName", playerName);
-            config.set("createdAt", createdAt.toString());
-            config.set("lastPlayed", lastPlayed != null ? lastPlayed.toString() : LocalDateTime.now().toString());
-            config.set("playtime", playtime);
-            config.set("coins", coins);
-            config.set("islandLevel", islandLevel);
-            config.set("firstJoin", firstJoin);
-
-            config.save(file);
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Failed to save SkyblockProfile for " + uuid, e);
-        }
+    public void setCoins(double coins) { this.coins = coins; }
+    
+    public Map<String, Integer> getSkills() { return skills; }
+    public void setSkills(Map<String, Integer> skills) { this.skills = skills; }
+    
+    public Map<String, Integer> getCollections() { return collections; }
+    public void setCollections(Map<String, Integer> collections) { this.collections = collections; }
+    
+    /**
+     * Get skill level
+     */
+    public int getSkillLevel(String skillName) {
+        return skills.getOrDefault(skillName, 0);
     }
-
-    public static SkyblockProfile load(UUID uuid) {
-        try {
-            File file = new File("plugins/BasicsPlugin/skyblock/profiles/" + uuid.toString() + ".yml");
-            if (!file.exists()) return null;
-
-            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-            String name = config.getString("playerName");
-            if (name == null) name = "Unknown";
-
-            SkyblockProfile profile = new SkyblockProfile(uuid, name);
-
-            String lastPlayedStr = config.getString("lastPlayed");
-            if (lastPlayedStr != null && !lastPlayedStr.isEmpty()) {
-                try {
-                    profile.lastPlayed = LocalDateTime.parse(lastPlayedStr);
-                } catch (Exception ex) {
-                    LOGGER.log(Level.WARNING, "Invalid lastPlayed format for " + uuid + ": " + lastPlayedStr, ex);
-                    profile.lastPlayed = profile.createdAt;
-                }
-            } else {
-                profile.lastPlayed = profile.createdAt;
-            }
-
-            profile.playtime = config.getInt("playtime", 0);
-            profile.coins = config.getDouble("coins", 1000.0);
-            profile.islandLevel = config.getInt("islandLevel", 1);
-            profile.firstJoin = config.getBoolean("firstJoin", true);
-
-            return profile;
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Failed to load SkyblockProfile for " + uuid, e);
-            return null;
-        }
+    
+    /**
+     * Set skill level
+     */
+    public void setSkillLevel(String skillName, int level) {
+        skills.put(skillName, level);
+    }
+    
+    /**
+     * Get collection count
+     */
+    public int getCollectionCount(String itemName) {
+        return collections.getOrDefault(itemName, 0);
+    }
+    
+    /**
+     * Set collection count
+     */
+    public void setCollectionCount(String itemName, int count) {
+        collections.put(itemName, count);
     }
 }

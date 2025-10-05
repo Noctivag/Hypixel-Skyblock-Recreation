@@ -1,6 +1,6 @@
 package de.noctivag.skyblock.config;
 
-import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPluginRefactored;
 import org.bukkit.configuration.file.FileConfiguration;
 
 /**
@@ -9,7 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
  */
 public class SettingsConfig {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPluginRefactored plugin;
     private FileConfiguration config;
     
     // Allgemeine Einstellungen
@@ -27,12 +27,19 @@ public class SettingsConfig {
     private boolean debugMode;
     private boolean verboseLogging;
     
+    // Feature-Einstellungen
+    private boolean magicalPowerEnabled;
+    private boolean bazaarEnabled;
+    private boolean slayerEnabled;
+    private boolean dungeonsEnabled;
+    private boolean customMobsEnabled;
+    
     // Welt-Einstellungen
     private String defaultHubWorld;
     private int worldResetInterval;
     private boolean autoWorldReset;
     
-    public SettingsConfig(SkyblockPlugin plugin) {
+    public SettingsConfig(SkyblockPluginRefactored plugin) {
         this.plugin = plugin;
     }
     
@@ -56,6 +63,13 @@ public class SettingsConfig {
         // Debug-Einstellungen
         this.debugMode = config.getBoolean("debug.enabled", false);
         this.verboseLogging = config.getBoolean("debug.verbose-logging", false);
+        
+        // Feature-Einstellungen
+        this.magicalPowerEnabled = config.getBoolean("features.magical-power.enabled", true);
+        this.bazaarEnabled = config.getBoolean("features.bazaar.enabled", true);
+        this.slayerEnabled = config.getBoolean("features.slayer.enabled", true);
+        this.dungeonsEnabled = config.getBoolean("features.dungeons.enabled", true);
+        this.customMobsEnabled = config.getBoolean("features.custom-mobs.enabled", true);
         
         // Welt-Einstellungen
         this.defaultHubWorld = config.getString("worlds.default-hub", "hub_a");
@@ -143,6 +157,31 @@ public class SettingsConfig {
     
     public boolean isAutoWorldReset() {
         return autoWorldReset;
+    }
+    
+    // Feature-Getter
+    public boolean isMagicalPowerEnabled() {
+        return magicalPowerEnabled;
+    }
+    
+    public boolean isBazaarEnabled() {
+        return bazaarEnabled;
+    }
+    
+    public boolean isSlayerEnabled() {
+        return slayerEnabled;
+    }
+    
+    public boolean isDungeonsEnabled() {
+        return dungeonsEnabled;
+    }
+    
+    public boolean isCustomMobsEnabled() {
+        return customMobsEnabled;
+    }
+    
+    public boolean isRollingRestartEnabled() {
+        return rollingRestartSystemEnabled;
     }
     
     // Setter-Methoden für dynamische Änderungen

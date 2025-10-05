@@ -1,10 +1,7 @@
 package de.noctivag.skyblock.commands;
 import net.kyori.adventure.text.Component;
 
-import de.noctivag.skyblock.SkyblockPlugin;
-import de.noctivag.skyblock.SkyblockPlugin;
-
-import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPluginRefactored;
 import de.noctivag.skyblock.gui.MiningGUI;
 import de.noctivag.skyblock.skyblock.MiningAreaSystem;
 import de.noctivag.skyblock.skyblock.SkyblockManager;
@@ -22,9 +19,9 @@ import java.util.Map;
 import org.bukkit.Location;
 
 public class MiningCommand implements CommandExecutor, TabCompleter {
-    private final SkyblockPlugin SkyblockPlugin;
+    private final SkyblockPluginRefactored SkyblockPlugin;
 
-    public MiningCommand(SkyblockPlugin SkyblockPlugin) {
+    public MiningCommand(SkyblockPluginRefactored SkyblockPlugin) {
         this.SkyblockPlugin = SkyblockPlugin;
     }
 

@@ -1,12 +1,9 @@
 package de.noctivag.skyblock.commands;
 
 import java.util.UUID;
-import de.noctivag.skyblock.SkyblockPlugin;
-import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPluginRefactored;
 import org.bukkit.inventory.ItemStack;
-
-import de.noctivag.skyblock.SkyblockPlugin;
-import de.noctivag.skyblock.database.MultiServerDatabaseManager;
+import de.noctivag.skyblock.data.DatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -37,13 +34,13 @@ import net.kyori.adventure.text.Component;
  * - Command Analytics
  */
 public class AdvancedCommandSystem implements CommandExecutor, TabCompleter {
-    private final SkyblockPlugin SkyblockPlugin;
-    private final MultiServerDatabaseManager databaseManager;
+    private final SkyblockPluginRefactored SkyblockPlugin;
+    private final DatabaseManager databaseManager;
     private final Map<UUID, PlayerCommands> playerCommands = new ConcurrentHashMap<>();
     private final Map<CommandType, CommandConfig> commandConfigs = new HashMap<>();
     private final Map<UUID, BukkitTask> commandTasks = new ConcurrentHashMap<>();
 
-    public AdvancedCommandSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+    public AdvancedCommandSystem(SkyblockPluginRefactored SkyblockPlugin, DatabaseManager databaseManager) {
         this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeCommandConfigs();

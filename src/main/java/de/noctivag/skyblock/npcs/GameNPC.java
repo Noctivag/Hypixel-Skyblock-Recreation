@@ -43,7 +43,7 @@ public class GameNPC {
     
     private void spawn() {
         entity = (Villager) location.getWorld().spawnEntity(location, EntityType.VILLAGER);
-        entity.setCustomName(displayName);
+        entity.customName(net.kyori.adventure.text.Component.text(displayName));
         entity.setCustomNameVisible(true);
         entity.setAI(false);
         entity.setInvulnerable(true);
@@ -144,7 +144,7 @@ public class GameNPC {
     public void update() {
         // Update NPC state
         if (entity != null && !entity.isDead()) {
-            entity.setCustomName(displayName);
+            entity.customName(net.kyori.adventure.text.Component.text(displayName));
         }
     }
     
@@ -160,7 +160,7 @@ public class GameNPC {
     public void updateDisplayName(String newDisplayName) {
         this.displayName = newDisplayName;
         if (entity != null && !entity.isDead()) {
-            entity.setCustomName(newDisplayName);
+            entity.customName(net.kyori.adventure.text.Component.text(newDisplayName));
         }
     }
     

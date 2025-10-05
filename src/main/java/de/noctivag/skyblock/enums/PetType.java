@@ -5,7 +5,7 @@ import org.bukkit.Material;
 public enum PetType {
     // Legendary Pets
     ENDER_DRAGON(Material.DRAGON_HEAD, "§dEnder Dragon", "§7Das stärkste Pet für reinen Schaden"),
-    ELEPHANT(Material.ELEPHANT_SPAWN_EGG, "§6Elephant", "§7Das beste Pet für das Farmen"),
+    ELEPHANT(Material.BONE, "§6Elephant", "§7Das beste Pet für das Farmen"),
     GRIFFIN(Material.PHANTOM_MEMBRANE, "§bGriffin", "§7Nützlich während Mythological Ritual Events"),
     
     // Epic Pets

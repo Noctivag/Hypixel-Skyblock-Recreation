@@ -1,5 +1,9 @@
 package de.noctivag.skyblock.models;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -18,11 +22,12 @@ public class PlayerProfile {
     private String currentWorld;
     private boolean isOnline;
     private AccessoryBag accessoryBag;
-    private PowerStone activePowerStone;
+    private de.noctivag.skyblock.enums.PowerStone activePowerStone;
     private SlayerQuest activeSlayerQuest;
     private Map<String, Integer> slayerXP;
-    private DungeonClass dungeonClass;
+    private de.noctivag.skyblock.enums.DungeonClass dungeonClass;
     private PetBag petBag;
+    private List<Minion> minions;
     
     public PlayerProfile(UUID uuid) {
         this.uuid = uuid;
@@ -34,11 +39,12 @@ public class PlayerProfile {
         this.currentWorld = "hub_a";
         this.isOnline = false;
         this.accessoryBag = new AccessoryBag();
-        this.activePowerStone = PowerStone.BERSERKER; // Standard Power Stone
+        this.activePowerStone = de.noctivag.skyblock.enums.PowerStone.BERSERKER; // Standard Power Stone
         this.activeSlayerQuest = null;
         this.slayerXP = new HashMap<>();
-        this.dungeonClass = DungeonClass.ARCHER; // Standard-Klasse
+        this.dungeonClass = de.noctivag.skyblock.enums.DungeonClass.ARCHER; // Standard-Klasse
         this.petBag = new PetBag();
+        this.minions = new ArrayList<>();
     }
     
     public PlayerProfile(UUID uuid, String playerName) {
@@ -91,6 +97,17 @@ public class PlayerProfile {
     public void setLastLogin(long lastLogin) {
         this.lastLogin = lastLogin;
     }
+
+    /**
+     * Setzt den letzten Logout-Zeitpunkt
+     * @param lastLogout Zeitstempel des letzten Logouts
+     */
+    public void setLastLogout(long lastLogout) {
+        // Berechne die Spielzeit basierend auf dem Logout
+        if (this.lastLogin > 0) {
+            this.playTime += (lastLogout - this.lastLogin);
+        }
+    }
     
     public void setLastSave(long lastSave) {
         this.lastSave = lastSave;
@@ -124,11 +141,11 @@ public class PlayerProfile {
         this.accessoryBag = accessoryBag;
     }
     
-    public PowerStone getActivePowerStone() {
+    public de.noctivag.skyblock.enums.PowerStone getActivePowerStone() {
         return activePowerStone;
     }
     
-    public void setActivePowerStone(PowerStone activePowerStone) {
+    public void setActivePowerStone(de.noctivag.skyblock.enums.PowerStone activePowerStone) {
         this.activePowerStone = activePowerStone;
     }
     
@@ -156,11 +173,11 @@ public class PlayerProfile {
         slayerXP.put(slayerType, slayerXP.getOrDefault(slayerType, 0) + xp);
     }
     
-    public DungeonClass getDungeonClass() {
+    public de.noctivag.skyblock.enums.DungeonClass getDungeonClass() {
         return dungeonClass;
     }
     
-    public void setDungeonClass(DungeonClass dungeonClass) {
+    public void setDungeonClass(de.noctivag.skyblock.enums.DungeonClass dungeonClass) {
         this.dungeonClass = dungeonClass;
     }
     
@@ -170,6 +187,57 @@ public class PlayerProfile {
     
     public void setPetBag(PetBag petBag) {
         this.petBag = petBag;
+    }
+    
+    public List<Minion> getMinions() {
+        return minions;
+    }
+    
+    public void setMinions(List<Minion> minions) {
+        this.minions = minions;
+    }
+    
+    public void addMinion(Minion minion) {
+        this.minions.add(minion);
+    }
+    
+    public void removeMinion(UUID minionId) {
+        this.minions.removeIf(minion -> minion.getMinionId().equals(minionId));
+    }
+    
+    // Collection methods
+    private Map<de.noctivag.skyblock.enums.CollectionType, Collection> collections = new HashMap<>();
+    
+    public Collection getCollection(de.noctivag.skyblock.enums.CollectionType collectionType) {
+        return collections.computeIfAbsent(collectionType, Collection::new);
+    }
+    
+    public Map<de.noctivag.skyblock.enums.CollectionType, Collection> getCollections() {
+        return new HashMap<>(collections);
+    }
+    
+    // Recipe methods
+    private List<Recipe> unlockedRecipes = new ArrayList<>();
+    
+    public List<Recipe> getUnlockedRecipes() {
+        return new ArrayList<>(unlockedRecipes);
+    }
+    
+    public void addUnlockedRecipe(Recipe recipe) {
+        if (!unlockedRecipes.contains(recipe)) {
+            unlockedRecipes.add(recipe);
+        }
+    }
+    
+    // Skill methods
+    private Map<String, Integer> skillLevels = new HashMap<>();
+    
+    public int getSkillLevel(String skillName) {
+        return skillLevels.getOrDefault(skillName, 1);
+    }
+    
+    public void setSkillLevel(String skillName, int level) {
+        skillLevels.put(skillName, level);
     }
     
     // Utility-Methoden
