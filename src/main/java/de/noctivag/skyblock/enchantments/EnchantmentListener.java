@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.enchantments;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -25,20 +28,21 @@ import org.bukkit.scheduler.BukkitRunnable;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.Random;
+import net.kyori.adventure.text.Component;
 
 /**
  * Enchantment Listener - Handles enchantment effects and GUI interactions
  */
 public class EnchantmentListener implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CustomEnchantmentSystem enchantmentSystem;
     private final EnchantmentGUI enchantmentGUI;
     private final Random random;
     
-    public EnchantmentListener(SkyblockPlugin plugin, CustomEnchantmentSystem enchantmentSystem, 
+    public EnchantmentListener(SkyblockPlugin SkyblockPlugin, CustomEnchantmentSystem enchantmentSystem, 
                               EnchantmentGUI enchantmentGUI) {
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.enchantmentSystem = enchantmentSystem;
         this.enchantmentGUI = enchantmentGUI;
         this.random = new Random();
@@ -143,7 +147,7 @@ public class EnchantmentListener implements Listener {
                 }
             }
             
-            player.sendMessage("§eThunderlord strikes!");
+            player.sendMessage(Component.text("§eThunderlord strikes!"));
             target.getWorld().playSound(target.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 1.0f, 1.0f);
         }
     }
@@ -211,7 +215,7 @@ public class EnchantmentListener implements Listener {
         if (meta == null) return;
         
         // Check for category buttons
-        NamespacedKey categoryKey = new NamespacedKey(plugin, "category");
+        NamespacedKey categoryKey = new NamespacedKey(SkyblockPlugin, "category");
         if (meta.getPersistentDataContainer().has(categoryKey, PersistentDataType.STRING)) {
             String category = meta.getPersistentDataContainer().get(categoryKey, PersistentDataType.STRING);
             enchantmentGUI.openEnchantmentCategory(player, category);
@@ -219,7 +223,7 @@ public class EnchantmentListener implements Listener {
         }
         
         // Check for enchantment books
-        NamespacedKey bookKey = new NamespacedKey(plugin, "enchantment_book");
+        NamespacedKey bookKey = new NamespacedKey(SkyblockPlugin, "enchantment_book");
         if (meta.getPersistentDataContainer().has(bookKey, PersistentDataType.STRING)) {
             String bookData = meta.getPersistentDataContainer().get(bookKey, PersistentDataType.STRING);
             handleEnchantmentBookPurchase(player, bookData);
@@ -227,7 +231,7 @@ public class EnchantmentListener implements Listener {
         }
         
         // Check for action buttons
-        NamespacedKey buttonKey = new NamespacedKey(plugin, "button_action");
+        NamespacedKey buttonKey = new NamespacedKey(SkyblockPlugin, "button_action");
         if (meta.getPersistentDataContainer().has(buttonKey, PersistentDataType.STRING)) {
             String action = meta.getPersistentDataContainer().get(buttonKey, PersistentDataType.STRING);
             handleButtonAction(player, action);
@@ -235,7 +239,7 @@ public class EnchantmentListener implements Listener {
         }
         
         // Check for enchantment items
-        NamespacedKey enchantmentKey = new NamespacedKey(plugin, "enchantment_item");
+        NamespacedKey enchantmentKey = new NamespacedKey(SkyblockPlugin, "enchantment_item");
         if (meta.getPersistentDataContainer().has(enchantmentKey, PersistentDataType.STRING)) {
             String enchantmentName = meta.getPersistentDataContainer().get(enchantmentKey, PersistentDataType.STRING);
             showEnchantmentLevels(player, enchantmentName);
@@ -261,7 +265,7 @@ public class EnchantmentListener implements Listener {
             player.sendMessage("§aPurchased " + enchantmentName + " " + level + " for " + 
                              String.format("%.0f", cost) + " coins!");
         } else {
-            player.sendMessage("§cYou don't have enough coins!");
+            player.sendMessage(Component.text("§cYou don't have enough coins!"));
         }
     }
     
@@ -272,13 +276,13 @@ public class EnchantmentListener implements Listener {
                 ItemStack item = player.getInventory().getItemInMainHand();
                 if (item != null && !item.getType().isAir()) {
                     clearItemEnchantments(item);
-                    player.sendMessage("§aRemoved all enchantments from your item!");
+                    player.sendMessage(Component.text("§aRemoved all enchantments from your item!"));
                 } else {
-                    player.sendMessage("§cYou must hold an item to remove enchantments!");
+                    player.sendMessage(Component.text("§cYou must hold an item to remove enchantments!"));
                 }
             }
             case "apply" -> {
-                player.sendMessage("§eDrag enchantment books onto items to apply them!");
+                player.sendMessage(Component.text("§eDrag enchantment books onto items to apply them!"));
             }
         }
     }

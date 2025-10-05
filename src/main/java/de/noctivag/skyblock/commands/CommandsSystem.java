@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.commands;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -16,24 +21,25 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Commands System - Hypixel Skyblock Style
  */
 public class CommandsSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerCommandsData> playerCommandsData = new ConcurrentHashMap<>();
     private final Map<CommandType, CommandConfig> commandConfigs = new HashMap<>();
     private final Map<UUID, BukkitTask> commandTasks = new ConcurrentHashMap<>();
     
-    public CommandsSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public CommandsSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeCommandConfigs();
         startCommandsUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeCommandConfigs() {
@@ -71,7 +77,7 @@ public class CommandsSystem implements Listener {
                     commandsData.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L * 60L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L * 60L);
     }
     
     @EventHandler
@@ -92,22 +98,22 @@ public class CommandsSystem implements Listener {
     }
     
     public void openCommandsGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§b§lCommands");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§b§lCommands"));
         
         addGUIItem(gui, 10, Material.COMPASS, "§b§lSkyBlock Commands", "§7Access SkyBlock commands.");
         addGUIItem(gui, 11, Material.GOLD_INGOT, "§6§lEconomy Commands", "§7Access economy commands.");
         addGUIItem(gui, 12, Material.PLAYER_HEAD, "§a§lSocial Commands", "§7Access social commands.");
         
         player.openInventory(gui);
-        player.sendMessage("§aCommands GUI geöffnet!");
+        player.sendMessage(Component.text("§aCommands GUI geöffnet!"));
     }
     
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String description) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(name);
-            meta.setLore(Arrays.asList(description));
+            meta.displayName(Component.text(name));
+            meta.lore(Arrays.asList(description).stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         gui.setItem(slot, item);
@@ -207,11 +213,11 @@ public class CommandsSystem implements Listener {
         
         public PlayerCommandsData(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void addCommand(CommandType type) {

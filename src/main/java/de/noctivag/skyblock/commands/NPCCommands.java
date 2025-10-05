@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.commands;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.gui.NPCManagementGUI;
 import de.noctivag.skyblock.npcs.AdvancedNPCSystem;
 import org.bukkit.command.Command;
@@ -15,10 +19,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class NPCCommands implements CommandExecutor, TabCompleter {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public NPCCommands(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public NPCCommands(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     @Override
@@ -29,7 +33,7 @@ public class NPCCommands implements CommandExecutor, TabCompleter {
         }
 
         if (!player.hasPermission("basicsplugin.npcs")) {
-            player.sendMessage("§cYou don't have permission to use this command!");
+            player.sendMessage(Component.text("§cYou don't have permission to use this command!"));
             return true;
         }
 
@@ -44,14 +48,14 @@ public class NPCCommands implements CommandExecutor, TabCompleter {
     private void handleNPCsCommand(Player player, String[] args) {
         if (args.length == 0) {
             // Open NPC Management GUI
-            new NPCManagementGUI(plugin, player).open(player);
+            new NPCManagementGUI(SkyblockPlugin, player).open(player);
             return;
         }
 
         switch (args[0].toLowerCase()) {
             case "list" -> {
-                AdvancedNPCSystem npcSystem = plugin.getAdvancedNPCSystem();
-                player.sendMessage("§6=== Active NPCs ===");
+                AdvancedNPCSystem npcSystem = SkyblockPlugin.getAdvancedNPCSystem();
+                player.sendMessage(Component.text("§6=== Active NPCs ==="));
                 npcSystem.getActiveNPCs().forEach((id, npc) -> {
                     player.sendMessage("§7- §e" + npc.getDisplayName() + " §7(ID: " + id + ")");
                 });
@@ -59,50 +63,50 @@ public class NPCCommands implements CommandExecutor, TabCompleter {
             case "reload" -> {
                 if (player.hasPermission("basicsplugin.admin")) {
                     // Reload NPCs from database
-                    player.sendMessage("§aNPCs reloaded from database!");
+                    player.sendMessage(Component.text("§aNPCs reloaded from database!"));
                 } else {
-                    player.sendMessage("§cYou don't have permission to reload NPCs!");
+                    player.sendMessage(Component.text("§cYou don't have permission to reload NPCs!"));
                 }
             }
             case "remove" -> {
                 if (args.length < 2) {
-                    player.sendMessage("§cUsage: /npcs remove <npc_id>");
+                    player.sendMessage(Component.text("§cUsage: /npcs remove <npc_id>"));
                     return;
                 }
                 
                 if (player.hasPermission("basicsplugin.admin")) {
-                    AdvancedNPCSystem npcSystem = plugin.getAdvancedNPCSystem();
+                    AdvancedNPCSystem npcSystem = SkyblockPlugin.getAdvancedNPCSystem();
                     npcSystem.removeNPC(args[1]);
-                    player.sendMessage("§aNPC removed successfully!");
+                    player.sendMessage(Component.text("§aNPC removed successfully!"));
                 } else {
-                    player.sendMessage("§cYou don't have permission to remove NPCs!");
+                    player.sendMessage(Component.text("§cYou don't have permission to remove NPCs!"));
                 }
             }
             case "help" -> {
-                player.sendMessage("§6=== NPC Commands ===");
-                player.sendMessage("§7/npcs - Open NPC Management GUI");
-                player.sendMessage("§7/npcs list - List all active NPCs");
-                player.sendMessage("§7/npcs reload - Reload NPCs from database");
-                player.sendMessage("§7/npcs remove <id> - Remove specific NPC");
-                player.sendMessage("§7/npctool - Get NPC creation tool");
+                player.sendMessage(Component.text("§6=== NPC Commands ==="));
+                player.sendMessage(Component.text("§7/npcs - Open NPC Management GUI"));
+                player.sendMessage(Component.text("§7/npcs list - List all active NPCs"));
+                player.sendMessage(Component.text("§7/npcs reload - Reload NPCs from database"));
+                player.sendMessage(Component.text("§7/npcs remove <id> - Remove specific NPC"));
+                player.sendMessage(Component.text("§7/npctool - Get NPC creation tool"));
             }
             default -> {
-                player.sendMessage("§cUnknown subcommand! Use /npcs help for help.");
+                player.sendMessage(Component.text("§cUnknown subcommand! Use /npcs help for help."));
             }
         }
     }
 
     private void handleNPCToolCommand(Player player, String[] args) {
         if (!player.hasPermission("basicsplugin.npctool")) {
-            player.sendMessage("§cYou don't have permission to use this command!");
+            player.sendMessage(Component.text("§cYou don't have permission to use this command!"));
             return;
         }
 
-        AdvancedNPCSystem npcSystem = plugin.getAdvancedNPCSystem();
+        AdvancedNPCSystem npcSystem = SkyblockPlugin.getAdvancedNPCSystem();
         player.getInventory().addItem(npcSystem.createNPCTool());
-        player.sendMessage("§aNPC Tool added to your inventory!");
-        player.sendMessage("§7Right-click on a block to place an NPC");
-        player.sendMessage("§7Left-click on an NPC to manage it");
+        player.sendMessage(Component.text("§aNPC Tool added to your inventory!"));
+        player.sendMessage(Component.text("§7Right-click on a block to place an NPC"));
+        player.sendMessage(Component.text("§7Left-click on an NPC to manage it"));
     }
 
     @Override
@@ -119,7 +123,7 @@ public class NPCCommands implements CommandExecutor, TabCompleter {
                 }
             } else if (args.length == 2 && args[0].equalsIgnoreCase("remove")) {
                 // Add NPC IDs for completion
-                AdvancedNPCSystem npcSystem = plugin.getAdvancedNPCSystem();
+                AdvancedNPCSystem npcSystem = SkyblockPlugin.getAdvancedNPCSystem();
                 completions.addAll(npcSystem.getActiveNPCs().keySet());
             }
         }

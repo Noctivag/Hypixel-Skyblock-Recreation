@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.armor;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.features.armor.types.ArmorSlot;
@@ -30,7 +31,7 @@ public class PlayerArmor {
         
         // Equip new piece
         equippedArmor.put(slot, piece);
-        equipTime.put(slot, System.currentTimeMillis());
+        equipTime.put(slot, java.lang.System.currentTimeMillis());
         
         return true;
     }
@@ -107,7 +108,7 @@ public class PlayerArmor {
         Long equipTime = this.equipTime.get(slot);
         if (equipTime == null) return 0;
         
-        return System.currentTimeMillis() - equipTime;
+        return java.lang.System.currentTimeMillis() - equipTime;
     }
     
     /**

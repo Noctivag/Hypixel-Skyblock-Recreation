@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.furniture;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -17,6 +22,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Furniture System - Hypixel Skyblock Style
@@ -34,19 +40,19 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Furniture Upgrades
  */
 public class FurnitureSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerFurnitureData> playerFurnitureData = new ConcurrentHashMap<>();
     private final Map<FurnitureType, FurnitureConfig> furnitureConfigs = new HashMap<>();
     private final Map<UUID, BukkitTask> furnitureTasks = new ConcurrentHashMap<>();
     
-    public FurnitureSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public FurnitureSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeFurnitureConfigs();
         startFurnitureUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeFurnitureConfigs() {
@@ -154,7 +160,7 @@ public class FurnitureSystem implements Listener {
                     furnitureData.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L * 60L); // Update every minute
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L * 60L); // Update every minute
     }
     
     @EventHandler
@@ -177,7 +183,7 @@ public class FurnitureSystem implements Listener {
     }
     
     public void openFurnitureGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lFurniture System");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lFurniture System"));
         
         // Add furniture categories
         addGUIItem(gui, 10, Material.OAK_STAIRS, "§6§lChairs", "§7View chairs.");
@@ -209,15 +215,15 @@ public class FurnitureSystem implements Listener {
         addGUIItem(gui, 53, Material.ARROW, "§7§lNext Page", "§7Go to next page.");
         
         player.openInventory(gui);
-        player.sendMessage("§aFurniture GUI geöffnet!");
+        player.sendMessage(Component.text("§aFurniture GUI geöffnet!"));
     }
     
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String description) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(name);
-            meta.setLore(Arrays.asList(description));
+            meta.displayName(Component.text(name));
+            meta.lore(Arrays.asList(description).stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         gui.setItem(slot, item);
@@ -229,7 +235,7 @@ public class FurnitureSystem implements Listener {
         
         PlayerFurnitureData furnitureData = getPlayerFurnitureData(player.getUniqueId());
         if (!furnitureData.hasFurniture(type)) {
-            player.sendMessage("§cDu besitzt dieses Möbelstück nicht!");
+            player.sendMessage(Component.text("§cDu besitzt dieses Möbelstück nicht!"));
             return;
         }
         
@@ -243,7 +249,7 @@ public class FurnitureSystem implements Listener {
         // Remove furniture from location
         location.getBlock().setType(Material.AIR);
         
-        player.sendMessage("§aMöbelstück entfernt!");
+        player.sendMessage(Component.text("§aMöbelstück entfernt!"));
     }
     
     public void craftFurniture(Player player, FurnitureType type) {
@@ -371,11 +377,11 @@ public class FurnitureSystem implements Listener {
         
         public PlayerFurnitureData(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void addFurniture(FurnitureType type, int amount) {

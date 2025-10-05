@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.cosmetics;
+import java.util.UUID;
 
 import de.noctivag.skyblock.core.api.Service;
 import de.noctivag.skyblock.features.cosmetics.config.CosmeticConfig;

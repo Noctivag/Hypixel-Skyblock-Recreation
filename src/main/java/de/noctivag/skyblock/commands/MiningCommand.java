@@ -1,6 +1,10 @@
 package de.noctivag.skyblock.commands;
+import net.kyori.adventure.text.Component;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.gui.MiningGUI;
 import de.noctivag.skyblock.skyblock.MiningAreaSystem;
 import de.noctivag.skyblock.skyblock.SkyblockManager;
@@ -18,10 +22,10 @@ import java.util.Map;
 import org.bukkit.Location;
 
 public class MiningCommand implements CommandExecutor, TabCompleter {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public MiningCommand(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public MiningCommand(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     @Override
@@ -33,25 +37,25 @@ public class MiningCommand implements CommandExecutor, TabCompleter {
 
         if (args.length == 0) {
             // Open mining GUI
-            new MiningGUI(plugin, player).open(player);
+            new MiningGUI(SkyblockPlugin, player).open(player);
             return true;
         }
 
         String subCommand = args[0].toLowerCase();
 
         switch (subCommand) {
-            case "gui" -> new MiningGUI(plugin, player).open(player);
+            case "gui" -> new MiningGUI(SkyblockPlugin, player).open(player);
 
             case "teleport", "tp" -> {
                 if (args.length < 2) {
-                    player.sendMessage("§cUsage: /mining teleport <area>");
+                    player.sendMessage(Component.text("§cUsage: /mining teleport <area>"));
                     return true;
                 }
 
                 String areaId = args[1].toLowerCase();
-                MiningAreaSystem mining = plugin.getMiningAreaSystem();
+                MiningAreaSystem mining = SkyblockPlugin.getMiningAreaSystem();
                 if (mining == null) {
-                    player.sendMessage("§cMining system not available.");
+                    player.sendMessage(Component.text("§cMining system not available."));
                     return true;
                 }
 
@@ -63,9 +67,9 @@ public class MiningCommand implements CommandExecutor, TabCompleter {
                 }
 
                 // Check if player has required level
-                SkyblockManager sky = plugin.getSkyblockManager();
+                SkyblockManager sky = SkyblockPlugin.getSkyblockManager();
                 if (sky == null) {
-                    player.sendMessage("§cSkyblock system not available.");
+                    player.sendMessage(Component.text("§cSkyblock system not available."));
                     return true;
                 }
 
@@ -84,16 +88,16 @@ public class MiningCommand implements CommandExecutor, TabCompleter {
             }
 
             case "list" -> {
-                player.sendMessage("§6§lAvailable Mining Areas:");
-                MiningAreaSystem mining = plugin.getMiningAreaSystem();
+                player.sendMessage(Component.text("§6§lAvailable Mining Areas:"));
+                MiningAreaSystem mining = SkyblockPlugin.getMiningAreaSystem();
                 if (mining == null) {
-                    player.sendMessage("§cMining system not available.");
+                    player.sendMessage(Component.text("§cMining system not available."));
                     return true;
                 }
 
                 Map<String, MiningAreaSystem.MiningArea> areas = mining.getAllMiningAreas();
 
-                SkyblockManager sky = plugin.getSkyblockManager();
+                SkyblockManager sky = SkyblockPlugin.getSkyblockManager();
                 for (Map.Entry<String, MiningAreaSystem.MiningArea> entry : areas.entrySet()) {
                     MiningAreaSystem.MiningArea area = entry.getValue();
 
@@ -112,9 +116,9 @@ public class MiningCommand implements CommandExecutor, TabCompleter {
             }
 
             case "stats" -> {
-                SkyblockManager sky = plugin.getSkyblockManager();
+                SkyblockManager sky = SkyblockPlugin.getSkyblockManager();
                 if (sky == null) {
-                    player.sendMessage("§cSkyblock system not available.");
+                    player.sendMessage(Component.text("§cSkyblock system not available."));
                     return true;
                 }
 
@@ -123,14 +127,14 @@ public class MiningCommand implements CommandExecutor, TabCompleter {
                 double miningXP = skills.getXP(SkyblockManager.SkyblockSkill.MINING);
                 double xpToNext = skills.getXPToNextLevel(SkyblockManager.SkyblockSkill.MINING);
 
-                player.sendMessage("§6§lYour Mining Stats:");
+                player.sendMessage(Component.text("§6§lYour Mining Stats:"));
                 player.sendMessage("§7Mining Level: §e" + miningLevel);
                 player.sendMessage("§7Mining XP: §e" + miningXP);
                 player.sendMessage("§7XP to Next Level: §e" + xpToNext);
 
-                MiningAreaSystem mining = plugin.getMiningAreaSystem();
+                MiningAreaSystem mining = SkyblockPlugin.getMiningAreaSystem();
                 if (mining == null) {
-                    player.sendMessage("§7Current Area: §cUnknown (mining system unavailable)");
+                    player.sendMessage(Component.text("§7Current Area: §cUnknown (mining system unavailable)"));
                     return true;
                 }
 
@@ -139,22 +143,22 @@ public class MiningCommand implements CommandExecutor, TabCompleter {
                 if (currentArea != null) {
                     player.sendMessage("§7Current Area: §e" + currentArea.getName());
                 } else {
-                    player.sendMessage("§7Current Area: §cNone");
+                    player.sendMessage(Component.text("§7Current Area: §cNone"));
                 }
             }
 
             case "help" -> {
-                player.sendMessage("§6§lMining Command Help:");
-                player.sendMessage("§7/mining §e- Open mining GUI");
-                player.sendMessage("§7/mining gui §e- Open mining GUI");
-                player.sendMessage("§7/mining teleport <area> §e- Teleport to mining area");
-                player.sendMessage("§7/mining list §e- List all mining areas");
-                player.sendMessage("§7/mining stats §e- Show your mining stats");
-                player.sendMessage("§7/mining help §e- Show this help");
+                player.sendMessage(Component.text("§6§lMining Command Help:"));
+                player.sendMessage(Component.text("§7/mining §e- Open mining GUI"));
+                player.sendMessage(Component.text("§7/mining gui §e- Open mining GUI"));
+                player.sendMessage(Component.text("§7/mining teleport <area> §e- Teleport to mining area"));
+                player.sendMessage(Component.text("§7/mining list §e- List all mining areas"));
+                player.sendMessage(Component.text("§7/mining stats §e- Show your mining stats"));
+                player.sendMessage(Component.text("§7/mining help §e- Show this help"));
             }
             default -> {
                 player.sendMessage("§cUnknown subcommand: " + subCommand);
-                player.sendMessage("§7Use §e/mining help §7for help");
+                player.sendMessage(Component.text("§7Use §e/mining help §7for help"));
             }
         }
 
@@ -194,13 +198,13 @@ public class MiningCommand implements CommandExecutor, TabCompleter {
 
         try {
             player.teleport(center);
-            player.sendMessage("§a§lTELEPORTED TO MINING AREA!");
+            player.sendMessage(Component.text("§a§lTELEPORTED TO MINING AREA!"));
             player.sendMessage("§7Area: §e" + area.getName());
             player.sendMessage("§7Location: §e" + center.getBlockX() + ", " + center.getBlockY() + ", " + center.getBlockZ());
         } catch (Exception e) {
             // If teleport fails for any reason, send user-friendly message
             player.sendMessage("§cTeleport fehlgeschlagen: " + e.getMessage());
-            plugin.getLogger().warning("Failed to teleport player " + player.getName() + " to mining area " + area.getId() + ": " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Failed to teleport player " + player.getName() + " to mining area " + area.getId() + ": " + e.getMessage());
         }
     }
 
@@ -209,7 +213,7 @@ public class MiningCommand implements CommandExecutor, TabCompleter {
         if (args.length == 1) {
             return Arrays.asList("gui", "teleport", "tp", "list", "stats", "help");
         } else if (args.length == 2 && (args[0].equalsIgnoreCase("teleport") || args[0].equalsIgnoreCase("tp"))) {
-            MiningAreaSystem mining = plugin.getMiningAreaSystem();
+            MiningAreaSystem mining = SkyblockPlugin.getMiningAreaSystem();
             if (mining == null) return new ArrayList<>();
             // return a mutable list of area ids (keys)
             return new ArrayList<>(mining.getAllMiningAreas().keySet());

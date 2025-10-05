@@ -76,7 +76,7 @@ public class EventTriggerMessage {
      * Check if message is recent (within last 30 seconds)
      */
     public boolean isRecent() {
-        return (System.currentTimeMillis() - timestamp) < 30000L;
+        return (java.lang.System.currentTimeMillis() - timestamp) < 30000L;
     }
     
     /**

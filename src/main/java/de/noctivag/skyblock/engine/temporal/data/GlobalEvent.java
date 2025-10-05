@@ -78,7 +78,7 @@ public class GlobalEvent {
         if (!isActive()) return 0;
         
         LocalDateTime endTime = startTime.plusHours(duration);
-        return endTime.toEpochSecond(ZoneOffset.UTC) - System.currentTimeMillis() / 1000;
+        return endTime.toEpochSecond(ZoneOffset.UTC) - java.lang.System.currentTimeMillis() / 1000;
     }
     
     /**
@@ -88,7 +88,7 @@ public class GlobalEvent {
         if (!isActive()) return 100.0;
         
         long totalDuration = duration * 3600; // Convert hours to seconds
-        long elapsed = (System.currentTimeMillis() / 1000) - startTime.toEpochSecond(ZoneOffset.UTC);
+        long elapsed = (java.lang.System.currentTimeMillis() / 1000) - startTime.toEpochSecond(ZoneOffset.UTC);
         
         return Math.min(100.0, (double) elapsed / totalDuration * 100.0);
     }

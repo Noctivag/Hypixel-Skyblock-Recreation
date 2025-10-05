@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.friends;
+import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.ItemStack;
 
 import org.bukkit.Bukkit;
@@ -22,46 +23,46 @@ public class FriendsCommand implements CommandExecutor {
         }
 
         if (args.length == 0) {
-            player.sendMessage("§e/friends add <Spieler>, /friends accept <Spieler>, /friends remove <Spieler>");
+            player.sendMessage(Component.text("§e/friends add <Spieler>, /friends accept <Spieler>, /friends remove <Spieler>"));
             return true;
         }
 
         switch (args[0].toLowerCase()) {
             case "add": {
-                if (args.length < 2) { player.sendMessage("§cNutzung: /friends add <Spieler>"); return true; }
+                if (args.length < 2) { player.sendMessage(Component.text("§cNutzung: /friends add <Spieler>")); return true; }
                 Player target = Bukkit.getPlayer(args[1]);
-                if (target == null) { player.sendMessage("§cSpieler nicht gefunden."); return true; }
+                if (target == null) { player.sendMessage(Component.text("§cSpieler nicht gefunden.")); return true; }
                 friendsManager.requestFriend(player.getUniqueId(), target.getUniqueId());
                 player.sendMessage("§aAnfrage gesendet an §e" + target.getName());
                 target.sendMessage("§e" + player.getName() + " §7hat dir eine Freundschaftsanfrage gesendet. Nutze §a/friends accept " + player.getName());
                 return true;
             }
             case "accept": {
-                if (args.length < 2) { player.sendMessage("§cNutzung: /friends accept <Spieler>"); return true; }
+                if (args.length < 2) { player.sendMessage(Component.text("§cNutzung: /friends accept <Spieler>")); return true; }
                 Player from = Bukkit.getPlayer(args[1]);
-                if (from == null) { player.sendMessage("§cSpieler nicht gefunden."); return true; }
+                if (from == null) { player.sendMessage(Component.text("§cSpieler nicht gefunden.")); return true; }
                 if (friendsManager.accept(player, from)) {
-                    player.sendMessage("§aIhr seid jetzt Freunde.");
+                    player.sendMessage(Component.text("§aIhr seid jetzt Freunde."));
                     from.sendMessage("§a" + player.getName() + " §7hat deine Anfrage akzeptiert.");
                 } else {
-                    player.sendMessage("§cKeine Anfrage gefunden.");
+                    player.sendMessage(Component.text("§cKeine Anfrage gefunden."));
                 }
                 return true;
             }
             case "remove": {
-                if (args.length < 2) { player.sendMessage("§cNutzung: /friends remove <Spieler>"); return true; }
+                if (args.length < 2) { player.sendMessage(Component.text("§cNutzung: /friends remove <Spieler>")); return true; }
                 Player target = Bukkit.getPlayer(args[1]);
-                if (target == null) { player.sendMessage("§cSpieler nicht gefunden."); return true; }
+                if (target == null) { player.sendMessage(Component.text("§cSpieler nicht gefunden.")); return true; }
                 if (friendsManager.removeFriend(player, target)) {
-                    player.sendMessage("§eFreund entfernt.");
+                    player.sendMessage(Component.text("§eFreund entfernt."));
                 } else {
-                    player.sendMessage("§cWar kein Freund.");
+                    player.sendMessage(Component.text("§cWar kein Freund."));
                 }
                 return true;
             }
         }
 
-        player.sendMessage("§e/friends add <Spieler>, /friends accept <Spieler>, /friends remove <Spieler>");
+        player.sendMessage(Component.text("§e/friends add <Spieler>, /friends accept <Spieler>, /friends remove <Spieler>"));
         return true;
     }
 }

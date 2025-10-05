@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.skyblock.MiningAreaSystem;
 import de.noctivag.skyblock.skyblock.SkyblockManager;
 import net.kyori.adventure.text.Component;
@@ -14,12 +17,12 @@ import java.util.List;
 import java.util.Map;
 
 public class MiningGUI extends CustomGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Player player;
     
-    public MiningGUI(SkyblockPlugin plugin, Player player) {
+    public MiningGUI(SkyblockPlugin SkyblockPlugin, Player player) {
         super(54, Component.text("§6§lMining Areas"));
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.player = player;
         initializeItems();
     }
@@ -43,14 +46,14 @@ public class MiningGUI extends CustomGUI {
         
         // Mining Areas
         int slot = 10;
-        Map<String, MiningAreaSystem.MiningArea> areas = plugin.getMiningAreaSystem().getAllMiningAreas();
+        Map<String, MiningAreaSystem.MiningArea> areas = SkyblockPlugin.getMiningAreaSystem().getAllMiningAreas();
         
         for (Map.Entry<String, MiningAreaSystem.MiningArea> entry : areas.entrySet()) {
             MiningAreaSystem.MiningArea area = entry.getValue();
             String areaId = entry.getKey();
             
             // Get player's mining level
-            int playerLevel = plugin.getSkyblockManager().getSkills(player.getUniqueId())
+            int playerLevel = SkyblockPlugin.getSkyblockManager().getSkills(player.getUniqueId())
                 .getLevel(SkyblockManager.SkyblockSkill.MINING);
             
             // Get required level for this area (highest required level)
@@ -100,17 +103,17 @@ public class MiningGUI extends CustomGUI {
         
         // Player Stats
         setItem(28, Material.EXPERIENCE_BOTTLE, "§b§lYour Mining Stats",
-            Arrays.asList("§7Mining Level: §e" + plugin.getSkyblockManager().getSkills(player.getUniqueId())
+            Arrays.asList("§7Mining Level: §e" + SkyblockPlugin.getSkyblockManager().getSkills(player.getUniqueId())
                 .getLevel(SkyblockManager.SkyblockSkill.MINING),
-                "§7Mining XP: §e" + plugin.getSkyblockManager().getSkills(player.getUniqueId())
+                "§7Mining XP: §e" + SkyblockPlugin.getSkyblockManager().getSkills(player.getUniqueId())
                 .getXP(SkyblockManager.SkyblockSkill.MINING),
-                "§7XP to Next Level: §e" + plugin.getSkyblockManager().getSkills(player.getUniqueId())
+                "§7XP to Next Level: §e" + SkyblockPlugin.getSkyblockManager().getSkills(player.getUniqueId())
                 .getXPToNextLevel(SkyblockManager.SkyblockSkill.MINING),
                 "",
                 "§7Click to view detailed stats!"));
         
         // Current Area
-        MiningAreaSystem.MiningArea currentArea = plugin.getMiningAreaSystem().getPlayerCurrentArea(player.getUniqueId());
+        MiningAreaSystem.MiningArea currentArea = SkyblockPlugin.getMiningAreaSystem().getPlayerCurrentArea(player.getUniqueId());
         if (currentArea != null) {
             setItem(30, Material.COMPASS, "§a§lCurrent Area",
                 Arrays.asList("§7Area: §e" + currentArea.getName(),

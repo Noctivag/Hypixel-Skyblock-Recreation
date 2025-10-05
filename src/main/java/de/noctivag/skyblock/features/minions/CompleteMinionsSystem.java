@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.features.minions;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.api.System;
 import de.noctivag.skyblock.core.api.SystemStatus;
 import de.noctivag.skyblock.features.minions.types.CompleteMinionType;
@@ -17,14 +20,14 @@ import java.util.logging.Level;
 
 public class CompleteMinionsSystem implements System {
 
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private SystemStatus status = SystemStatus.UNINITIALIZED;
     private boolean enabled = false;
     private MinionWorldManager worldManager;
 
-    public CompleteMinionsSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.worldManager = new MinionWorldManager(plugin);
+    public CompleteMinionsSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.worldManager = new MinionWorldManager(SkyblockPlugin);
     }
 
     @Override
@@ -40,23 +43,23 @@ public class CompleteMinionsSystem implements System {
     @Override
     public CompletableFuture<Void> initialize() {
         status = SystemStatus.INITIALIZING;
-        plugin.getLogger().info("Initializing Complete Minions System...");
+        SkyblockPlugin.getLogger().info("Initializing Complete Minions System...");
         try {
             // Load all minion types
             int totalMinions = CompleteMinionType.values().length;
-            plugin.getLogger().info("Loaded " + totalMinions + " minion types.");
+            SkyblockPlugin.getLogger().info("Loaded " + totalMinions + " minion types.");
 
             // Initialize world manager for multi-world support
             worldManager.initialize();
 
             // Register event listeners if any (e.g., for minion spawning, collection, upgrades)
-            // plugin.getServer().getPluginManager().registerEvents(new MinionListener(), plugin);
+            // SkyblockPlugin.getServer().getPluginManager().registerEvents(new MinionListener(), SkyblockPlugin);
 
             status = SystemStatus.INITIALIZED;
-            plugin.getLogger().info("Complete Minions System initialized successfully.");
+            SkyblockPlugin.getLogger().info("Complete Minions System initialized successfully.");
             return CompletableFuture.completedFuture(null);
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to initialize Complete Minions System", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to initialize Complete Minions System", e);
             status = SystemStatus.ERROR;
             return CompletableFuture.failedFuture(e);
         }
@@ -65,7 +68,7 @@ public class CompleteMinionsSystem implements System {
     @Override
     public CompletableFuture<Void> shutdown() {
         status = SystemStatus.SHUTTING_DOWN;
-        plugin.getLogger().info("Shutting down Complete Minions System...");
+        SkyblockPlugin.getLogger().info("Shutting down Complete Minions System...");
         
         // Shutdown world manager
         if (worldManager != null) {
@@ -73,7 +76,7 @@ public class CompleteMinionsSystem implements System {
         }
         
         status = SystemStatus.SHUTDOWN;
-        plugin.getLogger().info("Complete Minions System shut down.");
+        SkyblockPlugin.getLogger().info("Complete Minions System shut down.");
         return CompletableFuture.completedFuture(null);
     }
 
@@ -91,7 +94,7 @@ public class CompleteMinionsSystem implements System {
     public CompletableFuture<Void> enable() {
         enabled = true;
         status = SystemStatus.ENABLED;
-        plugin.getLogger().info("Complete Minions System enabled.");
+        SkyblockPlugin.getLogger().info("Complete Minions System enabled.");
         return CompletableFuture.completedFuture(null);
     }
 
@@ -99,7 +102,7 @@ public class CompleteMinionsSystem implements System {
     public CompletableFuture<Void> disable() {
         enabled = false;
         status = SystemStatus.DISABLED;
-        plugin.getLogger().info("Complete Minions System disabled.");
+        SkyblockPlugin.getLogger().info("Complete Minions System disabled.");
         return CompletableFuture.completedFuture(null);
     }
 

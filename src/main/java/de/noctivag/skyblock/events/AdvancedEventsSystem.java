@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.events;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -19,19 +24,19 @@ import java.util.concurrent.ConcurrentHashMap;
  * Advanced Events System - Hypixel Skyblock Style
  */
 public class AdvancedEventsSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerEvents> playerEvents = new ConcurrentHashMap<>();
     private final Map<EventType, EventConfig> eventConfigs = new HashMap<>();
     private final Map<UUID, BukkitTask> eventTasks = new ConcurrentHashMap<>();
     
-    public AdvancedEventsSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedEventsSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeEventConfigs();
         startEventUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeEventConfigs() {
@@ -59,7 +64,7 @@ public class AdvancedEventsSystem implements Listener {
                     events.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L);
     }
     
     @EventHandler
@@ -72,7 +77,7 @@ public class AdvancedEventsSystem implements Listener {
     }
     
     private void openEventGUI(Player player) {
-        player.sendMessage("§aEvent GUI geöffnet!");
+        player.sendMessage(Component.text("§aEvent GUI geöffnet!"));
     }
     
     public PlayerEvents getPlayerEvents(UUID playerId) {
@@ -152,11 +157,11 @@ public class AdvancedEventsSystem implements Listener {
         
         public PlayerEvents(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long timeDiff = currentTime - lastUpdate;
             
             if (timeDiff >= 60000) {

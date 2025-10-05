@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.brewing.gui;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.brewing.AdvancedBrewingSystem;
 import de.noctivag.skyblock.brewing.BrewingRecipe;
 import de.noctivag.skyblock.brewing.PlayerBrewingData;
@@ -18,11 +22,11 @@ import java.util.*;
  */
 public class BrewingGUI {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final AdvancedBrewingSystem brewingSystem;
     
-    public BrewingGUI(SkyblockPlugin plugin, AdvancedBrewingSystem brewingSystem) {
-        this.plugin = plugin;
+    public BrewingGUI(SkyblockPlugin SkyblockPlugin, AdvancedBrewingSystem brewingSystem) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.brewingSystem = brewingSystem;
     }
     
@@ -30,7 +34,7 @@ public class BrewingGUI {
      * Open the main brewing GUI
      */
     public void openBrewingGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lBrewing System");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lBrewing System"));
         
         // Fill borders
         fillBorders(gui);
@@ -79,14 +83,14 @@ public class BrewingGUI {
         ItemStack playerHead = new ItemStack(Material.PLAYER_HEAD);
         ItemMeta headMeta = playerHead.getItemMeta();
         headMeta.setDisplayName("§6§l" + player.getName() + "'s Brewing Profile");
-        headMeta.setLore(Arrays.asList(
-            "§7Level: §a" + data.getLevel(),
-            "§7Experience: §a" + data.getExperience() + "§7/§a" + (data.getLevel() + 1) * 1000,
-            "§7Coins: §a" + data.getCoins(),
-            "§7Brewed Potions: §a" + data.getBrewedPotions(),
-            "",
-            "§7Experience to Next Level: §a" + data.getExperienceToNextLevel(),
-            "§7Progress: §a" + String.format("%.1f", data.getExperienceProgress() * 100) + "%"
+        headMeta.lore(Arrays.asList(
+            Component.text("§7Level: §a" + data.getLevel()),
+            Component.text("§7Experience: §a" + data.getExperience() + "§7/§a" + (data.getLevel() + 1) * 1000),
+            Component.text("§7Coins: §a" + data.getCoins()),
+            Component.text("§7Brewed Potions: §a" + data.getBrewedPotions()),
+            Component.text(""),
+            Component.text("§7Experience to Next Level: §a" + data.getExperienceToNextLevel()),
+            Component.text("§7Progress: §a" + String.format("%.1f", data.getExperienceProgress() * 100) + "%")
         ));
         playerHead.setItemMeta(headMeta);
         gui.setItem(4, playerHead);
@@ -120,7 +124,7 @@ public class BrewingGUI {
         
         boolean canBrew = brewingSystem.canBrew(player, recipe.getName().toLowerCase().replace(" ", "_"));
         
-        meta.setDisplayName((canBrew ? "§a" : "§c") + recipe.getName());
+        meta.displayName(Component.text((canBrew ? "§a" : "§c") + recipe.getName()));
         
         List<String> lore = new ArrayList<>();
         lore.add("§7Level: §a" + recipe.getLevel());
@@ -139,7 +143,7 @@ public class BrewingGUI {
             lore.add("§cMissing ingredients or coins");
         }
         
-        meta.setLore(lore);
+        meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
         item.setItemMeta(meta);
         
         return item;
@@ -160,7 +164,7 @@ public class BrewingGUI {
         // Brewing station button
         ItemStack stationButton = new ItemStack(Material.BREWING_STAND);
         ItemMeta stationMeta = stationButton.getItemMeta();
-        stationMeta.setDisplayName("§6§lBrewing Station");
+        stationMeta.displayName(Component.text("§6§lBrewing Station"));
         stationMeta.setLore(Arrays.asList(
             "§7Open your personal brewing station",
             "§7to brew potions automatically"
@@ -171,10 +175,10 @@ public class BrewingGUI {
         // Statistics button
         ItemStack statsButton = new ItemStack(Material.BOOK);
         ItemMeta statsMeta = statsButton.getItemMeta();
-        statsMeta.setDisplayName("§e§lBrewing Statistics");
-        statsMeta.setLore(Arrays.asList(
-            "§7View your brewing statistics",
-            "§7and achievements"
+        statsMeta.displayName(Component.text("§e§lBrewing Statistics"));
+        statsMeta.lore(Arrays.asList(
+            net.kyori.adventure.text.Component.text("§7View your brewing statistics"),
+            net.kyori.adventure.text.Component.text("§7and achievements")
         ));
         statsButton.setItemMeta(statsMeta);
         gui.setItem(51, statsButton);
@@ -184,7 +188,7 @@ public class BrewingGUI {
      * Open the brewing station GUI
      */
     public void openBrewingStationGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lBrewing Station");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lBrewing Station"));
         
         // Fill borders
         fillBorders(gui);
@@ -211,14 +215,14 @@ public class BrewingGUI {
         ItemStack stationInfo = new ItemStack(Material.BREWING_STAND);
         ItemMeta infoMeta = stationInfo.getItemMeta();
         infoMeta.setDisplayName("§6§lYour Brewing Station");
-        infoMeta.setLore(Arrays.asList(
-            "§7Status: §aActive",
-            "§7Level: §a" + data.getLevel(),
-            "§7Coins: §a" + data.getCoins(),
-            "",
-            "§7This station can brew potions",
-            "§7automatically when you have",
-            "§7the required ingredients."
+        infoMeta.lore(Arrays.asList(
+            Component.text("§7Status: §aActive"),
+            Component.text("§7Level: §a" + data.getLevel()),
+            Component.text("§7Coins: §a" + data.getCoins()),
+            Component.text(""),
+            Component.text("§7This station can brew potions"),
+            Component.text("§7automatically when you have"),
+            Component.text("§7the required ingredients.")
         ));
         stationInfo.setItemMeta(infoMeta);
         gui.setItem(4, stationInfo);
@@ -233,10 +237,10 @@ public class BrewingGUI {
         
         ItemStack emptySlot = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
         ItemMeta emptyMeta = emptySlot.getItemMeta();
-        emptyMeta.setDisplayName("§7Empty Brewing Slot");
-        emptyMeta.setLore(Arrays.asList(
-            "§7Place ingredients here to",
-            "§7start brewing a potion"
+        emptyMeta.displayName(Component.text("§7Empty Brewing Slot"));
+        emptyMeta.lore(Arrays.asList(
+            Component.text("§7Place ingredients here to"),
+            Component.text("§7start brewing a potion")
         ));
         emptySlot.setItemMeta(emptyMeta);
         
@@ -274,7 +278,7 @@ public class BrewingGUI {
      * Open the brewing statistics GUI
      */
     public void openBrewingStatisticsGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lBrewing Statistics");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lBrewing Statistics"));
         
         // Fill borders
         fillBorders(gui);

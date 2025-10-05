@@ -1,19 +1,23 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.events.UltimateEventSystem;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import java.util.List;
 import java.util.Map;
+import net.kyori.adventure.text.Component;
 
 public class UltimateEventGUI extends AnimatedGUI {
     private final UltimateEventSystem eventSystem;
     private String currentCategory = "all";
 
-    public UltimateEventGUI(SkyblockPlugin plugin, Player player) {
-        super(plugin, player, 54, "§c§l⚔️ ULTIMATE EVENTS ⚔️");
+    public UltimateEventGUI(SkyblockPlugin SkyblockPlugin, Player player) {
+        super(SkyblockPlugin, player, 54, "§c§l⚔️ ULTIMATE EVENTS ⚔️");
         this.eventSystem = null; // UltimateEventSystem not implemented yet
     }
 

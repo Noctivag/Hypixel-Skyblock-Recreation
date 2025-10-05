@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.commands;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.multiserver.ServerTemplate;
 import de.noctivag.skyblock.multiserver.ServerTemplateSystem;
 import net.kyori.adventure.text.Component;
@@ -20,12 +23,12 @@ import java.util.concurrent.CompletableFuture;
  */
 public class TemplateCommands implements CommandExecutor, TabCompleter {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final ServerTemplateSystem templateSystem;
     
-    public TemplateCommands(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.templateSystem = plugin.getHypixelProxySystem().getTemplateSystem();
+    public TemplateCommands(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.templateSystem = SkyblockPlugin.getHypixelProxySystem().getTemplateSystem();
     }
     
     @Override
@@ -259,7 +262,7 @@ public class TemplateCommands implements CommandExecutor, TabCompleter {
                     break;
                 case "copyworld":
                     // Füge alle verfügbaren Welt-Namen hinzu
-                    plugin.getServer().getWorlds().forEach(world -> completions.add(world.getName()));
+                    SkyblockPlugin.getServer().getWorlds().forEach(world -> completions.add(world.getName()));
                     break;
             }
         }

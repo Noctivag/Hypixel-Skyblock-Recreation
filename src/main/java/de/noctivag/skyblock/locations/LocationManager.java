@@ -1,24 +1,28 @@
 package de.noctivag.skyblock.locations;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.data.DatabaseManager;
 import org.bukkit.entity.Player;
+import net.kyori.adventure.text.Component;
 
 /**
  * Location Manager - Basic implementation
  */
 public class LocationManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final DatabaseManager databaseManager;
 
-    public LocationManager(SkyblockPlugin plugin, DatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public LocationManager(SkyblockPlugin SkyblockPlugin, DatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
     }
 
     public void openLocationNavigationGUI(Player player) {
-        player.sendMessage("§aLocation Navigation GUI geöffnet!");
+        player.sendMessage(Component.text("§aLocation Navigation GUI geöffnet!"));
     }
 
     public void teleportToLocation(Player player, String location) {
@@ -26,15 +30,15 @@ public class LocationManager {
         // Basic teleportation logic would go here
     }
 
-    // Persist locations to the database (basic stub to satisfy Plugin auto-save call)
+    // Persist locations to the database (basic stub to satisfy SkyblockPlugin auto-save call)
     public void saveLocations() {
         // In the full implementation this would persist any cached locations to the database.
         // For now we log a simple message to confirm the save was invoked.
-        plugin.getLogger().info("LocationManager: saveLocations called (stub)");
+        SkyblockPlugin.getLogger().info("LocationManager: saveLocations called (stub)");
     }
     
     // Missing method implementations for compilation fixes
-    public de.noctivag.plugin.locations.Warp getWarp(String warpName) {
+    public de.noctivag.skyblock.locations.Warp getWarp(String warpName) {
         return null; // Placeholder - warp not implemented
     }
     
@@ -43,7 +47,7 @@ public class LocationManager {
         return new java.util.HashSet<>(); // Placeholder - method not implemented
     }
     
-    public de.noctivag.plugin.locations.Home getHome(org.bukkit.entity.Player player, String homeName) {
+    public de.noctivag.skyblock.locations.Home getHome(org.bukkit.entity.Player player, String homeName) {
         return null; // Placeholder - method not implemented
     }
     
@@ -68,7 +72,7 @@ public class LocationManager {
         return new java.util.ArrayList<>(); // Placeholder - method not implemented
     }
     
-    public java.util.List<de.noctivag.plugin.locations.EnhancedWarp> getWarpsByCategory(de.noctivag.plugin.locations.EnhancedWarp.WarpCategory category) {
+    public java.util.List<de.noctivag.skyblock.locations.EnhancedWarp> getWarpsByCategory(de.noctivag.skyblock.locations.EnhancedWarp.WarpCategory category) {
         return new java.util.ArrayList<>(); // Placeholder - method not implemented
     }
     

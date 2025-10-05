@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.npcs;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -12,12 +17,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * Advanced NPC Dialogue System - Hypixel Style
  */
 public class NPCDialogueSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, DialogueSession> activeSessions = new ConcurrentHashMap<>();
     private final Map<String, DialogueTree> dialogueTrees = new HashMap<>();
     
-    public NPCDialogueSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public NPCDialogueSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         initializeDialogueTrees();
     }
     
@@ -206,7 +211,7 @@ public class NPCDialogueSystem {
             public void run() {
                 showDialogueOptions(player, npcType);
             }
-        }.runTaskLater(plugin, 40L);
+        }.runTaskLater(SkyblockPlugin, 40L);
     }
     
     public void handleDialogueChoice(Player player, int choice) {
@@ -234,14 +239,14 @@ public class NPCDialogueSystem {
                     @Override
                     public void run() {
                         // Open shop GUI
-                        if (plugin.getShopSystem() != null) {
-                            plugin.getShopSystem().openShopGUI(player);
+                        if (SkyblockPlugin.getShopSystem() != null) {
+                            SkyblockPlugin.getShopSystem().openShopGUI(player);
                         } else {
-                            player.sendMessage("§cShop-System ist nicht verfügbar!");
+                            player.sendMessage(Component.text("§cShop-System ist nicht verfügbar!"));
                         }
-                        player.sendMessage("§aOpening shop interface...");
+                        player.sendMessage(Component.text("§aOpening shop interface..."));
                     }
-                }.runTaskLater(plugin, 20L);
+                }.runTaskLater(SkyblockPlugin, 20L);
             }
             case 2 -> {
                 sendDialogue(player, "shop", "sell", npcName);
@@ -250,14 +255,14 @@ public class NPCDialogueSystem {
                     @Override
                     public void run() {
                         // Open sell GUI
-                        if (plugin.getShopSystem() != null) {
-                            plugin.getShopSystem().openSellGUI(player);
+                        if (SkyblockPlugin.getShopSystem() != null) {
+                            SkyblockPlugin.getShopSystem().openSellGUI(player);
                         } else {
-                            player.sendMessage("§cShop-System ist nicht verfügbar!");
+                            player.sendMessage(Component.text("§cShop-System ist nicht verfügbar!"));
                         }
-                        player.sendMessage("§aOpening sell interface...");
+                        player.sendMessage(Component.text("§aOpening sell interface..."));
                     }
-                }.runTaskLater(plugin, 20L);
+                }.runTaskLater(SkyblockPlugin, 20L);
             }
             case 3 -> {
                 sendDialogue(player, "shop", "prices", npcName);
@@ -267,7 +272,7 @@ public class NPCDialogueSystem {
                     public void run() {
                         showShopPrices(player);
                     }
-                }.runTaskLater(plugin, 20L);
+                }.runTaskLater(SkyblockPlugin, 20L);
             }
             case 4 -> {
                 sendDialogue(player, "shop", "farewell", npcName);
@@ -286,7 +291,7 @@ public class NPCDialogueSystem {
                     public void run() {
                         showAvailableQuests(player);
                     }
-                }.runTaskLater(plugin, 20L);
+                }.runTaskLater(SkyblockPlugin, 20L);
             }
             case 2 -> {
                 sendDialogue(player, "quest", "progress", npcName);
@@ -296,7 +301,7 @@ public class NPCDialogueSystem {
                     public void run() {
                         showQuestProgress(player);
                     }
-                }.runTaskLater(plugin, 20L);
+                }.runTaskLater(SkyblockPlugin, 20L);
             }
             case 3 -> {
                 sendDialogue(player, "quest", "rewards", npcName);
@@ -306,7 +311,7 @@ public class NPCDialogueSystem {
                     public void run() {
                         showQuestRewards(player);
                     }
-                }.runTaskLater(plugin, 20L);
+                }.runTaskLater(SkyblockPlugin, 20L);
             }
             case 4 -> {
                 sendDialogue(player, "quest", "farewell", npcName);
@@ -325,7 +330,7 @@ public class NPCDialogueSystem {
                     public void run() {
                         showServerInfo(player);
                     }
-                }.runTaskLater(plugin, 20L);
+                }.runTaskLater(SkyblockPlugin, 20L);
             }
             case 2 -> {
                 sendDialogue(player, "info", "rules", npcName);
@@ -335,7 +340,7 @@ public class NPCDialogueSystem {
                     public void run() {
                         showServerRules(player);
                     }
-                }.runTaskLater(plugin, 20L);
+                }.runTaskLater(SkyblockPlugin, 20L);
             }
             case 3 -> {
                 sendDialogue(player, "info", "commands", npcName);
@@ -345,7 +350,7 @@ public class NPCDialogueSystem {
                     public void run() {
                         showCommands(player);
                     }
-                }.runTaskLater(plugin, 20L);
+                }.runTaskLater(SkyblockPlugin, 20L);
             }
             case 4 -> {
                 sendDialogue(player, "info", "farewell", npcName);
@@ -363,9 +368,9 @@ public class NPCDialogueSystem {
                     @Override
                     public void run() {
                         player.teleport(player.getWorld().getSpawnLocation());
-                        player.sendMessage("§dYou have been teleported to spawn!");
+                        player.sendMessage(Component.text("§dYou have been teleported to spawn!"));
                     }
-                }.runTaskLater(plugin, 20L);
+                }.runTaskLater(SkyblockPlugin, 20L);
             }
             case 2 -> {
                 sendDialogue(player, "warp", "market", npcName);
@@ -374,15 +379,15 @@ public class NPCDialogueSystem {
                     @Override
                     public void run() {
                         // Warp to market location
-                        if (plugin.getLocationManager() != null) {
+                        if (SkyblockPlugin.getLocationManager() != null) {
                             // TODO: Implement proper LocationManager interface
-                            // ((LocationManager) plugin.getLocationManager()).teleportToLocation(player, "market");
+                            // ((LocationManager) SkyblockPlugin.getLocationManager()).teleportToLocation(player, "market");
                         } else {
-                            player.sendMessage("§cLocation-System ist nicht verfügbar!");
+                            player.sendMessage(Component.text("§cLocation-System ist nicht verfügbar!"));
                         }
-                        player.sendMessage("§dYou have been teleported to the market!");
+                        player.sendMessage(Component.text("§dYou have been teleported to the market!"));
                     }
-                }.runTaskLater(plugin, 20L);
+                }.runTaskLater(SkyblockPlugin, 20L);
             }
             case 3 -> {
                 sendDialogue(player, "warp", "arena", npcName);
@@ -391,15 +396,15 @@ public class NPCDialogueSystem {
                     @Override
                     public void run() {
                         // Warp to arena location
-                        if (plugin.getLocationManager() != null) {
+                        if (SkyblockPlugin.getLocationManager() != null) {
                             // TODO: Implement proper LocationManager interface
-                            // ((LocationManager) plugin.getLocationManager()).teleportToLocation(player, "arena");
+                            // ((LocationManager) SkyblockPlugin.getLocationManager()).teleportToLocation(player, "arena");
                         } else {
-                            player.sendMessage("§cLocation-System ist nicht verfügbar!");
+                            player.sendMessage(Component.text("§cLocation-System ist nicht verfügbar!"));
                         }
-                        player.sendMessage("§dYou have been teleported to the arena!");
+                        player.sendMessage(Component.text("§dYou have been teleported to the arena!"));
                     }
-                }.runTaskLater(plugin, 20L);
+                }.runTaskLater(SkyblockPlugin, 20L);
             }
             case 4 -> {
                 sendDialogue(player, "warp", "farewell", npcName);
@@ -417,14 +422,14 @@ public class NPCDialogueSystem {
                     @Override
                     public void run() {
                         // Open deposit GUI
-                        if (plugin.getBankSystem() != null) {
-                            plugin.getBankSystem().openDepositGUI(player);
+                        if (SkyblockPlugin.getBankSystem() != null) {
+                            SkyblockPlugin.getBankSystem().openDepositGUI(player);
                         } else {
-                            player.sendMessage("§cBank-System ist nicht verfügbar!");
+                            player.sendMessage(Component.text("§cBank-System ist nicht verfügbar!"));
                         }
-                        player.sendMessage("§6Opening deposit interface...");
+                        player.sendMessage(Component.text("§6Opening deposit interface..."));
                     }
-                }.runTaskLater(plugin, 20L);
+                }.runTaskLater(SkyblockPlugin, 20L);
             }
             case 2 -> {
                 sendDialogue(player, "bank", "withdraw", npcName);
@@ -433,14 +438,14 @@ public class NPCDialogueSystem {
                     @Override
                     public void run() {
                         // Open withdraw GUI
-                        if (plugin.getBankSystem() != null) {
-                            plugin.getBankSystem().openWithdrawGUI(player);
+                        if (SkyblockPlugin.getBankSystem() != null) {
+                            SkyblockPlugin.getBankSystem().openWithdrawGUI(player);
                         } else {
-                            player.sendMessage("§cBank-System ist nicht verfügbar!");
+                            player.sendMessage(Component.text("§cBank-System ist nicht verfügbar!"));
                         }
-                        player.sendMessage("§6Opening withdraw interface...");
+                        player.sendMessage(Component.text("§6Opening withdraw interface..."));
                     }
-                }.runTaskLater(plugin, 20L);
+                }.runTaskLater(SkyblockPlugin, 20L);
             }
             case 3 -> {
                 sendDialogue(player, "bank", "balance", npcName);
@@ -450,7 +455,7 @@ public class NPCDialogueSystem {
                     public void run() {
                         showBankBalance(player);
                     }
-                }.runTaskLater(plugin, 20L);
+                }.runTaskLater(SkyblockPlugin, 20L);
             }
             case 4 -> {
                 sendDialogue(player, "bank", "farewell", npcName);
@@ -473,110 +478,110 @@ public class NPCDialogueSystem {
     private void showDialogueOptions(Player player, String npcType) {
         switch (npcType) {
             case "shop" -> {
-                player.sendMessage("§8[§6Shop NPC§8] §fWhat would you like to do?");
-                player.sendMessage("§7• §e1. §fBrowse Items");
-                player.sendMessage("§7• §e2. §fSell Items");
-                player.sendMessage("§7• §e3. §fView Prices");
-                player.sendMessage("§7• §e4. §fLeave");
+                player.sendMessage(Component.text("§8[§6Shop NPC§8] §fWhat would you like to do?"));
+                player.sendMessage(Component.text("§7• §e1. §fBrowse Items"));
+                player.sendMessage(Component.text("§7• §e2. §fSell Items"));
+                player.sendMessage(Component.text("§7• §e3. §fView Prices"));
+                player.sendMessage(Component.text("§7• §e4. §fLeave"));
             }
             case "quest" -> {
-                player.sendMessage("§8[§6Quest NPC§8] §fI have quests available!");
-                player.sendMessage("§7• §e1. §fView Available Quests");
-                player.sendMessage("§7• §e2. §fCheck Quest Progress");
-                player.sendMessage("§7• §e3. §fClaim Rewards");
-                player.sendMessage("§7• §e4. §fLeave");
+                player.sendMessage(Component.text("§8[§6Quest NPC§8] §fI have quests available!"));
+                player.sendMessage(Component.text("§7• §e1. §fView Available Quests"));
+                player.sendMessage(Component.text("§7• §e2. §fCheck Quest Progress"));
+                player.sendMessage(Component.text("§7• §e3. §fClaim Rewards"));
+                player.sendMessage(Component.text("§7• §e4. §fLeave"));
             }
             case "info" -> {
-                player.sendMessage("§8[§6Info NPC§8] §fHow can I help you?");
-                player.sendMessage("§7• §e1. §fServer Information");
-                player.sendMessage("§7• §e2. §fGame Rules");
-                player.sendMessage("§7• §e3. §fCommands Help");
-                player.sendMessage("§7• §e4. §fLeave");
+                player.sendMessage(Component.text("§8[§6Info NPC§8] §fHow can I help you?"));
+                player.sendMessage(Component.text("§7• §e1. §fServer Information"));
+                player.sendMessage(Component.text("§7• §e2. §fGame Rules"));
+                player.sendMessage(Component.text("§7• §e3. §fCommands Help"));
+                player.sendMessage(Component.text("§7• §e4. §fLeave"));
             }
             case "warp" -> {
-                player.sendMessage("§8[§6Warp NPC§8] §fWhere would you like to go?");
-                player.sendMessage("§7• §e1. §fSpawn");
-                player.sendMessage("§7• §e2. §fMarket");
-                player.sendMessage("§7• §e3. §fArena");
-                player.sendMessage("§7• §e4. §fLeave");
+                player.sendMessage(Component.text("§8[§6Warp NPC§8] §fWhere would you like to go?"));
+                player.sendMessage(Component.text("§7• §e1. §fSpawn"));
+                player.sendMessage(Component.text("§7• §e2. §fMarket"));
+                player.sendMessage(Component.text("§7• §e3. §fArena"));
+                player.sendMessage(Component.text("§7• §e4. §fLeave"));
             }
             case "bank" -> {
-                player.sendMessage("§8[§6Bank NPC§8] §fBanking services available!");
-                player.sendMessage("§7• §e1. §fDeposit Money");
-                player.sendMessage("§7• §e2. §fWithdraw Money");
-                player.sendMessage("§7• §e3. §fCheck Balance");
-                player.sendMessage("§7• §e4. §fLeave");
+                player.sendMessage(Component.text("§8[§6Bank NPC§8] §fBanking services available!"));
+                player.sendMessage(Component.text("§7• §e1. §fDeposit Money"));
+                player.sendMessage(Component.text("§7• §e2. §fWithdraw Money"));
+                player.sendMessage(Component.text("§7• §e3. §fCheck Balance"));
+                player.sendMessage(Component.text("§7• §e4. §fLeave"));
             }
         }
     }
     
     private void showShopPrices(Player player) {
-        player.sendMessage("§a=== Shop Prices ===");
-        player.sendMessage("§7• §eDiamond: §a$100");
-        player.sendMessage("§7• §eIron: §a$50");
-        player.sendMessage("§7• §eGold: §a$75");
-        player.sendMessage("§7• §eEmerald: §a$150");
+        player.sendMessage(Component.text("§a=== Shop Prices ==="));
+        player.sendMessage(Component.text("§7• §eDiamond: §a$100"));
+        player.sendMessage(Component.text("§7• §eIron: §a$50"));
+        player.sendMessage(Component.text("§7• §eGold: §a$75"));
+        player.sendMessage(Component.text("§7• §eEmerald: §a$150"));
     }
     
     private void showAvailableQuests(Player player) {
-        player.sendMessage("§b=== Available Quests ===");
-        player.sendMessage("§7• §e1. §fKill 10 Zombies");
-        player.sendMessage("§7• §e2. §fMine 50 Stone");
-        player.sendMessage("§7• §e3. §fFind 5 Diamonds");
-        player.sendMessage("§7• §e4. §fBuild a House");
+        player.sendMessage(Component.text("§b=== Available Quests ==="));
+        player.sendMessage(Component.text("§7• §e1. §fKill 10 Zombies"));
+        player.sendMessage(Component.text("§7• §e2. §fMine 50 Stone"));
+        player.sendMessage(Component.text("§7• §e3. §fFind 5 Diamonds"));
+        player.sendMessage(Component.text("§7• §e4. §fBuild a House"));
     }
     
     private void showQuestProgress(Player player) {
-        player.sendMessage("§b=== Quest Progress ===");
-        player.sendMessage("§7• §eKill Zombies: §a5/10");
-        player.sendMessage("§7• §eMine Stone: §a25/50");
-        player.sendMessage("§7• §eFind Diamonds: §a2/5");
-        player.sendMessage("§7• §eBuild House: §aNot Started");
+        player.sendMessage(Component.text("§b=== Quest Progress ==="));
+        player.sendMessage(Component.text("§7• §eKill Zombies: §a5/10"));
+        player.sendMessage(Component.text("§7• §eMine Stone: §a25/50"));
+        player.sendMessage(Component.text("§7• §eFind Diamonds: §a2/5"));
+        player.sendMessage(Component.text("§7• §eBuild House: §aNot Started"));
     }
     
     private void showQuestRewards(Player player) {
-        player.sendMessage("§b=== Quest Rewards ===");
-        player.sendMessage("§7• §eKill Zombies: §a$500 + 100 XP");
-        player.sendMessage("§7• §eMine Stone: §a$250 + 50 XP");
-        player.sendMessage("§7• §eFind Diamonds: §a$1000 + 200 XP");
-        player.sendMessage("§7• §eBuild House: §a$750 + 150 XP");
+        player.sendMessage(Component.text("§b=== Quest Rewards ==="));
+        player.sendMessage(Component.text("§7• §eKill Zombies: §a$500 + 100 XP"));
+        player.sendMessage(Component.text("§7• §eMine Stone: §a$250 + 50 XP"));
+        player.sendMessage(Component.text("§7• §eFind Diamonds: §a$1000 + 200 XP"));
+        player.sendMessage(Component.text("§7• §eBuild House: §a$750 + 150 XP"));
     }
     
     private void showServerInfo(Player player) {
-        player.sendMessage("§e=== Server Information ===");
-        player.sendMessage("§7• §eServer: §fHypixel Skyblock Style");
-        player.sendMessage("§7• §eVersion: §f1.20.1");
-        player.sendMessage("§7• §ePlayers Online: §f" + plugin.getServer().getOnlinePlayers().size());
-        player.sendMessage("§7• §eUptime: §f24/7");
+        player.sendMessage(Component.text("§e=== Server Information ==="));
+        player.sendMessage(Component.text("§7• §eServer: §fHypixel Skyblock Style"));
+        player.sendMessage(Component.text("§7• §eVersion: §f1.20.1"));
+        player.sendMessage("§7• §ePlayers Online: §f" + SkyblockPlugin.getServer().getOnlinePlayers().size());
+        player.sendMessage(Component.text("§7• §eUptime: §f24/7"));
     }
     
     private void showServerRules(Player player) {
-        player.sendMessage("§e=== Server Rules ===");
-        player.sendMessage("§7• §e1. §fBe respectful to other players");
-        player.sendMessage("§7• §e2. §fNo cheating or hacking");
-        player.sendMessage("§7• §e3. §fNo spamming or advertising");
-        player.sendMessage("§7• §e4. §fFollow staff instructions");
+        player.sendMessage(Component.text("§e=== Server Rules ==="));
+        player.sendMessage(Component.text("§7• §e1. §fBe respectful to other players"));
+        player.sendMessage(Component.text("§7• §e2. §fNo cheating or hacking"));
+        player.sendMessage(Component.text("§7• §e3. §fNo spamming or advertising"));
+        player.sendMessage(Component.text("§7• §e4. §fFollow staff instructions"));
     }
     
     private void showCommands(Player player) {
-        player.sendMessage("§e=== Useful Commands ===");
-        player.sendMessage("§7• §e/shop §f- Open shop");
-        player.sendMessage("§7• §e/quest §f- View quests");
-        player.sendMessage("§7• §e/bank §f- Open bank");
-        player.sendMessage("§7• §e/warp §f- Teleport");
+        player.sendMessage(Component.text("§e=== Useful Commands ==="));
+        player.sendMessage(Component.text("§7• §e/shop §f- Open shop"));
+        player.sendMessage(Component.text("§7• §e/quest §f- View quests"));
+        player.sendMessage(Component.text("§7• §e/bank §f- Open bank"));
+        player.sendMessage(Component.text("§7• §e/warp §f- Teleport"));
     }
     
     private void showBankBalance(Player player) {
         // Get actual balance from economy system
         double balance = 0.0;
-        if (plugin.getEconomyManager() != null) {
-            balance = plugin.getEconomyManager().getBalance(player);
+        if (SkyblockPlugin.getEconomyManager() != null) {
+            balance = SkyblockPlugin.getEconomyManager().getBalance(player);
         }
         
-        player.sendMessage("§6=== Bank Balance ===");
+        player.sendMessage(Component.text("§6=== Bank Balance ==="));
         player.sendMessage("§7• §eAccount Balance: §a$" + String.format("%.2f", balance));
-        player.sendMessage("§7• §eInterest Rate: §a2% per day");
-        player.sendMessage("§7• §eNext Interest: §aIn 12 hours");
+        player.sendMessage(Component.text("§7• §eInterest Rate: §a2% per day"));
+        player.sendMessage(Component.text("§7• §eNext Interest: §aIn 12 hours"));
     }
     
     public void endDialogue(Player player) {
@@ -614,7 +619,7 @@ public class NPCDialogueSystem {
             this.player = player;
             this.npcType = npcType;
             this.npcName = npcName;
-            this.startTime = System.currentTimeMillis();
+            this.startTime = java.lang.System.currentTimeMillis();
         }
         
         public Player getPlayer() { return player; }

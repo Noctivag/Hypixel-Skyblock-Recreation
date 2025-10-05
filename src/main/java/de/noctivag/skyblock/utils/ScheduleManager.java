@@ -1,8 +1,11 @@
 package de.noctivag.skyblock.utils;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.boss.BossBar;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -15,17 +18,17 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public class ScheduleManager {
-    private final JavaSkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<String, BossBar> notificationBars = new HashMap<>();
 
-    public ScheduleManager(JavaSkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public ScheduleManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         startGlobalTimer();
     }
 
     private void startGlobalTimer() {
         // Timer für alle 5 Minuten
-        Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+        Bukkit.getScheduler().runTaskTimer(SkyblockPlugin, () -> {
             LocalDateTime now = LocalDateTime.now();
 
             // Server-Restart-Ankündigung
@@ -43,11 +46,11 @@ public class ScheduleManager {
 
     public void scheduleEvent(String eventName, Consumer<Void> action, Duration delay) {
         long ticks = delay.getSeconds() * 20;
-        Bukkit.getScheduler().runTaskLater(plugin, () -> action.accept(null), ticks);
+        Bukkit.getScheduler().runTaskLater(SkyblockPlugin, () -> action.accept(null), ticks);
 
         // Ankündigung 5 Minuten vorher
         if (delay.getSeconds() > 300) {
-            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            Bukkit.getScheduler().runTaskLater(SkyblockPlugin, () -> {
                 broadcastWarning("§e" + eventName + " startet in 5 Minuten!", BarColor.YELLOW);
             }, ticks - (20L * 300));
         }
@@ -72,7 +75,7 @@ public class ScheduleManager {
         });
 
         // BossBar nach 1 Minute entfernen
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+        Bukkit.getScheduler().runTaskLater(SkyblockPlugin, () -> {
             bar.removeAll();
         }, 20L * 60);
     }

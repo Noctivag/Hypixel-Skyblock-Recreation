@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.features.bosses;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -31,7 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CompleteBossSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     
     // Boss-Kategorien
@@ -45,8 +49,8 @@ public class CompleteBossSystem implements Listener {
     private final Map<UUID, BossInstance> activeBosses = new ConcurrentHashMap<>();
     private final Map<UUID, BossFight> activeFights = new ConcurrentHashMap<>();
     
-    public CompleteBossSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public CompleteBossSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeAllBosses();
     }
@@ -674,7 +678,7 @@ public class CompleteBossSystem implements Listener {
         activeFights.put(instance.getBossEntity().getUniqueId(), fight);
         
         // Starte Boss-AI
-        new BossAI(instance, fight).runTaskTimer(plugin, 0L, 20L);
+        new BossAI(instance, fight).runTaskTimer(SkyblockPlugin, 0L, 20L);
     }
     
     /**
@@ -902,7 +906,7 @@ public class CompleteBossSystem implements Listener {
         
         public BossFight(BossInstance instance) {
             this.instance = instance;
-            this.startTime = System.currentTimeMillis();
+            this.startTime = java.lang.System.currentTimeMillis();
         }
         
         public BossInstance getInstance() { return instance; }

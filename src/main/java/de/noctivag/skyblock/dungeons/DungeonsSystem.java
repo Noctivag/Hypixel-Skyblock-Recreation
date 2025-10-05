@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.dungeons;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -21,6 +26,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Dungeons System - Complete Hypixel SkyBlock Dungeons Implementation
@@ -36,7 +42,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DungeonsSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerDungeonData> playerDungeonData = new ConcurrentHashMap<>();
     private final Map<String, DungeonParty> activeParties = new ConcurrentHashMap<>();
@@ -44,14 +50,14 @@ public class DungeonsSystem implements Listener {
     private final Map<DungeonFloor, DungeonFloorConfig> floorConfigs = new HashMap<>();
     private final Map<DungeonClass, DungeonClassConfig> classConfigs = new HashMap<>();
     
-    public DungeonsSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public DungeonsSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeFloorConfigs();
         initializeClassConfigs();
         startDungeonUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeFloorConfigs() {
@@ -144,7 +150,7 @@ public class DungeonsSystem implements Listener {
     
     private void startDungeonUpdateTask() {
         Thread.ofVirtual().start(() -> {
-            while (plugin.isEnabled()) {
+            while (SkyblockPlugin.isEnabled()) {
                 try {
                     for (DungeonInstance instance : activeDungeons.values()) {
                         updateDungeonInstance(instance);
@@ -201,7 +207,7 @@ public class DungeonsSystem implements Listener {
             UUID.randomUUID().toString(),
             party,
             floorConfigs.get(party.getFloor()),
-            System.currentTimeMillis()
+            java.lang.System.currentTimeMillis()
         );
         
         activeDungeons.put(instance.getInstanceId(), instance);
@@ -224,7 +230,7 @@ public class DungeonsSystem implements Listener {
         );
         
         player.teleport(dungeonLocation);
-        player.sendMessage("§aTeleported to dungeon!");
+        player.sendMessage(Component.text("§aTeleported to dungeon!"));
     }
     
     private void startDungeonMechanics(DungeonInstance instance) {
@@ -335,21 +341,21 @@ public class DungeonsSystem implements Listener {
     private ItemStack createDungeonItem(String name, Material material, String displayName) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(displayName);
-        meta.setLore(Arrays.asList(
+        meta.displayName(Component.text(displayName));
+        meta.lore(Arrays.asList(
             "§7A powerful dungeon weapon",
             "§7from the Catacombs",
             "",
             "§7Damage: §c+100",
             "§7Strength: §c+50",
             "§7Crit Damage: §c+25%"
-        ));
+        ).stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
         item.setItemMeta(meta);
         return item;
     }
     
     private void giveDungeonRewards(Player player, List<ItemStack> rewards, DungeonScore score) {
-        player.sendMessage("§aDungeon completed!");
+        player.sendMessage(Component.text("§aDungeon completed!"));
         player.sendMessage("§7Score: §e" + score.getTotalScore());
         player.sendMessage("§7Time: §e" + score.getTimeBonus());
         player.sendMessage("§7Secrets: §e" + score.getSecretsFound());

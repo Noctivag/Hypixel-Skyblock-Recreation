@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.data;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.skyblock.SkyblockIsland;
 import de.noctivag.skyblock.skyblock.SkyblockProfile;
 import org.bukkit.Bukkit;
@@ -16,20 +20,20 @@ import java.util.logging.Level;
 
 public class SQLiteStorage {
     private static Connection connection;
-    private static SkyblockPlugin plugin;
+    private static SkyblockPlugin SkyblockPlugin;
 
     public static synchronized void init(SkyblockPlugin pluginInstance) {
-        plugin = pluginInstance;
+        SkyblockPlugin = pluginInstance;
         try {
-            File dataDir = new File(plugin.getDataFolder(), "data");
+            File dataDir = new File(SkyblockPlugin.getDataFolder(), "data");
             if (!dataDir.exists()) dataDir.mkdirs();
             File dbFile = new File(dataDir, "skyblock.db");
             String url = "jdbc:sqlite:" + dbFile.getAbsolutePath();
             connection = DriverManager.getConnection(url);
             createTables();
-            plugin.getLogger().info("SQLiteStorage initialized at " + dbFile.getAbsolutePath());
+            SkyblockPlugin.getLogger().info("SQLiteStorage initialized at " + dbFile.getAbsolutePath());
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to initialize SQLite storage", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to initialize SQLite storage", e);
         }
     }
 
@@ -78,7 +82,7 @@ public class SQLiteStorage {
             ps.setInt(8, profile.isFirstJoin() ? 1 : 0);
             ps.executeUpdate();
         } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to save profile to SQLite for " + profile.getUuid(), e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to save profile to SQLite for " + profile.getUuid(), e);
         }
     }
 
@@ -103,7 +107,7 @@ public class SQLiteStorage {
                 return profile;
             }
         } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to load profile from SQLite for " + uuid, e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to load profile from SQLite for " + uuid, e);
             return null;
         }
     }
@@ -130,7 +134,7 @@ public class SQLiteStorage {
             ps.setInt(13, island.hasVisitors() ? 1 : 0);
             ps.executeUpdate();
         } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to save island to SQLite for " + island.getOwner(), e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to save island to SQLite for " + island.getOwner(), e);
         }
     }
 
@@ -161,7 +165,7 @@ public class SQLiteStorage {
                 return island;
             }
         } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to load island from SQLite for " + owner, e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to load island from SQLite for " + owner, e);
             return null;
         }
     }
@@ -174,7 +178,7 @@ public class SQLiteStorage {
             ps.setString(2, member.toString());
             ps.executeUpdate();
         } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to add trusted member to SQLite for " + owner, e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to add trusted member to SQLite for " + owner, e);
         }
     }
 
@@ -186,7 +190,7 @@ public class SQLiteStorage {
             ps.setString(2, member.toString());
             ps.executeUpdate();
         } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to remove trusted member from SQLite for " + owner, e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to remove trusted member from SQLite for " + owner, e);
         }
     }
 
@@ -203,7 +207,7 @@ public class SQLiteStorage {
                 }
             }
         } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to load trusted members from SQLite for " + owner, e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to load trusted members from SQLite for " + owner, e);
         }
         return result;
     }

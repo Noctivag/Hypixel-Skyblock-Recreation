@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.skyblock;
+
+import org.bukkit.plugin.java.JavaPlugin;
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.worlds.WorldManager;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -28,15 +33,15 @@ import java.util.UUID;
  */
 public class IslandCommandImpl {
 
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final WorldManager worldManager;
-    private final de.noctivag.plugin.skyblock.IslandManager islandManager;
+    private final de.noctivag.skyblock.skyblock.IslandManager islandManager;
 
     public IslandCommandImpl() {
-        // Obtain the plugin main instance via JavaPlugin helper
-        this.plugin = Plugin.getPlugin(SkyblockPlugin.class);
-        this.worldManager = (de.noctivag.plugin.worlds.WorldManager) plugin.getSimpleWorldManager();
-        this.islandManager = de.noctivag.plugin.skyblock.IslandManager.getInstance(plugin);
+        // Obtain the SkyblockPlugin main instance via JavaPlugin helper
+        this.SkyblockPlugin = SkyblockPlugin.getPlugin(SkyblockPlugin.class);
+        this.worldManager = (de.noctivag.skyblock.worlds.WorldManager) SkyblockPlugin.getSimpleWorldManager();
+        this.islandManager = de.noctivag.skyblock.skyblock.IslandManager.getInstance(SkyblockPlugin);
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -194,7 +199,7 @@ public class IslandCommandImpl {
         }
 
         // Teleport player to their island world
-        de.noctivag.plugin.skyblock.IslandManager.Island island = islandManager.getIslandByOwner(id);
+        de.noctivag.skyblock.skyblock.IslandManager.Island island = islandManager.getIslandByOwner(id);
         if (island == null) {
             player.sendMessage(Component.text("§cFehler: Insel nicht gefunden nach Erstellung."));
             return;
@@ -212,7 +217,7 @@ public class IslandCommandImpl {
         }
 
         Location spawn = world.getSpawnLocation();
-        Bukkit.getScheduler().runTask(plugin, () -> player.teleport(spawn));
+        Bukkit.getScheduler().runTask(SkyblockPlugin, () -> player.teleport(spawn));
         player.sendMessage(Component.text("§aInsel erstellt: Du wurdest zu deiner Insel teleportiert."));
     }
 
@@ -255,7 +260,7 @@ public class IslandCommandImpl {
             player.sendMessage(Component.text("§cDu besitzt keine Insel."));
             return;
         }
-        de.noctivag.plugin.skyblock.IslandManager.Island island = islandManager.getIslandByOwner(id);
+        de.noctivag.skyblock.skyblock.IslandManager.Island island = islandManager.getIslandByOwner(id);
         player.sendMessage(Component.text("§6§l=== Insel Mitglieder ==="));
         for (UUID member : new java.util.ArrayList<>(island.getMembers())) {
             String name = Bukkit.getOfflinePlayer(member).getName();
@@ -317,7 +322,7 @@ public class IslandCommandImpl {
             player.sendMessage(Component.text("§cDu besitzt keine Insel."));
             return;
         }
-        de.noctivag.plugin.skyblock.IslandManager.Island island = islandManager.getIslandByOwner(id);
+        de.noctivag.skyblock.skyblock.IslandManager.Island island = islandManager.getIslandByOwner(id);
         player.sendMessage(Component.text("§6§l=== Insel Informationen ==="));
         player.sendMessage(Component.text("§7Inhaber: §e" + Bukkit.getOfflinePlayer(island.getOwner()).getName()));
         player.sendMessage(Component.text("§7Welt: §e" + island.getWorldName()));
@@ -325,7 +330,7 @@ public class IslandCommandImpl {
     }
 
     private void teleportToOwnerIsland(Player player, UUID ownerId) {
-        de.noctivag.plugin.skyblock.IslandManager.Island island = islandManager.getIslandByOwner(ownerId);
+        de.noctivag.skyblock.skyblock.IslandManager.Island island = islandManager.getIslandByOwner(ownerId);
         if (island == null) {
             player.sendMessage(Component.text("§cDie Insel wurde nicht gefunden."));
             return;
@@ -340,7 +345,7 @@ public class IslandCommandImpl {
             player.sendMessage(Component.text("§eHinweis: Ziel-Insel ist ein Platzhalter in der privaten Inselwelt."));
         }
         Location spawn = world.getSpawnLocation();
-        Bukkit.getScheduler().runTask(plugin, () -> player.teleport(spawn));
+        Bukkit.getScheduler().runTask(SkyblockPlugin, () -> player.teleport(spawn));
     }
 
     private String getPlayerIslandWorldName(UUID playerId) {

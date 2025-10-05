@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.listeners;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.gui.MainMenu;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -13,10 +16,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.kyori.adventure.text.Component;
 
 public class MenuItemListener implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public MenuItemListener(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public MenuItemListener(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     @EventHandler
@@ -40,8 +43,8 @@ public class MenuItemListener implements Listener {
         String displayName = Component.text().append(meta.displayName()).build().toString();
         if (displayName.contains("§6✧ Hauptmenü ✧") || displayName.contains("Hauptmenü")) {
             event.setCancelled(true);
-            new MainMenu(plugin).open(player);
-            player.sendMessage("§aHauptmenü geöffnet!");
+            new MainMenu(SkyblockPlugin).open(player);
+            player.sendMessage(Component.text("§aHauptmenü geöffnet!"));
         }
     }
 }

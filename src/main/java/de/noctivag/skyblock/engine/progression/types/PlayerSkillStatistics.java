@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.engine.progression.types;
+import java.util.UUID;
 
 import java.util.Map;
 import java.util.UUID;
@@ -113,7 +114,7 @@ public class PlayerSkillStatistics {
     
     public double getXPToNextLevel(HypixelSkillType skillType) {
         SkillProgress progress = skills.get(skillType);
-        return progress != null ? progress.getXPToNextLevel() : 0.0;
+        return progress != null ? progress.getExperienceToNextLevel() : 0.0;
     }
     
     @Override

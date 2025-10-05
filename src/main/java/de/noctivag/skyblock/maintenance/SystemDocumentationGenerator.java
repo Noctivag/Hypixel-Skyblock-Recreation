@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.maintenance;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -23,12 +27,12 @@ import java.util.*;
  */
 public class SystemDocumentationGenerator {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final File docsFolder;
     
-    public SystemDocumentationGenerator(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.docsFolder = new File(plugin.getDataFolder(), "docs");
+    public SystemDocumentationGenerator(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.docsFolder = new File(SkyblockPlugin.getDataFolder(), "docs");
         if (!docsFolder.exists()) {
             docsFolder.mkdirs();
         }
@@ -38,7 +42,7 @@ public class SystemDocumentationGenerator {
      * Generiert alle Dokumentationen
      */
     public void generateAllDocumentation() {
-        plugin.getLogger().info("§e[Documentation] Generating system documentation...");
+        SkyblockPlugin.getLogger().info("§e[Documentation] Generating system documentation...");
         
         generateSystemOverview();
         generateCommandReference();
@@ -47,7 +51,7 @@ public class SystemDocumentationGenerator {
         generateConfigurationGuide();
         generateTroubleshootingGuide();
         
-        plugin.getLogger().info("§a[Documentation] Documentation generation completed!");
+        SkyblockPlugin.getLogger().info("§a[Documentation] Documentation generation completed!");
     }
     
     /**
@@ -58,12 +62,12 @@ public class SystemDocumentationGenerator {
             File file = new File(docsFolder, "system-overview.md");
             FileWriter writer = new FileWriter(file);
             
-            writer.write("# Plugin System Overview\n\n");
-            writer.write("## Plugin Information\n");
-            writer.write("- **Name**: " + plugin.getDescription().getName() + "\n");
-            writer.write("- **Version**: " + plugin.getDescription().getVersion() + "\n");
-            writer.write("- **Author**: " + plugin.getDescription().getAuthors() + "\n");
-            writer.write("- **Description**: " + plugin.getDescription().getDescription() + "\n\n");
+            writer.write("# SkyblockPlugin System Overview\n\n");
+            writer.write("## SkyblockPlugin Information\n");
+            writer.write("- **Name**: " + SkyblockPlugin.getDescription().getName() + "\n");
+            writer.write("- **Version**: " + SkyblockPlugin.getDescription().getVersion() + "\n");
+            writer.write("- **Author**: " + SkyblockPlugin.getDescription().getAuthors() + "\n");
+            writer.write("- **Description**: " + SkyblockPlugin.getDescription().getDescription() + "\n\n");
             
             writer.write("## Core Systems\n");
             writer.write("1. **Skills System** - 12 different skills with progression\n");
@@ -90,10 +94,10 @@ public class SystemDocumentationGenerator {
             }
             
             writer.close();
-            plugin.getLogger().info("§a[Documentation] System overview generated");
+            SkyblockPlugin.getLogger().info("§a[Documentation] System overview generated");
             
         } catch (IOException e) {
-            plugin.getLogger().warning("Error generating system overview: " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Error generating system overview: " + e.getMessage());
         }
     }
     
@@ -107,7 +111,7 @@ public class SystemDocumentationGenerator {
             
             writer.write("# Command Reference\n\n");
             
-            File pluginFile = new File(plugin.getDataFolder().getParentFile(), "plugin.yml");
+            File pluginFile = new File(SkyblockPlugin.getDataFolder().getParentFile(), "SkyblockPlugin.yml");
             if (pluginFile.exists()) {
                 FileConfiguration config = YamlConfiguration.loadConfiguration(pluginFile);
                 
@@ -131,10 +135,10 @@ public class SystemDocumentationGenerator {
             }
             
             writer.close();
-            plugin.getLogger().info("§a[Documentation] Command reference generated");
+            SkyblockPlugin.getLogger().info("§a[Documentation] Command reference generated");
             
         } catch (IOException e) {
-            plugin.getLogger().warning("Error generating command reference: " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Error generating command reference: " + e.getMessage());
         }
     }
     
@@ -148,10 +152,10 @@ public class SystemDocumentationGenerator {
             
             writer.write("# API Documentation\n\n");
             
-            // Document main plugin class
-            writer.write("## Plugin Class\n");
-            writer.write("**Class**: `de.noctivag.plugin.Plugin`\n");
-            writer.write("**Description**: Main plugin class containing all system managers\n\n");
+            // Document main SkyblockPlugin class
+            writer.write("## SkyblockPlugin Class\n");
+            writer.write("**Class**: `de.noctivag.skyblock.SkyblockPlugin`\n");
+            writer.write("**Description**: Main SkyblockPlugin class containing all system managers\n\n");
             
             // Document system managers
             String[] managers = {
@@ -162,15 +166,15 @@ public class SystemDocumentationGenerator {
             
             for (String manager : managers) {
                 writer.write("## " + manager + "\n");
-                writer.write("**Class**: `de.noctivag.plugin." + manager.toLowerCase() + "." + manager + "`\n");
+                writer.write("**Class**: `de.noctivag.skyblock." + manager.toLowerCase() + "." + manager + "`\n");
                 writer.write("**Description**: Manages " + manager.toLowerCase() + " functionality\n\n");
             }
             
             writer.close();
-            plugin.getLogger().info("§a[Documentation] API documentation generated");
+            SkyblockPlugin.getLogger().info("§a[Documentation] API documentation generated");
             
         } catch (IOException e) {
-            plugin.getLogger().warning("Error generating API documentation: " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Error generating API documentation: " + e.getMessage());
         }
     }
     
@@ -210,10 +214,10 @@ public class SystemDocumentationGenerator {
             }
             
             writer.close();
-            plugin.getLogger().info("§a[Documentation] GUI guide generated");
+            SkyblockPlugin.getLogger().info("§a[Documentation] GUI guide generated");
             
         } catch (IOException e) {
-            plugin.getLogger().warning("Error generating GUI guide: " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Error generating GUI guide: " + e.getMessage());
         }
     }
     
@@ -228,7 +232,7 @@ public class SystemDocumentationGenerator {
             writer.write("# Configuration Guide\n\n");
             
             writer.write("## Main Configuration\n");
-            writer.write("The main configuration file is `config.yml` in the plugin data folder.\n\n");
+            writer.write("The main configuration file is `config.yml` in the SkyblockPlugin data folder.\n\n");
             
             writer.write("### Database Configuration\n");
             writer.write("```yaml\n");
@@ -258,10 +262,10 @@ public class SystemDocumentationGenerator {
             writer.write("```\n\n");
             
             writer.close();
-            plugin.getLogger().info("§a[Documentation] Configuration guide generated");
+            SkyblockPlugin.getLogger().info("§a[Documentation] Configuration guide generated");
             
         } catch (IOException e) {
-            plugin.getLogger().warning("Error generating configuration guide: " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Error generating configuration guide: " + e.getMessage());
         }
     }
     
@@ -278,7 +282,7 @@ public class SystemDocumentationGenerator {
             writer.write("## Common Issues\n\n");
             
             writer.write("### Database Connection Issues\n");
-            writer.write("**Problem**: Plugin cannot connect to database\n");
+            writer.write("**Problem**: SkyblockPlugin cannot connect to database\n");
             writer.write("**Solution**:\n");
             writer.write("1. Check database credentials in config.yml\n");
             writer.write("2. Ensure database server is running\n");
@@ -289,8 +293,8 @@ public class SystemDocumentationGenerator {
             writer.write("**Problem**: Commands not working\n");
             writer.write("**Solution**:\n");
             writer.write("1. Check player permissions\n");
-            writer.write("2. Verify permission plugin is loaded\n");
-            writer.write("3. Check plugin.yml permissions\n\n");
+            writer.write("2. Verify permission SkyblockPlugin is loaded\n");
+            writer.write("3. Check SkyblockPlugin.yml permissions\n\n");
             
             writer.write("### GUI Issues\n");
             writer.write("**Problem**: GUIs not opening\n");
@@ -308,10 +312,10 @@ public class SystemDocumentationGenerator {
             writer.write("4. Check for memory leaks\n\n");
             
             writer.close();
-            plugin.getLogger().info("§a[Documentation] Troubleshooting guide generated");
+            SkyblockPlugin.getLogger().info("§a[Documentation] Troubleshooting guide generated");
             
         } catch (IOException e) {
-            plugin.getLogger().warning("Error generating troubleshooting guide: " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Error generating troubleshooting guide: " + e.getMessage());
         }
     }
     
@@ -322,7 +326,7 @@ public class SystemDocumentationGenerator {
         Map<String, String> descriptions = new HashMap<>();
         descriptions.put("AdvancedGUISystem", "Main GUI system manager");
         descriptions.put("UltimateMainMenu", "Primary navigation menu");
-        descriptions.put("FeatureBookGUI", "Plugin features overview");
+        descriptions.put("FeatureBookGUI", "SkyblockPlugin features overview");
         descriptions.put("AdminMenu", "Administrative tools and settings");
         descriptions.put("SettingsGUI", "Player settings and preferences");
         descriptions.put("ModerationGUI", "Moderation tools and utilities");
@@ -395,7 +399,7 @@ public class SystemDocumentationGenerator {
         org.bukkit.inventory.meta.ItemMeta meta = item.getItemMeta();
         
         if (meta != null) {
-            meta.setDisplayName("§6§lSystem Documentation");
+            meta.displayName(Component.text("§6§lSystem Documentation"));
             
             List<String> lore = new ArrayList<>();
             lore.add("§7Generated Documentation:");
@@ -409,7 +413,7 @@ public class SystemDocumentationGenerator {
             lore.add("§eClick to regenerate documentation");
             lore.add("§eRight-click to open docs folder");
             
-            meta.setLore(lore);
+            meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         

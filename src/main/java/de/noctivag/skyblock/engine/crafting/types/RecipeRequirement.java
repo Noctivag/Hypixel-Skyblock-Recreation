@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.engine.crafting.types;
+import java.util.UUID;
 
 import de.noctivag.skyblock.engine.collections.types.CollectionType;
 import de.noctivag.skyblock.engine.progression.types.HypixelSkillType;

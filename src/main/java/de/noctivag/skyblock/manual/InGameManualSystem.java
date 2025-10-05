@@ -1,4 +1,9 @@
 package de.noctivag.skyblock.manual;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
@@ -10,25 +15,26 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class InGameManualSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerManualData> playerManualData = new ConcurrentHashMap<>();
     private final Map<ManualCategory, List<ManualEntry>> manualEntries = new HashMap<>();
     
-    public InGameManualSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public InGameManualSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
         initializeManualEntries();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeManualEntries() {
@@ -37,7 +43,7 @@ public class InGameManualSystem implements Listener {
         basicCommands.add(new ManualEntry(
             "Basic Commands", "§aBasic Commands", Material.COMMAND_BLOCK,
             "§7Basic commands for everyday use.",
-            Arrays.asList("§7- /help - Show help information", "§7- /info - Show plugin information", "§7- /reload - Reload the plugin"),
+            Arrays.asList("§7- /help - Show help information", "§7- /info - Show SkyblockPlugin information", "§7- /reload - Reload the SkyblockPlugin"),
             Arrays.asList("§7- /help", "§7- /info", "§7- /reload")
         ));
         manualEntries.put(ManualCategory.BASIC_COMMANDS, basicCommands);
@@ -219,7 +225,7 @@ public class InGameManualSystem implements Listener {
     }
     
     public void openManualGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lIn-Game Manual");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lIn-Game Manual"));
         
         // Add manual categories
         addGUIItem(gui, 10, Material.COMMAND_BLOCK, "§a§lBasic Commands", "§7Basic commands for everyday use.");
@@ -245,7 +251,7 @@ public class InGameManualSystem implements Listener {
         addGUIItem(gui, 53, Material.ARROW, "§7§lNext Page", "§7Go to next page.");
         
         player.openInventory(gui);
-        player.sendMessage("§aIn-Game Manual geöffnet!");
+        player.sendMessage(Component.text("§aIn-Game Manual geöffnet!"));
     }
     
     public void openCategoryGUI(Player player, ManualCategory category) {
@@ -304,8 +310,10 @@ public class InGameManualSystem implements Listener {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(name);
-            meta.setLore(Arrays.asList(description));
+            meta.displayName(Component.text(name));
+            meta.lore(Arrays.asList(description).stream()
+                .map(desc -> Component.text(desc))
+                .collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         gui.setItem(slot, item);
@@ -382,7 +390,7 @@ public class InGameManualSystem implements Listener {
         
         public PlayerManualData(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
             
             // Unlock basic categories by default
             for (ManualCategory category : ManualCategory.values()) {
@@ -391,7 +399,7 @@ public class InGameManualSystem implements Listener {
         }
         
         public void update() {
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void unlockCategory(ManualCategory category) {

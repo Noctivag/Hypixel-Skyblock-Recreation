@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.combat;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Bukkit;
@@ -41,20 +45,20 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Damage Statistics
  */
 public class AdvancedDamageSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerDamageStats> playerDamageStats = new ConcurrentHashMap<>();
     private final Map<UUID, List<DamageOverTime>> damageOverTime = new ConcurrentHashMap<>();
     private final Map<UUID, List<HealOverTime>> healOverTime = new ConcurrentHashMap<>();
     private final Map<UUID, BukkitTask> damageTasks = new ConcurrentHashMap<>();
 
-    public AdvancedDamageSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedDamageSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         startDamageUpdateTask();
 
         // Register events
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
 
     private void startDamageUpdateTask() {
@@ -64,7 +68,7 @@ public class AdvancedDamageSystem implements Listener {
                 updateDamageOverTime();
                 updateHealOverTime();
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Every second
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Every second
     }
 
     @EventHandler
@@ -324,7 +328,7 @@ public class AdvancedDamageSystem implements Listener {
     }
 
     private void updateDamageOverTime() {
-        long currentTime = System.currentTimeMillis();
+        long currentTime = java.lang.System.currentTimeMillis();
 
         for (Map.Entry<UUID, List<DamageOverTime>> entry : damageOverTime.entrySet()) {
             UUID entityId = entry.getKey();
@@ -362,7 +366,7 @@ public class AdvancedDamageSystem implements Listener {
     }
 
     private void updateHealOverTime() {
-        long currentTime = System.currentTimeMillis();
+        long currentTime = java.lang.System.currentTimeMillis();
 
         for (Map.Entry<UUID, List<HealOverTime>> entry : healOverTime.entrySet()) {
             UUID entityId = entry.getKey();
@@ -621,7 +625,7 @@ public class AdvancedDamageSystem implements Listener {
             this.damage = damage;
             this.duration = duration;
             this.tickInterval = tickInterval;
-            this.startTime = System.currentTimeMillis();
+            this.startTime = java.lang.System.currentTimeMillis();
             this.lastTick = startTime;
         }
 
@@ -646,7 +650,7 @@ public class AdvancedDamageSystem implements Listener {
             this.healing = healing;
             this.duration = duration;
             this.tickInterval = tickInterval;
-            this.startTime = System.currentTimeMillis();
+            this.startTime = java.lang.System.currentTimeMillis();
             this.lastTick = startTime;
         }
 

@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.rewards.DailyRewardSystem;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -11,13 +14,13 @@ import net.kyori.adventure.text.Component;
 import java.util.Arrays;
 
 public class EnhancedDailyRewardGUI extends CustomGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Player player;
     private final DailyRewardSystem dailyRewardSystem;
 
-    public EnhancedDailyRewardGUI(SkyblockPlugin plugin, Player player) {
+    public EnhancedDailyRewardGUI(SkyblockPlugin SkyblockPlugin, Player player) {
         super(54, Component.text("§6§lDaily Rewards"));
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.player = player;
         // Placeholder - method not implemented
         this.dailyRewardSystem = null;
@@ -63,7 +66,7 @@ public class EnhancedDailyRewardGUI extends CustomGUI {
                 setItem(slot, icon, name,
                     "§7" + reward.getDescription(),
                     "",
-                    "§eGeld: §f" + plugin.getEconomyManager().formatMoney(reward.getMoneyReward()),
+                    "§eGeld: §f" + SkyblockPlugin.getEconomyManager().formatMoney(reward.getMoneyReward()),
                     "§7Items: §f" + reward.getItems().size() + " Items",
                     "",
                     status);
@@ -130,7 +133,7 @@ public class EnhancedDailyRewardGUI extends CustomGUI {
         if (meta != null) {
             meta.displayName(Component.text(name));
             if (lore.length > 0) {
-                meta.lore(Arrays.stream(lore).map(Component::text).toList());
+                meta.lore(java.util.Arrays.stream(lore).map(Component::text).collect(java.util.stream.Collectors.toList()));
             }
             item.setItemMeta(meta);
         }

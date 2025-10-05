@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.skills.rewards;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.core.api.Service;
@@ -8,6 +9,7 @@ import de.noctivag.skyblock.features.skills.types.SkillType;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Manages skill rewards and milestones

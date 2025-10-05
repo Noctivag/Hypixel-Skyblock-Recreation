@@ -1,15 +1,19 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import net.kyori.adventure.text.Component;
 
 public class WebsiteGUI extends CustomGUI {
     private final Player player;
     
-    public WebsiteGUI(SkyblockPlugin plugin, Player player) {
-        super(plugin, "§b§lWebsite", 54);
+    public WebsiteGUI(SkyblockPlugin SkyblockPlugin, Player player) {
+        super(SkyblockPlugin, "§b§lWebsite", 54);
         this.player = player;
         setupItems();
     }

@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.npcs;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -12,12 +15,13 @@ import org.bukkit.util.Vector;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import net.kyori.adventure.text.Component;
 
 /**
  * Hypixel-Style NPC with advanced animations and interactions
  */
 public class HypixelStyleNPC {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final String npcId;
     private final AdvancedNPCSystem.NPCType type;
     private Location location;
@@ -46,8 +50,8 @@ public class HypixelStyleNPC {
     private NPCEmote currentEmote = NPCEmote.NEUTRAL;
     private long emoteStartTime = 0;
     
-    public HypixelStyleNPC(SkyblockPlugin plugin, String npcId, AdvancedNPCSystem.NPCType type, Location location, String displayName, String customData) {
-        this.plugin = plugin;
+    public HypixelStyleNPC(SkyblockPlugin SkyblockPlugin, String npcId, AdvancedNPCSystem.NPCType type, Location location, String displayName, String customData) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.npcId = npcId;
         this.type = type;
         this.location = location;
@@ -149,8 +153,8 @@ public class HypixelStyleNPC {
         setNPCAppearance();
         
         // Add custom metadata
-        entity.setMetadata("npc_id", new org.bukkit.metadata.FixedMetadataValue(plugin, npcId));
-        entity.setMetadata("npc_type", new org.bukkit.metadata.FixedMetadataValue(plugin, type.name()));
+        entity.setMetadata("npc_id", new org.bukkit.metadata.FixedMetadataValue(SkyblockPlugin, npcId));
+        entity.setMetadata("npc_type", new org.bukkit.metadata.FixedMetadataValue(SkyblockPlugin, type.name()));
     }
     
     private void setNPCAppearance() {
@@ -219,7 +223,7 @@ public class HypixelStyleNPC {
                     performEmoteAnimation();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 10L); // Faster updates for smoother animations
+        }.runTaskTimer(SkyblockPlugin, 0L, 10L); // Faster updates for smoother animations
     }
     
     private void startParticleEffects() {
@@ -242,7 +246,7 @@ public class HypixelStyleNPC {
                     case ADMIN -> spawnParticles(Particle.DUST, 2);
                 }
             }
-        }.runTaskTimer(plugin, 0L, 40L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 40L);
     }
     
     private void startSoundEffects() {
@@ -256,7 +260,7 @@ public class HypixelStyleNPC {
                     playAmbientSound();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 100L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 100L);
     }
     
     private void performIdleAnimation() {
@@ -280,7 +284,7 @@ public class HypixelStyleNPC {
     }
     
     private void performEmoteAnimation() {
-        long currentTime = System.currentTimeMillis();
+        long currentTime = java.lang.System.currentTimeMillis();
         long emoteDuration = 2000; // 2 seconds
         
         if (currentTime - emoteStartTime > emoteDuration) {
@@ -354,7 +358,7 @@ public class HypixelStyleNPC {
     public void onPlayerInteract(Player player) {
         if (player == null) return;
         
-        lastInteraction = System.currentTimeMillis();
+        lastInteraction = java.lang.System.currentTimeMillis();
         isLookingAtPlayer = true;
         currentPlayer = player;
         
@@ -374,7 +378,7 @@ public class HypixelStyleNPC {
                 isLookingAtPlayer = false;
                 currentPlayer = null;
             }
-        }.runTaskLater(plugin, 100L);
+        }.runTaskLater(SkyblockPlugin, 100L);
     }
     
     private void startDialogue(Player player) {
@@ -395,7 +399,7 @@ public class HypixelStyleNPC {
                 showDialogueOptions(player);
                 isTalking = false;
             }
-        }.runTaskLater(plugin, 40L);
+        }.runTaskLater(SkyblockPlugin, 40L);
     }
     
     private void showDialogueOptions(Player player) {
@@ -403,45 +407,45 @@ public class HypixelStyleNPC {
         switch (type) {
             case SHOP -> {
                 player.sendMessage("§8[§6" + displayName + "§8] §fWhat would you like to do?");
-                player.sendMessage("§7• §e1. §fBrowse Items");
-                player.sendMessage("§7• §e2. §fSell Items");
-                player.sendMessage("§7• §e3. §fView Prices");
-                player.sendMessage("§7• §e4. §fLeave");
+                player.sendMessage(Component.text("§7• §e1. §fBrowse Items"));
+                player.sendMessage(Component.text("§7• §e2. §fSell Items"));
+                player.sendMessage(Component.text("§7• §e3. §fView Prices"));
+                player.sendMessage(Component.text("§7• §e4. §fLeave"));
             }
             case QUEST -> {
                 player.sendMessage("§8[§6" + displayName + "§8] §fI have quests available!");
-                player.sendMessage("§7• §e1. §fView Available Quests");
-                player.sendMessage("§7• §e2. §fCheck Quest Progress");
-                player.sendMessage("§7• §e3. §fClaim Rewards");
-                player.sendMessage("§7• §e4. §fLeave");
+                player.sendMessage(Component.text("§7• §e1. §fView Available Quests"));
+                player.sendMessage(Component.text("§7• §e2. §fCheck Quest Progress"));
+                player.sendMessage(Component.text("§7• §e3. §fClaim Rewards"));
+                player.sendMessage(Component.text("§7• §e4. §fLeave"));
             }
             case INFO -> {
                 player.sendMessage("§8[§6" + displayName + "§8] §fHow can I help you?");
-                player.sendMessage("§7• §e1. §fServer Information");
-                player.sendMessage("§7• §e2. §fGame Rules");
-                player.sendMessage("§7• §e3. §fCommands Help");
-                player.sendMessage("§7• §e4. §fLeave");
+                player.sendMessage(Component.text("§7• §e1. §fServer Information"));
+                player.sendMessage(Component.text("§7• §e2. §fGame Rules"));
+                player.sendMessage(Component.text("§7• §e3. §fCommands Help"));
+                player.sendMessage(Component.text("§7• §e4. §fLeave"));
             }
             case WARP -> {
                 player.sendMessage("§8[§6" + displayName + "§8] §fWhere would you like to go?");
-                player.sendMessage("§7• §e1. §fSpawn");
-                player.sendMessage("§7• §e2. §fMarket");
-                player.sendMessage("§7• §e3. §fArena");
-                player.sendMessage("§7• §e4. §fLeave");
+                player.sendMessage(Component.text("§7• §e1. §fSpawn"));
+                player.sendMessage(Component.text("§7• §e2. §fMarket"));
+                player.sendMessage(Component.text("§7• §e3. §fArena"));
+                player.sendMessage(Component.text("§7• §e4. §fLeave"));
             }
             case BANK -> {
                 player.sendMessage("§8[§6" + displayName + "§8] §fBanking services available!");
-                player.sendMessage("§7• §e1. §fDeposit Money");
-                player.sendMessage("§7• §e2. §fWithdraw Money");
-                player.sendMessage("§7• §e3. §fCheck Balance");
-                player.sendMessage("§7• §e4. §fLeave");
+                player.sendMessage(Component.text("§7• §e1. §fDeposit Money"));
+                player.sendMessage(Component.text("§7• §e2. §fWithdraw Money"));
+                player.sendMessage(Component.text("§7• §e3. §fCheck Balance"));
+                player.sendMessage(Component.text("§7• §e4. §fLeave"));
             }
         }
     }
     
     public void setEmote(NPCEmote emote) {
         this.currentEmote = emote;
-        this.emoteStartTime = System.currentTimeMillis();
+        this.emoteStartTime = java.lang.System.currentTimeMillis();
     }
     
     public void update() {

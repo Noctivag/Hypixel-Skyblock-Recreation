@@ -1,6 +1,9 @@
 package de.noctivag.skyblock.engine.temporal;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.engine.temporal.data.*;
 import de.noctivag.skyblock.engine.temporal.services.GIMIntegrationService;
 import de.noctivag.skyblock.network.ServerManager;
@@ -30,7 +33,7 @@ import java.util.logging.Level;
  */
 public class GlobalTimeManagementService {
     
-    private final Plugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final ServerManager serverManager;
     private final JedisPool jedisPool;
     private final GIMIntegrationService gimIntegration;
@@ -60,8 +63,8 @@ public class GlobalTimeManagementService {
     private static final String EVENT_TRIGGERS_CHANNEL = "temporal:event_triggers";
     private static final String TIME_SYNC_CHANNEL = "temporal:time_sync";
     
-    public GlobalTimeManagementService(Plugin plugin, ServerManager serverManager) {
-        this.plugin = plugin;
+    public GlobalTimeManagementService(SkyblockPlugin SkyblockPlugin, ServerManager serverManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.serverManager = serverManager;
         this.jedisPool = serverManager.getJedisPool();
         this.gimIntegration = new GIMIntegrationService(this);
@@ -89,10 +92,10 @@ public class GlobalTimeManagementService {
             // Start GIM integration
             gimIntegration.initialize();
             
-            plugin.getLogger().info("Global Time Management Service initialized successfully");
+            SkyblockPlugin.getLogger().info("Global Time Management Service initialized successfully");
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to initialize Global Time Management Service", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to initialize Global Time Management Service", e);
         }
     }
     
@@ -129,10 +132,10 @@ public class GlobalTimeManagementService {
                 cultEvents.put(entry.getKey(), event);
             }
             
-            plugin.getLogger().info("Loaded " + scheduledEvents.size() + " events from Redis");
+            SkyblockPlugin.getLogger().info("Loaded " + scheduledEvents.size() + " events from Redis");
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to load events from Redis", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to load events from Redis", e);
         }
     }
     
@@ -180,7 +183,7 @@ public class GlobalTimeManagementService {
             public void run() {
                 synchronizeGlobalTime();
             }
-        }.runTaskTimerAsynchronously(plugin, 0L, CALENDAR_UPDATE_INTERVAL / 50L);
+        }.runTaskTimerAsynchronously(SkyblockPlugin, 0L, CALENDAR_UPDATE_INTERVAL / 50L);
     }
     
     /**
@@ -194,7 +197,7 @@ public class GlobalTimeManagementService {
                 updateEventStatus();
                 cleanupExpiredEvents();
             }
-        }.runTaskTimerAsynchronously(plugin, 0L, EVENT_CHECK_INTERVAL / 50L);
+        }.runTaskTimerAsynchronously(SkyblockPlugin, 0L, EVENT_CHECK_INTERVAL / 50L);
     }
     
     /**
@@ -202,7 +205,7 @@ public class GlobalTimeManagementService {
      */
     private void synchronizeGlobalTime() {
         try (Jedis jedis = jedisPool.getResource()) {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             LocalDateTime globalTime = LocalDateTime.now(ZoneOffset.UTC);
             
             // Store global time
@@ -219,7 +222,7 @@ public class GlobalTimeManagementService {
             jedis.publish(TIME_SYNC_CHANNEL, message.toJson());
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to synchronize global time", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to synchronize global time", e);
         }
     }
     
@@ -304,10 +307,10 @@ public class GlobalTimeManagementService {
             // Announce to players
             announceEventStart(event);
             
-            plugin.getLogger().info("Event triggered: " + event.getName());
+            SkyblockPlugin.getLogger().info("Event triggered: " + event.getName());
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to trigger event: " + event.getName(), e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to trigger event: " + event.getName(), e);
         }
     }
     
@@ -330,10 +333,10 @@ public class GlobalTimeManagementService {
             // Announce to players
             announceEventEnd(event);
             
-            plugin.getLogger().info("Event ended: " + event.getName());
+            SkyblockPlugin.getLogger().info("Event ended: " + event.getName());
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to end event: " + event.getName(), e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to end event: " + event.getName(), e);
         }
     }
     
@@ -413,7 +416,7 @@ public class GlobalTimeManagementService {
         // Announce election
         announceMayorElection(election);
         
-        plugin.getLogger().info("Mayor election started: " + election.getId());
+        SkyblockPlugin.getLogger().info("Mayor election started: " + election.getId());
     }
     
     /**
@@ -428,7 +431,7 @@ public class GlobalTimeManagementService {
         // Announce event
         announceJacobsEvent(event);
         
-        plugin.getLogger().info("Jacob's event started: " + event.getId());
+        SkyblockPlugin.getLogger().info("Jacob's event started: " + event.getId());
     }
     
     /**
@@ -443,7 +446,7 @@ public class GlobalTimeManagementService {
         // Announce event
         announceCultEvent(event);
         
-        plugin.getLogger().info("Cult event started: " + event.getId());
+        SkyblockPlugin.getLogger().info("Cult event started: " + event.getId());
     }
     
     /**
@@ -480,13 +483,13 @@ public class GlobalTimeManagementService {
                 event.getName(),
                 event.getType(),
                 EventTriggerMessage.TriggerType.START,
-                System.currentTimeMillis()
+                java.lang.System.currentTimeMillis()
             );
             
             jedis.publish(EVENT_TRIGGERS_CHANNEL, message.toJson());
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to broadcast event trigger", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to broadcast event trigger", e);
         }
     }
     
@@ -500,13 +503,13 @@ public class GlobalTimeManagementService {
                 event.getName(),
                 event.getType(),
                 EventTriggerMessage.TriggerType.END,
-                System.currentTimeMillis()
+                java.lang.System.currentTimeMillis()
             );
             
             jedis.publish(EVENT_TRIGGERS_CHANNEL, message.toJson());
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to broadcast event end", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to broadcast event end", e);
         }
     }
     
@@ -568,7 +571,7 @@ public class GlobalTimeManagementService {
         try (Jedis jedis = jedisPool.getResource()) {
             jedis.hset(EVENTS_KEY, event.getId(), event.toJson());
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to store event in Redis", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to store event in Redis", e);
         }
     }
     
@@ -579,7 +582,7 @@ public class GlobalTimeManagementService {
         try (Jedis jedis = jedisPool.getResource()) {
             jedis.hset(MAYOR_ELECTIONS_KEY, election.getId(), election.toJson());
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to store mayor election in Redis", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to store mayor election in Redis", e);
         }
     }
     
@@ -590,7 +593,7 @@ public class GlobalTimeManagementService {
         try (Jedis jedis = jedisPool.getResource()) {
             jedis.hset(JACOBS_EVENTS_KEY, event.getId(), event.toJson());
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to store Jacob's event in Redis", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to store Jacob's event in Redis", e);
         }
     }
     
@@ -601,7 +604,7 @@ public class GlobalTimeManagementService {
         try (Jedis jedis = jedisPool.getResource()) {
             jedis.hset(CULT_EVENTS_KEY, event.getId(), event.toJson());
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to store Cult event in Redis", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to store Cult event in Redis", e);
         }
     }
     
@@ -612,7 +615,7 @@ public class GlobalTimeManagementService {
         // Update event timers and status
         for (GlobalEvent event : activeEvents.values()) {
             long remainingTime = event.getStartTime().plusHours(event.getDuration())
-                .toEpochSecond(ZoneOffset.UTC) - System.currentTimeMillis() / 1000;
+                .toEpochSecond(ZoneOffset.UTC) - java.lang.System.currentTimeMillis() / 1000;
             
             if (remainingTime <= 0) {
                 endEvent(event);
@@ -657,8 +660,8 @@ public class GlobalTimeManagementService {
         return gimIntegration;
     }
     
-    public Plugin getPlugin() {
-        return plugin;
+    public SkyblockPlugin getPlugin() {
+        return SkyblockPlugin;
     }
     
     public JedisPool getJedisPool() {

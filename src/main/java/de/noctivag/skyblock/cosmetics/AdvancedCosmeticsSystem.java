@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.cosmetics;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.data.DatabaseManager;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -11,14 +15,14 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AdvancedCosmeticsSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final DatabaseManager databaseManager;
     private final Map<UUID, PlayerCosmetics> playerCosmetics;
     private final BukkitTask cosmeticTasks;
 
-    public AdvancedCosmeticsSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.databaseManager = plugin.getDatabaseManager();
+    public AdvancedCosmeticsSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.databaseManager = SkyblockPlugin.getDatabaseManager();
         this.playerCosmetics = new ConcurrentHashMap<>();
         this.cosmeticTasks = null; // Will be initialized later
     }

@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.economy.bazaar.types;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
@@ -25,7 +26,7 @@ public class BazaarOrder {
         this.price = price;
         this.amount = amount;
         this.filledAmount = 0;
-        this.timestamp = System.currentTimeMillis();
+        this.timestamp = java.lang.System.currentTimeMillis();
         this.isActive = true;
     }
 

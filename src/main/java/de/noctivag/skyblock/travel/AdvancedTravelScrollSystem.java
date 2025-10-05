@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.travel;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -21,7 +26,7 @@ import java.util.concurrent.CompletableFuture;
  */
 public class AdvancedTravelScrollSystem {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerTravelData> playerTravelData = new ConcurrentHashMap<>();
     private final Map<String, TravelScroll> travelScrolls = new HashMap<>();
@@ -29,8 +34,8 @@ public class AdvancedTravelScrollSystem {
     private final Map<UUID, BukkitTask> activeTeleports = new ConcurrentHashMap<>();
     private final Map<UUID, Long> teleportCooldowns = new ConcurrentHashMap<>();
     
-    public AdvancedTravelScrollSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedTravelScrollSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeTravelScrolls();
         initializeTravelLocations();
@@ -356,7 +361,7 @@ public class AdvancedTravelScrollSystem {
                 updateActiveTeleports();
                 updateCooldowns();
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Every second
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Every second
     }
     
     /**
@@ -377,7 +382,7 @@ public class AdvancedTravelScrollSystem {
      * Update teleport cooldowns
      */
     private void updateCooldowns() {
-        long currentTime = System.currentTimeMillis();
+        long currentTime = java.lang.System.currentTimeMillis();
         teleportCooldowns.entrySet().removeIf(entry -> currentTime >= entry.getValue());
     }
     
@@ -448,7 +453,7 @@ public class AdvancedTravelScrollSystem {
         TravelLocation location = getTravelLocation(scroll.getLocationId());
         
         if (location == null) {
-            player.sendMessage("§cTravel location not found!");
+            player.sendMessage(Component.text("§cTravel location not found!"));
             return false;
         }
         
@@ -469,7 +474,7 @@ public class AdvancedTravelScrollSystem {
      */
     private void startTeleportation(Player player, TravelLocation location, TravelScroll scroll) {
         player.sendMessage("§aTeleporting to " + location.getName() + " in 3 seconds...");
-        player.sendMessage("§7Don't move!");
+        player.sendMessage(Component.text("§7Don't move!"));
         
         Location startLocation = player.getLocation();
         BukkitTask teleportTask = new BukkitRunnable() {
@@ -487,7 +492,7 @@ public class AdvancedTravelScrollSystem {
                 
                 // Check if player moved
                 if (player.getLocation().distance(startLocation) > 1.0) {
-                    player.sendMessage("§cTeleportation cancelled! You moved.");
+                    player.sendMessage(Component.text("§cTeleportation cancelled! You moved."));
                     activeTeleports.remove(player.getUniqueId());
                     cancel();
                     return;
@@ -496,7 +501,7 @@ public class AdvancedTravelScrollSystem {
                 player.sendMessage("§eTeleporting in " + countdown + "...");
                 countdown--;
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L);
         
         activeTeleports.put(player.getUniqueId(), teleportTask);
     }
@@ -531,8 +536,8 @@ public class AdvancedTravelScrollSystem {
             data.addExperience(100);
             
         } catch (Exception e) {
-            player.sendMessage("§cTeleportation failed!");
-            plugin.getLogger().warning("Failed to teleport player: " + e.getMessage());
+            player.sendMessage(Component.text("§cTeleportation failed!"));
+            SkyblockPlugin.getLogger().warning("Failed to teleport player: " + e.getMessage());
         }
     }
     
@@ -541,7 +546,7 @@ public class AdvancedTravelScrollSystem {
      */
     public boolean isOnCooldown(UUID playerId, String scrollId) {
         Long cooldownEnd = teleportCooldowns.get(playerId + ":" + scrollId);
-        return cooldownEnd != null && System.currentTimeMillis() < cooldownEnd;
+        return cooldownEnd != null && java.lang.System.currentTimeMillis() < cooldownEnd;
     }
     
     /**
@@ -550,7 +555,7 @@ public class AdvancedTravelScrollSystem {
     public void setCooldown(UUID playerId, String scrollId, long cooldownMs) {
         // Use a different approach since we need to store per-scroll cooldowns
         // For now, just use player ID as key
-        teleportCooldowns.put(playerId, System.currentTimeMillis() + cooldownMs);
+        teleportCooldowns.put(playerId, java.lang.System.currentTimeMillis() + cooldownMs);
     }
     
     /**
@@ -559,7 +564,7 @@ public class AdvancedTravelScrollSystem {
     public long getRemainingCooldown(UUID playerId, String scrollId) {
         Long cooldownEnd = teleportCooldowns.get(playerId + ":" + scrollId);
         if (cooldownEnd == null) return 0;
-        return Math.max(0, cooldownEnd - System.currentTimeMillis());
+        return Math.max(0, cooldownEnd - java.lang.System.currentTimeMillis());
     }
     
     /**
@@ -573,14 +578,14 @@ public class AdvancedTravelScrollSystem {
         ItemMeta meta = item.getItemMeta();
         
         if (meta != null) {
-            meta.setDisplayName("§6" + scroll.getName());
+            meta.displayName(Component.text("§6" + scroll.getName()));
             List<String> lore = new ArrayList<>(scroll.getDescription());
             lore.add("");
             lore.add("§7Right-click to use this scroll");
             lore.add("§7and teleport instantly!");
             lore.add("");
             lore.add("§8A magical travel scroll");
-            meta.setLore(lore);
+            meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             
             item.setItemMeta(meta);
         }
@@ -655,7 +660,7 @@ public class AdvancedTravelScrollSystem {
                 playerTravelData.put(playerId, data);
             }
         } catch (Exception e) {
-            plugin.getLogger().warning("Failed to load travel data for player " + playerId + ": " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Failed to load travel data for player " + playerId + ": " + e.getMessage());
         }
     }
     

@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.contests;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -17,24 +21,26 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 
 /**
  * Jacob's Farming Contest System - Hypixel Skyblock Style
  */
 public class JacobsFarmingContestSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerContestData> playerContestData = new ConcurrentHashMap<>();
     private final Map<ContestType, ContestConfig> contestConfigs = new HashMap<>();
     private final Map<UUID, BukkitTask> contestTasks = new ConcurrentHashMap<>();
     
-    public JacobsFarmingContestSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public JacobsFarmingContestSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeContestConfigs();
         startContestUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeContestConfigs() {
@@ -83,7 +89,7 @@ public class JacobsFarmingContestSystem implements Listener {
                     contestData.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L * 60L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L * 60L);
     }
     
     @EventHandler
@@ -119,7 +125,7 @@ public class JacobsFarmingContestSystem implements Listener {
     }
     
     public void openContestGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§e§lJacob's Farming Contest");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§e§lJacob's Farming Contest"));
         
         addGUIItem(gui, 10, Material.WHEAT, "§e§lWheat Contest", "§7Compete in wheat farming.");
         addGUIItem(gui, 11, Material.CARROT, "§6§lCarrot Contest", "§7Compete in carrot farming.");
@@ -128,7 +134,7 @@ public class JacobsFarmingContestSystem implements Listener {
         addGUIItem(gui, 14, Material.MELON, "§a§lMelon Contest", "§7Compete in melon farming.");
         
         player.openInventory(gui);
-        player.sendMessage("§aJacob's Farming Contest GUI geöffnet!");
+        player.sendMessage(Component.text("§aJacob's Farming Contest GUI geöffnet!"));
     }
     
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String description) {
@@ -244,11 +250,11 @@ public class JacobsFarmingContestSystem implements Listener {
         
         public PlayerContestData(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void addContestProgress(ContestType type, int amount) {

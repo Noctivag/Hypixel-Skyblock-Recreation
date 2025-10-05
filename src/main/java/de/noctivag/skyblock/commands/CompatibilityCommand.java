@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.commands;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.compatibility.CompatibilityManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,14 +15,14 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * CompatibilityCommand - Verwaltet Plugin-Kompatibilität
+ * CompatibilityCommand - Verwaltet SkyblockPlugin-Kompatibilität
  */
 public class CompatibilityCommand implements CommandExecutor, TabCompleter {
     
     private final CompatibilityManager compatibilityManager;
     
-    public CompatibilityCommand(SkyblockPlugin plugin) {
-        this.compatibilityManager = (de.noctivag.plugin.compatibility.CompatibilityManager) plugin.getCompatibilityManager();
+    public CompatibilityCommand(SkyblockPlugin SkyblockPlugin) {
+        this.compatibilityManager = (de.noctivag.skyblock.compatibility.CompatibilityManager) SkyblockPlugin.getCompatibilityManager();
     }
     
     @Override
@@ -65,10 +68,10 @@ public class CompatibilityCommand implements CommandExecutor, TabCompleter {
     }
     
     private void showCompatibilityReport(CommandSender sender) {
-        sender.sendMessage("§6§l=== PLUGIN COMPATIBILITY REPORT ===");
+        sender.sendMessage("§6§l=== SkyblockPlugin COMPATIBILITY REPORT ===");
         
         if (compatibilityManager.isCompatible()) {
-            sender.sendMessage("§a✅ Plugin is fully compatible with your server!");
+            sender.sendMessage("§a✅ SkyblockPlugin is fully compatible with your server!");
         } else {
             sender.sendMessage("§c❌ Compatibility issues detected!");
         }

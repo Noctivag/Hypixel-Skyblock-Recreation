@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.gui;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.CorePlatform;
 import de.noctivag.skyblock.economy.EconomySystem;
 import de.noctivag.skyblock.pets.PetSystem;
@@ -14,7 +18,7 @@ import net.kyori.adventure.text.Component;
 import java.util.*;
 
 /**
- * Ultimate GUI System - Umfassendes GUI-System für alle Plugin-Features
+ * Ultimate GUI System - Umfassendes GUI-System für alle SkyblockPlugin-Features
  * 
  * Verantwortlich für:
  * - Hauptmenü-Navigation
@@ -25,7 +29,7 @@ import java.util.*;
  * - Responsive Design
  */
 public class UltimateGUISystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CorePlatform corePlatform;
     private final EconomySystem economySystem;
     private final PetSystem petSystem;
@@ -35,9 +39,9 @@ public class UltimateGUISystem {
     private final Map<String, GUITemplate> templates = new HashMap<>();
     private final Map<UUID, GUISession> activeSessions = new HashMap<>();
     
-    public UltimateGUISystem(SkyblockPlugin plugin, CorePlatform corePlatform, EconomySystem economySystem, 
+    public UltimateGUISystem(SkyblockPlugin SkyblockPlugin, CorePlatform corePlatform, EconomySystem economySystem, 
                            PetSystem petSystem, SkyblockManager skyblockManager) {
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.corePlatform = corePlatform;
         this.economySystem = economySystem;
         this.petSystem = petSystem;
@@ -51,7 +55,7 @@ public class UltimateGUISystem {
         GUITemplate mainMenu = new GUITemplate("main_menu", 54, "§6§lUltimate Menu");
         mainMenu.setBorder(Material.BLACK_STAINED_GLASS_PANE);
         mainMenu.addItem(10, Material.NETHER_STAR, "§6§l⚙️ CORE FEATURES", 
-            Arrays.asList("§7Wichtige Plugin-Funktionen", "§7• Einstellungen", "§7• Profil", "§7• Feature-Buch", "", "§eKlicke zum Öffnen"));
+            Arrays.asList("§7Wichtige SkyblockPlugin-Funktionen", "§7• Einstellungen", "§7• Profil", "§7• Feature-Buch", "", "§eKlicke zum Öffnen"));
         mainMenu.addItem(12, Material.GOLD_INGOT, "§6§l🏆 ACHIEVEMENTS", 
             Arrays.asList("§7Schaue deine Achievements an", "§7• Belohnungen und Fortschritt", "", "§eKlicke zum Öffnen"));
         mainMenu.addItem(14, Material.CHEST, "§e§lKITS & BELOHNUNGEN", 
@@ -286,63 +290,63 @@ public class UltimateGUISystem {
         switch (slot) {
             case 10 -> {
                 // Core Features
-                new CoreFeaturesGUI(plugin).openCoreFeaturesGUI(player);
+                new CoreFeaturesGUI(SkyblockPlugin).openCoreFeaturesGUI(player);
             }
             case 12 -> {
                 // Achievements
-                new AchievementsGUI(plugin).openAchievementsGUI(player);
+                new AchievementsGUI(SkyblockPlugin).openAchievementsGUI(player);
             }
             case 14 -> {
                 // Kits & Rewards
-                new KitsGUI(plugin).openKitsGUI(player);
+                new KitsGUI(SkyblockPlugin).openKitsGUI(player);
             }
             case 16 -> {
                 // Cosmetics
-                new CosmeticsGUI(plugin).openCosmeticsGUI(player);
+                new CosmeticsGUI(SkyblockPlugin).openCosmeticsGUI(player);
             }
             case 19 -> {
                 // Combat & Events
-                new CombatGUI(plugin).openCombatGUI(player);
+                new CombatGUI(SkyblockPlugin).openCombatGUI(player);
             }
             case 21 -> {
                 // Friends & Party
-                new FriendsGUI(plugin).openFriendsGUI(player);
+                new FriendsGUI(SkyblockPlugin, player).openFriendsGUI(player);
             }
             case 23 -> {
                 // Teleportation
-                new TeleportationGUI(plugin).openTeleportationGUI(player);
+                new TeleportationGUI(SkyblockPlugin, player).openTeleportationGUI(player);
             }
             case 25 -> {
                 // Basic Commands
-                new BasicCommandsGUI(plugin).openBasicCommandsGUI(player);
+                new BasicCommandsGUI(SkyblockPlugin).openBasicCommandsGUI(player);
             }
             case 28 -> {
                 // Messages
-                new MessagesGUI(plugin).openMessagesGUI(player);
+                new MessagesGUI(SkyblockPlugin, player).openMessagesGUI(player);
             }
             case 30 -> {
                 // Guild System
-                new GuildGUI(plugin).openGuildGUI(player);
+                new GuildGUI(SkyblockPlugin).openGuildGUI(player);
             }
             case 32 -> {
                 // Admin Tools
-                new AdminGUI(plugin).openAdminGUI(player);
+                new AdminGUI(SkyblockPlugin).openAdminGUI(player);
             }
             case 34 -> {
-                // Plugin Features
-                new FeaturesGUI(plugin).openFeaturesGUI(player);
+                // SkyblockPlugin Features
+                new FeaturesGUI(SkyblockPlugin).openFeaturesGUI(player);
             }
             case 37 -> {
                 // Settings
-                new SettingsGUI(plugin).openSettingsGUI(player);
+                new SettingsGUI(SkyblockPlugin).openSettingsGUI(player);
             }
             case 39 -> {
                 // Server Info
-                new ServerInfoGUI(plugin).openServerInfoGUI(player);
+                new ServerInfoGUI(SkyblockPlugin).openServerInfoGUI(player);
             }
             case 41 -> {
                 // Help & Support
-                new HelpGUI(plugin).openHelpGUI(player);
+                new HelpGUI(SkyblockPlugin).openHelpGUI(player);
             }
             case 49 -> {
                 // Close
@@ -355,51 +359,51 @@ public class UltimateGUISystem {
         switch (slot) {
             case 10 -> {
                 // Balance
-                new BalanceGUI(plugin).openBalanceGUI(player);
+                new BalanceGUI(SkyblockPlugin).openBalanceGUI(player);
             }
             case 12 -> {
                 // Auction House
-                new AuctionHouseGUI(plugin).openAuctionHouseGUI(player);
+                new AuctionHouseGUI(SkyblockPlugin).openAuctionHouseGUI(player);
             }
             case 14 -> {
                 // Bazaar
-                new BazaarGUI(plugin).openBazaarGUI(player);
+                new BazaarGUI(SkyblockPlugin).openBazaarGUI(player);
             }
             case 16 -> {
                 // NPC Shops
-                new NPCShopsGUI(plugin).openNPCShopsGUI(player);
+                new NPCShopsGUI(SkyblockPlugin).openNPCShopsGUI(player);
             }
             case 19 -> {
                 // Trading
-                new TradingGUI(plugin).openTradingGUI(player);
+                new TradingGUI(SkyblockPlugin).openTradingGUI(player);
             }
             case 21 -> {
                 // Market Analysis
-                new MarketAnalysisGUI(plugin).openMarketAnalysisGUI(player);
+                new MarketAnalysisGUI(SkyblockPlugin).openMarketAnalysisGUI(player);
             }
             case 23 -> {
                 // Price History
-                new PriceHistoryGUI(plugin).openPriceHistoryGUI(player);
+                new PriceHistoryGUI(SkyblockPlugin).openPriceHistoryGUI(player);
             }
             case 25 -> {
                 // Market Alerts
-                new MarketAlertsGUI(plugin).openMarketAlertsGUI(player);
+                new MarketAlertsGUI(SkyblockPlugin).openMarketAlertsGUI(player);
             }
             case 28 -> {
                 // Coin Exchange
-                new CoinExchangeGUI(plugin).openCoinExchangeGUI(player);
+                new CoinExchangeGUI(SkyblockPlugin).openCoinExchangeGUI(player);
             }
             case 30 -> {
                 // Inventory
-                new InventoryGUI(plugin).openInventoryGUI(player);
+                new InventoryGUI(SkyblockPlugin).openInventoryGUI(player);
             }
             case 32 -> {
                 // Economy Guide
-                new EconomyGuideGUI(plugin).openEconomyGuideGUI(player);
+                new EconomyGuideGUI(SkyblockPlugin).openEconomyGuideGUI(player);
             }
             case 34 -> {
                 // Economy Settings
-                new EconomySettingsGUI(plugin).openEconomySettingsGUI(player);
+                new EconomySettingsGUI(SkyblockPlugin).openEconomySettingsGUI(player);
             }
             case 49 -> {
                 // Back
@@ -412,51 +416,51 @@ public class UltimateGUISystem {
         switch (slot) {
             case 10 -> {
                 // My Pets
-                new PetGUI(plugin).openPetGUI(player);
+                new PetGUI(SkyblockPlugin).openPetGUI(player);
             }
             case 12 -> {
                 // Pet Shop
-                new PetShopGUI(plugin).openPetShopGUI(player);
+                new PetShopGUI(SkyblockPlugin).openPetShopGUI(player);
             }
             case 14 -> {
                 // Pet Leveling
-                new PetLevelingGUI(plugin).openPetLevelingGUI(player);
+                new PetLevelingGUI(SkyblockPlugin).openPetLevelingGUI(player);
             }
             case 16 -> {
                 // Pet Upgrades
-                new PetUpgradesGUI(plugin).openPetUpgradesGUI(player);
+                new PetUpgradesGUI(SkyblockPlugin).openPetUpgradesGUI(player);
             }
             case 19 -> {
                 // Pet Care
-                new PetCareGUI(plugin).openPetCareGUI(player);
+                new PetCareGUI(SkyblockPlugin).openPetCareGUI(player);
             }
             case 21 -> {
                 // Pet Inventory
-                new PetInventoryGUI(plugin).openPetInventoryGUI(player);
+                new PetInventoryGUI(SkyblockPlugin).openPetInventoryGUI(player);
             }
             case 23 -> {
                 // Pet Guide
-                new PetGuideGUI(plugin).openPetGuideGUI(player);
+                new PetGuideGUI(SkyblockPlugin).openPetGuideGUI(player);
             }
             case 25 -> {
                 // Pet Settings
-                new PetSettingsGUI(plugin).openPetSettingsGUI(player);
+                new PetSettingsGUI(SkyblockPlugin).openPetSettingsGUI(player);
             }
             case 28 -> {
                 // Pet Achievements
-                new PetAchievementsGUI(plugin).openPetAchievementsGUI(player);
+                new PetAchievementsGUI(SkyblockPlugin).openPetAchievementsGUI(player);
             }
             case 30 -> {
                 // Pet Social
-                new PetSocialGUI(plugin).openPetSocialGUI(player);
+                new PetSocialGUI(SkyblockPlugin).openPetSocialGUI(player);
             }
             case 32 -> {
                 // Pet Storage
-                new PetStorageGUI(plugin).openPetStorageGUI(player);
+                new PetStorageGUI(SkyblockPlugin).openPetStorageGUI(player);
             }
             case 34 -> {
                 // Pet Encyclopedia
-                new PetEncyclopediaGUI(plugin).openPetEncyclopediaGUI(player);
+                new PetEncyclopediaGUI(SkyblockPlugin).openPetEncyclopediaGUI(player);
             }
             case 49 -> {
                 // Back
@@ -469,51 +473,51 @@ public class UltimateGUISystem {
         switch (slot) {
             case 10 -> {
                 // Island
-                new SkyblockGUI(plugin).openSkyblockGUI(player);
+                new SkyblockGUI(SkyblockPlugin).openSkyblockGUI(player);
             }
             case 12 -> {
                 // Minions
-                new MinionsGUI(plugin).openMinionsGUI(player);
+                new MinionsGUI(SkyblockPlugin).openMinionsGUI(player);
             }
             case 14 -> {
                 // Skills
-                new SkillsGUI(plugin).openSkillsGUI(player);
+                new SkillsGUI(SkyblockPlugin).openSkillsGUI(player);
             }
             case 16 -> {
                 // Collections
-                new CollectionsGUI(plugin).openCollectionsGUI(player);
+                new CollectionsGUI(SkyblockPlugin).openCollectionsGUI(player);
             }
             case 19 -> {
                 // Slayers
-                new SlayersGUI(plugin).openSlayersGUI(player);
+                new SlayersGUI(SkyblockPlugin).openSlayersGUI(player);
             }
             case 21 -> {
                 // Enchanting
-                new EnchantingGUI(plugin, player, null).openGUI(player); // EnchantingSystem not implemented yet
+                new EnchantingGUI(SkyblockPlugin, player, null).openGUI(player); // EnchantingSystem not implemented yet
             }
             case 23 -> {
                 // Bank
-                new BankGUI(plugin).openBankGUI(player);
+                new BankGUI(SkyblockPlugin).openBankGUI(player);
             }
             case 25 -> {
                 // Teleportation
-                new TeleportationGUI(plugin).openTeleportationGUI(player);
+                new TeleportationGUI(SkyblockPlugin, player).openTeleportationGUI(player);
             }
             case 28 -> {
                 // Skyblock Guide
-                new SkyblockGuideGUI(plugin).openSkyblockGuideGUI(player);
+                new SkyblockGuideGUI(SkyblockPlugin).openSkyblockGuideGUI(player);
             }
             case 30 -> {
                 // Skyblock Settings
-                new SkyblockSettingsGUI(plugin).openSkyblockSettingsGUI(player);
+                new SkyblockSettingsGUI(SkyblockPlugin).openSkyblockSettingsGUI(player);
             }
             case 32 -> {
                 // Skyblock Achievements
-                new SkyblockAchievementsGUI(plugin).openSkyblockAchievementsGUI(player);
+                new SkyblockAchievementsGUI(SkyblockPlugin).openSkyblockAchievementsGUI(player);
             }
             case 34 -> {
                 // Skyblock Social
-                new SkyblockSocialGUI(plugin).openSkyblockSocialGUI(player);
+                new SkyblockSocialGUI(SkyblockPlugin).openSkyblockSocialGUI(player);
             }
             case 49 -> {
                 // Back
@@ -586,7 +590,7 @@ public class UltimateGUISystem {
         public GUISession(UUID playerId, String currentGUI) {
             this.playerId = playerId;
             this.currentGUI = currentGUI;
-            this.startTime = System.currentTimeMillis();
+            this.startTime = java.lang.System.currentTimeMillis();
         }
         
         public UUID getPlayerId() { return playerId; }

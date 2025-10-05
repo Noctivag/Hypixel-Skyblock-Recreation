@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.Player;
@@ -11,10 +14,10 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class EventMenuListener implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public EventMenuListener(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public EventMenuListener(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     @EventHandler
@@ -35,35 +38,35 @@ public class EventMenuListener implements Listener {
         String display = PlainTextComponentSerializer.plainText().serialize(nameComp);
 
         if (display.toLowerCase().contains("zurück") || display.toLowerCase().contains("zurueck") || display.contains("§c§lZurück")) {
-            new MainMenu(plugin).open(player);
+            new MainMenu(SkyblockPlugin).open(player);
             return;
         }
 
         if (display.contains("Drachen-Event")) {
             player.closeInventory();
-            plugin.joinEvent(player, "dragon");
+            SkyblockPlugin.joinEvent(player, "dragon");
             return;
         }
 
         if (display.contains("Wither-Boss")) {
             player.closeInventory();
-            plugin.joinEvent(player, "wither");
+            SkyblockPlugin.joinEvent(player, "wither");
             return;
         }
 
         if (display.contains("Zombie-Horde")) {
             player.closeInventory();
-            plugin.joinEvent(player, "zombie");
+            SkyblockPlugin.joinEvent(player, "zombie");
             return;
         }
 
         if (display.contains("Nächste Events") || display.toLowerCase().contains("nächste")) {
-            player.sendMessage("§eNächste Events: Drachen-Event in 30 Minuten, Wither-Boss in 1 Stunde.");
+            player.sendMessage(Component.text("§eNächste Events: Drachen-Event in 30 Minuten, Wither-Boss in 1 Stunde."));
             return;
         }
 
         if (display.contains("Event-Shop") || display.toLowerCase().contains("event-shop")) {
-            player.sendMessage("§eEvent-Shop ist noch nicht implementiert.");
+            player.sendMessage(Component.text("§eEvent-Shop ist noch nicht implementiert."));
         }
     }
 }

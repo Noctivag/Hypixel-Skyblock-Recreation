@@ -1,4 +1,8 @@
 package de.noctivag.skyblock.mobs;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
@@ -14,7 +18,7 @@ import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -22,18 +26,19 @@ import net.kyori.adventure.text.Component;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class AdvancedMobSystem implements Listener {
 
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerMobData> playerMobData = new ConcurrentHashMap<>();
     private final Map<MobType, MobConfig> mobConfigs = new HashMap<>();
     private final Map<UUID, SpawnArea> spawnAreas = new ConcurrentHashMap<>();
     private final Map<UUID, LivingEntity> activeMobs = new ConcurrentHashMap<>();
 
-    public AdvancedMobSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedMobSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
 
         initializeMobConfigs();
@@ -41,7 +46,7 @@ public class AdvancedMobSystem implements Listener {
     }
 
     public void registerEvents() {
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
 
     private void initializeMobConfigs() {
@@ -888,7 +893,7 @@ public class AdvancedMobSystem implements Listener {
 
     private void startMobUpdateTask() {
         Thread.ofVirtual().start(() -> {
-            while (plugin.isEnabled()) {
+            while (SkyblockPlugin.isEnabled()) {
                 try {
                     updateAllPlayerMobData();
                     updateSpawnAreas();
@@ -992,7 +997,7 @@ public class AdvancedMobSystem implements Listener {
         addGUIItem(gui, 53, Material.ARROW, "§7§lNext Page", "§7Go to next page.");
 
         player.openInventory(gui);
-        player.sendMessage("§aMob GUI geöffnet!");
+        player.sendMessage(Component.text("§aMob GUI geöffnet!"));
     }
 
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String description) {
@@ -1099,6 +1104,9 @@ public class AdvancedMobSystem implements Listener {
 
         // Hypixel SkyBlock End Mobs
         ZEALOT, SPECIAL_ZEALOT, ENDER_DRAGON,
+        
+        // Deep Dark Mobs
+        WARDEN,
 
         // Hypixel SkyBlock Slayer Mobs
         REVENANT_HORROR_I, REVENANT_HORROR_II, REVENANT_HORROR_III, REVENANT_HORROR_IV,
@@ -1249,11 +1257,11 @@ public class AdvancedMobSystem implements Listener {
 
         public PlayerMobData(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
 
         public void update() {
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
 
         public void addMobKill(MobType type) {
@@ -1292,7 +1300,7 @@ public class AdvancedMobSystem implements Listener {
             this.radius = radius;
             this.mobType = mobType;
             this.maxMobs = maxMobs;
-            this.lastSpawn = System.currentTimeMillis();
+            this.lastSpawn = java.lang.System.currentTimeMillis();
         }
 
         public void update() {
@@ -1300,9 +1308,9 @@ public class AdvancedMobSystem implements Listener {
             spawnedMobs.removeIf(mob -> mob.isDead() || !mob.isValid());
 
             // Spawn new mobs if needed
-            if (spawnedMobs.size() < maxMobs && System.currentTimeMillis() - lastSpawn > 5000) {
+            if (spawnedMobs.size() < maxMobs && java.lang.System.currentTimeMillis() - lastSpawn > 5000) {
                 spawnMob();
-                lastSpawn = System.currentTimeMillis();
+                lastSpawn = java.lang.System.currentTimeMillis();
             }
         }
 

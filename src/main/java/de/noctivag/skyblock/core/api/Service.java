@@ -43,7 +43,7 @@ public interface Service {
     }
     
     /**
-     * Check if the service is required for plugin startup
+     * Check if the service is required for SkyblockPlugin startup
      * @return true if required, false if optional
      */
     default boolean isRequired() {

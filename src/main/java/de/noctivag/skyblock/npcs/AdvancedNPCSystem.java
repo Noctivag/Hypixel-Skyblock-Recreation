@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.npcs;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -18,12 +22,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import net.kyori.adventure.text.Component;
 
 /**
  * Advanced NPC System - Hypixel Skyblock Style
  */
 public class AdvancedNPCSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerNPCManager> playerNPCManagers = new ConcurrentHashMap<>();
     private final Map<String, HypixelStyleNPC> activeNPCs = new ConcurrentHashMap<>();
@@ -34,22 +39,22 @@ public class AdvancedNPCSystem implements Listener {
     private final NPCQuestSystem questSystem;
     private final NPCSkinManager skinManager;
     
-    public AdvancedNPCSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedNPCSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
         // Initialize advanced systems
-        this.dialogueSystem = new NPCDialogueSystem(plugin);
-        this.skinSystem = new NPCSkinSystem(plugin);
-        this.questSystem = new NPCQuestSystem(plugin);
-        this.skinManager = new NPCSkinManager(plugin);
+        this.dialogueSystem = new NPCDialogueSystem(SkyblockPlugin);
+        this.skinSystem = new NPCSkinSystem(SkyblockPlugin);
+        this.questSystem = new NPCQuestSystem(SkyblockPlugin);
+        this.skinManager = new NPCSkinManager(SkyblockPlugin);
     }
     
     public void initialize() {
         startNPCUpdateTask();
         loadNPCsFromDatabase();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void startNPCUpdateTask() {
@@ -65,7 +70,7 @@ public class AdvancedNPCSystem implements Listener {
                     npc.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L);
     }
     
     private void loadNPCsFromDatabase() {
@@ -89,7 +94,7 @@ public class AdvancedNPCSystem implements Listener {
                 }
                 resultSet.close();
             } catch (Exception e) {
-                plugin.getLogger().severe("Error loading NPCs from database: " + e.getMessage());
+                SkyblockPlugin.getLogger().severe("Error loading NPCs from database: " + e.getMessage());
             }
         });
     }
@@ -136,11 +141,11 @@ public class AdvancedNPCSystem implements Listener {
     }
     
     private void openNPCCreationGUI(Player player, Location location) {
-        new de.noctivag.plugin.gui.NPCCreationGUI(plugin, player, location).open(player);
+        new de.noctivag.skyblock.gui.NPCCreationGUI(SkyblockPlugin, player, location).open(player);
     }
     
     public HypixelStyleNPC createHypixelNPC(String npcId, NPCType type, Location location, String displayName, String customData) {
-        HypixelStyleNPC npc = new HypixelStyleNPC(plugin, npcId, type, location, displayName, customData);
+        HypixelStyleNPC npc = new HypixelStyleNPC(SkyblockPlugin, npcId, type, location, displayName, customData);
         activeNPCs.put(npcId, npc);
         saveNPCToDatabase(npc);
         return npc;
@@ -148,7 +153,7 @@ public class AdvancedNPCSystem implements Listener {
     
     // Legacy method for compatibility
     public GameNPC createNPC(String npcId, NPCType type, Location location, String displayName, String customData) {
-        return new GameNPC(plugin, npcId, type, location, displayName, customData);
+        return new GameNPC(SkyblockPlugin, npcId, type, location, displayName, customData);
     }
     
     public void removeNPC(String npcId) {
@@ -237,7 +242,7 @@ public class AdvancedNPCSystem implements Listener {
     
     // Player-based NPC methods
     public PlayerBasedNPC createPlayerNPC(String npcId, NPCType type, Location location, String displayName, String customData) {
-        PlayerBasedNPC npc = new PlayerBasedNPC(plugin, npcId, type, location, displayName, customData);
+        PlayerBasedNPC npc = new PlayerBasedNPC(SkyblockPlugin, npcId, type, location, displayName, customData);
         // Note: In a real implementation, you would store this in a separate map
         // and handle the player entity creation properly
         return npc;
@@ -278,11 +283,11 @@ public class AdvancedNPCSystem implements Listener {
         
         public PlayerNPCManager(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long timeDiff = currentTime - lastUpdate;
             
             if (timeDiff >= 60000) {
@@ -310,15 +315,15 @@ public class AdvancedNPCSystem implements Listener {
     
     // Missing method implementations for compilation fixes
     public void openTypeSelectionGUI(org.bukkit.entity.Player player) {
-        player.sendMessage("§cType Selection GUI not implemented yet!");
+        player.sendMessage(Component.text("§cType Selection GUI not implemented yet!"));
     }
     
     public void openDataEditorGUI(org.bukkit.entity.Player player) {
-        player.sendMessage("§cData Editor GUI not implemented yet!");
+        player.sendMessage(Component.text("§cData Editor GUI not implemented yet!"));
     }
     
     public void openPermissionsGUI(org.bukkit.entity.Player player) {
-        player.sendMessage("§cPermissions GUI not implemented yet!");
+        player.sendMessage(Component.text("§cPermissions GUI not implemented yet!"));
     }
     
 }

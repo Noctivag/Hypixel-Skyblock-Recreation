@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,25 +12,27 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 
 /**
  * Help GUI - Hilfe und Support
  */
 public class HelpGUI {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     
-    public HelpGUI(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public HelpGUI(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
     
     public void openHelpGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lHelp & Support");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lHelp & Support"));
         
         // Getting Started
         setItem(gui, 10, Material.BOOK, "§a§lGetting Started",
             "§7Erste Schritte",
-            "§7• Plugin Overview",
+            "§7• SkyblockPlugin Overview",
             "§7• Basic Commands",
             "§7• First Steps Guide",
             "",
@@ -125,7 +130,7 @@ public class HelpGUI {
             
         setItem(gui, 30, Material.BOOK, "§b§lDocumentation",
             "§7Dokumentation",
-            "§7• Plugin Documentation",
+            "§7• SkyblockPlugin Documentation",
             "§7• API Documentation",
             "§7• Developer Guide",
             "",
@@ -162,8 +167,8 @@ public class HelpGUI {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(name);
-            meta.setLore(Arrays.asList(lore));
+            meta.displayName(Component.text(name));
+            meta.lore(Arrays.asList(lore).stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         gui.setItem(slot, item);

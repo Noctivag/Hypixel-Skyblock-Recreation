@@ -1,4 +1,8 @@
 package de.noctivag.skyblock.skyblock;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
@@ -15,7 +19,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import net.kyori.adventure.text.Component;
 
@@ -33,21 +37,21 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AdvancedCombatSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final HealthManaSystem healthManaSystem;
     private final AdvancedSkillsSystem skillsSystem;
     private final Map<UUID, PlayerCombatData> playerCombatData = new ConcurrentHashMap<>();
     private final Map<UUID, Long> lastAttackTime = new ConcurrentHashMap<>();
     
-    public AdvancedCombatSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager,
+    public AdvancedCombatSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager,
                                HealthManaSystem healthManaSystem, AdvancedSkillsSystem skillsSystem) {
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         this.healthManaSystem = healthManaSystem;
         this.skillsSystem = skillsSystem;
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     @EventHandler
@@ -326,7 +330,7 @@ public class AdvancedCombatSystem implements Listener {
         data.incrementHits();
         
         // Update last attack time
-        lastAttackTime.put(attackerId, System.currentTimeMillis());
+        lastAttackTime.put(attackerId, java.lang.System.currentTimeMillis());
         
         // Check for combat achievements
         checkCombatAchievements(attacker, target, data);
@@ -420,12 +424,12 @@ public class AdvancedCombatSystem implements Listener {
     
     private void handleDeathPenalties(Player player) {
         // Apply death penalties
-        player.sendMessage("§cYou died! You lost some coins and experience.");
+        player.sendMessage(Component.text("§cYou died! You lost some coins and experience."));
         
         // Implement death penalties (coin loss, XP loss, etc.)
-        if (((de.noctivag.plugin.Plugin) plugin).getEconomyManager() != null) {
+        if (((de.noctivag.skyblock.SkyblockPlugin) SkyblockPlugin).getEconomyManager() != null) {
             double coinLoss = Math.min(player.getLevel() * 100, 10000); // Max 10k coin loss
-            ((de.noctivag.plugin.Plugin) plugin).getEconomyManager().withdrawMoney(player, coinLoss);
+            ((de.noctivag.skyblock.SkyblockPlugin) SkyblockPlugin).getEconomyManager().withdrawMoney(player, coinLoss);
             player.sendMessage("§cDu hast " + coinLoss + " Coins durch den Tod verloren!");
         }
         

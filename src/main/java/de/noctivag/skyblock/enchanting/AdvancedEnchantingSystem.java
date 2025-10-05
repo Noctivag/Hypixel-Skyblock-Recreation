@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.enchanting;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -17,6 +21,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Advanced Enchanting System - Hypixel Skyblock Style
@@ -24,20 +29,20 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AdvancedEnchantingSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerEnchantingData> playerEnchantingData = new ConcurrentHashMap<>();
     private final Map<EnchantmentType, EnchantmentConfig> enchantmentConfigs = new HashMap<>();
     private final Map<EnchantingLocation, EnchantingConfig> enchantingConfigs = new HashMap<>();
     
-    public AdvancedEnchantingSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedEnchantingSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
         initializeEnchantmentConfigs();
         initializeEnchantingConfigs();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeEnchantmentConfigs() {
@@ -291,7 +296,7 @@ public class AdvancedEnchantingSystem implements Listener {
         addGUIItem(gui, 53, Material.ARROW, "§7§lNext Page", "§7Go to next page.");
         
         player.openInventory(gui);
-        player.sendMessage("§aEnchanting GUI opened!");
+        player.sendMessage(Component.text("§aEnchanting GUI opened!"));
     }
     
     private int calculateEnchantingXP(Player player, PlayerEnchantingData data) {

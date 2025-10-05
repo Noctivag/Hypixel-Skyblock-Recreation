@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.skyblock;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -9,29 +14,29 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AuctionHouse {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, Auction> auctions = new ConcurrentHashMap<>();
     private final Map<UUID, List<Auction>> playerAuctions = new ConcurrentHashMap<>();
     private final Map<UUID, List<Auction>> playerBids = new ConcurrentHashMap<>();
     
-    public AuctionHouse(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public AuctionHouse(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         startAuctionTimer();
     }
     
     public void createAuction(Player player, ItemStack item, double startingBid, double binPrice, int durationHours) {
         UUID auctionId = UUID.randomUUID();
-        long endTime = System.currentTimeMillis() + (durationHours * 60 * 60 * 1000L);
+        long endTime = java.lang.System.currentTimeMillis() + (durationHours * 60 * 60 * 1000L);
         
         Auction auction = new Auction(auctionId, player.getUniqueId(), item, startingBid, binPrice, endTime);
         auctions.put(auctionId, auction);
         
         playerAuctions.computeIfAbsent(player.getUniqueId(), k -> new ArrayList<>()).add(auction);
         
-        player.sendMessage("§a§lAUCTION CREATED!");
+        player.sendMessage(Component.text("§a§lAUCTION CREATED!"));
         player.sendMessage("§7Item: §e" + item.getType().name());
-        player.sendMessage("§7Starting Bid: §6" + plugin.getEconomyManager().formatMoney(startingBid));
-        player.sendMessage("§7BIN Price: §6" + plugin.getEconomyManager().formatMoney(binPrice));
+        player.sendMessage("§7Starting Bid: §6" + SkyblockPlugin.getEconomyManager().formatMoney(startingBid));
+        player.sendMessage("§7BIN Price: §6" + SkyblockPlugin.getEconomyManager().formatMoney(binPrice));
         player.sendMessage("§7Duration: §e" + durationHours + " hours");
     }
     
@@ -44,27 +49,27 @@ public class AuctionHouse {
         if (bidAmount <= auction.getStartingBid()) return false;
         
         // Check if player has enough money
-        if (!plugin.getEconomyManager().hasBalance(player, bidAmount)) return false;
+        if (!SkyblockPlugin.getEconomyManager().hasBalance(player, bidAmount)) return false;
         
         // Refund previous bidder
         if (auction.getCurrentBidder() != null) {
-            Player previousBidder = plugin.getServer().getPlayer(auction.getCurrentBidder());
+            Player previousBidder = SkyblockPlugin.getServer().getPlayer(auction.getCurrentBidder());
             if (previousBidder != null) {
-                plugin.getEconomyManager().giveMoney(previousBidder, auction.getCurrentBid());
+                SkyblockPlugin.getEconomyManager().giveMoney(previousBidder, auction.getCurrentBid());
                 previousBidder.sendMessage("§cYour bid was outbid!");
             }
         }
         
         // Place new bid
-        plugin.getEconomyManager().withdrawMoney(player, bidAmount);
+        SkyblockPlugin.getEconomyManager().withdrawMoney(player, bidAmount);
         auction.setCurrentBid(bidAmount);
         auction.setCurrentBidder(player.getUniqueId());
         
         playerBids.computeIfAbsent(player.getUniqueId(), k -> new ArrayList<>()).add(auction);
         
-        player.sendMessage("§a§lBID PLACED!");
+        player.sendMessage(Component.text("§a§lBID PLACED!"));
         player.sendMessage("§7Auction: §e" + auction.getItem().getType().name());
-        player.sendMessage("§7Your Bid: §6" + plugin.getEconomyManager().formatMoney(bidAmount));
+        player.sendMessage("§7Your Bid: §6" + SkyblockPlugin.getEconomyManager().formatMoney(bidAmount));
         
         return true;
     }
@@ -77,11 +82,11 @@ public class AuctionHouse {
         if (auction.getBinPrice() <= 0) return false;
         
         // Check if player has enough money
-        if (!plugin.getEconomyManager().hasBalance(player, auction.getBinPrice())) return false;
+        if (!SkyblockPlugin.getEconomyManager().hasBalance(player, auction.getBinPrice())) return false;
         
         // Complete the auction
-        plugin.getEconomyManager().withdrawMoney(player, auction.getBinPrice());
-        plugin.getEconomyManager().giveMoney(plugin.getServer().getPlayer(auction.getSeller()), auction.getBinPrice());
+        SkyblockPlugin.getEconomyManager().withdrawMoney(player, auction.getBinPrice());
+        SkyblockPlugin.getEconomyManager().giveMoney(SkyblockPlugin.getServer().getPlayer(auction.getSeller()), auction.getBinPrice());
         
         // Give item to buyer
         player.getInventory().addItem(auction.getItem());
@@ -90,9 +95,9 @@ public class AuctionHouse {
         auctions.remove(auctionId);
         playerAuctions.get(auction.getSeller()).remove(auction);
         
-        player.sendMessage("§a§lITEM PURCHASED!");
+        player.sendMessage(Component.text("§a§lITEM PURCHASED!"));
         player.sendMessage("§7Item: §e" + auction.getItem().getType().name());
-        player.sendMessage("§7Price: §6" + plugin.getEconomyManager().formatMoney(auction.getBinPrice()));
+        player.sendMessage("§7Price: §6" + SkyblockPlugin.getEconomyManager().formatMoney(auction.getBinPrice()));
         
         return true;
     }
@@ -106,14 +111,14 @@ public class AuctionHouse {
         
         if (auction.getCurrentBidder() != null) {
             // Auction was sold
-            plugin.getEconomyManager().giveMoney(player, auction.getCurrentBid());
-            player.sendMessage("§a§lAUCTION SOLD!");
+            SkyblockPlugin.getEconomyManager().giveMoney(player, auction.getCurrentBid());
+            player.sendMessage(Component.text("§a§lAUCTION SOLD!"));
             player.sendMessage("§7Item: §e" + auction.getItem().getType().name());
-            player.sendMessage("§7Sold for: §6" + plugin.getEconomyManager().formatMoney(auction.getCurrentBid()));
+            player.sendMessage("§7Sold for: §6" + SkyblockPlugin.getEconomyManager().formatMoney(auction.getCurrentBid()));
         } else {
             // Auction expired without bids
             player.getInventory().addItem(auction.getItem());
-            player.sendMessage("§c§lAUCTION EXPIRED!");
+            player.sendMessage(Component.text("§c§lAUCTION EXPIRED!"));
             player.sendMessage("§7Item returned: §e" + auction.getItem().getType().name());
         }
         
@@ -137,7 +142,7 @@ public class AuctionHouse {
                 for (UUID auctionId : expiredAuctions) {
                     Auction auction = auctions.get(auctionId);
                     if (auction != null) {
-                        Player seller = plugin.getServer().getPlayer(auction.getSeller());
+                        Player seller = SkyblockPlugin.getServer().getPlayer(auction.getSeller());
                         if (seller != null) {
                             seller.sendMessage("§c§lAUCTION EXPIRED!");
                             seller.sendMessage("§7Item: §e" + auction.getItem().getType().name());
@@ -145,7 +150,7 @@ public class AuctionHouse {
                     }
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Check every second
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Check every second
     }
     
     public List<Auction> getActiveAuctions() {
@@ -182,11 +187,11 @@ public class AuctionHouse {
         }
         
         public boolean isExpired() {
-            return System.currentTimeMillis() >= endTime;
+            return java.lang.System.currentTimeMillis() >= endTime;
         }
         
         public long getTimeRemaining() {
-            return Math.max(0, endTime - System.currentTimeMillis());
+            return Math.max(0, endTime - java.lang.System.currentTimeMillis());
         }
         
         // Getters and setters

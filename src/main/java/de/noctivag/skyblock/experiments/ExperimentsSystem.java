@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.experiments;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -16,23 +21,24 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Experiments System - Hypixel Skyblock Style
  */
 public class ExperimentsSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerExperimentData> playerExperimentData = new ConcurrentHashMap<>();
     private final Map<ExperimentType, ExperimentConfig> experimentConfigs = new HashMap<>();
     
-    public ExperimentsSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public ExperimentsSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeExperimentConfigs();
         startExperimentUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeExperimentConfigs() {
@@ -70,7 +76,7 @@ public class ExperimentsSystem implements Listener {
                     experimentData.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L * 60L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L * 60L);
     }
     
     @EventHandler
@@ -91,22 +97,24 @@ public class ExperimentsSystem implements Listener {
     }
     
     public void openExperimentGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§d§lExperiments");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§d§lExperiments"));
         
         addGUIItem(gui, 10, Material.ENCHANTING_TABLE, "§d§lEnchanting Experiment", "§7Experiment with enchanting.");
         addGUIItem(gui, 11, Material.BREWING_STAND, "§b§lAlchemy Experiment", "§7Experiment with alchemy.");
         addGUIItem(gui, 12, Material.DIAMOND_PICKAXE, "§6§lMining Experiment", "§7Experiment with mining.");
         
         player.openInventory(gui);
-        player.sendMessage("§aExperiments GUI geöffnet!");
+        player.sendMessage(Component.text("§aExperiments GUI geöffnet!"));
     }
     
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String description) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(name);
-            meta.setLore(Arrays.asList(description));
+            meta.displayName(Component.text(name));
+            meta.lore(Arrays.asList(description).stream()
+                .map(desc -> Component.text(desc))
+                .collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         gui.setItem(slot, item);
@@ -207,11 +215,11 @@ public class ExperimentsSystem implements Listener {
         
         public PlayerExperimentData(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void addExperiment(ExperimentType type) {

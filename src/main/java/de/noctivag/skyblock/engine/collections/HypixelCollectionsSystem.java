@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.engine.collections;
+import java.util.UUID;
 
 import de.noctivag.skyblock.core.api.Service;
 import de.noctivag.skyblock.core.api.SystemStatus;
@@ -119,8 +120,10 @@ public class HypixelCollectionsSystem implements Service {
      */
     private boolean isAllowedSource(CollectionSource source) {
         return switch (source) {
-            case MINING, FARMING, MOB_DROP, MINION, FISHING, FORAGING, NATURAL_GENERATION -> true;
-            case AUCTION_HOUSE, BAZAAR, DIRECT_TRADE, GIFT, ADMIN_GIVE -> false;
+            case MINING, FORAGING, FISHING, FARMING, COMBAT, CRAFTING, ENCHANTING, ALCHEMY, 
+                 TAMING, DUNGEON, SLAYER, EVENT, QUEST, REWARD, MOB_DROP, MINION, 
+                 NATURAL_GENERATION, SHOP, AUCTION, BAZAAR, UNKNOWN, OTHER -> true;
+            case AUCTION_HOUSE, DIRECT_TRADE, GIFT, ADMIN_GIVE -> false;
         };
     }
     
@@ -190,7 +193,7 @@ public class HypixelCollectionsSystem implements Service {
      */
     public CollectionStatistics getCollectionStatistics(UUID playerId) {
         HypixelPlayerCollections collections = getPlayerCollections(playerId);
-        return new CollectionStatistics(collections);
+        return new CollectionStatistics(playerId);
     }
     
     /**

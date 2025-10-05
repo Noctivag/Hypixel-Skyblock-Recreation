@@ -1,4 +1,8 @@
 package de.noctivag.skyblock.mobs;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import org.bukkit.Bukkit;
@@ -8,18 +12,18 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.*;
 
 public class MobCommandSystem implements CommandExecutor, TabCompleter {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final AdvancedMobSystem mobSystem;
     private final SpawnAreaManager spawnAreaManager;
     
-    public MobCommandSystem(SkyblockPlugin plugin, AdvancedMobSystem mobSystem, SpawnAreaManager spawnAreaManager) {
-        this.plugin = plugin;
+    public MobCommandSystem(SkyblockPlugin SkyblockPlugin, AdvancedMobSystem mobSystem, SpawnAreaManager spawnAreaManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.mobSystem = mobSystem;
         this.spawnAreaManager = spawnAreaManager;
     }
@@ -86,7 +90,7 @@ public class MobCommandSystem implements CommandExecutor, TabCompleter {
     
     private void handleSpawnCommand(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage("§cUsage: /mob spawn <mobtype> [amount]");
+            player.sendMessage(Component.text("§cUsage: /mob spawn <mobtype> [amount]"));
             return;
         }
         
@@ -95,7 +99,7 @@ public class MobCommandSystem implements CommandExecutor, TabCompleter {
             int amount = args.length > 2 ? Integer.parseInt(args[2]) : 1;
             
             if (amount < 1 || amount > 10) {
-                player.sendMessage("§cAmount must be between 1 and 10!");
+                player.sendMessage(Component.text("§cAmount must be between 1 and 10!"));
                 return;
             }
             
@@ -115,7 +119,7 @@ public class MobCommandSystem implements CommandExecutor, TabCompleter {
     
     private void handleKillCommand(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage("§cUsage: /mob kill <mobtype> [radius]");
+            player.sendMessage(Component.text("§cUsage: /mob kill <mobtype> [radius]"));
             return;
         }
         
@@ -124,7 +128,7 @@ public class MobCommandSystem implements CommandExecutor, TabCompleter {
             int radius = args.length > 2 ? Integer.parseInt(args[2]) : 10;
             
             if (radius < 1 || radius > 100) {
-                player.sendMessage("§cRadius must be between 1 and 100!");
+                player.sendMessage(Component.text("§cRadius must be between 1 and 100!"));
                 return;
             }
             
@@ -153,7 +157,7 @@ public class MobCommandSystem implements CommandExecutor, TabCompleter {
     }
     
     private void handleListCommand(Player player, String[] args) {
-        player.sendMessage("§a=== Available Mobs ===");
+        player.sendMessage(Component.text("§a=== Available Mobs ==="));
         
         for (AdvancedMobSystem.MobType mobType : AdvancedMobSystem.MobType.values()) {
             AdvancedMobSystem.MobConfig config = mobSystem.getMobConfig(mobType);
@@ -165,7 +169,7 @@ public class MobCommandSystem implements CommandExecutor, TabCompleter {
     
     private void handleInfoCommand(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage("§cUsage: /mob info <mobtype>");
+            player.sendMessage(Component.text("§cUsage: /mob info <mobtype>"));
             return;
         }
         
@@ -198,7 +202,7 @@ public class MobCommandSystem implements CommandExecutor, TabCompleter {
     
     private void handleSpawnAreaCommand(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage("§cUsage: /mob spawnarea <create|remove|edit|list|info>");
+            player.sendMessage(Component.text("§cUsage: /mob spawnarea <create|remove|edit|list|info>"));
             return;
         }
         
@@ -229,7 +233,7 @@ public class MobCommandSystem implements CommandExecutor, TabCompleter {
     
     private void handleSpawnAreaCreate(Player player, String[] args) {
         if (args.length < 5) {
-            player.sendMessage("§cUsage: /mob spawnarea create <name> <mobtype> <radius> <maxmobs>");
+            player.sendMessage(Component.text("§cUsage: /mob spawnarea create <name> <mobtype> <radius> <maxmobs>"));
             return;
         }
         
@@ -240,12 +244,12 @@ public class MobCommandSystem implements CommandExecutor, TabCompleter {
             int maxMobs = Integer.parseInt(args[5]);
             
             if (radius < 1 || radius > 100) {
-                player.sendMessage("§cRadius must be between 1 and 100!");
+                player.sendMessage(Component.text("§cRadius must be between 1 and 100!"));
                 return;
             }
             
             if (maxMobs < 1 || maxMobs > 50) {
-                player.sendMessage("§cMax mobs must be between 1 and 50!");
+                player.sendMessage(Component.text("§cMax mobs must be between 1 and 50!"));
                 return;
             }
             
@@ -253,14 +257,14 @@ public class MobCommandSystem implements CommandExecutor, TabCompleter {
             spawnAreaManager.createSpawnArea(player, name, center, radius, mobType, maxMobs);
             
         } catch (IllegalArgumentException e) {
-            player.sendMessage("§cInvalid parameters!");
+            player.sendMessage(Component.text("§cInvalid parameters!"));
             player.sendMessage("§7Available mob types: " + getAvailableMobTypes());
         }
     }
     
     private void handleSpawnAreaRemove(Player player, String[] args) {
         if (args.length < 3) {
-            player.sendMessage("§cUsage: /mob spawnarea remove <name>");
+            player.sendMessage(Component.text("§cUsage: /mob spawnarea remove <name>"));
             return;
         }
         
@@ -279,7 +283,7 @@ public class MobCommandSystem implements CommandExecutor, TabCompleter {
     
     private void handleSpawnAreaEdit(Player player, String[] args) {
         if (args.length < 5) {
-            player.sendMessage("§cUsage: /mob spawnarea edit <name> <radius> <maxmobs>");
+            player.sendMessage(Component.text("§cUsage: /mob spawnarea edit <name> <radius> <maxmobs>"));
             return;
         }
         
@@ -301,7 +305,7 @@ public class MobCommandSystem implements CommandExecutor, TabCompleter {
     
     private void handleSpawnAreaInfo(Player player, String[] args) {
         if (args.length < 3) {
-            player.sendMessage("§cUsage: /mob spawnarea info <name>");
+            player.sendMessage(Component.text("§cUsage: /mob spawnarea info <name>"));
             return;
         }
         
@@ -312,7 +316,7 @@ public class MobCommandSystem implements CommandExecutor, TabCompleter {
                 .orElse(null);
         
         if (area != null) {
-            player.sendMessage("§a=== Spawn Area Info ===");
+            player.sendMessage(Component.text("§a=== Spawn Area Info ==="));
             player.sendMessage("§7Name: " + area.getName());
             player.sendMessage("§7Mob Type: " + area.getMobType().name());
             player.sendMessage("§7Center: " + area.getCenter().getBlockX() + ", " + area.getCenter().getBlockY() + ", " + area.getCenter().getBlockZ());
@@ -327,7 +331,7 @@ public class MobCommandSystem implements CommandExecutor, TabCompleter {
     
     private void handleEditCommand(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage("§cUsage: /mob edit <enter|exit>");
+            player.sendMessage(Component.text("§cUsage: /mob edit <enter|exit>"));
             return;
         }
         
@@ -346,15 +350,15 @@ public class MobCommandSystem implements CommandExecutor, TabCompleter {
     
     private void handleSearchCommand(Player player, String[] args) {
         if (args.length < 3) {
-            player.sendMessage("§cUsage: /mob search <type> <value>");
-            player.sendMessage("§7Types: name, category, rarity, ability, location");
+            player.sendMessage(Component.text("§cUsage: /mob search <type> <value>"));
+            player.sendMessage(Component.text("§7Types: name, category, rarity, ability, location"));
             return;
         }
         
         String searchType = args[1].toLowerCase();
         String searchValue = args[2].toLowerCase();
         
-        player.sendMessage("§a=== Search Results ===");
+        player.sendMessage(Component.text("§a=== Search Results ==="));
         int found = 0;
         
         for (AdvancedMobSystem.MobType mobType : AdvancedMobSystem.MobType.values()) {
@@ -392,14 +396,14 @@ public class MobCommandSystem implements CommandExecutor, TabCompleter {
     
     private void handleFilterCommand(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage("§cUsage: /mob filter <category> [rarity]");
+            player.sendMessage(Component.text("§cUsage: /mob filter <category> [rarity]"));
             return;
         }
         
         String category = args[1].toLowerCase();
         String rarity = args.length > 2 ? args[2].toLowerCase() : null;
         
-        player.sendMessage("§a=== Filtered Mobs ===");
+        player.sendMessage(Component.text("§a=== Filtered Mobs ==="));
         int found = 0;
         
         for (AdvancedMobSystem.MobType mobType : AdvancedMobSystem.MobType.values()) {
@@ -420,7 +424,7 @@ public class MobCommandSystem implements CommandExecutor, TabCompleter {
     
     private void handleCategoryCommand(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage("§cUsage: /mob category <category>");
+            player.sendMessage(Component.text("§cUsage: /mob category <category>"));
             player.sendMessage("§7Available categories: " + getAvailableCategories());
             return;
         }
@@ -450,7 +454,7 @@ public class MobCommandSystem implements CommandExecutor, TabCompleter {
     
     private void handleRarityCommand(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage("§cUsage: /mob rarity <rarity>");
+            player.sendMessage(Component.text("§cUsage: /mob rarity <rarity>"));
             player.sendMessage("§7Available rarities: " + getAvailableRarities());
             return;
         }
@@ -478,25 +482,25 @@ public class MobCommandSystem implements CommandExecutor, TabCompleter {
     }
     
     private void showHelp(Player player) {
-        player.sendMessage("§a=== Mob System Commands ===");
-        player.sendMessage("§7/mob spawn <mobtype> [amount] - Spawn mobs");
-        player.sendMessage("§7/mob kill <mobtype> [radius] - Kill mobs in radius");
-        player.sendMessage("§7/mob list - List all available mobs");
-        player.sendMessage("§7/mob info <mobtype> - Show mob information");
-        player.sendMessage("§7/mob gui - Open mob GUI");
-        player.sendMessage("§7/mob spawnarea create <name> <mobtype> <radius> <maxmobs> - Create spawn area");
-        player.sendMessage("§7/mob spawnarea remove <name> - Remove spawn area");
-        player.sendMessage("§7/mob spawnarea edit <name> <radius> <maxmobs> - Edit spawn area");
-        player.sendMessage("§7/mob spawnarea list - List all spawn areas");
-        player.sendMessage("§7/mob spawnarea info <name> - Show spawn area info");
-        player.sendMessage("§7/mob spawnarea gui - Open spawn area GUI");
-        player.sendMessage("§7/mob edit enter - Enter edit mode");
-        player.sendMessage("§7/mob edit exit - Exit edit mode");
-        player.sendMessage("§7/mob search <type> <value> - Search mobs");
-        player.sendMessage("§7/mob filter <category> [rarity] - Filter mobs by category");
-        player.sendMessage("§7/mob category <category> - Show mobs in category");
-        player.sendMessage("§7/mob rarity <rarity> - Show mobs with rarity");
-        player.sendMessage("§7/mob help - Show this help");
+        player.sendMessage(Component.text("§a=== Mob System Commands ==="));
+        player.sendMessage(Component.text("§7/mob spawn <mobtype> [amount] - Spawn mobs"));
+        player.sendMessage(Component.text("§7/mob kill <mobtype> [radius] - Kill mobs in radius"));
+        player.sendMessage(Component.text("§7/mob list - List all available mobs"));
+        player.sendMessage(Component.text("§7/mob info <mobtype> - Show mob information"));
+        player.sendMessage(Component.text("§7/mob gui - Open mob GUI"));
+        player.sendMessage(Component.text("§7/mob spawnarea create <name> <mobtype> <radius> <maxmobs> - Create spawn area"));
+        player.sendMessage(Component.text("§7/mob spawnarea remove <name> - Remove spawn area"));
+        player.sendMessage(Component.text("§7/mob spawnarea edit <name> <radius> <maxmobs> - Edit spawn area"));
+        player.sendMessage(Component.text("§7/mob spawnarea list - List all spawn areas"));
+        player.sendMessage(Component.text("§7/mob spawnarea info <name> - Show spawn area info"));
+        player.sendMessage(Component.text("§7/mob spawnarea gui - Open spawn area GUI"));
+        player.sendMessage(Component.text("§7/mob edit enter - Enter edit mode"));
+        player.sendMessage(Component.text("§7/mob edit exit - Exit edit mode"));
+        player.sendMessage(Component.text("§7/mob search <type> <value> - Search mobs"));
+        player.sendMessage(Component.text("§7/mob filter <category> [rarity] - Filter mobs by category"));
+        player.sendMessage(Component.text("§7/mob category <category> - Show mobs in category"));
+        player.sendMessage(Component.text("§7/mob rarity <rarity> - Show mobs with rarity"));
+        player.sendMessage(Component.text("§7/mob help - Show this help"));
     }
     
     private String getAvailableCategories() {

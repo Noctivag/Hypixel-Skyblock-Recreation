@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.features.locations;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.api.System;
 import de.noctivag.skyblock.core.api.SystemStatus;
 import de.noctivag.skyblock.features.locations.types.CompleteLocationType;
@@ -17,14 +20,14 @@ import java.util.logging.Level;
 
 public class CompleteLocationsSystem implements System {
 
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private SystemStatus status = SystemStatus.UNINITIALIZED;
     private boolean enabled = false;
     private LocationWorldManager worldManager;
 
-    public CompleteLocationsSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.worldManager = new LocationWorldManager(plugin);
+    public CompleteLocationsSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.worldManager = new LocationWorldManager(SkyblockPlugin);
     }
 
     @Override
@@ -40,23 +43,23 @@ public class CompleteLocationsSystem implements System {
     @Override
     public CompletableFuture<Void> initialize() {
         status = SystemStatus.INITIALIZING;
-        plugin.getLogger().info("Initializing Complete Locations System...");
+        SkyblockPlugin.getLogger().info("Initializing Complete Locations System...");
         try {
             // Load all location types
             int totalLocations = CompleteLocationType.values().length;
-            plugin.getLogger().info("Loaded " + totalLocations + " location types.");
+            SkyblockPlugin.getLogger().info("Loaded " + totalLocations + " location types.");
 
             // Initialize world manager for multi-world support
             worldManager.initialize();
 
             // Register event listeners if any (e.g., for location discovery, teleportation, etc.)
-            // plugin.getServer().getPluginManager().registerEvents(new LocationListener(), plugin);
+            // SkyblockPlugin.getServer().getPluginManager().registerEvents(new LocationListener(), SkyblockPlugin);
 
             status = SystemStatus.INITIALIZED;
-            plugin.getLogger().info("Complete Locations System initialized successfully.");
+            SkyblockPlugin.getLogger().info("Complete Locations System initialized successfully.");
             return CompletableFuture.completedFuture(null);
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to initialize Complete Locations System", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to initialize Complete Locations System", e);
             status = SystemStatus.ERROR;
             return CompletableFuture.failedFuture(e);
         }
@@ -65,7 +68,7 @@ public class CompleteLocationsSystem implements System {
     @Override
     public CompletableFuture<Void> shutdown() {
         status = SystemStatus.SHUTTING_DOWN;
-        plugin.getLogger().info("Shutting down Complete Locations System...");
+        SkyblockPlugin.getLogger().info("Shutting down Complete Locations System...");
         
         // Shutdown world manager
         if (worldManager != null) {
@@ -73,7 +76,7 @@ public class CompleteLocationsSystem implements System {
         }
         
         status = SystemStatus.SHUTDOWN;
-        plugin.getLogger().info("Complete Locations System shut down.");
+        SkyblockPlugin.getLogger().info("Complete Locations System shut down.");
         return CompletableFuture.completedFuture(null);
     }
 
@@ -91,7 +94,7 @@ public class CompleteLocationsSystem implements System {
     public CompletableFuture<Void> enable() {
         enabled = true;
         status = SystemStatus.ENABLED;
-        plugin.getLogger().info("Complete Locations System enabled.");
+        SkyblockPlugin.getLogger().info("Complete Locations System enabled.");
         return CompletableFuture.completedFuture(null);
     }
 
@@ -99,7 +102,7 @@ public class CompleteLocationsSystem implements System {
     public CompletableFuture<Void> disable() {
         enabled = false;
         status = SystemStatus.DISABLED;
-        plugin.getLogger().info("Complete Locations System disabled.");
+        SkyblockPlugin.getLogger().info("Complete Locations System disabled.");
         return CompletableFuture.completedFuture(null);
     }
 

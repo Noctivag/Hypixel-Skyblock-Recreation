@@ -49,7 +49,7 @@ public class LockFreeDataStructures {
         }
         
         public V put(K key, V value) {
-            CacheEntry<V> newEntry = new CacheEntry<>(value, System.currentTimeMillis());
+            CacheEntry<V> newEntry = new CacheEntry<>(value, java.lang.System.currentTimeMillis());
             CacheEntry<V> oldEntry = cache.put(key, newEntry);
             
             if (oldEntry == null) {

@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.network;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -28,11 +32,11 @@ import java.util.List;
  */
 public class NetworkCommands implements CommandExecutor, TabCompleter {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final SimpleNetworkManager networkManager;
     
-    public NetworkCommands(SkyblockPlugin plugin, SimpleNetworkManager networkManager) {
-        this.plugin = plugin;
+    public NetworkCommands(SkyblockPlugin SkyblockPlugin, SimpleNetworkManager networkManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.networkManager = networkManager;
     }
     

@@ -1,9 +1,12 @@
 package de.noctivag.skyblock.config;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -25,20 +28,20 @@ import java.util.logging.Level;
  */
 public class ConfigManager {
 
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<String, FileConfiguration> configs;
     private final Map<String, File> configFiles;
     private final Map<String, Boolean> autoSave;
 
-    public ConfigManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public ConfigManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.configs = new HashMap<>();
         this.configFiles = new HashMap<>();
         this.autoSave = new HashMap<>();
 
-        // Create plugin data folder if it doesn't exist
-        if (!plugin.getDataFolder().exists()) {
-            plugin.getDataFolder().mkdirs();
+        // Create SkyblockPlugin data folder if it doesn't exist
+        if (!SkyblockPlugin.getDataFolder().exists()) {
+            SkyblockPlugin.getDataFolder().mkdirs();
         }
     }
 
@@ -53,10 +56,10 @@ public class ConfigManager {
      * Load a configuration file with auto-save option
      */
     public FileConfiguration loadConfig(String name, boolean autoSave) {
-        File configFile = new File(plugin.getDataFolder(), name + ".yml");
+        File configFile = new File(SkyblockPlugin.getDataFolder(), name + ".yml");
 
         if (!configFile.exists()) {
-            plugin.saveResource(name + ".yml", false);
+            SkyblockPlugin.saveResource(name + ".yml", false);
         }
 
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
@@ -75,7 +78,7 @@ public class ConfigManager {
     }
 
     /**
-     * Get the main plugin configuration
+     * Get the main SkyblockPlugin configuration
      */
     public FileConfiguration getConfig() {
         // Lazily load the main config if it hasn't been loaded yet to avoid null returns
@@ -83,7 +86,7 @@ public class ConfigManager {
             try {
                 loadConfig("config");
             } catch (Exception e) {
-                plugin.getLogger().log(Level.WARNING, "Failed to lazily load config.yml", e);
+                SkyblockPlugin.getLogger().log(Level.WARNING, "Failed to lazily load config.yml", e);
                 return null;
             }
         }
@@ -101,7 +104,7 @@ public class ConfigManager {
             try {
                 config.save(configFile);
             } catch (IOException e) {
-                plugin.getLogger().log(Level.SEVERE, "Could not save config " + name, e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Could not save config " + name, e);
             }
         }
     }
@@ -127,7 +130,7 @@ public class ConfigManager {
     }
 
     /**
-     * Reload the main plugin configuration
+     * Reload the main SkyblockPlugin configuration
      */
     public void reloadConfig() {
         reloadConfig("config");
@@ -356,13 +359,13 @@ public class ConfigManager {
      * Create a new configuration file
      */
     public FileConfiguration createConfig(String name) {
-        File configFile = new File(plugin.getDataFolder(), name + ".yml");
+        File configFile = new File(SkyblockPlugin.getDataFolder(), name + ".yml");
 
         if (!configFile.exists()) {
             try {
                 configFile.createNewFile();
             } catch (IOException e) {
-                plugin.getLogger().log(Level.SEVERE, "Could not create config " + name, e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Could not create config " + name, e);
                 return null;
             }
         }

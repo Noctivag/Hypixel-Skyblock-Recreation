@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.levels;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.CorePlatform;
 import de.noctivag.skyblock.core.PlayerProfile;
 import org.bukkit.Bukkit;
@@ -28,15 +33,15 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Level GUI interface
  */
 public class SkyBlockLevelSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CorePlatform corePlatform;
     private final Map<UUID, PlayerSkyBlockLevel> playerLevels = new ConcurrentHashMap<>();
     
-    public SkyBlockLevelSystem(SkyblockPlugin plugin, CorePlatform corePlatform) {
-        this.plugin = plugin;
+    public SkyBlockLevelSystem(SkyblockPlugin SkyblockPlugin, CorePlatform corePlatform) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.corePlatform = corePlatform;
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
         startLevelUpdateTask();
     }
     
@@ -49,7 +54,7 @@ public class SkyBlockLevelSystem implements Listener {
                     level.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L * 60L); // Every minute
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L * 60L); // Every minute
     }
     
     @EventHandler
@@ -92,7 +97,7 @@ public class SkyBlockLevelSystem implements Listener {
         
         int newLevel = level.getLevel();
         if (newLevel > oldLevel) {
-            player.sendMessage("§a§lSKYBLOCK LEVEL UP!");
+            player.sendMessage(Component.text("§a§lSKYBLOCK LEVEL UP!"));
             player.sendMessage("§7Level: §e" + oldLevel + " §7→ §e" + newLevel);
             player.sendMessage("§7Source: §e" + source);
             
@@ -113,14 +118,14 @@ public class SkyBlockLevelSystem implements Listener {
         
         // Special level milestones
         if (level == 10) {
-            player.sendMessage("§e§lMILESTONE REACHED!");
-            player.sendMessage("§7You can now access the Auction House!");
+            player.sendMessage(Component.text("§e§lMILESTONE REACHED!"));
+            player.sendMessage(Component.text("§7You can now access the Auction House!"));
         } else if (level == 20) {
-            player.sendMessage("§e§lMILESTONE REACHED!");
-            player.sendMessage("§7You can now access Dungeons!");
+            player.sendMessage(Component.text("§e§lMILESTONE REACHED!"));
+            player.sendMessage(Component.text("§7You can now access Dungeons!"));
         } else if (level == 30) {
-            player.sendMessage("§e§lMILESTONE REACHED!");
-            player.sendMessage("§7You can now access the End!");
+            player.sendMessage(Component.text("§e§lMILESTONE REACHED!"));
+            player.sendMessage(Component.text("§7You can now access the End!"));
         }
     }
     
@@ -176,7 +181,7 @@ public class SkyBlockLevelSystem implements Listener {
             this.playerId = playerId;
             this.xp = 0.0;
             this.level = 1;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void addXP(double amount) {
@@ -208,7 +213,7 @@ public class SkyBlockLevelSystem implements Listener {
         }
         
         public void update() {
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         // Getters

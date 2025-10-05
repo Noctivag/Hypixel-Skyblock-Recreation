@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.items;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -28,17 +33,17 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Dungeon Stats
  */
 public class DungeonStarSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerDungeonStars> playerDungeonStars = new ConcurrentHashMap<>();
     private final Map<UUID, BukkitTask> dungeonStarTasks = new ConcurrentHashMap<>();
     
-    public DungeonStarSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public DungeonStarSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         startDungeonStarUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void startDungeonStarUpdateTask() {
@@ -50,7 +55,7 @@ public class DungeonStarSystem implements Listener {
                     dungeonStars.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L);
     }
     
     @EventHandler
@@ -71,30 +76,30 @@ public class DungeonStarSystem implements Listener {
     }
     
     private void openDungeonStarGUI(Player player) {
-        player.sendMessage("§aDungeon Star GUI geöffnet!");
+        player.sendMessage(Component.text("§aDungeon Star GUI geöffnet!"));
     }
     
     public boolean addDungeonStar(Player player, ItemStack item, int starLevel) {
         if (item == null || !item.hasItemMeta()) {
-            player.sendMessage("§cUngültiges Item!");
+            player.sendMessage(Component.text("§cUngültiges Item!"));
             return false;
         }
         
         // Check if item is dungeon item
         if (!isDungeonItem(item)) {
-            player.sendMessage("§cDieses Item ist kein Dungeon-Item!");
+            player.sendMessage(Component.text("§cDieses Item ist kein Dungeon-Item!"));
             return false;
         }
         
         // Check current star level
         int currentStars = getCurrentStarLevel(item);
         if (currentStars >= 5) {
-            player.sendMessage("§cDieses Item hat bereits die maximale Anzahl von Sternen (5)!");
+            player.sendMessage(Component.text("§cDieses Item hat bereits die maximale Anzahl von Sternen (5)!"));
             return false;
         }
         
         if (starLevel <= currentStars) {
-            player.sendMessage("§cDu kannst nur höhere Sterne hinzufügen!");
+            player.sendMessage(Component.text("§cDu kannst nur höhere Sterne hinzufügen!"));
             return false;
         }
         
@@ -114,7 +119,7 @@ public class DungeonStarSystem implements Listener {
         
         // Add star to display name
         String newDisplayName = addStarToDisplayName(displayName, starLevel);
-        meta.setDisplayName(newDisplayName);
+        meta.displayName(Component.text(newDisplayName));
         
         // Update lore
         List<String> lore = meta.getLore();
@@ -137,7 +142,7 @@ public class DungeonStarSystem implements Listener {
         // Add dungeon bonus info
         lore.add("§7Dungeon Bonus: §a+" + (starLevel * 10) + "% §7Stats in Dungeons");
         
-        meta.setLore(lore);
+        meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
         item.setItemMeta(meta);
         
         // Remove essence from player
@@ -252,7 +257,7 @@ public class DungeonStarSystem implements Listener {
         ItemStack star = new ItemStack(Material.NETHER_STAR);
         ItemMeta meta = star.getItemMeta();
         
-        meta.setDisplayName("§6Dungeon Star " + level);
+        meta.displayName(Component.text("§6Dungeon Star " + level));
         List<String> lore = new ArrayList<>();
         lore.add("§7A star that can be applied to");
         lore.add("§7dungeon items to increase their");
@@ -263,7 +268,7 @@ public class DungeonStarSystem implements Listener {
         lore.add("");
         lore.add("§6Right-click to apply!");
         
-        meta.setLore(lore);
+        meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
         star.setItemMeta(meta);
         
         return star;
@@ -273,7 +278,7 @@ public class DungeonStarSystem implements Listener {
         ItemStack essence = new ItemStack(essenceType.getMaterial());
         ItemMeta meta = essence.getItemMeta();
         
-        meta.setDisplayName(essenceType.getDisplayName());
+        meta.displayName(Component.text(essenceType.getDisplayName()));
         List<String> lore = new ArrayList<>();
         lore.add("§7A magical essence used to");
         lore.add("§7upgrade dungeon items with");
@@ -284,7 +289,7 @@ public class DungeonStarSystem implements Listener {
         lore.add("");
         lore.add("§6Right-click to use!");
         
-        meta.setLore(lore);
+        meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
         essence.setItemMeta(meta);
         
         return essence;
@@ -329,11 +334,11 @@ public class DungeonStarSystem implements Listener {
         
         public PlayerDungeonStars(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long timeDiff = currentTime - lastUpdate;
             
             if (timeDiff >= 60000) {

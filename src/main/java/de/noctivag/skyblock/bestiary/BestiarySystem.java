@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.bestiary;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.CorePlatform;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -17,6 +21,7 @@ import net.kyori.adventure.text.Component;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Bestiary System - Hypixel Skyblock Style
@@ -29,17 +34,17 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Bestiary achievements and milestones
  */
 public class BestiarySystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CorePlatform corePlatform;
     private final Map<UUID, PlayerBestiary> playerBestiaries = new ConcurrentHashMap<>();
     private final Map<EntityType, BestiaryEntry> bestiaryEntries = new HashMap<>();
     
-    public BestiarySystem(SkyblockPlugin plugin, CorePlatform corePlatform) {
-        this.plugin = plugin;
+    public BestiarySystem(SkyblockPlugin SkyblockPlugin, CorePlatform corePlatform) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.corePlatform = corePlatform;
         initializeBestiaryEntries();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeBestiaryEntries() {
@@ -146,7 +151,7 @@ public class BestiarySystem implements Listener {
         int newLevel = killData.getLevel();
         
         if (newLevel > oldLevel) {
-            player.sendMessage("§a§lBESTIARY LEVEL UP!");
+            player.sendMessage(Component.text("§a§lBESTIARY LEVEL UP!"));
             player.sendMessage("§7Mob: §e" + entry.getName());
             player.sendMessage("§7Level: §e" + oldLevel + " §7→ §e" + newLevel);
             player.sendMessage("§7Kills: §e" + newKills);
@@ -167,7 +172,7 @@ public class BestiarySystem implements Listener {
     }
     
     public void openBestiaryGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lBestiary");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lBestiary"));
         
         // Bestiary categories
         addGUIItem(gui, 10, Material.ROTTEN_FLESH, "§8§lUndead", 
@@ -324,10 +329,10 @@ public class BestiarySystem implements Listener {
                 openBestiaryCategoryGUI(player, BestiaryCategory.NETHER);
                 break;
             case 19: // Statistics
-                player.sendMessage("§eStatistics coming soon!");
+                player.sendMessage(Component.text("§eStatistics coming soon!"));
                 break;
             case 20: // Achievements
-                player.sendMessage("§eAchievements coming soon!");
+                player.sendMessage(Component.text("§eAchievements coming soon!"));
                 break;
             case 49: // Close
                 player.closeInventory();

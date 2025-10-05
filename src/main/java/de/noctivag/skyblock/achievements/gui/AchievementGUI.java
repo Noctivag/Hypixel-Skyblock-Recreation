@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.achievements.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.achievements.Achievement;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -20,13 +23,13 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings({"unused", "deprecation"})
 public class AchievementGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private static final Component GUI_TITLE = Component.text("» ").color(net.kyori.adventure.text.format.NamedTextColor.DARK_GRAY)
             .append(Component.text("Erfolge").color(net.kyori.adventure.text.format.NamedTextColor.GOLD))
             .append(Component.text(" »").color(net.kyori.adventure.text.format.NamedTextColor.DARK_GRAY));
 
-    public AchievementGUI(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public AchievementGUI(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     public void openMainGUI(Player player) {
@@ -35,8 +38,8 @@ public class AchievementGUI {
 
         // Statistik-Item
         // TODO: Implement proper AchievementManager interface
-        // double completion = ((AchievementManager) plugin.getAchievementManager()).getCompletionPercentage(player);
-        // int unlockedCount = ((AchievementManager) plugin.getAchievementManager()).getUnlockedAchievements(player).size();
+        // double completion = ((AchievementManager) SkyblockPlugin.getAchievementManager()).getCompletionPercentage(player);
+        // int unlockedCount = ((AchievementManager) SkyblockPlugin.getAchievementManager()).getUnlockedAchievements(player).size();
         double completion = 0.0; // Placeholder
         int unlockedCount = 0; // Placeholder
         int totalCount = Achievement.values().length;
@@ -122,10 +125,10 @@ public class AchievementGUI {
         int slot = 10;
         for (Achievement achievement : categoryAchievements) {
             // TODO: Implement proper AchievementManager interface
-            // if ("UNLOCKED".equalsIgnoreCase(filterMode) && !((AchievementManager) plugin.getAchievementManager()).hasAchievement(player, achievement)) {
+            // if ("UNLOCKED".equalsIgnoreCase(filterMode) && !((AchievementManager) SkyblockPlugin.getAchievementManager()).hasAchievement(player, achievement)) {
             //     continue;
             // }
-            // if ("LOCKED".equalsIgnoreCase(filterMode) && ((AchievementManager) plugin.getAchievementManager()).hasAchievement(player, achievement)) {
+            // if ("LOCKED".equalsIgnoreCase(filterMode) && ((AchievementManager) SkyblockPlugin.getAchievementManager()).hasAchievement(player, achievement)) {
             //     continue;
             // }
             ItemStack achievementItem = createAchievementItem(player, achievement);
@@ -146,8 +149,8 @@ public class AchievementGUI {
 
     private ItemStack createAchievementItem(Player player, Achievement achievement) {
         // TODO: Implement proper AchievementManager interface
-        // boolean unlocked = ((AchievementManager) plugin.getAchievementManager()).hasAchievement(player, achievement);
-        // int progress = ((AchievementManager) plugin.getAchievementManager()).getProgress(player, achievement);
+        // boolean unlocked = ((AchievementManager) SkyblockPlugin.getAchievementManager()).hasAchievement(player, achievement);
+        // int progress = ((AchievementManager) SkyblockPlugin.getAchievementManager()).getProgress(player, achievement);
         boolean unlocked = false; // Placeholder
         int progress = 0; // Placeholder
 
@@ -278,20 +281,20 @@ public class AchievementGUI {
     private int countUnlocked(Player player, List<Achievement> achievements) {
         // TODO: Implement proper AchievementManager interface
         // return (int) achievements.stream()
-        //     .filter(ach -> ((AchievementManager) plugin.getAchievementManager()).hasAchievement(player, ach))
+        //     .filter(ach -> ((AchievementManager) SkyblockPlugin.getAchievementManager()).hasAchievement(player, ach))
         //     .count();
         return 0; // Placeholder
     }
 
     private int calculateTotalExp(Player player) {
         // TODO: Implement proper AchievementManager interface
-        // return ((AchievementManager) plugin.getAchievementManager()).getUnlockedAchievements(player).stream()
+        // return ((AchievementManager) SkyblockPlugin.getAchievementManager()).getUnlockedAchievements(player).stream()
         return 0; // Placeholder
     }
 
     private int calculateTotalCoins(Player player) {
         // TODO: Implement proper AchievementManager interface
-        // return ((AchievementManager) plugin.getAchievementManager()).getUnlockedAchievements(player).stream()
+        // return ((AchievementManager) SkyblockPlugin.getAchievementManager()).getUnlockedAchievements(player).stream()
         //     .mapToInt(Achievement::getCoinReward)
         //     .sum();
         return 0; // Placeholder

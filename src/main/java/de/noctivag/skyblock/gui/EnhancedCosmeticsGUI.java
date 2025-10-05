@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.cosmetics.AdvancedCosmeticsSystem;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -11,14 +14,14 @@ import net.kyori.adventure.text.Component;
 import java.util.Arrays;
 
 public class EnhancedCosmeticsGUI extends CustomGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Player player;
     private final AdvancedCosmeticsSystem cosmeticsSystem;
     private String currentCategory = "particles";
 
-    public EnhancedCosmeticsGUI(SkyblockPlugin plugin, Player player) {
+    public EnhancedCosmeticsGUI(SkyblockPlugin SkyblockPlugin, Player player) {
         super(54, Component.text("§d§lEnhanced Cosmetics"));
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.player = player;
         // Placeholder - method not implemented
         this.cosmeticsSystem = null;
@@ -117,7 +120,7 @@ public class EnhancedCosmeticsGUI extends CustomGUI {
             setItem(slot, icon, name,
                 "§7" + cosmetic.getDescription(),
                 "",
-                "§ePreis: §f" + plugin.getEconomyManager().formatMoney(cosmetic.getPrice()),
+                "§ePreis: §f" + SkyblockPlugin.getEconomyManager().formatMoney(cosmetic.getPrice()),
                 "§7Typ: §f" + getTypeDisplayName(cosmetic.getType()),
                 "",
                 status);
@@ -171,7 +174,7 @@ public class EnhancedCosmeticsGUI extends CustomGUI {
         if (meta != null) {
             meta.displayName(Component.text(name));
             if (lore.length > 0) {
-                meta.lore(Arrays.stream(lore).map(Component::text).toList());
+                meta.lore(java.util.Arrays.stream(lore).map(Component::text).collect(java.util.stream.Collectors.toList()));
             }
             item.setItemMeta(meta);
         }

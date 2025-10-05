@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.kit;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.utils.ItemUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -11,28 +15,29 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import net.kyori.adventure.text.Component;
 
 public class KitManager {
 
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<String, Kit> kits;
     private final Map<UUID, Map<String, Long>> cooldowns;
     private File kitFile;
     private FileConfiguration kitConfig;
     private final KitShop kitShop;
 
-    public KitManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public KitManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.kits = new HashMap<>();
         this.cooldowns = new HashMap<>();
-        this.kitShop = new KitShop(plugin);
+        this.kitShop = new KitShop(SkyblockPlugin);
         loadKits();
     }
 
     private void loadKits() {
-        kitFile = new File(plugin.getDataFolder(), "kits.yml");
+        kitFile = new File(SkyblockPlugin.getDataFolder(), "kits.yml");
         if (!kitFile.exists()) {
-            plugin.saveResource("kits.yml", false);
+            SkyblockPlugin.saveResource("kits.yml", false);
         }
         kitConfig = YamlConfiguration.loadConfiguration(kitFile);
 
@@ -65,19 +70,19 @@ public class KitManager {
         try {
             kitConfig.save(kitFile);
         } catch (IOException e) {
-            plugin.getLogger().severe("Konnte Kits nicht speichern: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Konnte Kits nicht speichern: " + e.getMessage());
         }
     }
 
     public void giveKit(Player player, String kitName) {
         Kit kit = kits.get(kitName.toLowerCase());
         if (kit == null) {
-            player.sendMessage("§cDieses Kit existiert nicht!");
+            player.sendMessage(Component.text("§cDieses Kit existiert nicht!"));
             return;
         }
 
         if (!kit.getPermission().isEmpty() && !player.hasPermission(kit.getPermission())) {
-            player.sendMessage("§cDu hast keine Berechtigung für dieses Kit!");
+            player.sendMessage(Component.text("§cDu hast keine Berechtigung für dieses Kit!"));
             return;
         }
 
@@ -85,7 +90,7 @@ public class KitManager {
         Map<String, Long> playerCooldowns = cooldowns.computeIfAbsent(playerUUID, k -> new HashMap<>());
 
         long lastUsed = playerCooldowns.getOrDefault(kitName.toLowerCase(), 0L);
-        long currentTime = System.currentTimeMillis();
+        long currentTime = java.lang.System.currentTimeMillis();
         long cooldownTime = kit.getCooldown() * 1000; // Konvertiere zu Millisekunden
 
         if (currentTime - lastUsed < cooldownTime) {
@@ -95,7 +100,7 @@ public class KitManager {
         }
 
         if (player.getInventory().firstEmpty() == -1) {
-            player.sendMessage("§cDein Inventar ist voll!");
+            player.sendMessage(Component.text("§cDein Inventar ist voll!"));
             return;
         }
 
@@ -131,7 +136,7 @@ public class KitManager {
         long cooldownSeconds = kit != null ? kit.getCooldown() : 0L;
         if (lastUsed == 0 || cooldownSeconds <= 0) return 0L;
         long expireAt = lastUsed + cooldownSeconds * 1000L;
-        long remainingMillis = Math.max(0, expireAt - System.currentTimeMillis());
+        long remainingMillis = Math.max(0, expireAt - java.lang.System.currentTimeMillis());
         return remainingMillis / 1000L;
     }
 
@@ -139,6 +144,6 @@ public class KitManager {
     public void setCooldown(Player player, String kitName) {
         UUID playerUUID = player.getUniqueId();
         Map<String, Long> playerCooldowns = cooldowns.computeIfAbsent(playerUUID, k -> new HashMap<>());
-        playerCooldowns.put(kitName.toLowerCase(), System.currentTimeMillis());
+        playerCooldowns.put(kitName.toLowerCase(), java.lang.System.currentTimeMillis());
     }
 }

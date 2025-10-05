@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.items;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
@@ -20,6 +24,7 @@ import net.kyori.adventure.text.Component;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Special Effects System - Hypixel Skyblock Style
@@ -37,19 +42,19 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Buff/Debuff Effects
  */
 public class SpecialEffectsSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, Map<SpecialEffect, Long>> playerCooldowns = new ConcurrentHashMap<>();
     private final Map<UUID, List<ActiveEffect>> activeEffects = new ConcurrentHashMap<>();
     private final Map<UUID, BukkitTask> effectTasks = new ConcurrentHashMap<>();
     
-    public SpecialEffectsSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public SpecialEffectsSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         startEffectUpdateTask();
         
         // Register events
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void startEffectUpdateTask() {
@@ -58,7 +63,7 @@ public class SpecialEffectsSystem implements Listener {
             public void run() {
                 updateAllActiveEffects();
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Every second
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Every second
     }
     
     @EventHandler
@@ -456,24 +461,24 @@ public class SpecialEffectsSystem implements Listener {
         if (lastUsed == null) return true;
         
         long cooldownTime = effect.getCooldown() * 1000; // Convert to milliseconds
-        return System.currentTimeMillis() - lastUsed >= cooldownTime;
+        return java.lang.System.currentTimeMillis() - lastUsed >= cooldownTime;
     }
     
     private void useAbility(Player player, SpecialEffect effect) {
         UUID playerId = player.getUniqueId();
         
         // Set cooldown
-        playerCooldowns.computeIfAbsent(playerId, k -> new ConcurrentHashMap<>()).put(effect, System.currentTimeMillis());
+        playerCooldowns.computeIfAbsent(playerId, k -> new ConcurrentHashMap<>()).put(effect, java.lang.System.currentTimeMillis());
         
         // Apply effect
         effect.applyEffect(player);
         
         // Add to active effects
-        activeEffects.computeIfAbsent(playerId, k -> new ArrayList<>()).add(new ActiveEffect(effect, System.currentTimeMillis()));
+        activeEffects.computeIfAbsent(playerId, k -> new ArrayList<>()).add(new ActiveEffect(effect, java.lang.System.currentTimeMillis()));
     }
     
     private void updateAllActiveEffects() {
-        long currentTime = System.currentTimeMillis();
+        long currentTime = java.lang.System.currentTimeMillis();
         
         for (Map.Entry<UUID, List<ActiveEffect>> entry : activeEffects.entrySet()) {
             List<ActiveEffect> effects = entry.getValue();

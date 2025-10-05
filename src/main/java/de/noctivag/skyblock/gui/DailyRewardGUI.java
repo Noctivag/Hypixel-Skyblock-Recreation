@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.rewards.DailyReward;
 import de.noctivag.skyblock.rewards.DailyRewardManager;
 import net.kyori.adventure.text.Component;
@@ -17,17 +20,17 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DailyRewardGUI implements InventoryHolder {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Inventory inventory;
 
-    public DailyRewardGUI(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public DailyRewardGUI(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.inventory = Bukkit.createInventory(this, 54, Component.text("Tägliche Belohnungen"));
         initializeItems();
     }
 
     private void initializeItems() {
-        DailyRewardManager rewardManager = plugin.getDailyRewardManager();
+        DailyRewardManager rewardManager = SkyblockPlugin.getDailyRewardManager();
         for (int i = 1; i <= 7; i++) {
             DailyReward reward = rewardManager.getReward(i);
             if (reward != null) {

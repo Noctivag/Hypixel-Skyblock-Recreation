@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.dungeons;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.*;
 import org.bukkit.entity.*;
@@ -19,6 +23,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Complete Dungeon System - Full Implementation with Instance Management, Boss Mechanics, and Party Integration
@@ -33,7 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CompleteDungeonSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerDungeonData> playerDungeonData = new ConcurrentHashMap<>();
     private final Map<UUID, DungeonParty> activeParties = new ConcurrentHashMap<>();
@@ -41,17 +46,17 @@ public class CompleteDungeonSystem implements Listener {
     private final Map<UUID, DungeonBoss> activeBosses = new ConcurrentHashMap<>();
     private final Map<UUID, BukkitTask> dungeonTasks = new ConcurrentHashMap<>();
     
-    public CompleteDungeonSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public CompleteDungeonSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
         startDungeonUpdateTask();
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void startDungeonUpdateTask() {
         Thread.ofVirtual().start(() -> {
-            while (plugin.isEnabled()) {
+            while (SkyblockPlugin.isEnabled()) {
                 try {
                     updateActiveInstances();
                     updateActiveParties();
@@ -192,7 +197,7 @@ public class CompleteDungeonSystem implements Listener {
         addGUIItem(gui, 53, Material.ARROW, "§7§lNext Page", "§7Go to next page.");
         
         player.openInventory(gui);
-        player.sendMessage("§aDungeon GUI opened!");
+        player.sendMessage(Component.text("§aDungeon GUI opened!"));
     }
     
     private DungeonInstance findInstanceByBoss(UUID bossId) {
@@ -220,7 +225,7 @@ public class CompleteDungeonSystem implements Listener {
         }
         
         // Send completion message
-        player.sendMessage("§a§lDUNGEON COMPLETED!");
+        player.sendMessage(Component.text("§a§lDUNGEON COMPLETED!"));
         player.sendMessage("§7Floor " + instance.getFloor().getFloor() + " completed!");
         
         // Play sound
@@ -241,7 +246,7 @@ public class CompleteDungeonSystem implements Listener {
         ItemStack reward = new ItemStack(Material.DIAMOND, floor.getFloor());
         player.getInventory().addItem(reward);
         
-        player.sendMessage("§a§lDUNGEON REWARDS!");
+        player.sendMessage(Component.text("§a§lDUNGEON REWARDS!"));
         player.sendMessage("§6+" + xpReward + " Dungeon XP");
         player.sendMessage("§a+" + floor.getFloor() + " Diamonds");
     }
@@ -251,7 +256,7 @@ public class CompleteDungeonSystem implements Listener {
         
         // Check if player already has an active instance
         if (hasActiveInstance(playerId)) {
-            player.sendMessage("§cYou already have an active dungeon run!");
+            player.sendMessage(Component.text("§cYou already have an active dungeon run!"));
             return false;
         }
         
@@ -274,7 +279,7 @@ public class CompleteDungeonSystem implements Listener {
         spawnDungeonBoss(instance);
         
         // Send messages
-        player.sendMessage("§a§lDUNGEON RUN STARTED!");
+        player.sendMessage(Component.text("§a§lDUNGEON RUN STARTED!"));
         player.sendMessage("§7Floor: " + floor.getDisplayName());
         player.sendMessage("§7Difficulty: " + floor.getDifficulty());
         
@@ -388,16 +393,16 @@ public class CompleteDungeonSystem implements Listener {
     public boolean joinParty(Player player, UUID leaderId) {
         DungeonParty party = activeParties.get(leaderId);
         if (party == null) {
-            player.sendMessage("§cParty not found!");
+            player.sendMessage(Component.text("§cParty not found!"));
             return false;
         }
         
         if (party.addMember(player.getUniqueId())) {
-            player.sendMessage("§a§lJOINED PARTY!");
+            player.sendMessage(Component.text("§a§lJOINED PARTY!"));
             player.sendMessage("§7You joined " + Bukkit.getPlayer(leaderId).getName() + "'s party!");
             return true;
         } else {
-            player.sendMessage("§cParty is full!");
+            player.sendMessage(Component.text("§cParty is full!"));
             return false;
         }
     }
@@ -407,14 +412,14 @@ public class CompleteDungeonSystem implements Listener {
         DungeonParty party = activeParties.get(playerId);
         
         if (party == null) {
-            player.sendMessage("§cYou are not in a party!");
+            player.sendMessage(Component.text("§cYou are not in a party!"));
             return false;
         }
         
         party.removeMember(playerId);
         activeParties.remove(playerId);
         
-        player.sendMessage("§a§lLEFT PARTY!");
+        player.sendMessage(Component.text("§a§lLEFT PARTY!"));
         return true;
     }
     
@@ -599,7 +604,7 @@ public class CompleteDungeonSystem implements Listener {
             this.instanceId = UUID.randomUUID();
             this.playerId = playerId;
             this.floor = floor;
-            this.startTime = System.currentTimeMillis();
+            this.startTime = java.lang.System.currentTimeMillis();
             this.active = true;
             this.location = new Location(Bukkit.getWorld("world"), 0, 64, 0);
         }
@@ -623,7 +628,7 @@ public class CompleteDungeonSystem implements Listener {
         
         public void update() {
             // Instance update logic
-            if (System.currentTimeMillis() - startTime > 30 * 60 * 1000) { // 30 minutes timeout
+            if (java.lang.System.currentTimeMillis() - startTime > 30 * 60 * 1000) { // 30 minutes timeout
                 active = false;
             }
         }
@@ -638,7 +643,7 @@ public class CompleteDungeonSystem implements Listener {
         public DungeonBoss(Entity entity, DungeonFloor floor) {
             this.entity = entity;
             this.floor = floor;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public Entity getEntity() { return entity; }
@@ -651,7 +656,7 @@ public class CompleteDungeonSystem implements Listener {
         public void update() {
             if (!isAlive()) return;
             
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             if (currentTime - lastUpdate >= 1000) { // Update every second
                 lastUpdate = currentTime;
                 

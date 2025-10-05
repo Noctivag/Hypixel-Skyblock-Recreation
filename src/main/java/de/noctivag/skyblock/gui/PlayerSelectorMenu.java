@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -18,7 +21,7 @@ public class PlayerSelectorMenu implements InventoryHolder {
     private final Inventory inventory;
     private final Map<Integer, String> slotToPlayer = new HashMap<>();
 
-    public PlayerSelectorMenu(SkyblockPlugin plugin) {
+    public PlayerSelectorMenu(SkyblockPlugin SkyblockPlugin) {
         this.inventory = Bukkit.createInventory(this, 54, Component.text("§6Spieler auswählen"));
         initializeItems();
     }

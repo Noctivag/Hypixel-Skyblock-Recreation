@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.pets;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.CorePlatform;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -15,6 +19,7 @@ import net.kyori.adventure.text.Component;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Pet Items System - Hypixel Skyblock Style
@@ -27,19 +32,19 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Pet item GUI interface
  */
 public class PetItemsSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CorePlatform corePlatform;
     private final PetSystem petSystem;
     private final Map<String, PetItem> petItems = new HashMap<>();
     private final Map<UUID, Map<String, PetItem>> equippedPetItems = new ConcurrentHashMap<>();
     
-    public PetItemsSystem(SkyblockPlugin plugin, CorePlatform corePlatform, PetSystem petSystem) {
-        this.plugin = plugin;
+    public PetItemsSystem(SkyblockPlugin SkyblockPlugin, CorePlatform corePlatform, PetSystem petSystem) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.corePlatform = corePlatform;
         this.petSystem = petSystem;
         
         initializePetItems();
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializePetItems() {
@@ -152,7 +157,7 @@ public class PetItemsSystem implements Listener {
     }
     
     public void openPetItemsGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§e§lPet Items");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§e§lPet Items"));
         
         // Pet item categories
         addGUIItem(gui, 10, Material.EXPERIENCE_BOTTLE, "§a§lXP Boost Items", 
@@ -208,7 +213,7 @@ public class PetItemsSystem implements Listener {
     }
     
     public void openEquippedItemsGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lEquipped Pet Items");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lEquipped Pet Items"));
         
         Map<String, PetItem> equipped = equippedPetItems.getOrDefault(player.getUniqueId(), new HashMap<>());
         
@@ -240,7 +245,7 @@ public class PetItemsSystem implements Listener {
         
         // Check if player has the item
         if (!player.getInventory().contains(petItem.getMaterial())) {
-            player.sendMessage("§cYou don't have this item!");
+            player.sendMessage(Component.text("§cYou don't have this item!"));
             return false;
         }
         
@@ -250,7 +255,7 @@ public class PetItemsSystem implements Listener {
         // Remove item from inventory
         player.getInventory().removeItem(new ItemStack(petItem.getMaterial(), 1));
         
-        player.sendMessage("§a§lPET ITEM EQUIPPED!");
+        player.sendMessage(Component.text("§a§lPET ITEM EQUIPPED!"));
         player.sendMessage("§7Pet: §e" + pet.getType().getName());
         player.sendMessage("§7Item: " + petItem.getDisplayName());
         
@@ -265,7 +270,7 @@ public class PetItemsSystem implements Listener {
             // Return item to inventory
             player.getInventory().addItem(new ItemStack(petItem.getMaterial(), 1));
             
-            player.sendMessage("§c§lPET ITEM UNEQUIPPED!");
+            player.sendMessage(Component.text("§c§lPET ITEM UNEQUIPPED!"));
             player.sendMessage("§7Pet: §e" + pet.getType().getName());
             player.sendMessage("§7Item: " + petItem.getDisplayName());
             
@@ -329,7 +334,7 @@ public class PetItemsSystem implements Listener {
                 openEquippedItemsGUI(player);
                 break;
             case 20: // Crafting
-                player.sendMessage("§ePet Item Crafting coming soon!");
+                player.sendMessage(Component.text("§ePet Item Crafting coming soon!"));
                 break;
             case 49: // Close
                 player.closeInventory();

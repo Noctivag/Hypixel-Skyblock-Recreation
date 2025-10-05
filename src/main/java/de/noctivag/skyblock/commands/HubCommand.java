@@ -1,4 +1,8 @@
 package de.noctivag.skyblock.commands;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.World;
@@ -13,10 +17,10 @@ import org.bukkit.entity.Player;
  */
 public class HubCommand implements CommandExecutor {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     
-    public HubCommand(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public HubCommand(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
     
     @Override
@@ -29,16 +33,16 @@ public class HubCommand implements CommandExecutor {
         Player player = (Player) sender;
         
         // Hole die aktuelle Live-Instanz des Hubs
-        World hub = plugin.getWorldManager().getLiveWorld("hub");
+        World hub = SkyblockPlugin.getWorldManager().getLiveWorld("hub");
         
         if (hub == null) {
-            player.sendMessage("§cDer Hub ist momentan nicht verfügbar. Bitte versuche es später erneut.");
+            player.sendMessage(Component.text("§cDer Hub ist momentan nicht verfügbar. Bitte versuche es später erneut."));
             return true;
         }
         
         // Teleportiere den Spieler zum Hub
         player.teleport(hub.getSpawnLocation());
-        player.sendMessage("§aDu wurdest zum Hub teleportiert!");
+        player.sendMessage(Component.text("§aDu wurdest zum Hub teleportiert!"));
         
         return true;
     }

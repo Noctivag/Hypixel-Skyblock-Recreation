@@ -1,15 +1,19 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import net.kyori.adventure.text.Component;
 
 public class EconomyGUI extends CustomGUI {
     private final Player player;
     
-    public EconomyGUI(SkyblockPlugin plugin, Player player) {
-        super(plugin, "§6§lEconomy", 54);
+    public EconomyGUI(SkyblockPlugin SkyblockPlugin, Player player) {
+        super(SkyblockPlugin, "§6§lEconomy", 54);
         this.player = player;
         setupItems();
     }

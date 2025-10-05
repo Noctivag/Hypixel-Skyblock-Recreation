@@ -2,6 +2,8 @@ package de.noctivag.skyblock.engine.collections.types;
 
 import java.util.ArrayList;
 import java.util.List;
+import de.noctivag.skyblock.engine.collections.ItemProvenance;
+import de.noctivag.skyblock.engine.collections.CollectionSource;
 
 /**
  * Collection Item Progress
@@ -109,14 +111,14 @@ public class CollectionItemProgress {
      * Get age of this progress in days
      */
     public double getAgeInDays() {
-        return (System.currentTimeMillis() - firstObtained) / (24.0 * 60 * 60 * 1000);
+        return (java.lang.System.currentTimeMillis() - firstObtained) / (24.0 * 60 * 60 * 1000);
     }
     
     /**
      * Get time since last obtained in hours
      */
     public double getTimeSinceLastObtainedInHours() {
-        return (System.currentTimeMillis() - lastObtained) / (60.0 * 60 * 1000);
+        return (java.lang.System.currentTimeMillis() - lastObtained) / (60.0 * 60 * 1000);
     }
     
     @Override

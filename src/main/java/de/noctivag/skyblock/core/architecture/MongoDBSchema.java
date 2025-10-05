@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.core.architecture;
+import java.util.UUID;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -371,19 +372,12 @@ public class MongoDBSchema {
             playerProfiles.createIndex(Indexes.descending("lastLogin"));
             
             // Bazaar orders indexes
-            bazaarOrders.createIndex(Indexes.compound(
-                Indexes.ascending("itemId"),
-                Indexes.ascending("isBuyOrder"),
-                Indexes.ascending("price")
-            ));
+            bazaarOrders.createIndex(Indexes.ascending("itemId", "isBuyOrder", "price"));
             bazaarOrders.createIndex(Indexes.ascending("playerUUID"));
             bazaarOrders.createIndex(Indexes.ascending("status"));
             
             // Auction house indexes
-            auctionHouse.createIndex(Indexes.compound(
-                Indexes.ascending("itemId"),
-                Indexes.ascending("price")
-            ));
+            auctionHouse.createIndex(Indexes.ascending("itemId", "price"));
             auctionHouse.createIndex(Indexes.ascending("sellerUUID"));
             auctionHouse.createIndex(Indexes.descending("endTime"));
             
@@ -401,7 +395,7 @@ public class MongoDBSchema {
         AccessoriesBag bag = new AccessoriesBag();
         bag.unlockedSlots = doc.getInteger("unlockedSlots", 0);
         bag.accessories = doc.getList("accessories", Document.class, new ArrayList<>());
-        bag.talismanPowers = doc.get("talismanPowers", Map.class, new HashMap<>());
+        bag.talismanPowers = (Map<String, Object>) doc.get("talismanPowers", new HashMap<String, Object>());
         return bag;
     }
     
@@ -424,8 +418,8 @@ public class MongoDBSchema {
      */
     private CollectionProgress parseCollectionProgress(Document doc) {
         CollectionProgress progress = new CollectionProgress();
-        progress.collections = doc.get("collections", Map.class, new HashMap<>());
-        progress.milestones = doc.get("milestones", Map.class, new HashMap<>());
+        progress.collections = (Map<String, Object>) doc.get("collections", new HashMap<String, Object>());
+        progress.milestones = (Map<String, Object>) doc.get("milestones", new HashMap<String, Object>());
         progress.unlockedRecipes = doc.getList("unlockedRecipes", String.class, new ArrayList<>());
         return progress;
     }
@@ -435,7 +429,7 @@ public class MongoDBSchema {
      */
     private RNGMeterState parseRNGMeterState(Document doc) {
         RNGMeterState state = new RNGMeterState();
-        state.bossProgress = doc.get("bossProgress", Map.class, new HashMap<>());
+        state.bossProgress = (Map<String, Object>) doc.get("bossProgress", new HashMap<String, Object>());
         state.lastReset = doc.getDate("lastReset");
         state.totalRngDrops = doc.getInteger("totalRngDrops", 0);
         return state;

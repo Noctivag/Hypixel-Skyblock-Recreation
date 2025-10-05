@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.Player;
@@ -10,11 +13,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 public class FeatureToggleListener implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private static final Component GUI_TITLE = Component.text("§6§lFeature-Einstellungen");
 
-    public FeatureToggleListener(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public FeatureToggleListener(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     @EventHandler
@@ -52,31 +55,31 @@ public class FeatureToggleListener implements Listener {
         }
 
         // GUI aktualisieren
-        new FeatureToggleGUI(plugin).openGUI(player);
+        new FeatureToggleGUI(SkyblockPlugin).openGUI(player);
     }
 
     private void toggleScoreboardFeature(Player player, String feature) {
-        if (!player.hasPermission("plugin.admin")) {
-            player.sendMessage("§cDazu hast du keine Berechtigung!");
+        if (!player.hasPermission("SkyblockPlugin.admin")) {
+            player.sendMessage(Component.text("§cDazu hast du keine Berechtigung!"));
             return;
         }
 
-        boolean currentState = plugin.getConfigManager().isScoreboardFeatureEnabled(feature);
-        plugin.getConfigManager().setScoreboardFeature(feature, !currentState);
-        plugin.getScoreboardManager().updateAllScoreboards();
+        boolean currentState = SkyblockPlugin.getConfigManager().isScoreboardFeatureEnabled(feature);
+        SkyblockPlugin.getConfigManager().setScoreboardFeature(feature, !currentState);
+        SkyblockPlugin.getScoreboardManager().updateAllScoreboards();
 
         player.sendMessage(String.format("§7Das Feature §e%s §7wurde %s§7!",
             feature, !currentState ? "§aaktiviert" : "§cdeaktiviert"));
     }
 
     private void toggleFeature(Player player, String feature) {
-        if (!player.hasPermission("plugin.admin")) {
-            player.sendMessage("§cDazu hast du keine Berechtigung!");
+        if (!player.hasPermission("SkyblockPlugin.admin")) {
+            player.sendMessage(Component.text("§cDazu hast du keine Berechtigung!"));
             return;
         }
 
-        boolean currentState = plugin.getConfigManager().isFeatureEnabled(feature);
-        plugin.getConfigManager().setFeature(feature, !currentState);
+        boolean currentState = SkyblockPlugin.getConfigManager().isFeatureEnabled(feature);
+        SkyblockPlugin.getConfigManager().setFeature(feature, !currentState);
 
         player.sendMessage(String.format("§7Das Feature §e%s §7wurde %s§7!",
             feature, !currentState ? "§aaktiviert" : "§cdeaktiviert"));

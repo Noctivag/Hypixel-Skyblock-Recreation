@@ -67,7 +67,7 @@ public class ScalingRequest {
      * Get request age in milliseconds
      */
     public long getAge() {
-        return System.currentTimeMillis() - timestamp;
+        return java.lang.System.currentTimeMillis() - timestamp;
     }
     
     /**

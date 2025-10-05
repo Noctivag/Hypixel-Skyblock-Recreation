@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -13,15 +16,15 @@ import net.kyori.adventure.text.format.TextDecoration;
 import java.util.Arrays;
 
 public class UltimateMainMenu extends CustomGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Player player;
     private final HypixelMenuStyleSystem styleSystem;
 
-    public UltimateMainMenu(SkyblockPlugin plugin, Player player) {
+    public UltimateMainMenu(SkyblockPlugin SkyblockPlugin, Player player) {
         super(54, Component.text("§6§l⚡ ULTIMATE MENU ⚡").color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD));
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.player = player;
-        this.styleSystem = new HypixelMenuStyleSystem(plugin);
+        this.styleSystem = new HypixelMenuStyleSystem(SkyblockPlugin);
         setupItems();
         playOpenSound();
     }
@@ -289,7 +292,7 @@ public class UltimateMainMenu extends CustomGUI {
         
         // Settings
         setItem(40, styleSystem.createFeatureItem(Material.REDSTONE, "⚙️ SETTINGS", 
-            "Configure plugin settings and preferences", true,
+            "Configure SkyblockPlugin settings and preferences", true,
             "• Feature toggles and options",
             "• Notification preferences",
             "• Personal customization settings"));
@@ -299,7 +302,7 @@ public class UltimateMainMenu extends CustomGUI {
             "Access administrative tools and controls", player.hasPermission("basics.admin"),
             "• Player management tools",
             "• Server administration",
-            "• Plugin configuration"));
+            "• SkyblockPlugin configuration"));
     }
 
     private void setupHypixelFeatures() {
@@ -334,7 +337,7 @@ public class UltimateMainMenu extends CustomGUI {
         // Server Info
         setItem(48, styleSystem.createFeatureItem(Material.BEACON, "🖥️ SERVER INFO", 
             "View server information and statistics", true,
-            "• Online players: " + plugin.getServer().getOnlinePlayers().size(),
+            "• Online players: " + SkyblockPlugin.getServer().getOnlinePlayers().size(),
             "• Server TPS and performance",
             "• Uptime and status"));
 
@@ -356,7 +359,7 @@ public class UltimateMainMenu extends CustomGUI {
     }
 
     private String getServerUptime() {
-        long uptime = System.currentTimeMillis() - (System.currentTimeMillis() - 1000 * 60 * 60); // Placeholder
+        long uptime = java.lang.System.currentTimeMillis() - (java.lang.System.currentTimeMillis() - 1000 * 60 * 60); // Placeholder
         long hours = uptime / (1000 * 60 * 60);
         long minutes = (uptime % (1000 * 60 * 60)) / (1000 * 60);
         return hours + "h " + minutes + "m";
@@ -369,7 +372,7 @@ public class UltimateMainMenu extends CustomGUI {
         if (meta != null) {
             meta.displayName(Component.text(name));
             if (lore.length > 0) {
-                meta.lore(Arrays.stream(lore).map(Component::text).toList());
+                meta.lore(java.util.Arrays.stream(lore).map(Component::text).collect(java.util.stream.Collectors.toList()));
             }
             item.setItemMeta(meta);
         }

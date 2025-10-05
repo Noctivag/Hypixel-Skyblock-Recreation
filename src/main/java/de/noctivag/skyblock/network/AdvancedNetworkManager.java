@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.network;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -25,7 +29,7 @@ import java.util.logging.Level;
  */
 public class AdvancedNetworkManager {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     
     // Netzwerk-Komponenten
@@ -39,8 +43,8 @@ public class AdvancedNetworkManager {
     private final Map<String, Object> networkConfig = new ConcurrentHashMap<>();
     private boolean isInitialized = false;
     
-    public AdvancedNetworkManager(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedNetworkManager(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
     }
     
@@ -49,7 +53,7 @@ public class AdvancedNetworkManager {
      */
     public void initialize() {
         try {
-            plugin.getLogger().info("Initializing Advanced Network Manager...");
+            SkyblockPlugin.getLogger().info("Initializing Advanced Network Manager...");
             
             // Initialisiere Komponenten
             initializeComponents();
@@ -61,10 +65,10 @@ public class AdvancedNetworkManager {
             startAllSystems();
             
             isInitialized = true;
-            plugin.getLogger().info("Advanced Network Manager initialized successfully!");
+            SkyblockPlugin.getLogger().info("Advanced Network Manager initialized successfully!");
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to initialize Advanced Network Manager", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to initialize Advanced Network Manager", e);
         }
     }
     
@@ -73,19 +77,19 @@ public class AdvancedNetworkManager {
      */
     private void initializeComponents() {
         // Server Communication Manager
-        communicationManager = new ServerCommunicationManager(plugin, databaseManager);
+        communicationManager = new ServerCommunicationManager(SkyblockPlugin, databaseManager);
         
         // Advanced Player Transfer System
-        transferSystem = new AdvancedPlayerTransferSystem(plugin, databaseManager, communicationManager);
+        transferSystem = new AdvancedPlayerTransferSystem(SkyblockPlugin, databaseManager, communicationManager);
         
         // Server Load Balancer
-        loadBalancer = new ServerLoadBalancer(plugin, databaseManager, communicationManager);
+        loadBalancer = new ServerLoadBalancer(SkyblockPlugin, databaseManager, communicationManager);
         
         // Cross-Server Data Sync
-        dataSync = new CrossServerDataSync(plugin, databaseManager, communicationManager);
+        dataSync = new CrossServerDataSync(SkyblockPlugin, databaseManager, communicationManager);
         
         // Server Monitoring System
-        monitoringSystem = new ServerMonitoringSystem(plugin, databaseManager, communicationManager);
+        monitoringSystem = new ServerMonitoringSystem(SkyblockPlugin, databaseManager, communicationManager);
     }
     
     /**
@@ -103,7 +107,7 @@ public class AdvancedNetworkManager {
         networkConfig.put("transfer_cooldown", 30000L);
         networkConfig.put("max_transfers_per_minute", 3);
         
-        plugin.getLogger().info("Network configuration loaded");
+        SkyblockPlugin.getLogger().info("Network configuration loaded");
     }
     
     /**
@@ -119,7 +123,7 @@ public class AdvancedNetworkManager {
         // Starte Monitoring System
         monitoringSystem.startMonitoring();
         
-        plugin.getLogger().info("All network systems started");
+        SkyblockPlugin.getLogger().info("All network systems started");
     }
     
     /**
@@ -346,7 +350,7 @@ public class AdvancedNetworkManager {
      */
     public void updateNetworkConfiguration(String key, Object value) {
         networkConfig.put(key, value);
-        plugin.getLogger().info("Network configuration updated: " + key + " = " + value);
+        SkyblockPlugin.getLogger().info("Network configuration updated: " + key + " = " + value);
     }
     
     /**
@@ -364,7 +368,7 @@ public class AdvancedNetworkManager {
             return;
         }
         
-        plugin.getLogger().info("Shutting down Advanced Network Manager...");
+        SkyblockPlugin.getLogger().info("Shutting down Advanced Network Manager...");
         
         // Stoppe alle Systeme
         if (communicationManager != null) {
@@ -379,7 +383,7 @@ public class AdvancedNetworkManager {
         networkConfig.clear();
         
         isInitialized = false;
-        plugin.getLogger().info("Advanced Network Manager shutdown complete");
+        SkyblockPlugin.getLogger().info("Advanced Network Manager shutdown complete");
     }
     
     /**

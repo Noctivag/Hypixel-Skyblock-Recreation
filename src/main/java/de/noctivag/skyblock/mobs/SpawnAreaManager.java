@@ -1,4 +1,9 @@
 package de.noctivag.skyblock.mobs;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import org.bukkit.Bukkit;
@@ -10,24 +15,25 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class SpawnAreaManager implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final AdvancedMobSystem mobSystem;
     private final Map<UUID, SpawnArea> spawnAreas = new ConcurrentHashMap<>();
     private final Map<UUID, Player> playersInEditMode = new ConcurrentHashMap<>();
     
-    public SpawnAreaManager(SkyblockPlugin plugin, AdvancedMobSystem mobSystem) {
-        this.plugin = plugin;
+    public SpawnAreaManager(SkyblockPlugin SkyblockPlugin, AdvancedMobSystem mobSystem) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.mobSystem = mobSystem;
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     @EventHandler
@@ -48,7 +54,7 @@ public class SpawnAreaManager implements Listener {
     }
     
     public void openSpawnAreaGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§e§lSpawn Area Manager");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§e§lSpawn Area Manager"));
         
         // Add spawn area management options
         addGUIItem(gui, 10, Material.GRASS_BLOCK, "§a§lCreate Spawn Area", "§7Create a new spawn area.");
@@ -82,15 +88,17 @@ public class SpawnAreaManager implements Listener {
         addGUIItem(gui, 53, Material.ARROW, "§7§lNext Page", "§7Go to next page.");
         
         player.openInventory(gui);
-        player.sendMessage("§aSpawn Area Manager geöffnet!");
+        player.sendMessage(Component.text("§aSpawn Area Manager geöffnet!"));
     }
     
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String description) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(name);
-            meta.setLore(Arrays.asList(description));
+            meta.displayName(Component.text(name));
+            meta.lore(Arrays.asList(description).stream()
+                .map(desc -> Component.text(desc))
+                .collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         gui.setItem(slot, item);
@@ -113,7 +121,7 @@ public class SpawnAreaManager implements Listener {
         if (area != null) {
             player.sendMessage("§aSpawn area '" + area.getName() + "' removed successfully!");
         } else {
-            player.sendMessage("§cSpawn area not found!");
+            player.sendMessage(Component.text("§cSpawn area not found!"));
         }
     }
     
@@ -124,14 +132,14 @@ public class SpawnAreaManager implements Listener {
             area.setMaxMobs(newMaxMobs);
             player.sendMessage("§aSpawn area '" + area.getName() + "' updated successfully!");
         } else {
-            player.sendMessage("§cSpawn area not found!");
+            player.sendMessage(Component.text("§cSpawn area not found!"));
         }
     }
     
     public void viewSpawnAreas(Player player) {
-        player.sendMessage("§a=== Spawn Areas ===");
+        player.sendMessage(Component.text("§a=== Spawn Areas ==="));
         if (spawnAreas.isEmpty()) {
-            player.sendMessage("§7No spawn areas found.");
+            player.sendMessage(Component.text("§7No spawn areas found."));
         } else {
             for (SpawnArea area : spawnAreas.values()) {
                 player.sendMessage("§7- " + area.getName() + " (" + area.getMobType().name() + ")");
@@ -143,13 +151,13 @@ public class SpawnAreaManager implements Listener {
     
     public void enterEditMode(Player player) {
         playersInEditMode.put(player.getUniqueId(), player);
-        player.sendMessage("§aEdit mode activated! Right-click to select spawn area center.");
-        player.sendMessage("§7Use /spawnarea exit to exit edit mode.");
+        player.sendMessage(Component.text("§aEdit mode activated! Right-click to select spawn area center."));
+        player.sendMessage(Component.text("§7Use /spawnarea exit to exit edit mode."));
     }
     
     public void exitEditMode(Player player) {
         playersInEditMode.remove(player.getUniqueId());
-        player.sendMessage("§aEdit mode deactivated!");
+        player.sendMessage(Component.text("§aEdit mode deactivated!"));
     }
     
     public boolean isInEditMode(Player player) {
@@ -172,7 +180,7 @@ public class SpawnAreaManager implements Listener {
                     area.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L * 5L); // Update every 5 seconds
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L * 5L); // Update every 5 seconds
     }
     
     public static class SpawnArea {
@@ -193,7 +201,7 @@ public class SpawnAreaManager implements Listener {
             this.radius = radius;
             this.mobType = mobType;
             this.maxMobs = maxMobs;
-            this.lastSpawn = System.currentTimeMillis();
+            this.lastSpawn = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
@@ -201,9 +209,9 @@ public class SpawnAreaManager implements Listener {
             spawnedMobs.removeIf(mob -> mob.isDead() || !mob.isValid());
             
             // Spawn new mobs if needed
-            if (spawnedMobs.size() < maxMobs && System.currentTimeMillis() - lastSpawn > spawnRate) {
+            if (spawnedMobs.size() < maxMobs && java.lang.System.currentTimeMillis() - lastSpawn > spawnRate) {
                 spawnMob();
-                lastSpawn = System.currentTimeMillis();
+                lastSpawn = java.lang.System.currentTimeMillis();
             }
         }
         

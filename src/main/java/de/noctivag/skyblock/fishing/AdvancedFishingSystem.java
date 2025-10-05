@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.fishing;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -35,7 +40,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AdvancedFishingSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerFishingData> playerFishingData = new ConcurrentHashMap<>();
     private final Map<UUID, FishingSession> activeSessions = new ConcurrentHashMap<>();
@@ -43,15 +48,15 @@ public class AdvancedFishingSystem implements Listener {
     private final Map<FishingLocation, FishingLocationConfig> locationConfigs = new HashMap<>();
     private final Map<FishingEvent, FishingEventConfig> eventConfigs = new HashMap<>();
     
-    public AdvancedFishingSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedFishingSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeSeaCreatureConfigs();
         initializeLocationConfigs();
         initializeEventConfigs();
         startFishingUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeSeaCreatureConfigs() {
@@ -185,7 +190,7 @@ public class AdvancedFishingSystem implements Listener {
     }
     
     private void startFishingUpdateTask() {
-        Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+        Bukkit.getScheduler().runTaskTimer(SkyblockPlugin, () -> {
             for (FishingSession session : activeSessions.values()) {
                 updateFishingSession(session);
             }
@@ -205,7 +210,7 @@ public class AdvancedFishingSystem implements Listener {
     
     public void startFishingSession(Player player, FishingLocation location) {
         if (activeSessions.containsKey(player.getUniqueId())) {
-            player.sendMessage("§cYou already have an active fishing session!");
+            player.sendMessage(Component.text("§cYou already have an active fishing session!"));
             return;
         }
         
@@ -216,21 +221,21 @@ public class AdvancedFishingSystem implements Listener {
             player.getUniqueId(),
             location,
             locationConfig,
-            System.currentTimeMillis()
+            java.lang.System.currentTimeMillis()
         );
         
         activeSessions.put(player.getUniqueId(), session);
         
-        player.sendMessage("§aFishing session started!");
+        player.sendMessage(Component.text("§aFishing session started!"));
         player.sendMessage("§7Location: " + locationConfig.getDisplayName());
-        player.sendMessage("§7Use your fishing rod to catch fish!");
+        player.sendMessage(Component.text("§7Use your fishing rod to catch fish!"));
     }
     
     public void stopFishingSession(Player player) {
         FishingSession session = activeSessions.remove(player.getUniqueId());
         if (session != null) {
             session.setActive(false);
-            player.sendMessage("§aFishing session ended!");
+            player.sendMessage(Component.text("§aFishing session ended!"));
             player.sendMessage("§7Time fished: " + session.getTimeElapsed() + " seconds");
         }
     }
@@ -294,13 +299,13 @@ public class AdvancedFishingSystem implements Listener {
         // Give regular fish
         ItemStack fish = new ItemStack(Material.COD);
         player.getInventory().addItem(fish);
-        player.sendMessage("§aCaught a fish!");
+        player.sendMessage(Component.text("§aCaught a fish!"));
     }
     
     private void handleSeaCreatureCatch(Player player, FishingSession session) {
         // Spawn sea creature
         spawnSeaCreature(session);
-        player.sendMessage("§c⚠ Sea Creature Spawned! ⚠");
+        player.sendMessage(Component.text("§c⚠ Sea Creature Spawned! ⚠"));
     }
     
     private void spawnSeaCreature(FishingSession session) {
@@ -341,7 +346,7 @@ public class AdvancedFishingSystem implements Listener {
         // Give junk
         ItemStack junk = new ItemStack(Material.ROTTEN_FLESH);
         player.getInventory().addItem(junk);
-        player.sendMessage("§7Caught junk: Rotten Flesh");
+        player.sendMessage(Component.text("§7Caught junk: Rotten Flesh"));
     }
     
     private ItemStack generateTreasure(FishingSession session) {

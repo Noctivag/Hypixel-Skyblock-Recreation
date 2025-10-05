@@ -1,10 +1,12 @@
 package de.noctivag.skyblock.engine.crafting;
+import java.util.UUID;
 
 import de.noctivag.skyblock.core.api.Service;
 import de.noctivag.skyblock.core.api.SystemStatus;
 import de.noctivag.skyblock.engine.crafting.types.CraftingRecipe;
 import de.noctivag.skyblock.engine.crafting.types.RecipeType;
 import de.noctivag.skyblock.engine.crafting.types.RecipeRequirement;
+import de.noctivag.skyblock.engine.crafting.types.RecipeTree;
 import de.noctivag.skyblock.engine.collections.types.CollectionType;
 
 import java.util.*;
@@ -202,7 +204,7 @@ public class HypixelCraftingSystem implements Service {
      * Get recipe tree for a player
      */
     public RecipeTree getRecipeTree(UUID playerId) {
-        return new RecipeTree(playerId, this);
+        return new RecipeTree(this);
     }
     
     /**

@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.reforges;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -26,16 +29,16 @@ import java.util.*;
  */
 public class ReforgeGUI {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final ReforgeSystem reforgeSystem;
     
-    public ReforgeGUI(SkyblockPlugin plugin, ReforgeSystem reforgeSystem) {
-        this.plugin = plugin;
+    public ReforgeGUI(SkyblockPlugin SkyblockPlugin, ReforgeSystem reforgeSystem) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.reforgeSystem = reforgeSystem;
     }
     
     public void openReforgeTable(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6⚔ Reforge Table");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6⚔ Reforge Table"));
         
         // Item slot for reforge
         gui.setItem(13, createItemSlot());
@@ -71,7 +74,7 @@ public class ReforgeGUI {
     
     public void openReforgeCategory(Player player, String category, ItemStack item) {
         if (item == null || item.getType().isAir()) {
-            player.sendMessage("§cPlease place an item in the reforge slot first!");
+            player.sendMessage(Component.text("§cPlease place an item in the reforge slot first!"));
             return;
         }
         
@@ -125,7 +128,7 @@ public class ReforgeGUI {
             LegacyComponentSerializer.legacySection().deserialize("§eClick to view reforges!")
         ));
         
-        NamespacedKey key = new NamespacedKey(plugin, "reforge_category");
+        NamespacedKey key = new NamespacedKey(SkyblockPlugin, "reforge_category");
         meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, category);
         
         item.setItemMeta(meta);
@@ -164,7 +167,7 @@ public class ReforgeGUI {
         
         meta.lore(lore);
         
-        NamespacedKey key = new NamespacedKey(plugin, "reforge_select");
+        NamespacedKey key = new NamespacedKey(SkyblockPlugin, "reforge_select");
         meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, reforge.getName());
         
         item.setItemMeta(meta);
@@ -182,7 +185,7 @@ public class ReforgeGUI {
             LegacyComponentSerializer.legacySection().deserialize("§eClick to " + action + "!")
         ));
         
-        NamespacedKey key = new NamespacedKey(plugin, "reforge_action");
+        NamespacedKey key = new NamespacedKey(SkyblockPlugin, "reforge_action");
         meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, action);
         
         item.setItemMeta(meta);
@@ -234,7 +237,7 @@ public class ReforgeGUI {
         player.sendMessage("§7Rarity: " + reforge.getRarity().getDisplayName());
         player.sendMessage("§7Cost: §6" + String.format("%.0f", reforgeSystem.calculateReforgeCost(reforge, item)) + " coins");
         player.sendMessage("");
-        player.sendMessage("§7Stats that will be added:");
+        player.sendMessage(Component.text("§7Stats that will be added:"));
         
         Map<String, Double> stats = reforgeSystem.calculateReforgeStats(reforge, item);
         for (Map.Entry<String, Double> stat : stats.entrySet()) {

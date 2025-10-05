@@ -1,84 +1,118 @@
 package de.noctivag.skyblock.engine.crafting.types;
 
+import de.noctivag.skyblock.engine.crafting.HypixelCraftingSystem;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+
 import java.util.*;
 
 /**
- * Recipe Tree
- * 
- * Represents the recipe dependency tree for a player.
- * Shows available recipes and their unlock requirements.
+ * Represents a tree structure for crafting recipes
  */
 public class RecipeTree {
-    
-    private final UUID playerId;
+    private final Map<String, RecipeNode> recipes;
     private final HypixelCraftingSystem craftingSystem;
-    private final Map<String, RecipeNode> recipeNodes;
-    
-    public RecipeTree(UUID playerId, HypixelCraftingSystem craftingSystem) {
-        this.playerId = playerId;
+
+    public RecipeTree(HypixelCraftingSystem craftingSystem) {
+        this.recipes = new HashMap<>();
         this.craftingSystem = craftingSystem;
-        this.recipeNodes = new HashMap<>();
-        
-        buildRecipeTree();
     }
-    
-    private void buildRecipeTree() {
-        // Build recipe dependency tree
-        for (CraftingRecipe recipe : craftingSystem.getAllRecipes().values()) {
-            RecipeNode node = new RecipeNode(recipe, playerId);
-            recipeNodes.put(recipe.getRecipeId(), node);
-        }
+
+    public void addRecipe(String recipeId, RecipeNode node) {
+        recipes.put(recipeId, node);
     }
-    
-    public Map<String, RecipeNode> getRecipeNodes() {
-        return new HashMap<>(recipeNodes);
+
+    public RecipeNode getRecipe(String recipeId) {
+        return recipes.get(recipeId);
     }
-    
-    public RecipeNode getRecipeNode(String recipeId) {
-        return recipeNodes.get(recipeId);
+
+    public Collection<RecipeNode> getAllRecipes() {
+        return recipes.values();
     }
-    
-    public List<RecipeNode> getAvailableRecipes() {
-        return recipeNodes.values().stream()
-            .filter(RecipeNode::isAvailable)
-            .toList();
+
+    public Set<String> getRecipeIds() {
+        return recipes.keySet();
     }
-    
-    public List<RecipeNode> getUnlockedRecipes() {
-        return recipeNodes.values().stream()
-            .filter(RecipeNode::isUnlocked)
-            .toList();
+
+    public boolean hasRecipe(String recipeId) {
+        return recipes.containsKey(recipeId);
     }
-    
-    public List<RecipeNode> getLockedRecipes() {
-        return recipeNodes.values().stream()
-            .filter(node -> !node.isUnlocked())
-            .toList();
+
+    public void removeRecipe(String recipeId) {
+        recipes.remove(recipeId);
     }
-    
+
+    public void clearRecipes() {
+        recipes.clear();
+    }
+
+    public int getRecipeCount() {
+        return recipes.size();
+    }
+
+    /**
+     * Represents a node in the recipe tree
+     */
     public static class RecipeNode {
-        private final CraftingRecipe recipe;
-        private final UUID playerId;
-        private final boolean unlocked;
-        private final boolean available;
-        
-        public RecipeNode(CraftingRecipe recipe, UUID playerId) {
-            this.recipe = recipe;
-            this.playerId = playerId;
-            this.unlocked = false; // TODO: Check if recipe is unlocked
-            this.available = recipe.meetsRequirements(playerId);
+        private final String id;
+        private final ItemStack result;
+        private final Map<Integer, ItemStack> ingredients;
+        private final int craftingTime;
+        private final String category;
+        private final List<String> prerequisites;
+        private final Map<String, Object> metadata;
+
+        public RecipeNode(String id, ItemStack result, Map<Integer, ItemStack> ingredients, 
+                         int craftingTime, String category) {
+            this.id = id;
+            this.result = result;
+            this.ingredients = new HashMap<>(ingredients);
+            this.craftingTime = craftingTime;
+            this.category = category;
+            this.prerequisites = new ArrayList<>();
+            this.metadata = new HashMap<>();
         }
-        
-        public CraftingRecipe getRecipe() {
-            return recipe;
+
+        public String getId() {
+            return id;
         }
-        
-        public boolean isUnlocked() {
-            return unlocked;
+
+        public ItemStack getResult() {
+            return result.clone();
         }
-        
-        public boolean isAvailable() {
-            return available;
+
+        public Map<Integer, ItemStack> getIngredients() {
+            return new HashMap<>(ingredients);
+        }
+
+        public int getCraftingTime() {
+            return craftingTime;
+        }
+
+        public String getCategory() {
+            return category;
+        }
+
+        public List<String> getPrerequisites() {
+            return new ArrayList<>(prerequisites);
+        }
+
+        public void addPrerequisite(String prerequisite) {
+            prerequisites.add(prerequisite);
+        }
+
+        public Map<String, Object> getMetadata() {
+            return new HashMap<>(metadata);
+        }
+
+        public void setMetadata(String key, Object value) {
+            metadata.put(key, value);
+        }
+
+        @Override
+        public String toString() {
+            return String.format("RecipeNode{id='%s', result=%s, category='%s', craftingTime=%d}", 
+                               id, result.getType(), category, craftingTime);
         }
     }
 }

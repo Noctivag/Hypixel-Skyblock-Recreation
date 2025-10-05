@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.commands;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.worlds.WorldManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -27,11 +30,11 @@ import java.util.List;
  */
 public class WorldCommands implements CommandExecutor, TabCompleter {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final WorldManager worldManager;
     
-    public WorldCommands(SkyblockPlugin plugin, WorldManager worldManager) {
-        this.plugin = plugin;
+    public WorldCommands(SkyblockPlugin SkyblockPlugin, WorldManager worldManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.worldManager = worldManager;
     }
     
@@ -127,7 +130,7 @@ public class WorldCommands implements CommandExecutor, TabCompleter {
         
         // Zeige alle verfügbaren Welten
         sender.sendMessage(Component.text("§e§lAlle verfügbaren Welten:"));
-        for (org.bukkit.World world : plugin.getServer().getWorlds()) {
+        for (org.bukkit.World world : SkyblockPlugin.getServer().getWorlds()) {
             String status = worldManager.getManagedWorlds().containsKey(world.getName()) ? "§aVerwaltet" : "§7Nicht verwaltet";
             sender.sendMessage(Component.text("§7- " + world.getName() + " " + status));
         }

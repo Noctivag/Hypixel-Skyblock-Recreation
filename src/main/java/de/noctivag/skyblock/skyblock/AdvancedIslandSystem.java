@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.skyblock;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -19,24 +24,24 @@ import java.util.concurrent.ConcurrentHashMap;
  * Advanced Island System - Hypixel Skyblock Style
  */
 public class AdvancedIslandSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerIsland> playerIslands = new ConcurrentHashMap<>();
     private final Map<UUID, BukkitTask> islandTasks = new ConcurrentHashMap<>();
     
-    public AdvancedIslandSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedIslandSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         startIslandUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void startIslandUpdateTask() {
         // Use virtual thread for Folia compatibility
         Thread.ofVirtual().start(() -> {
             try {
-                while (plugin.isEnabled()) {
+                while (SkyblockPlugin.isEnabled()) {
                     for (Map.Entry<UUID, PlayerIsland> entry : playerIslands.entrySet()) {
                         PlayerIsland island = entry.getValue();
                         island.update();
@@ -59,7 +64,7 @@ public class AdvancedIslandSystem implements Listener {
     }
     
     private void openIslandGUI(Player player) {
-        player.sendMessage("§aIsland GUI geöffnet!");
+        player.sendMessage(Component.text("§aIsland GUI geöffnet!"));
     }
     
     public void createIsland(Player player, IslandType type) {
@@ -67,19 +72,19 @@ public class AdvancedIslandSystem implements Listener {
         PlayerIsland island = new PlayerIsland(islandId, player.getUniqueId(), type);
         playerIslands.put(islandId, island);
         
-        player.sendMessage("§aIsland erstellt!");
+        player.sendMessage(Component.text("§aIsland erstellt!"));
     }
     
     public void teleportToIsland(Player player, UUID islandId) {
         PlayerIsland island = playerIslands.get(islandId);
         if (island == null) {
-            player.sendMessage("§cIsland nicht gefunden!");
+            player.sendMessage(Component.text("§cIsland nicht gefunden!"));
             return;
         }
         
         // Teleport player to island
         player.teleport(island.getSpawnLocation());
-        player.sendMessage("§aZu Island teleportiert!");
+        player.sendMessage(Component.text("§aZu Island teleportiert!"));
     }
     
     public PlayerIsland getPlayerIsland(UUID playerId) {
@@ -137,14 +142,14 @@ public class AdvancedIslandSystem implements Listener {
             this.owner = owner;
             this.type = type;
             this.spawnLocation = new Location(Bukkit.getWorlds().get(0), 0, 100, 0); // Placeholder
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
             
             members.add(owner);
             memberRoles.put(owner, IslandRole.OWNER);
         }
         
         public void update() {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long timeDiff = currentTime - lastUpdate;
             
             if (timeDiff >= 60000) {

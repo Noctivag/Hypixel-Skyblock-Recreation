@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.enchantments;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -23,11 +26,11 @@ import java.util.*;
  */
 public class CustomEnchantmentSystem {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<String, CustomEnchantment> enchantments;
     
-    public CustomEnchantmentSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public CustomEnchantmentSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.enchantments = new HashMap<>();
         initializeCustomEnchantments();
     }
@@ -182,7 +185,7 @@ public class CustomEnchantmentSystem {
         
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            NamespacedKey key = new NamespacedKey(plugin, enchantment.getName().toLowerCase());
+            NamespacedKey key = new NamespacedKey(SkyblockPlugin, enchantment.getName().toLowerCase());
             meta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, level);
             item.setItemMeta(meta);
         }
@@ -191,7 +194,7 @@ public class CustomEnchantmentSystem {
     public int getEnchantmentLevel(ItemStack item, CustomEnchantment enchantment) {
         if (item == null || item.getItemMeta() == null) return 0;
         
-        NamespacedKey key = new NamespacedKey(plugin, enchantment.getName().toLowerCase());
+        NamespacedKey key = new NamespacedKey(SkyblockPlugin, enchantment.getName().toLowerCase());
         return item.getItemMeta().getPersistentDataContainer()
             .getOrDefault(key, PersistentDataType.INTEGER, 0);
     }

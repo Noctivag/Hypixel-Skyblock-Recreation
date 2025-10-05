@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.items;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -33,13 +38,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Ability Activation
  */
 public class ItemAbilitySystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, Long> abilityCooldowns = new ConcurrentHashMap<>();
     private final Map<UUID, BukkitTask> activeAbilities = new ConcurrentHashMap<>();
     
-    public ItemAbilitySystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    public ItemAbilitySystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        SkyblockPlugin.getServer().getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     /**
@@ -53,8 +58,8 @@ public class ItemAbilitySystem implements Listener {
         if (abilityCooldowns.containsKey(playerId)) {
             long lastUsed = abilityCooldowns.get(playerId);
             long cooldownTime = getAbilityCooldown(itemType);
-            if (System.currentTimeMillis() - lastUsed < cooldownTime) {
-                long remaining = (cooldownTime - (System.currentTimeMillis() - lastUsed)) / 1000;
+            if (java.lang.System.currentTimeMillis() - lastUsed < cooldownTime) {
+                long remaining = (cooldownTime - (java.lang.System.currentTimeMillis() - lastUsed)) / 1000;
                 player.sendMessage("§cAbility on cooldown for " + remaining + " seconds!");
                 return;
             }
@@ -253,12 +258,12 @@ public class ItemAbilitySystem implements Listener {
                 break;
                 
             default:
-                player.sendMessage("§cNo ability available for this item!");
+                player.sendMessage(Component.text("§cNo ability available for this item!"));
                 return;
         }
         
         // Set cooldown
-        abilityCooldowns.put(playerId, System.currentTimeMillis());
+        abilityCooldowns.put(playerId, java.lang.System.currentTimeMillis());
         player.sendMessage("§a" + itemType.getDisplayName() + " ability activated!");
     }
     
@@ -266,19 +271,19 @@ public class ItemAbilitySystem implements Listener {
      * Dragon Weapon Abilities
      */
     private void activateDragonBreath(Player player) {
-        player.sendMessage("§aDragon Breath activated! Devastating dragon energy for 30 seconds!");
+        player.sendMessage(Component.text("§aDragon Breath activated! Devastating dragon energy for 30 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 600, 4)); // 30 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 600, 0));
     }
     
     private void activateInstantTransmission(Player player) {
-        player.sendMessage("§aInstant Transmission activated! Teleport 8 blocks ahead!");
+        player.sendMessage(Component.text("§aInstant Transmission activated! Teleport 8 blocks ahead!"));
         // Teleport logic would be implemented here
         player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 300, 2)); // 15 seconds
     }
     
     private void activateVoidStrike(Player player) {
-        player.sendMessage("§aVoid Strike activated! Channeling void power for 45 seconds!");
+        player.sendMessage(Component.text("§aVoid Strike activated! Channeling void power for 45 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 900, 5)); // 45 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 900, 0));
     }
@@ -287,48 +292,48 @@ public class ItemAbilitySystem implements Listener {
      * Dungeon Weapon Abilities
      */
     private void activateWitherImpact(Player player) {
-        player.sendMessage("§aWither Impact activated! Devastating explosion!");
+        player.sendMessage(Component.text("§aWither Impact activated! Devastating explosion!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 600, 6)); // 30 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 600, 2));
     }
     
     private void activateBoneToss(Player player) {
-        player.sendMessage("§aBone Toss activated! Throwing bone that returns!");
+        player.sendMessage(Component.text("§aBone Toss activated! Throwing bone that returns!"));
         // Bone toss logic would be implemented here
     }
     
     private void activateSpiritShot(Player player) {
-        player.sendMessage("§aSpirit Shot activated! Channeling spirit energy for 30 seconds!");
+        player.sendMessage(Component.text("§aSpirit Shot activated! Channeling spirit energy for 30 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 600, 4)); // 30 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 600, 0));
     }
     
     private void activateSpiritBurst(Player player) {
-        player.sendMessage("§aSpirit Burst activated! Explosive spirit magic for 45 seconds!");
+        player.sendMessage(Component.text("§aSpirit Burst activated! Explosive spirit magic for 45 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 900, 5)); // 45 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 900, 1));
     }
     
     private void activateSpiritStrike(Player player) {
-        player.sendMessage("§aSpirit Strike activated! Ghostly strikes for 30 seconds!");
+        player.sendMessage(Component.text("§aSpirit Strike activated! Ghostly strikes for 30 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 600, 4)); // 30 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 600, 0));
     }
     
     private void activateAdaptiveStrike(Player player) {
-        player.sendMessage("§aAdaptive Strike activated! Adapting to combat for 60 seconds!");
+        player.sendMessage(Component.text("§aAdaptive Strike activated! Adapting to combat for 60 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 1200, 3)); // 60 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 1200, 1));
     }
     
     private void activateShadowStrike(Player player) {
-        player.sendMessage("§aShadow Strike activated! Shadow energy for 45 seconds!");
+        player.sendMessage(Component.text("§aShadow Strike activated! Shadow energy for 45 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 900, 5)); // 45 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 900, 0));
     }
     
     private void activateBackstab(Player player) {
-        player.sendMessage("§aBackstab activated! Fury of a livid for 60 seconds!");
+        player.sendMessage(Component.text("§aBackstab activated! Fury of a livid for 60 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 1200, 6)); // 60 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 1200, 3));
     }
@@ -337,36 +342,36 @@ public class ItemAbilitySystem implements Listener {
      * Slayer Weapon Abilities
      */
     private void activateUndeadSlayer(Player player) {
-        player.sendMessage("§aUndead Slayer activated! Extra damage to zombies for 90 seconds!");
+        player.sendMessage(Component.text("§aUndead Slayer activated! Extra damage to zombies for 90 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 1800, 4)); // 90 seconds
     }
     
     private void activateReaperStrike(Player player) {
-        player.sendMessage("§aReaper Strike activated! Enhanced zombie slaying for 120 seconds!");
+        player.sendMessage(Component.text("§aReaper Strike activated! Enhanced zombie slaying for 120 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 2400, 5)); // 120 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 2400, 2));
     }
     
     private void activateReaperHarvest(Player player) {
-        player.sendMessage("§aReaper's Harvest activated! Ultimate zombie slaying for 150 seconds!");
+        player.sendMessage(Component.text("§aReaper's Harvest activated! Ultimate zombie slaying for 150 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 3000, 6)); // 150 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 3000, 3));
     }
     
     private void activateWebShredder(Player player) {
-        player.sendMessage("§aWeb Shredder activated! Massive spider damage for 90 seconds!");
+        player.sendMessage(Component.text("§aWeb Shredder activated! Massive spider damage for 90 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 1800, 5)); // 90 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 1800, 2));
     }
     
     private void activateVoidWalker(Player player) {
-        player.sendMessage("§aVoid Walker activated! Enhanced enderman slaying for 120 seconds!");
+        player.sendMessage(Component.text("§aVoid Walker activated! Enhanced enderman slaying for 120 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 2400, 5)); // 120 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 2400, 0));
     }
     
     private void activateVoidMastery(Player player) {
-        player.sendMessage("§aVoid Mastery activated! Ultimate enderman slaying for 150 seconds!");
+        player.sendMessage(Component.text("§aVoid Mastery activated! Ultimate enderman slaying for 150 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 3000, 6)); // 150 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 3000, 0));
         player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 3000, 0));
@@ -376,62 +381,62 @@ public class ItemAbilitySystem implements Listener {
      * Mining Tool Abilities
      */
     private void activateBasicMining(Player player) {
-        player.sendMessage("§aBasic Mining activated! Enhanced mining for 60 seconds!");
+        player.sendMessage(Component.text("§aBasic Mining activated! Enhanced mining for 60 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 1200, 2)); // 60 seconds
     }
     
     private void activateEnhancedMining(Player player) {
-        player.sendMessage("§aEnhanced Mining activated! Superior mining for 90 seconds!");
+        player.sendMessage(Component.text("§aEnhanced Mining activated! Superior mining for 90 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 1800, 3)); // 90 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, 1800, 1));
     }
     
     private void activateFastMining(Player player) {
-        player.sendMessage("§aFast Mining activated! Rapid mining for 75 seconds!");
+        player.sendMessage(Component.text("§aFast Mining activated! Rapid mining for 75 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 1500, 4)); // 75 seconds
     }
     
     private void activateMoltenMining(Player player) {
-        player.sendMessage("§aMolten Mining activated! Fire-resistant mining for 120 seconds!");
+        player.sendMessage(Component.text("§aMolten Mining activated! Fire-resistant mining for 120 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 2400, 4)); // 120 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 2400, 0));
         player.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, 2400, 2));
     }
     
     private void activateTitaniumMining(Player player) {
-        player.sendMessage("§aTitanium Mining activated! Ultimate mining power for 150 seconds!");
+        player.sendMessage(Component.text("§aTitanium Mining activated! Ultimate mining power for 150 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 3000, 5)); // 150 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, 3000, 3));
     }
     
     private void activateMechanicalMining(Player player) {
-        player.sendMessage("§aMechanical Mining activated! Auto-repair mining for 180 seconds!");
+        player.sendMessage(Component.text("§aMechanical Mining activated! Auto-repair mining for 180 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 3600, 5)); // 180 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, 3600, 3));
         player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 3600, 1));
     }
     
     private void activateAdvancedMining(Player player) {
-        player.sendMessage("§aAdvanced Mining activated! High-tech mining for 200 seconds!");
+        player.sendMessage(Component.text("§aAdvanced Mining activated! High-tech mining for 200 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 4000, 6)); // 200 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, 4000, 4));
     }
     
     private void activateHighEndMining(Player player) {
-        player.sendMessage("§aHigh-End Mining activated! Premium mining for 250 seconds!");
+        player.sendMessage(Component.text("§aHigh-End Mining activated! Premium mining for 250 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 5000, 6)); // 250 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, 5000, 5));
     }
     
     private void activateUltimateMining(Player player) {
-        player.sendMessage("§aUltimate Mining activated! Maximum mining efficiency for 300 seconds!");
+        player.sendMessage(Component.text("§aUltimate Mining activated! Maximum mining efficiency for 300 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 6000, 7)); // 300 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, 6000, 6));
         player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 6000, 2));
     }
     
     private void activateGauntletPower(Player player) {
-        player.sendMessage("§aGauntlet Power activated! All-in-one tool power for 240 seconds!");
+        player.sendMessage(Component.text("§aGauntlet Power activated! All-in-one tool power for 240 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 4800, 6)); // 240 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, 4800, 4));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 4800, 3));
@@ -441,33 +446,33 @@ public class ItemAbilitySystem implements Listener {
      * Fishing Rod Abilities
      */
     private void activateSeaCreatureBoost(Player player) {
-        player.sendMessage("§aSea Creature Boost activated! +10% Sea Creature Chance for 300 seconds!");
+        player.sendMessage(Component.text("§aSea Creature Boost activated! +10% Sea Creature Chance for 300 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, 6000, 2)); // 300 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 6000, 0));
     }
     
     private void activateChallengeBoost(Player player) {
-        player.sendMessage("§aChallenge Boost activated! Enhanced fishing for 360 seconds!");
+        player.sendMessage(Component.text("§aChallenge Boost activated! Enhanced fishing for 360 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, 7200, 3)); // 360 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 7200, 0));
     }
     
     private void activateLegendaryFishing(Player player) {
-        player.sendMessage("§aLegendary Fishing activated! Incredible fishing power for 420 seconds!");
+        player.sendMessage(Component.text("§aLegendary Fishing activated! Incredible fishing power for 420 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, 8400, 4)); // 420 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 8400, 0));
         player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 8400, 0));
     }
     
     private void activateSharkSpecialist(Player player) {
-        player.sendMessage("§aShark Specialist activated! +25% Shark Chance for 480 seconds!");
+        player.sendMessage(Component.text("§aShark Specialist activated! +25% Shark Chance for 480 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, 9600, 5)); // 480 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 9600, 0));
         player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 9600, 0));
     }
     
     private void activateSharkScalePower(Player player) {
-        player.sendMessage("§aShark Scale Power activated! Enhanced shark hunting for 540 seconds!");
+        player.sendMessage(Component.text("§aShark Scale Power activated! Enhanced shark hunting for 540 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, 10800, 6)); // 540 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 10800, 0));
         player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 10800, 0));
@@ -475,7 +480,7 @@ public class ItemAbilitySystem implements Listener {
     }
     
     private void activateMechanicalFishing(Player player) {
-        player.sendMessage("§aMechanical Fishing activated! Auto-reel fishing for 600 seconds!");
+        player.sendMessage(Component.text("§aMechanical Fishing activated! Auto-reel fishing for 600 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, 12000, 7)); // 600 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 12000, 0));
         player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 12000, 0));
@@ -485,49 +490,49 @@ public class ItemAbilitySystem implements Listener {
      * Magic Weapon Abilities
      */
     private void activateFireVeil(Player player) {
-        player.sendMessage("§aFire Veil activated! Veil of fire for 60 seconds!");
+        player.sendMessage(Component.text("§aFire Veil activated! Veil of fire for 60 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 1200, 0)); // 60 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 1200, 4));
     }
     
     private void activateFrozenSlash(Player player) {
-        player.sendMessage("§aFrozen Slash activated! Ice and frost power for 75 seconds!");
+        player.sendMessage(Component.text("§aFrozen Slash activated! Ice and frost power for 75 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 1500, 5)); // 75 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 1500, 0)); // Ice effect
     }
     
     private void activateVoodooCurse(Player player) {
-        player.sendMessage("§aVoodoo Curse activated! Dark magic for 90 seconds!");
+        player.sendMessage(Component.text("§aVoodoo Curse activated! Dark magic for 90 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 1800, 5)); // 90 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 1800, 0));
     }
     
     private void activateBonzoBalloon(Player player) {
-        player.sendMessage("§aBonzo Balloon activated! Clown magic for 60 seconds!");
+        player.sendMessage(Component.text("§aBonzo Balloon activated! Clown magic for 60 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 1200, 4)); // 60 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, 1200, 2));
     }
     
     private void activateStudy(Player player) {
-        player.sendMessage("§aStudy activated! Academic knowledge for 90 seconds!");
+        player.sendMessage(Component.text("§aStudy activated! Academic knowledge for 90 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 1800, 4)); // 90 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 1800, 0));
     }
     
     private void activateAcademicPower(Player player) {
-        player.sendMessage("§aAcademic Power activated! Professor's knowledge for 120 seconds!");
+        player.sendMessage(Component.text("§aAcademic Power activated! Professor's knowledge for 120 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 2400, 5)); // 120 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 2400, 0));
         player.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, 2400, 2));
     }
     
     private void activateThornShot(Player player) {
-        player.sendMessage("§aThorn Shot activated! Piercing thorn arrows for 45 seconds!");
+        player.sendMessage(Component.text("§aThorn Shot activated! Piercing thorn arrows for 45 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 900, 4)); // 45 seconds
     }
     
     private void activateLastBreath(Player player) {
-        player.sendMessage("§aLast Breath activated! Final blow power for 60 seconds!");
+        player.sendMessage(Component.text("§aLast Breath activated! Final blow power for 60 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 1200, 6)); // 60 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 1200, 3));
     }
@@ -536,31 +541,31 @@ public class ItemAbilitySystem implements Listener {
      * Bow Abilities
      */
     private void activateRapidFire(Player player) {
-        player.sendMessage("§aRapid Fire activated! High-speed arrows for 90 seconds!");
+        player.sendMessage(Component.text("§aRapid Fire activated! High-speed arrows for 90 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 1800, 5)); // 90 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 1800, 3));
     }
     
     private void activateTerminate(Player player) {
-        player.sendMessage("§aTerminate activated! Devastating arrows for 120 seconds!");
+        player.sendMessage(Component.text("§aTerminate activated! Devastating arrows for 120 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 2400, 7)); // 120 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 2400, 4));
     }
     
     private void activatePreciseShot(Player player) {
-        player.sendMessage("§aPrecise Shot activated! Precision arrows for 60 seconds!");
+        player.sendMessage(Component.text("§aPrecise Shot activated! Precision arrows for 60 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 1200, 3)); // 60 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, 1200, 2));
     }
     
     private void activateMagmaShot(Player player) {
-        player.sendMessage("§aMagma Shot activated! Fire arrows for 75 seconds!");
+        player.sendMessage(Component.text("§aMagma Shot activated! Fire arrows for 75 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 1500, 4)); // 75 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 1500, 0));
     }
     
     private void activateVenomShot(Player player) {
-        player.sendMessage("§aVenom Shot activated! Poison arrows for 75 seconds!");
+        player.sendMessage(Component.text("§aVenom Shot activated! Poison arrows for 75 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 1500, 4)); // 75 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 1500, 0)); // Venom effect
     }
@@ -569,32 +574,32 @@ public class ItemAbilitySystem implements Listener {
      * Special Item Abilities
      */
     private void activateGrapple(Player player) {
-        player.sendMessage("§aGrapple activated! Long-range grappling!");
+        player.sendMessage(Component.text("§aGrapple activated! Long-range grappling!"));
         // Grapple logic would be implemented here
         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 300, 0)); // 15 seconds
     }
     
     private void activateTeleport(Player player) {
-        player.sendMessage("§aTeleport activated! Instant teleportation!");
+        player.sendMessage(Component.text("§aTeleport activated! Instant teleportation!"));
         // Teleport logic would be implemented here
         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 300, 0)); // 15 seconds
     }
     
     private void activatePigmanRage(Player player) {
-        player.sendMessage("§aPigman Rage activated! Pigman power for 90 seconds!");
+        player.sendMessage(Component.text("§aPigman Rage activated! Pigman power for 90 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 1800, 4)); // 90 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 1800, 0));
     }
     
     private void activateHealing(Player player) {
-        player.sendMessage("§aHealing activated! Instant healing and resistance!");
+        player.sendMessage(Component.text("§aHealing activated! Instant healing and resistance!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 600, 4)); // 30 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 600, 1));
         player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 600, 0));
     }
     
     private void activateEnhancedHealing(Player player) {
-        player.sendMessage("§aEnhanced Healing activated! Massive healing and multiple resistances!");
+        player.sendMessage(Component.text("§aEnhanced Healing activated! Massive healing and multiple resistances!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 1200, 6)); // 60 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 1200, 2));
         player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 1200, 0));
@@ -602,7 +607,7 @@ public class ItemAbilitySystem implements Listener {
     }
     
     private void activatePotatoWarPower(Player player) {
-        player.sendMessage("§aPotato War Power activated! War damage resistance for 180 seconds!");
+        player.sendMessage(Component.text("§aPotato War Power activated! War damage resistance for 180 seconds!"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 3600, 3)); // 180 seconds
         player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 3600, 3));
         player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 3600, 2));
@@ -667,7 +672,7 @@ public class ItemAbilitySystem implements Listener {
         if (task != null && !task.isCancelled()) {
             task.cancel();
         }
-        player.sendMessage("§7All item abilities deactivated!");
+        player.sendMessage(Component.text("§7All item abilities deactivated!"));
     }
     
     @EventHandler

@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.web;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -19,19 +24,19 @@ import java.util.concurrent.ConcurrentHashMap;
  * Web Interface System - Hypixel Skyblock Style
  */
 public class WebInterfaceSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerWeb> playerWeb = new ConcurrentHashMap<>();
     private final Map<WebType, WebConfig> webConfigs = new HashMap<>();
     private final Map<UUID, BukkitTask> webTasks = new ConcurrentHashMap<>();
     
-    public WebInterfaceSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public WebInterfaceSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeWebConfigs();
         startWebUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeWebConfigs() {
@@ -59,7 +64,7 @@ public class WebInterfaceSystem implements Listener {
                     web.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L);
     }
     
     @EventHandler
@@ -72,7 +77,7 @@ public class WebInterfaceSystem implements Listener {
     }
     
     private void openWebGUI(Player player) {
-        player.sendMessage("§aWeb Interface geöffnet!");
+        player.sendMessage(Component.text("§aWeb Interface geöffnet!"));
     }
     
     public PlayerWeb getPlayerWeb(UUID playerId) {
@@ -152,11 +157,11 @@ public class WebInterfaceSystem implements Listener {
         
         public PlayerWeb(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long timeDiff = currentTime - lastUpdate;
             
             if (timeDiff >= 60000) {

@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.skyblock.data;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -21,7 +22,7 @@ public class PlayerSkyblockData {
     
     public PlayerSkyblockData(UUID playerId) {
         this.playerId = playerId;
-        this.joinTime = System.currentTimeMillis();
+        this.joinTime = java.lang.System.currentTimeMillis();
         this.totalPlayTime = 0;
         this.skyblockLevel = 1;
         this.skyblockXP = 0.0;

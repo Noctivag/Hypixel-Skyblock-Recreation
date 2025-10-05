@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.items;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -14,6 +19,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Recipe Book System - Hypixel SkyBlock Style
@@ -26,18 +32,18 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Recipe book GUI
  */
 public class RecipeBookSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerRecipeData> playerRecipeData = new ConcurrentHashMap<>();
     private final Map<String, Recipe> recipes = new HashMap<>();
     private final Map<RecipeCategory, List<Recipe>> recipesByCategory = new HashMap<>();
     
-    public RecipeBookSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public RecipeBookSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeRecipes();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeRecipes() {
@@ -190,7 +196,7 @@ public class RecipeBookSystem implements Listener {
     }
     
     public void openRecipeBook(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lRecipe Book");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lRecipe Book"));
         
         // Category selection
         int slot = 10;
@@ -246,13 +252,15 @@ public class RecipeBookSystem implements Listener {
         ItemMeta meta = item.getItemMeta();
         
         if (meta != null) {
-            meta.setDisplayName(category.getDisplayName());
-            meta.setLore(Arrays.asList(
+            meta.displayName(Component.text(category.getDisplayName()));
+            meta.lore(Arrays.asList(
                 "§7Recipes: §e" + discovered + "§7/§e" + total,
                 "§7Progress: §e" + String.format("%.1f", (double) discovered / total * 100) + "%",
                 "",
                 "§eClick to view recipes"
-            ));
+            ).stream()
+                .map(line -> Component.text(line))
+                .collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         
@@ -265,7 +273,7 @@ public class RecipeBookSystem implements Listener {
         
         if (meta != null) {
             String status = discovered ? "§a✓ DISCOVERED" : "§c✗ LOCKED";
-            meta.setDisplayName(recipe.getRarity().getColor() + recipe.getName() + " " + status);
+            meta.displayName(Component.text(recipe.getRarity().getColor() + recipe.getName() + " " + status));
             
             List<String> lore = new ArrayList<>();
             lore.add(recipe.getDescription());
@@ -289,7 +297,7 @@ public class RecipeBookSystem implements Listener {
                 lore.add("§7Complete the requirement to unlock");
             }
             
-            meta.setLore(lore);
+            meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         
@@ -302,12 +310,14 @@ public class RecipeBookSystem implements Listener {
         ItemMeta meta = recentItem.getItemMeta();
         
         if (meta != null) {
-            meta.setDisplayName("§e§lRecent Recipes");
-            meta.setLore(Arrays.asList(
+            meta.displayName(Component.text("§e§lRecent Recipes"));
+            meta.lore(Arrays.asList(
                 "§7View your recently discovered recipes",
                 "",
                 "§eClick to view"
-            ));
+            ).stream()
+                .map(line -> Component.text(line))
+                .collect(java.util.stream.Collectors.toList()));
             recentItem.setItemMeta(meta);
         }
         
@@ -320,12 +330,14 @@ public class RecipeBookSystem implements Listener {
         ItemMeta meta = searchItem.getItemMeta();
         
         if (meta != null) {
-            meta.setDisplayName("§b§lSearch Recipes");
-            meta.setLore(Arrays.asList(
+            meta.displayName(Component.text("§b§lSearch Recipes"));
+            meta.lore(Arrays.asList(
                 "§7Search for specific recipes",
                 "",
                 "§eClick to search"
-            ));
+            ).stream()
+                .map(line -> Component.text(line))
+                .collect(java.util.stream.Collectors.toList()));
             searchItem.setItemMeta(meta);
         }
         
@@ -354,8 +366,10 @@ public class RecipeBookSystem implements Listener {
         ItemMeta meta = closeItem.getItemMeta();
         
         if (meta != null) {
-            meta.setDisplayName("§c§lClose");
-            meta.setLore(Arrays.asList("§7Close the recipe book"));
+            meta.displayName(Component.text("§c§lClose"));
+            meta.lore(Arrays.asList("§7Close the recipe book").stream()
+                .map(line -> Component.text(line))
+                .collect(java.util.stream.Collectors.toList()));
             closeItem.setItemMeta(meta);
         }
         
@@ -368,8 +382,10 @@ public class RecipeBookSystem implements Listener {
         ItemMeta meta = backItem.getItemMeta();
         
         if (meta != null) {
-            meta.setDisplayName("§7§lBack to Categories");
-            meta.setLore(Arrays.asList("§7Return to recipe categories"));
+            meta.displayName(Component.text("§7§lBack to Categories"));
+            meta.lore(Arrays.asList("§7Return to recipe categories").stream()
+                .map(line -> Component.text(line))
+                .collect(java.util.stream.Collectors.toList()));
             backItem.setItemMeta(meta);
         }
         
@@ -398,9 +414,9 @@ public class RecipeBookSystem implements Listener {
             playerData.discoverRecipe(recipeId);
             savePlayerRecipeData(player.getUniqueId(), playerData);
             
-            player.sendMessage("§a§lNew Recipe Discovered!");
+            player.sendMessage(Component.text("§a§lNew Recipe Discovered!"));
             player.sendMessage("§7You discovered: " + recipe.getRarity().getColor() + recipe.getName());
-            player.sendMessage("§7Check your Recipe Book to view it!");
+            player.sendMessage(Component.text("§7Check your Recipe Book to view it!"));
         }
     }
     
@@ -440,7 +456,7 @@ public class RecipeBookSystem implements Listener {
         for (String recipeId : data.getDiscoveredRecipes()) {
             databaseManager.executeUpdate(
                 "INSERT INTO player_recipe_data (player_uuid, recipe_id, discovered_at) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE discovered_at = VALUES(discovered_at)",
-                playerId.toString(), recipeId, System.currentTimeMillis()
+                playerId.toString(), recipeId, java.lang.System.currentTimeMillis()
             );
         }
     }
@@ -560,7 +576,7 @@ public class RecipeBookSystem implements Listener {
         
         public void discoverRecipe(String recipeId) {
             discoveredRecipes.add(recipeId);
-            discoveryTimes.put(recipeId, System.currentTimeMillis());
+            discoveryTimes.put(recipeId, java.lang.System.currentTimeMillis());
         }
         
         public boolean isRecipeDiscovered(String recipeId) {

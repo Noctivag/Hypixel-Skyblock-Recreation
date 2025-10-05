@@ -1,26 +1,29 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.cosmetics.AdvancedParticleManager;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 public class ParticleSettingsGUI extends CustomGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final AdvancedParticleManager particleManager;
 
-    public ParticleSettingsGUI(SkyblockPlugin plugin, AdvancedParticleManager particleManager) {
+    public ParticleSettingsGUI(SkyblockPlugin SkyblockPlugin, AdvancedParticleManager particleManager) {
         super(27, Component.text("§e§lPartikel-Einstellungen"));
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.particleManager = particleManager;
     }
 
-    public ParticleSettingsGUI(SkyblockPlugin plugin) {
+    public ParticleSettingsGUI(SkyblockPlugin SkyblockPlugin) {
         super(27, Component.text("§e§lPartikel-Einstellungen"));
-        this.plugin = plugin;
-        this.particleManager = (AdvancedParticleManager) plugin.getAdvancedParticleManager(); // Cast from Object
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.particleManager = (AdvancedParticleManager) SkyblockPlugin.getAdvancedParticleManager(); // Cast from Object
     }
 
     public void open(Player player) {

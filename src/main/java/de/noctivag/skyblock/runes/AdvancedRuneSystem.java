@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.runes;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -19,15 +24,15 @@ import java.util.concurrent.CompletableFuture;
  */
 public class AdvancedRuneSystem {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerRuneData> playerRuneData = new ConcurrentHashMap<>();
     private final Map<String, RuneType> runeTypes = new HashMap<>();
     private final Map<String, RuneUpgrade> runeUpgrades = new HashMap<>();
     private final Map<UUID, List<RuneEffect>> activeRuneEffects = new ConcurrentHashMap<>();
     
-    public AdvancedRuneSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedRuneSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeRuneTypes();
         initializeRuneUpgrades();
@@ -287,7 +292,7 @@ public class AdvancedRuneSystem {
             public void run() {
                 updateActiveRuneEffects();
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Every second
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Every second
     }
     
     /**
@@ -421,14 +426,14 @@ public class AdvancedRuneSystem {
         ItemMeta meta = rune.getItemMeta();
         
         if (meta != null) {
-            meta.setDisplayName("§6" + runeType.getName());
+            meta.displayName(Component.text("§6" + runeType.getName()));
             List<String> lore = new ArrayList<>(runeType.getEffects());
             lore.add("");
             lore.add("§7Right-click to apply this rune");
             lore.add("§7to a weapon, tool, or armor piece.");
             lore.add("");
             lore.add("§8Crafted with ancient magic");
-            meta.setLore(lore);
+            meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             
             rune.setItemMeta(meta);
         }
@@ -453,7 +458,7 @@ public class AdvancedRuneSystem {
         lore.add("§6" + runeType.getName() + ":");
         lore.addAll(runeType.getEffects());
         
-        meta.setLore(lore);
+        meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
         item.setItemMeta(meta);
         
         return true;
@@ -590,7 +595,7 @@ public class AdvancedRuneSystem {
                 playerRuneData.put(playerId, data);
             }
         } catch (Exception e) {
-            plugin.getLogger().warning("Failed to load rune data for player " + playerId + ": " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Failed to load rune data for player " + playerId + ": " + e.getMessage());
         }
     }
     

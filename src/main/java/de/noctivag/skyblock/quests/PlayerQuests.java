@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.quests;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -27,7 +28,7 @@ public class PlayerQuests {
     
     public PlayerQuests(UUID playerId) {
         this.playerId = playerId;
-        this.lastActivity = System.currentTimeMillis();
+        this.lastActivity = java.lang.System.currentTimeMillis();
         
         // Initialize settings
         this.autoAcceptQuests = false;
@@ -49,7 +50,7 @@ public class PlayerQuests {
         QuestProgress progress = new QuestProgress(questId, quest);
         activeQuests.put(questId, progress);
         questStatistics.put("total_quests", questStatistics.get("total_quests") + 1);
-        lastActivity = System.currentTimeMillis();
+        lastActivity = java.lang.System.currentTimeMillis();
     }
     
     public void updateQuestProgress(String questId, String objectiveId, int amount) {
@@ -57,7 +58,7 @@ public class PlayerQuests {
         if (progress == null) return;
         
         progress.updateObjective(objectiveId, amount);
-        lastActivity = System.currentTimeMillis();
+        lastActivity = java.lang.System.currentTimeMillis();
         
         // Check if quest is completed
         if (progress.isCompleted()) {
@@ -72,7 +73,7 @@ public class PlayerQuests {
         completedQuests.put(questId, progress);
         questStatistics.put("completed_quests", questStatistics.get("completed_quests") + 1);
         questStatistics.put("total_rewards", questStatistics.get("total_rewards") + progress.getQuest().getRewards().size());
-        lastActivity = System.currentTimeMillis();
+        lastActivity = java.lang.System.currentTimeMillis();
     }
     
     public void failQuest(String questId) {
@@ -80,7 +81,7 @@ public class PlayerQuests {
         if (progress == null) return;
         
         questStatistics.put("failed_quests", questStatistics.get("failed_quests") + 1);
-        lastActivity = System.currentTimeMillis();
+        lastActivity = java.lang.System.currentTimeMillis();
     }
     
     public boolean hasActiveQuest(String questId) {
@@ -176,7 +177,7 @@ public class PlayerQuests {
         activeQuests.clear();
         completedQuests.clear();
         questStatistics.clear();
-        lastActivity = System.currentTimeMillis();
+        lastActivity = java.lang.System.currentTimeMillis();
         
         // Reset settings
         this.autoAcceptQuests = false;
@@ -226,8 +227,8 @@ public class PlayerQuests {
         public QuestProgress(String questId, Quest quest) {
             this.questId = questId;
             this.quest = quest;
-            this.startTime = System.currentTimeMillis();
-            this.lastUpdate = System.currentTimeMillis();
+            this.startTime = java.lang.System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
             
             // Initialize objective progress
             for (QuestObjective objective : quest.getObjectives()) {
@@ -237,7 +238,7 @@ public class PlayerQuests {
         
         public void updateObjective(String objectiveId, int amount) {
             objectiveProgress.put(objectiveId, objectiveProgress.getOrDefault(objectiveId, 0) + amount);
-            lastUpdate = System.currentTimeMillis();
+            lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public boolean isCompleted() {
@@ -285,7 +286,7 @@ public class PlayerQuests {
         }
         
         public long getDuration() {
-            return System.currentTimeMillis() - startTime;
+            return java.lang.System.currentTimeMillis() - startTime;
         }
     }
 }

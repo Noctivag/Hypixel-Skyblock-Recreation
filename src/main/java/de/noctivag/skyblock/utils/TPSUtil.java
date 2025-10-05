@@ -2,7 +2,7 @@ package de.noctivag.skyblock.utils;
 import org.bukkit.inventory.ItemStack;
 
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 /**
  * TPS (Ticks Per Second) Utility - Server performance monitoring
@@ -16,7 +16,7 @@ import org.bukkit.plugin.Plugin;
 public class TPSUtil {
     
     private static final long TICK_TIME = 50L; // 50ms per tick
-    private static final long LAST_TICK = System.currentTimeMillis();
+    private static final long LAST_TICK = java.lang.System.currentTimeMillis();
     private static final long[] TICK_TIMES = new long[600]; // 30 seconds of data
     private static int tickCount = 0;
     
@@ -143,7 +143,7 @@ public class TPSUtil {
      * Update tick time (called by scheduler)
      */
     public static void updateTickTime() {
-        long currentTime = System.currentTimeMillis();
+        long currentTime = java.lang.System.currentTimeMillis();
         long tickTime = currentTime - LAST_TICK;
         
         TICK_TIMES[tickCount % TICK_TIMES.length] = tickTime;

@@ -1,6 +1,11 @@
 package de.noctivag.skyblock.weapons;
+import net.kyori.adventure.text.Component;
 
-import de.noctivag.skyblock.Plugin;
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.api.Service;
 import de.noctivag.skyblock.core.api.SystemStatus;
 import org.bukkit.entity.Player;
@@ -23,15 +28,15 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class WeaponAbilitySystem implements Service {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, PlayerAbilityData> playerData = new ConcurrentHashMap<>();
     private final Map<String, WeaponAbility> abilities = new HashMap<>();
     private final Map<String, List<WeaponAbility>> abilitiesByWeapon = new HashMap<>();
     
     private SystemStatus status = SystemStatus.UNINITIALIZED;
     
-    public WeaponAbilitySystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public WeaponAbilitySystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
     
     @Override
@@ -43,7 +48,7 @@ public class WeaponAbilitySystem implements Service {
             initializeWeaponAbilities();
             
             status = SystemStatus.ENABLED;
-            plugin.getLogger().info("§a[WeaponAbilitySystem] Initialized " + abilities.size() + " weapon abilities");
+            SkyblockPlugin.getLogger().info("§a[WeaponAbilitySystem] Initialized " + abilities.size() + " weapon abilities");
         });
     }
     
@@ -302,7 +307,7 @@ public class WeaponAbilitySystem implements Service {
                 executeMeteor(player, ability);
                 break;
             default:
-                player.sendMessage("§cAbility not implemented yet!");
+                player.sendMessage(Component.text("§cAbility not implemented yet!"));
                 break;
         }
     }
@@ -312,7 +317,7 @@ public class WeaponAbilitySystem implements Service {
      */
     private void executeSlash(Player player, WeaponAbility ability) {
         // TODO: Implement slash effect
-        player.sendMessage("§eSlash ability executed!");
+        player.sendMessage(Component.text("§eSlash ability executed!"));
     }
     
     /**
@@ -320,7 +325,7 @@ public class WeaponAbilitySystem implements Service {
      */
     private void executeWhirlwind(Player player, WeaponAbility ability) {
         // TODO: Implement whirlwind effect
-        player.sendMessage("§eWhirlwind ability executed!");
+        player.sendMessage(Component.text("§eWhirlwind ability executed!"));
     }
     
     /**
@@ -328,7 +333,7 @@ public class WeaponAbilitySystem implements Service {
      */
     private void executeWitherImpact(Player player, WeaponAbility ability) {
         // TODO: Implement wither impact effect
-        player.sendMessage("§eWither Impact ability executed!");
+        player.sendMessage(Component.text("§eWither Impact ability executed!"));
     }
     
     /**
@@ -336,7 +341,7 @@ public class WeaponAbilitySystem implements Service {
      */
     private void executePiercingShot(Player player, WeaponAbility ability) {
         // TODO: Implement piercing shot effect
-        player.sendMessage("§ePiercing Shot ability executed!");
+        player.sendMessage(Component.text("§ePiercing Shot ability executed!"));
     }
     
     /**
@@ -344,7 +349,7 @@ public class WeaponAbilitySystem implements Service {
      */
     private void executeExplosiveShot(Player player, WeaponAbility ability) {
         // TODO: Implement explosive shot effect
-        player.sendMessage("§eExplosive Shot ability executed!");
+        player.sendMessage(Component.text("§eExplosive Shot ability executed!"));
     }
     
     /**
@@ -352,7 +357,7 @@ public class WeaponAbilitySystem implements Service {
      */
     private void executeSpiritShot(Player player, WeaponAbility ability) {
         // TODO: Implement spirit shot effect
-        player.sendMessage("§eSpirit Shot ability executed!");
+        player.sendMessage(Component.text("§eSpirit Shot ability executed!"));
     }
     
     /**
@@ -360,7 +365,7 @@ public class WeaponAbilitySystem implements Service {
      */
     private void executeFireball(Player player, WeaponAbility ability) {
         // TODO: Implement fireball effect
-        player.sendMessage("§eFireball ability executed!");
+        player.sendMessage(Component.text("§eFireball ability executed!"));
     }
     
     /**
@@ -368,7 +373,7 @@ public class WeaponAbilitySystem implements Service {
      */
     private void executeLightningStrike(Player player, WeaponAbility ability) {
         // TODO: Implement lightning strike effect
-        player.sendMessage("§eLightning Strike ability executed!");
+        player.sendMessage(Component.text("§eLightning Strike ability executed!"));
     }
     
     /**
@@ -376,7 +381,7 @@ public class WeaponAbilitySystem implements Service {
      */
     private void executeMeteor(Player player, WeaponAbility ability) {
         // TODO: Implement meteor effect
-        player.sendMessage("§eMeteor ability executed!");
+        player.sendMessage(Component.text("§eMeteor ability executed!"));
     }
     
     /**

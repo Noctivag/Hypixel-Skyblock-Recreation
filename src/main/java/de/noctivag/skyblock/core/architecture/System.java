@@ -52,6 +52,27 @@ public interface System {
     SystemStatus getStatus();
     
     /**
+     * Get current time in milliseconds
+     */
+    default long currentTimeMillis() {
+        return java.lang.System.currentTimeMillis();
+    }
+    
+    /**
+     * Get current time in nanoseconds
+     */
+    default long nanoTime() {
+        return java.lang.System.nanoTime();
+    }
+    
+    /**
+     * Get system property
+     */
+    default String getProperty(String key, String defaultValue) {
+        return java.lang.System.getProperty(key, defaultValue);
+    }
+    
+    /**
      * System status enum
      */
     enum SystemStatus {

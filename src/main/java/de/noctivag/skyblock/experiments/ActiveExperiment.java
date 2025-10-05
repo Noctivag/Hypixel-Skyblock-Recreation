@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.experiments;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
@@ -16,7 +17,7 @@ public class ActiveExperiment {
     public ActiveExperiment(String experimentType, UUID playerId, int durationMinutes) {
         this.experimentType = experimentType;
         this.playerId = playerId;
-        this.startTime = System.currentTimeMillis();
+        this.startTime = java.lang.System.currentTimeMillis();
         this.durationMinutes = durationMinutes;
     }
     
@@ -37,18 +38,18 @@ public class ActiveExperiment {
     }
     
     public boolean isCompleted() {
-        long elapsed = System.currentTimeMillis() - startTime;
+        long elapsed = java.lang.System.currentTimeMillis() - startTime;
         return elapsed >= (durationMinutes * 60 * 1000L);
     }
     
     public long getRemainingTime() {
-        long elapsed = System.currentTimeMillis() - startTime;
+        long elapsed = java.lang.System.currentTimeMillis() - startTime;
         long total = durationMinutes * 60 * 1000L;
         return Math.max(0, total - elapsed);
     }
     
     public double getProgress() {
-        long elapsed = System.currentTimeMillis() - startTime;
+        long elapsed = java.lang.System.currentTimeMillis() - startTime;
         long total = durationMinutes * 60 * 1000L;
         return Math.min(1.0, (double) elapsed / total);
     }

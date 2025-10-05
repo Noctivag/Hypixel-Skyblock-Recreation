@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.economy.auction.types;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
@@ -21,7 +22,7 @@ public class AuctionBid {
         this.bidderId = bidderId;
         this.bidderName = bidderName;
         this.amount = amount;
-        this.timestamp = System.currentTimeMillis();
+        this.timestamp = java.lang.System.currentTimeMillis();
         this.isWinning = false;
     }
 

@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.skyblock.pets;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -19,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class PetsSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, Pet> activePets = new ConcurrentHashMap<>();
     private final Map<UUID, List<Pet>> playerPets = new ConcurrentHashMap<>();
     
@@ -143,9 +148,9 @@ public class PetsSystem implements Listener {
     // Pet Registry
     private final Map<String, Pet> petRegistry = new HashMap<>();
     
-    public PetsSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    public PetsSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        SkyblockPlugin.getServer().getPluginManager().registerEvents(this, SkyblockPlugin);
         initializePets();
     }
     
@@ -270,14 +275,14 @@ public class PetsSystem implements Listener {
     public boolean givePetToPlayer(Player player, String petId) {
         Pet pet = petRegistry.get(petId);
         if (pet == null) {
-            player.sendMessage("§cPet nicht gefunden!");
+            player.sendMessage(Component.text("§cPet nicht gefunden!"));
             return false;
         }
         
         List<Pet> pets = playerPets.computeIfAbsent(player.getUniqueId(), k -> new ArrayList<>());
         pets.add(pet);
         
-        player.sendMessage("§aPet erhalten!");
+        player.sendMessage(Component.text("§aPet erhalten!"));
         player.sendMessage("§e" + pet.getRarity().getDisplayName() + " " + pet.getName());
         player.sendMessage("§7" + pet.getType().getDescription());
         
@@ -290,7 +295,7 @@ public class PetsSystem implements Listener {
     public boolean activatePet(Player player, String petId) {
         List<Pet> pets = playerPets.get(player.getUniqueId());
         if (pets == null) {
-            player.sendMessage("§cDu hast keine Pets!");
+            player.sendMessage(Component.text("§cDu hast keine Pets!"));
             return false;
         }
         
@@ -300,7 +305,7 @@ public class PetsSystem implements Listener {
             .orElse(null);
         
         if (pet == null) {
-            player.sendMessage("§cPet nicht gefunden!");
+            player.sendMessage(Component.text("§cPet nicht gefunden!"));
             return false;
         }
         
@@ -317,7 +322,7 @@ public class PetsSystem implements Listener {
                               pet.getLevel(), pet.getXp(), pet.getStats(), pet.getAbilities(), true);
         activePets.put(player.getUniqueId(), activePet);
         
-        player.sendMessage("§aPet aktiviert!");
+        player.sendMessage(Component.text("§aPet aktiviert!"));
         player.sendMessage("§e" + activePet.getRarity().getDisplayName() + " " + activePet.getName());
         player.sendMessage("§7Level " + activePet.getLevel());
         

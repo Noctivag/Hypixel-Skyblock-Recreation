@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.help;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -31,19 +36,19 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Help Customization
  */
 public class AdvancedHelpSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerHelp> playerHelp = new ConcurrentHashMap<>();
     private final Map<HelpType, HelpConfig> helpConfigs = new HashMap<>();
     private final Map<UUID, BukkitTask> helpTasks = new ConcurrentHashMap<>();
     
-    public AdvancedHelpSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedHelpSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeHelpConfigs();
         startHelpUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeHelpConfigs() {
@@ -218,7 +223,7 @@ public class AdvancedHelpSystem implements Listener {
                     help.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L);
     }
     
     @EventHandler
@@ -231,7 +236,7 @@ public class AdvancedHelpSystem implements Listener {
     }
     
     private void openHelpGUI(Player player) {
-        player.sendMessage("§aHelp GUI geöffnet!");
+        player.sendMessage(Component.text("§aHelp GUI geöffnet!"));
     }
     
     public PlayerHelp getPlayerHelp(UUID playerId) {
@@ -331,11 +336,11 @@ public class AdvancedHelpSystem implements Listener {
         
         public PlayerHelp(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long timeDiff = currentTime - lastUpdate;
             
             if (timeDiff >= 60000) {

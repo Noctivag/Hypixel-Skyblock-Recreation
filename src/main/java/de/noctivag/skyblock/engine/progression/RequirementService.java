@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.engine.progression;
+import java.util.UUID;
 
 import de.noctivag.skyblock.core.api.Service;
 import de.noctivag.skyblock.core.api.SystemStatus;

@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.slayers;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.CorePlatform;
 import de.noctivag.skyblock.data.DatabaseManager;
 import org.bukkit.Bukkit;
@@ -25,6 +29,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Complete Slayer System - Full Implementation with Quest Logic, Mob Spawning, Rewards, and GUI
@@ -40,7 +45,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CompleteSlayerSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CorePlatform corePlatform;
     private final DatabaseManager databaseManager;
     private final Map<UUID, PlayerSlayerData> playerSlayerData = new ConcurrentHashMap<>();
@@ -49,8 +54,8 @@ public class CompleteSlayerSystem implements Listener {
     private final Map<UUID, SlayerBoss> activeBosses = new ConcurrentHashMap<>();
     private final Map<UUID, List<SlayerReward>> pendingRewards = new ConcurrentHashMap<>();
     
-    public CompleteSlayerSystem(SkyblockPlugin plugin, CorePlatform corePlatform, DatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public CompleteSlayerSystem(SkyblockPlugin SkyblockPlugin, CorePlatform corePlatform, DatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.corePlatform = corePlatform;
         this.databaseManager = databaseManager;
         
@@ -60,7 +65,7 @@ public class CompleteSlayerSystem implements Listener {
     
     public void initialize() {
         // Register events after full initialization
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeSlayerConfigs() {
@@ -167,7 +172,7 @@ public class CompleteSlayerSystem implements Listener {
     
     private void startSlayerUpdateTask() {
         Thread.ofVirtual().start(() -> {
-            while (plugin.isEnabled()) {
+            while (SkyblockPlugin.isEnabled()) {
                 try {
                     updateActiveQuests();
                     updateActiveBosses();
@@ -194,7 +199,7 @@ public class CompleteSlayerSystem implements Listener {
                 // Notify player
                 Player player = Bukkit.getPlayer(quest.getPlayerId());
                 if (player != null) {
-                    player.sendMessage("§c§lSLAYER QUEST EXPIRED!");
+                    player.sendMessage(Component.text("§c§lSLAYER QUEST EXPIRED!"));
                     player.sendMessage("§7Your " + quest.getSlayerType().getDisplayName() + " quest has expired.");
                     player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
                 }
@@ -316,7 +321,7 @@ public class CompleteSlayerSystem implements Listener {
         addGUIItem(gui, 53, Material.ARROW, "§7§lNext Page", "§7Go to next page.");
         
         player.openInventory(gui);
-        player.sendMessage("§aSlayer GUI opened!");
+        player.sendMessage(Component.text("§aSlayer GUI opened!"));
     }
     
     private void onSlayerBossDefeated(Player player, ActiveSlayerQuest quest, SlayerBoss slayerBoss) {
@@ -342,7 +347,7 @@ public class CompleteSlayerSystem implements Listener {
                 pendingRewards.computeIfAbsent(playerId, k -> new ArrayList<>()).addAll(drops);
                 
                 // Send messages
-                player.sendMessage("§a§lSLAYER QUEST COMPLETED!");
+                player.sendMessage(Component.text("§a§lSLAYER QUEST COMPLETED!"));
                 player.sendMessage("§7" + quest.getSlayerType().getDisplayName() + " Tier " + quest.getTier() + " defeated!");
                 player.sendMessage("§6+" + tier.getCoinReward() + " Coins");
                 player.sendMessage("§b+" + tier.getXpReward() + " XP");
@@ -403,40 +408,40 @@ public class CompleteSlayerSystem implements Listener {
         
         // Check if player already has an active quest
         if (activeQuests.containsKey(playerId)) {
-            player.sendMessage("§cYou already have an active slayer quest!");
+            player.sendMessage(Component.text("§cYou already have an active slayer quest!"));
             return false;
         }
         
         // Check if player has the required level
         PlayerSlayerData data = getPlayerSlayerData(playerId);
         if (!data.canStartQuest(slayerType, tier)) {
-            player.sendMessage("§cYou don't have the required level for this quest!");
+            player.sendMessage(Component.text("§cYou don't have the required level for this quest!"));
             return false;
         }
         
         // Get slayer config
         SlayerConfig config = slayerConfigs.get(slayerType);
         if (config == null) {
-            player.sendMessage("§cInvalid slayer type!");
+            player.sendMessage(Component.text("§cInvalid slayer type!"));
             return false;
         }
         
         // Check if tier exists
         if (tier < 1 || tier > config.getTiers().size()) {
-            player.sendMessage("§cInvalid tier!");
+            player.sendMessage(Component.text("§cInvalid tier!"));
             return false;
         }
         
         // Get tier config
         SlayerTier tierConfig = config.getTiers().get(tier - 1);
         if (tierConfig == null) {
-            player.sendMessage("§cInvalid tier configuration!");
+            player.sendMessage(Component.text("§cInvalid tier configuration!"));
             return false;
         }
         
         // Check if player has enough coins
         if (!corePlatform.getPlayerProfile(playerId).hasCoins(tierConfig.getCost())) {
-            player.sendMessage("§cYou don't have enough coins!");
+            player.sendMessage(Component.text("§cYou don't have enough coins!"));
             return false;
         }
         
@@ -448,16 +453,16 @@ public class CompleteSlayerSystem implements Listener {
         SlayerBoss boss = spawnSlayerBoss(slayerType, tier, spawnLocation);
         
         if (boss == null) {
-            player.sendMessage("§cFailed to spawn slayer boss!");
+            player.sendMessage(Component.text("§cFailed to spawn slayer boss!"));
             return false;
         }
         
         // Create active quest
-        ActiveSlayerQuest quest = new ActiveSlayerQuest(playerId, slayerType, tier, boss.getEntity().getUniqueId(), System.currentTimeMillis());
+        ActiveSlayerQuest quest = new ActiveSlayerQuest(playerId, slayerType, tier, boss.getEntity().getUniqueId(), java.lang.System.currentTimeMillis());
         activeQuests.put(playerId, quest);
         
         // Send messages
-        player.sendMessage("§a§lSLAYER QUEST STARTED!");
+        player.sendMessage(Component.text("§a§lSLAYER QUEST STARTED!"));
         player.sendMessage("§7" + slayerType.getDisplayName() + " Tier " + tier + " - " + tierConfig.getName());
         player.sendMessage("§7Cost: §6" + tierConfig.getCost() + " Coins");
         player.sendMessage("§7Reward: §6" + tierConfig.getCoinReward() + " Coins");
@@ -596,7 +601,7 @@ public class CompleteSlayerSystem implements Listener {
                     player.getInventory().addItem(item);
                 }
                 
-                player.sendMessage("§a§lREWARDS CLAIMED!");
+                player.sendMessage(Component.text("§a§lREWARDS CLAIMED!"));
                 player.sendMessage("§7You received " + rewards.size() + " items!");
                 player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
             }
@@ -680,11 +685,11 @@ public class CompleteSlayerSystem implements Listener {
         public long getDuration() { return duration; }
         
         public boolean isExpired() {
-            return System.currentTimeMillis() - startTime > duration;
+            return java.lang.System.currentTimeMillis() - startTime > duration;
         }
         
         public long getTimeRemaining() {
-            return Math.max(0, duration - (System.currentTimeMillis() - startTime));
+            return Math.max(0, duration - (java.lang.System.currentTimeMillis() - startTime));
         }
     }
     
@@ -701,7 +706,7 @@ public class CompleteSlayerSystem implements Listener {
             this.slayerType = slayerType;
             this.tier = tier;
             this.config = config;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public Entity getEntity() { return entity; }
@@ -716,7 +721,7 @@ public class CompleteSlayerSystem implements Listener {
         public void update() {
             if (!isAlive()) return;
             
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             if (currentTime - lastUpdate >= 1000) { // Update every second
                 lastUpdate = currentTime;
                 

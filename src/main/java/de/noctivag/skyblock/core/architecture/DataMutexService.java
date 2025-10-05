@@ -1,8 +1,10 @@
 package de.noctivag.skyblock.core.architecture;
+import java.util.UUID;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.params.SetParams;
 import redis.clients.jedis.exceptions.JedisException;
 
 import java.util.*;
@@ -80,7 +82,7 @@ public class DataMutexService {
             try {
                 String lockKey = LOCK_PREFIX + lockName;
                 String lockValue = UUID.randomUUID().toString();
-                long expirationTime = System.currentTimeMillis() + (timeoutSeconds * 1000L);
+                long expirationTime = java.lang.System.currentTimeMillis() + (timeoutSeconds * 1000L);
                 
                 // Track lock attempts
                 lockAttempts.computeIfAbsent(lockName, k -> new AtomicInteger(0)).incrementAndGet();
@@ -92,7 +94,7 @@ public class DataMutexService {
                 try {
                     for (JedisPool pool : jedisPools) {
                         try (Jedis jedis = pool.getResource()) {
-                            String result = jedis.set(lockKey, lockValue, "NX", "EX", timeoutSeconds);
+                            String result = jedis.set(lockKey, lockValue, SetParams.setParams().nx().ex(timeoutSeconds));
                             if ("OK".equals(result)) {
                                 acquiredLocks++;
                                 acquiredConnections.add(jedis);
@@ -245,7 +247,7 @@ public class DataMutexService {
                 
                 if (extendedLocks > (jedisPools.size() / 2)) {
                     lockInfo.extensions++;
-                    lockInfo.expirationTime = System.currentTimeMillis() + (additionalSeconds * 1000L);
+                    lockInfo.expirationTime = java.lang.System.currentTimeMillis() + (additionalSeconds * 1000L);
                     logger.fine("Extended distributed lock: " + lockName + " for " + additionalSeconds + " seconds");
                     return true;
                 }
@@ -339,7 +341,7 @@ public class DataMutexService {
     public CompletableFuture<Void> cleanupExpiredLocks() {
         return CompletableFuture.runAsync(() -> {
             try {
-                long currentTime = System.currentTimeMillis();
+                long currentTime = java.lang.System.currentTimeMillis();
                 List<String> expiredLocks = new ArrayList<>();
                 
                 for (Map.Entry<String, LockInfo> entry : activeLocks.entrySet()) {

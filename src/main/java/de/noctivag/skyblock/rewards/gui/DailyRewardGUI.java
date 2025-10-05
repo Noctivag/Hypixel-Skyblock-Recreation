@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.rewards.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.rewards.DailyReward;
 import de.noctivag.skyblock.utils.ColorUtils;
 import net.kyori.adventure.text.Component;
@@ -18,12 +21,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DailyRewardGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private static final String MAIN_TITLE = "§8» §6Tägliche Belohnungen §8«";
     private static final String ADMIN_TITLE = "§8» §cBelohnungen Verwalten §8«";
 
-    public DailyRewardGUI(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public DailyRewardGUI(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     public void openRewardGUI(Player player) {
@@ -31,8 +34,8 @@ public class DailyRewardGUI {
         decorateInventory(inv);
 
         // Streak-Information
-        int currentStreak = plugin.getDailyRewardManager().getCurrentStreak(player);
-        LocalDateTime lastClaim = plugin.getDailyRewardManager().getLastClaimTime(player);
+        int currentStreak = SkyblockPlugin.getDailyRewardManager().getCurrentStreak(player);
+        LocalDateTime lastClaim = SkyblockPlugin.getDailyRewardManager().getLastClaimTime(player);
 
         ItemStack streakItem = createGuiItem(
             Material.EXPERIENCE_BOTTLE,
@@ -42,7 +45,7 @@ public class DailyRewardGUI {
                 "§7Letzte Belohnung: §e" + (lastClaim != null ?
                     lastClaim.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")) : "Noch nie"),
                 "",
-                plugin.getDailyRewardManager().canClaimReward(player) ?
+                SkyblockPlugin.getDailyRewardManager().canClaimReward(player) ?
                     "§aKlicke, um deine Belohnung abzuholen!" :
                     "§cDu hast deine Belohnung heute bereits abgeholt!"
             )
@@ -52,7 +55,7 @@ public class DailyRewardGUI {
         // Zeige die nächsten 7 Tage
         int startSlot = 19;
         for (int day = 1; day <= 7; day++) {
-            DailyReward reward = plugin.getDailyRewardManager().getReward(day);
+            DailyReward reward = SkyblockPlugin.getDailyRewardManager().getReward(day);
             if (reward != null) {
                 ItemStack rewardItem = createRewardDisplay(reward, currentStreak % 7, day);
                 inv.setItem(startSlot + (day - 1), rewardItem);
@@ -60,7 +63,7 @@ public class DailyRewardGUI {
         }
 
         // Admin-Button (nur für Admins sichtbar)
-        if (player.hasPermission("plugin.admin")) {
+        if (player.hasPermission("SkyblockPlugin.admin")) {
             ItemStack adminItem = createGuiItem(
                 Material.COMMAND_BLOCK,
                 "§c» §4Belohnungen verwalten",
@@ -76,8 +79,8 @@ public class DailyRewardGUI {
     }
 
     public void openAdminGUI(Player player) {
-        if (!player.hasPermission("plugin.admin")) {
-            player.sendMessage("§cDazu hast du keine Berechtigung!");
+        if (!player.hasPermission("SkyblockPlugin.admin")) {
+            player.sendMessage(Component.text("§cDazu hast du keine Berechtigung!"));
             return;
         }
 
@@ -87,7 +90,7 @@ public class DailyRewardGUI {
         // Belohnungen bearbeiten
         int slot = 10;
         for (int day = 1; day <= 7; day++) {
-            DailyReward reward = plugin.getDailyRewardManager().getReward(day);
+            DailyReward reward = SkyblockPlugin.getDailyRewardManager().getReward(day);
             ItemStack rewardItem = createAdminRewardItem(day, reward);
             inv.setItem(slot++, rewardItem);
         }

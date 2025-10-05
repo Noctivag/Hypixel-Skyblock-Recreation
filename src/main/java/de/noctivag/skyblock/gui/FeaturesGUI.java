@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,20 +12,22 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 
 /**
- * Features GUI - Plugin-Features und Funktionen
+ * Features GUI - SkyblockPlugin-Features und Funktionen
  */
 public class FeaturesGUI {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     
-    public FeaturesGUI(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public FeaturesGUI(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
     
     public void openFeaturesGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lPlugin Features");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lPlugin Features"));
         
         // Core Features
         setItem(gui, 10, Material.DIAMOND, "§b§lCore Features",
@@ -162,8 +167,8 @@ public class FeaturesGUI {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(name);
-            meta.setLore(Arrays.asList(lore));
+            meta.displayName(Component.text(name));
+            meta.lore(Arrays.asList(lore).stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         gui.setItem(slot, item);

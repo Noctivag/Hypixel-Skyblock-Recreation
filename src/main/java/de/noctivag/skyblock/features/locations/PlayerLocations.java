@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.locations;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.features.locations.types.CompleteLocationType;

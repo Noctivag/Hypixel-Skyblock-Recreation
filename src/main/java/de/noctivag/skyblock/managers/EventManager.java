@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.managers;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -16,13 +20,13 @@ import java.util.*;
 import java.time.Duration;
 
 public class EventManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<String, BossBar> activeBossBars = new HashMap<>();
     private final Map<String, Set<UUID>> eventParticipants = new HashMap<>();
     private final Map<UUID, Integer> playerPoints = new HashMap<>();
 
-    public EventManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public EventManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         scheduleEvents();
     }
 
@@ -31,7 +35,7 @@ public class EventManager {
         Thread.ofVirtual().start(() -> {
             try {
                 Thread.sleep(20L * 60 * 120 * 50); // Initial delay: 2 hours in ms
-                while (plugin.isEnabled()) {
+                while (SkyblockPlugin.isEnabled()) {
                     startDragonEvent();
                     Thread.sleep(20L * 60 * 120 * 50); // 2 hours = 7,200,000 ms
                 }
@@ -44,7 +48,7 @@ public class EventManager {
         Thread.ofVirtual().start(() -> {
             try {
                 Thread.sleep(20L * 60 * 60 * 50); // Initial delay: 1 hour in ms
-                while (plugin.isEnabled()) {
+                while (SkyblockPlugin.isEnabled()) {
                     startWitherEvent();
                     Thread.sleep(20L * 60 * 60 * 50); // 1 hour = 3,600,000 ms
                 }
@@ -57,7 +61,7 @@ public class EventManager {
         Thread.ofVirtual().start(() -> {
             try {
                 Thread.sleep(20L * 60 * 30 * 50); // Initial delay: 30 minutes in ms
-                while (plugin.isEnabled()) {
+                while (SkyblockPlugin.isEnabled()) {
                     startZombieHorde();
                     Thread.sleep(20L * 60 * 30 * 50); // 30 minutes = 1,800,000 ms
                 }
@@ -100,7 +104,7 @@ public class EventManager {
         Thread.ofVirtual().start(() -> {
             try {
                 Thread.sleep(20L * 60 * 15 * 50); // 15 minutes = 900,000 ms
-                if (plugin.isEnabled()) {
+                if (SkyblockPlugin.isEnabled()) {
                     endEvent("dragon");
                 }
             } catch (InterruptedException e) {
@@ -142,7 +146,7 @@ public class EventManager {
         Thread.ofVirtual().start(() -> {
             try {
                 Thread.sleep(20L * 60 * 10 * 50); // 10 minutes = 600,000 ms
-                if (plugin.isEnabled()) {
+                if (SkyblockPlugin.isEnabled()) {
                     endEvent("wither");
                 }
             } catch (InterruptedException e) {
@@ -184,7 +188,7 @@ public class EventManager {
         Thread.ofVirtual().start(() -> {
             try {
                 Thread.sleep(20L * 60 * 5 * 50); // 5 minutes = 300,000 ms
-                if (plugin.isEnabled()) {
+                if (SkyblockPlugin.isEnabled()) {
                     endEvent("zombie");
                 }
             } catch (InterruptedException e) {

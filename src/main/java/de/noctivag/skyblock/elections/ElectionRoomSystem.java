@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.elections;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -10,15 +15,16 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class ElectionRoomSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerElectionData> playerElectionData = new ConcurrentHashMap<>();
     private final Map<String, Election> elections = new HashMap<>();
     
-    public ElectionRoomSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public ElectionRoomSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeElections();
     }
@@ -31,7 +37,7 @@ public class ElectionRoomSystem {
     }
     
     public void openElectionRoomGUI(Player player) {
-        Inventory gui = plugin.getServer().createInventory(null, 54, "§6§lElection Room");
+        Inventory gui = SkyblockPlugin.getServer().createInventory(null, 54, "§6§lElection Room");
         
         addGUIItem(gui, 10, Material.GOLDEN_HELMET, "§6§lMayor Elections", "§7Vote for mayor");
         addGUIItem(gui, 11, Material.EMERALD, "§b§lCouncil Elections", "§7Vote for council members");
@@ -48,9 +54,9 @@ public class ElectionRoomSystem {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(name);
+            meta.displayName(Component.text(name));
             if (lore.length > 0) {
-                meta.setLore(Arrays.asList(lore));
+                meta.lore(Arrays.asList(lore).stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             }
             item.setItemMeta(meta);
         }

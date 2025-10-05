@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.network;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -26,7 +30,7 @@ import java.util.logging.Level;
  */
 public class AdvancedPlayerTransferSystem {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final ServerCommunicationManager communicationManager;
     
@@ -40,9 +44,9 @@ public class AdvancedPlayerTransferSystem {
     private final int maxTransfersPerMinute = 3;
     private final long transferTimeout = 60000; // 1 Minute
     
-    public AdvancedPlayerTransferSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager,
+    public AdvancedPlayerTransferSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager,
                                        ServerCommunicationManager communicationManager) {
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         this.communicationManager = communicationManager;
     }
@@ -75,7 +79,7 @@ public class AdvancedPlayerTransferSystem {
             bestServer.getServerId(),
             targetServerType,
             reason,
-            System.currentTimeMillis()
+            java.lang.System.currentTimeMillis()
         );
         
         pendingTransfers.put(player.getUniqueId(), request);
@@ -114,8 +118,8 @@ public class AdvancedPlayerTransferSystem {
         
         // Prüfe Cooldown
         Long lastTransfer = lastTransferTime.get(playerId);
-        if (lastTransfer != null && System.currentTimeMillis() - lastTransfer < transferCooldown) {
-            long remainingTime = (transferCooldown - (System.currentTimeMillis() - lastTransfer)) / 1000;
+        if (lastTransfer != null && java.lang.System.currentTimeMillis() - lastTransfer < transferCooldown) {
+            long remainingTime = (transferCooldown - (java.lang.System.currentTimeMillis() - lastTransfer)) / 1000;
             return new TransferValidationResult(false, "Du musst noch " + remainingTime + " Sekunden warten!");
         }
         
@@ -190,7 +194,7 @@ public class AdvancedPlayerTransferSystem {
                         startTransferTimeout(request);
                         
                         // Simuliere Transfer (in echter Implementierung würde hier der echte Transfer stattfinden)
-                        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                        Bukkit.getScheduler().runTaskLater(SkyblockPlugin, () -> {
                             future.complete(new TransferResult(true, "Transfer erfolgreich"));
                         }, 20L); // 1 Sekunde Verzögerung
                         
@@ -200,7 +204,7 @@ public class AdvancedPlayerTransferSystem {
                 });
                 
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Error executing transfer", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Error executing transfer", e);
             future.complete(new TransferResult(false, "Interner Fehler beim Transfer"));
         }
         
@@ -211,10 +215,10 @@ public class AdvancedPlayerTransferSystem {
      * Startet Transfer-Timeout
      */
     private void startTransferTimeout(TransferRequest request) {
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+        Bukkit.getScheduler().runTaskLater(SkyblockPlugin, () -> {
             if (pendingTransfers.containsKey(request.getPlayerId())) {
                 pendingTransfers.remove(request.getPlayerId());
-                plugin.getLogger().warning("Transfer timeout for player: " + request.getPlayerName());
+                SkyblockPlugin.getLogger().warning("Transfer timeout for player: " + request.getPlayerName());
             }
         }, transferTimeout / 50L); // Konvertiere zu Ticks
     }
@@ -223,11 +227,11 @@ public class AdvancedPlayerTransferSystem {
      * Aktualisiert Transfer-Statistiken
      */
     private void updateTransferStatistics(UUID playerId) {
-        lastTransferTime.put(playerId, System.currentTimeMillis());
+        lastTransferTime.put(playerId, java.lang.System.currentTimeMillis());
         transferCounts.merge(playerId, 1, Integer::sum);
         
         // Reset Transfer-Count nach einer Minute
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+        Bukkit.getScheduler().runTaskLater(SkyblockPlugin, () -> {
             transferCounts.remove(playerId);
         }, 20L * 60L); // 1 Minute
     }
@@ -307,7 +311,7 @@ public class AdvancedPlayerTransferSystem {
         TransferRequest request = pendingTransfers.get(playerId);
         if (request != null) {
             return new TransferStatus(true, request.getTargetServerId(), 
-                System.currentTimeMillis() - request.getTimestamp());
+                java.lang.System.currentTimeMillis() - request.getTimestamp());
         }
         
         return new TransferStatus(false, null, 0);
@@ -319,7 +323,7 @@ public class AdvancedPlayerTransferSystem {
     public boolean cancelTransfer(UUID playerId) {
         TransferRequest request = pendingTransfers.remove(playerId);
         if (request != null) {
-            plugin.getLogger().info("Transfer cancelled for player: " + request.getPlayerName());
+            SkyblockPlugin.getLogger().info("Transfer cancelled for player: " + request.getPlayerName());
             return true;
         }
         return false;

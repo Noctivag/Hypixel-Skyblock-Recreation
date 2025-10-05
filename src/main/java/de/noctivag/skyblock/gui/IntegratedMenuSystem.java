@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.items.ReforgeSystem;
 import de.noctivag.skyblock.items.ReforgeStoneSystem;
 import de.noctivag.skyblock.items.StatModificationSystem;
@@ -26,7 +29,7 @@ import net.kyori.adventure.text.format.TextDecoration;
  * - Quick Access to All Features
  */
 public class IntegratedMenuSystem extends CustomGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Player player;
     private final ReforgeSystem reforgeSystem;
     private final ReforgeStoneSystem reforgeStoneSystem;
@@ -37,12 +40,12 @@ public class IntegratedMenuSystem extends CustomGUI {
     private final AccessorySystem accessorySystem;
     private final HypixelMenuStyleSystem styleSystem;
     
-    public IntegratedMenuSystem(SkyblockPlugin plugin, Player player, ReforgeSystem reforgeSystem,
+    public IntegratedMenuSystem(SkyblockPlugin SkyblockPlugin, Player player, ReforgeSystem reforgeSystem,
                               ReforgeStoneSystem reforgeStoneSystem, StatModificationSystem statModificationSystem,
                               EnchantingSystem enchantingSystem, PetSystem petSystem,
                               PetManagementSystem petManagementSystem, AccessorySystem accessorySystem) {
         super(54, Component.text("§6§l⚡ INTEGRATED MENU ⚡").color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD));
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.player = player;
         this.reforgeSystem = reforgeSystem;
         this.reforgeStoneSystem = reforgeStoneSystem;
@@ -51,7 +54,7 @@ public class IntegratedMenuSystem extends CustomGUI {
         this.petSystem = petSystem;
         this.petManagementSystem = petManagementSystem;
         this.accessorySystem = accessorySystem;
-        this.styleSystem = new HypixelMenuStyleSystem(plugin);
+        this.styleSystem = new HypixelMenuStyleSystem(SkyblockPlugin);
         setupItems();
     }
     
@@ -80,7 +83,7 @@ public class IntegratedMenuSystem extends CustomGUI {
     
     private void setupHeader() {
         // Use Hypixel-style header
-        styleSystem.setupHeaderSection(getInventory(), 4, "INTEGRATED MENU", "Access all plugin features from one central location");
+        styleSystem.setupHeaderSection(getInventory(), 4, "INTEGRATED MENU", "Access all SkyblockPlugin features from one central location");
     }
     
     private void setupCoreSystems() {
@@ -153,14 +156,14 @@ public class IntegratedMenuSystem extends CustomGUI {
         
         // Settings
         setItem(38, styleSystem.createFeatureItem(Material.REDSTONE, "⚙️ SETTINGS", 
-            "Configure plugin settings and preferences", true,
+            "Configure SkyblockPlugin settings and preferences", true,
             "• Feature toggles and options",
             "• Personal preference settings",
             "• System configuration"));
         
         // Help
         setItem(39, styleSystem.createFeatureItem(Material.BOOK, "❓ HELP", 
-            "Get help with plugin features", true,
+            "Get help with SkyblockPlugin features", true,
             "• Tutorials and guides",
             "• Feature documentation",
             "• Support and assistance"));
@@ -179,49 +182,49 @@ public class IntegratedMenuSystem extends CustomGUI {
         switch (slot) {
             case 10 -> {
                 // Stats system
-                player.sendMessage("§eOpening stats system...");
+                player.sendMessage(Component.text("§eOpening stats system..."));
                 // Open stats GUI
             }
             case 12 -> {
                 // Profile system
-                player.sendMessage("§eOpening profile system...");
+                player.sendMessage(Component.text("§eOpening profile system..."));
                 // Open profile GUI
             }
             case 19 -> {
                 // Reforge system
-                player.sendMessage("§eOpening reforge system...");
+                player.sendMessage(Component.text("§eOpening reforge system..."));
                 // Placeholder - ReforgeGUI class not implemented
-                player.sendMessage("§cReforge GUI not implemented yet!");
+                player.sendMessage(Component.text("§cReforge GUI not implemented yet!"));
             }
             case 21 -> {
                 // Reforge stones
-                player.sendMessage("§eOpening reforge stones...");
+                player.sendMessage(Component.text("§eOpening reforge stones..."));
                 // Open reforge stones GUI
             }
             case 23 -> {
                 // Enchanting system
-                player.sendMessage("§eOpening enchanting system...");
-                new EnchantingGUI(plugin, player, enchantingSystem).openGUI(player);
+                player.sendMessage(Component.text("§eOpening enchanting system..."));
+                new EnchantingGUI(SkyblockPlugin, player, enchantingSystem).openGUI(player);
             }
             case 28 -> {
                 // Pet system
-                player.sendMessage("§eOpening pet system...");
-                new PetManagementGUI(plugin, player, petSystem, petManagementSystem).openGUI(player);
+                player.sendMessage(Component.text("§eOpening pet system..."));
+                new PetManagementGUI(SkyblockPlugin, player, petSystem, petManagementSystem).openGUI(player);
             }
             case 30 -> {
                 // Accessory system
-                player.sendMessage("§eOpening accessory system...");
+                player.sendMessage(Component.text("§eOpening accessory system..."));
                 // Placeholder - AccessoryGUI class not implemented
-                player.sendMessage("§cAccessory GUI not implemented yet!");
+                player.sendMessage(Component.text("§cAccessory GUI not implemented yet!"));
             }
             case 37 -> {
                 // Settings
-                player.sendMessage("§eOpening settings...");
+                player.sendMessage(Component.text("§eOpening settings..."));
                 // Open settings GUI
             }
             case 39 -> {
                 // Help
-                player.sendMessage("§eOpening help...");
+                player.sendMessage(Component.text("§eOpening help..."));
                 // Open help GUI
             }
             case 41 -> {

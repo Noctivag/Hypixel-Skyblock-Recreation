@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.gemstones;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -19,15 +24,15 @@ import java.util.concurrent.CompletableFuture;
  */
 public class AdvancedGemstoneSystem {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerGemstoneData> playerGemstoneData = new ConcurrentHashMap<>();
     private final Map<String, GemstoneType> gemstoneTypes = new HashMap<>();
     private final Map<String, GemstoneSlot> gemstoneSlots = new HashMap<>();
     private final Map<UUID, List<GemstoneEffect>> activeGemstoneEffects = new ConcurrentHashMap<>();
     
-    public AdvancedGemstoneSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedGemstoneSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeGemstoneTypes();
         initializeGemstoneSlots();
@@ -249,7 +254,7 @@ public class AdvancedGemstoneSystem {
             public void run() {
                 updateActiveGemstoneEffects();
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Every second
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Every second
     }
     
     /**
@@ -429,7 +434,7 @@ public class AdvancedGemstoneSystem {
         ItemMeta meta = item.getItemMeta();
         
         if (meta != null) {
-            meta.setDisplayName(gemstone.getRarity().getColor() + gemstone.getName() + " Gemstone");
+            meta.displayName(Component.text(gemstone.getRarity().getColor() + gemstone.getName() + " Gemstone"));
             List<String> lore = new ArrayList<>(gemstone.getEffects());
             lore.add("");
             lore.add("§7Category: " + gemstone.getCategory().getDisplayName());
@@ -441,7 +446,7 @@ public class AdvancedGemstoneSystem {
             lore.add("§7to enhance their abilities.");
             lore.add("");
             lore.add("§8A precious gemstone");
-            meta.setLore(lore);
+            meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             
             item.setItemMeta(meta);
         }
@@ -473,7 +478,7 @@ public class AdvancedGemstoneSystem {
         lore.add(gemstone.getRarity().getColor() + gemstone.getName() + " Gemstone (" + slot.getName() + "):");
         lore.addAll(gemstone.getEffects());
         
-        meta.setLore(lore);
+        meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
         item.setItemMeta(meta);
         
         return true;
@@ -567,7 +572,7 @@ public class AdvancedGemstoneSystem {
                 playerGemstoneData.put(playerId, data);
             }
         } catch (Exception e) {
-            plugin.getLogger().warning("Failed to load gemstone data for player " + playerId + ": " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Failed to load gemstone data for player " + playerId + ": " + e.getMessage());
         }
     }
     

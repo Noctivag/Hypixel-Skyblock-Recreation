@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.bazaar;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.CorePlatform;
 import de.noctivag.skyblock.core.PlayerProfile;
 import org.bukkit.Bukkit;
@@ -16,6 +20,7 @@ import net.kyori.adventure.text.Component;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Bazaar System - Hypixel Skyblock Style
@@ -28,18 +33,18 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Bazaar GUI interface
  */
 public class BazaarSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CorePlatform corePlatform;
     private final Map<Material, BazaarItem> bazaarItems = new ConcurrentHashMap<>();
     private final Map<UUID, List<BazaarOrder>> playerOrders = new ConcurrentHashMap<>();
     private final Map<UUID, BazaarStats> playerStats = new ConcurrentHashMap<>();
     
-    public BazaarSystem(SkyblockPlugin plugin, CorePlatform corePlatform) {
-        this.plugin = plugin;
+    public BazaarSystem(SkyblockPlugin SkyblockPlugin, CorePlatform corePlatform) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.corePlatform = corePlatform;
         initializeBazaarItems();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
         startBazaarUpdateTask();
     }
     
@@ -116,7 +121,7 @@ public class BazaarSystem implements Listener {
     }
     
     private void startBazaarUpdateTask() {
-        Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+        Bukkit.getScheduler().runTaskTimer(SkyblockPlugin, () -> {
             // Update bazaar prices based on supply and demand
             for (BazaarItem item : bazaarItems.values()) {
                 item.updatePrices();
@@ -138,7 +143,7 @@ public class BazaarSystem implements Listener {
     }
     
     public void openBazaarGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lBazaar");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lBazaar"));
         
         // Bazaar categories
         addGUIItem(gui, 10, Material.WHEAT, "§a§lFarming", 
@@ -281,7 +286,7 @@ public class BazaarSystem implements Listener {
         BazaarStats stats = getPlayerStats(player.getUniqueId());
         stats.addTotalBought(totalCost);
         
-        player.sendMessage("§a§lBAZAAR PURCHASE!");
+        player.sendMessage(Component.text("§a§lBAZAAR PURCHASE!"));
         player.sendMessage("§7Item: §e" + item.getName());
         player.sendMessage("§7Amount: §e" + amount);
         player.sendMessage("§7Total Cost: §6" + totalCost + " coins");
@@ -317,7 +322,7 @@ public class BazaarSystem implements Listener {
         BazaarStats stats = getPlayerStats(player.getUniqueId());
         stats.addTotalSold(totalEarnings);
         
-        player.sendMessage("§a§lBAZAAR SALE!");
+        player.sendMessage(Component.text("§a§lBAZAAR SALE!"));
         player.sendMessage("§7Item: §e" + item.getName());
         player.sendMessage("§7Amount: §e" + amount);
         player.sendMessage("§7Total Earnings: §6" + totalEarnings + " coins");
@@ -365,13 +370,13 @@ public class BazaarSystem implements Listener {
                 openBazaarCategoryGUI(player, BazaarCategory.FISHING);
                 break;
             case 19: // My Orders
-                player.sendMessage("§eMy Orders coming soon!");
+                player.sendMessage(Component.text("§eMy Orders coming soon!"));
                 break;
             case 20: // Statistics
-                player.sendMessage("§eStatistics coming soon!");
+                player.sendMessage(Component.text("§eStatistics coming soon!"));
                 break;
             case 21: // Trending
-                player.sendMessage("§eTrending coming soon!");
+                player.sendMessage(Component.text("§eTrending coming soon!"));
                 break;
             case 49: // Close
                 player.closeInventory();
@@ -479,7 +484,7 @@ public class BazaarSystem implements Listener {
             this.amount = amount;
             this.price = price;
             this.isBuyOrder = isBuyOrder;
-            this.timestamp = System.currentTimeMillis();
+            this.timestamp = java.lang.System.currentTimeMillis();
         }
         
         // Getters

@@ -1,9 +1,11 @@
 package de.noctivag.skyblock.core.architecture;
+import java.util.UUID;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.params.SetParams;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.exceptions.JedisException;
 
@@ -173,7 +175,7 @@ public class StateSynchronizationLayer {
                     PlayerProgression progression = gson.fromJson(jsonData, PlayerProgression.class);
                     
                     // Update local cache
-                    localCache.put(cacheKey, new CachedData(jsonData, System.currentTimeMillis() + 30000)); // 30s TTL
+                    localCache.put(cacheKey, new CachedData(jsonData, java.lang.System.currentTimeMillis() + 30000)); // 30s TTL
                     
                     return progression;
                 }
@@ -201,7 +203,7 @@ public class StateSynchronizationLayer {
                 jedisCluster.setex(cacheKey, 3600, jsonData); // 1 hour TTL
                 
                 // Update local cache
-                localCache.put(cacheKey, new CachedData(jsonData, System.currentTimeMillis() + 30000));
+                localCache.put(cacheKey, new CachedData(jsonData, java.lang.System.currentTimeMillis() + 30000));
                 
                 logger.fine("Updated player progression for: " + playerId);
                 
@@ -232,7 +234,7 @@ public class StateSynchronizationLayer {
                     BazaarPriceMap priceMap = gson.fromJson(jsonData, BazaarPriceMap.class);
                     
                     // Update local cache
-                    localCache.put(cacheKey, new CachedData(jsonData, System.currentTimeMillis() + 5000)); // 5s TTL
+                    localCache.put(cacheKey, new CachedData(jsonData, java.lang.System.currentTimeMillis() + 5000)); // 5s TTL
                     
                     return priceMap.getPrices();
                 }
@@ -260,7 +262,7 @@ public class StateSynchronizationLayer {
                 jedisCluster.setex(cacheKey, 60, jsonData); // 1 minute TTL
                 
                 // Update local cache
-                localCache.put(cacheKey, new CachedData(jsonData, System.currentTimeMillis() + 5000));
+                localCache.put(cacheKey, new CachedData(jsonData, java.lang.System.currentTimeMillis() + 5000));
                 
                 logger.fine("Updated bazaar prices for " + prices.size() + " items");
                 
@@ -286,7 +288,7 @@ public class StateSynchronizationLayer {
                 
                 // Try to acquire distributed lock
                 String lockValue = UUID.randomUUID().toString();
-                String result = jedisCluster.set(lockKey, lockValue, "NX", "EX", 30);
+                String result = jedisCluster.set(lockKey, lockValue, SetParams.setParams().nx().ex(30));
                 boolean acquired = "OK".equals(result);
                 
                 if (!acquired) {
@@ -397,7 +399,7 @@ public class StateSynchronizationLayer {
                 jedisNodes.add(new redis.clients.jedis.HostAndPort(node.getHost(), node.getPort()));
             }
             
-            jedisCluster = new JedisCluster(jedisNodes, poolConfig);
+            jedisCluster = new JedisCluster(jedisNodes);
             
             logger.info("Connected to Redis cluster with " + redisNodes.size() + " nodes");
             
@@ -497,7 +499,7 @@ public class StateSynchronizationLayer {
         }
         
         public String getData() { return data; }
-        public boolean isExpired() { return System.currentTimeMillis() > expirationTime; }
+        public boolean isExpired() { return java.lang.System.currentTimeMillis() > expirationTime; }
     }
     
     /**
@@ -620,7 +622,7 @@ public class StateSynchronizationLayer {
             this.serverId = serverId;
             this.playerCount = playerCount;
             this.tps = tps;
-            this.timestamp = System.currentTimeMillis();
+            this.timestamp = java.lang.System.currentTimeMillis();
             this.status = status;
         }
         

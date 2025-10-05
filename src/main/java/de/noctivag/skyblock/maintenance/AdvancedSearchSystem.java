@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.maintenance;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -14,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 /**
- * AdvancedSearchSystem - Erweiterte Suchfunktionen für das Plugin
+ * AdvancedSearchSystem - Erweiterte Suchfunktionen für das SkyblockPlugin
  * 
  * Features:
  * - Volltext-Suche in allen Systemen
@@ -26,14 +30,14 @@ import java.util.regex.Pattern;
  */
 public class AdvancedSearchSystem {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<String, List<String>> searchIndex = new ConcurrentHashMap<>();
     private final Map<String, Set<String>> tagIndex = new ConcurrentHashMap<>();
     private final Map<String, List<String>> fuzzyIndex = new ConcurrentHashMap<>();
     private final Map<String, String> commandAliases = new ConcurrentHashMap<>();
     
-    public AdvancedSearchSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public AdvancedSearchSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         initializeSearchIndex();
     }
     
@@ -59,14 +63,14 @@ public class AdvancedSearchSystem {
         // Index features
         indexFeatures();
         
-        plugin.getLogger().info("§a[Search] Search index initialized with " + searchIndex.size() + " entries");
+        SkyblockPlugin.getLogger().info("§a[Search] Search index initialized with " + searchIndex.size() + " entries");
     }
     
     /**
      * Indiziert alle Commands
      */
     private void indexCommands() {
-        File pluginFile = new File(plugin.getDataFolder().getParentFile(), "plugin.yml");
+        File pluginFile = new File(SkyblockPlugin.getDataFolder().getParentFile(), "SkyblockPlugin.yml");
         if (pluginFile.exists()) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(pluginFile);
             
@@ -103,7 +107,7 @@ public class AdvancedSearchSystem {
                     }
                     
                     // Add tags
-                    addTags("command", commandName, Arrays.asList("command", "executable", "plugin"));
+                    addTags("command", commandName, Arrays.asList("command", "executable", "SkyblockPlugin"));
                 }
             }
         }
@@ -132,7 +136,7 @@ public class AdvancedSearchSystem {
         
         for (String guiClass : guiClasses) {
             addToIndex("gui", guiClass, guiClass);
-            addTags("gui", guiClass, Arrays.asList("gui", "interface", "menu", "plugin"));
+            addTags("gui", guiClass, Arrays.asList("gui", "interface", "menu", "SkyblockPlugin"));
         }
     }
     
@@ -140,7 +144,7 @@ public class AdvancedSearchSystem {
      * Indiziert alle Permissions
      */
     private void indexPermissions() {
-        File pluginFile = new File(plugin.getDataFolder().getParentFile(), "plugin.yml");
+        File pluginFile = new File(SkyblockPlugin.getDataFolder().getParentFile(), "SkyblockPlugin.yml");
         if (pluginFile.exists()) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(pluginFile);
             
@@ -174,7 +178,7 @@ public class AdvancedSearchSystem {
      * Indiziert alle Configs
      */
     private void indexConfigs() {
-        File dataFolder = plugin.getDataFolder();
+        File dataFolder = SkyblockPlugin.getDataFolder();
         if (dataFolder.exists()) {
             File[] files = dataFolder.listFiles();
             if (files != null) {
@@ -388,7 +392,7 @@ public class AdvancedSearchSystem {
                 }
             }
         } catch (Exception e) {
-            plugin.getLogger().warning("Invalid regex pattern: " + pattern);
+            SkyblockPlugin.getLogger().warning("Invalid regex pattern: " + pattern);
         }
         
         return results;
@@ -581,7 +585,7 @@ public class AdvancedSearchSystem {
         if (meta != null) {
             Map<String, Integer> stats = getIndexStatistics();
             
-            meta.setDisplayName("§6§lAdvanced Search");
+            meta.displayName(Component.text("§6§lAdvanced Search"));
             
             List<String> lore = new ArrayList<>();
             lore.add("§7Total Entries: §a" + stats.get("total_entries"));
@@ -597,7 +601,7 @@ public class AdvancedSearchSystem {
             lore.add("");
             lore.add("§eClick to open search interface");
             
-            meta.setLore(lore);
+            meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         

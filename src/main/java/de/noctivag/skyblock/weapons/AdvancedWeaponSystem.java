@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.weapons;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -31,19 +36,19 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Weapon Progression
  */
 public class AdvancedWeaponSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerWeapons> playerWeapons = new ConcurrentHashMap<>();
     private final Map<WeaponType, WeaponConfig> weaponConfigs = new HashMap<>();
     private final Map<UUID, BukkitTask> weaponTasks = new ConcurrentHashMap<>();
     
-    public AdvancedWeaponSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedWeaponSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeWeaponConfigs();
         startWeaponUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeWeaponConfigs() {
@@ -229,7 +234,7 @@ public class AdvancedWeaponSystem implements Listener {
                     weapons.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L);
     }
     
     @EventHandler
@@ -242,7 +247,7 @@ public class AdvancedWeaponSystem implements Listener {
     }
     
     private void openWeaponGUI(Player player) {
-        player.sendMessage("§aWeapon GUI geöffnet!");
+        player.sendMessage(Component.text("§aWeapon GUI geöffnet!"));
     }
     
     public ItemStack createWeapon(WeaponType type, int level) {
@@ -252,7 +257,7 @@ public class AdvancedWeaponSystem implements Listener {
         ItemStack item = new ItemStack(config.getMaterial());
         ItemMeta meta = item.getItemMeta();
         
-        meta.setDisplayName(config.getDisplayName() + " §7Lv." + level);
+        meta.displayName(Component.text(config.getDisplayName() + " §7Lv." + level));
         List<String> lore = new ArrayList<>();
         lore.add(config.getDescription());
         lore.add("");
@@ -264,7 +269,7 @@ public class AdvancedWeaponSystem implements Listener {
         lore.add("");
         lore.add("§7Click to use ability!");
         
-        meta.setLore(lore);
+        meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
         item.setItemMeta(meta);
         
         return item;
@@ -392,11 +397,11 @@ public class AdvancedWeaponSystem implements Listener {
         
         public PlayerWeapons(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long timeDiff = currentTime - lastUpdate;
             
             if (timeDiff >= 60000) {

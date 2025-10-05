@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.events;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -18,6 +23,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Calendar System - Hypixel SkyBlock Style
@@ -30,19 +36,19 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Event participation tracking
  */
 public class CalendarSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerCalendarData> playerCalendarData = new ConcurrentHashMap<>();
     private final Map<String, CalendarEvent> events = new HashMap<>();
     private final Map<LocalDate, List<CalendarEvent>> eventsByDate = new HashMap<>();
     
-    public CalendarSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public CalendarSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeEvents();
         startCalendarUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeEvents() {
@@ -163,7 +169,7 @@ public class CalendarSystem implements Listener {
                 checkUpcomingEvents();
                 cleanupOldEvents();
             }
-        }.runTaskTimer(plugin, 0L, 20L * 60L); // Every minute
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L * 60L); // Every minute
     }
     
     private void updateCalendar() {
@@ -238,7 +244,7 @@ public class CalendarSystem implements Listener {
     }
     
     public void openCalendar(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§l📅 Event Calendar");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§l📅 Event Calendar"));
         
         // Current date header
         setupDateHeader(gui);
@@ -286,12 +292,12 @@ public class CalendarSystem implements Listener {
         ItemMeta meta = dateItem.getItemMeta();
         
         if (meta != null) {
-            meta.setDisplayName("§6§l" + dateStr);
-            meta.setLore(Arrays.asList(
+            meta.displayName(Component.text("§6§l" + dateStr));
+            meta.lore(Arrays.asList(
                 "§7Today's events and activities",
                 "",
                 "§eClick to view today's events"
-            ));
+            ).stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             dateItem.setItemMeta(meta);
         }
         
@@ -306,14 +312,14 @@ public class CalendarSystem implements Listener {
         ItemMeta meta = todayItem.getItemMeta();
         
         if (meta != null) {
-            meta.setDisplayName("§e§lToday's Events");
-            meta.setLore(Arrays.asList(
+            meta.displayName(Component.text("§e§lToday's Events"));
+            meta.lore(Arrays.asList(
                 "§7Active events for today:",
                 "",
                 "§7Events: §e" + todaysEvents.size(),
                 "",
                 "§eClick to view details"
-            ));
+            ).stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             todayItem.setItemMeta(meta);
         }
         
@@ -325,12 +331,12 @@ public class CalendarSystem implements Listener {
         ItemMeta meta = weeklyItem.getItemMeta();
         
         if (meta != null) {
-            meta.setDisplayName("§b§lWeekly View");
-            meta.setLore(Arrays.asList(
+            meta.displayName(Component.text("§b§lWeekly View"));
+            meta.lore(Arrays.asList(
                 "§7View events for the entire week",
                 "",
                 "§eClick to view weekly calendar"
-            ));
+            ).stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             weeklyItem.setItemMeta(meta);
         }
         
@@ -342,12 +348,12 @@ public class CalendarSystem implements Listener {
         ItemMeta meta = monthlyItem.getItemMeta();
         
         if (meta != null) {
-            meta.setDisplayName("§d§lMonthly Overview");
-            meta.setLore(Arrays.asList(
+            meta.displayName(Component.text("§d§lMonthly Overview"));
+            meta.lore(Arrays.asList(
                 "§7View all monthly events",
                 "",
                 "§eClick to view monthly calendar"
-            ));
+            ).stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             monthlyItem.setItemMeta(meta);
         }
         
@@ -398,8 +404,8 @@ public class CalendarSystem implements Listener {
         ItemMeta meta = backItem.getItemMeta();
         
         if (meta != null) {
-            meta.setDisplayName("§7§l← Back to Calendar");
-            meta.setLore(Arrays.asList("§7Return to main calendar"));
+            meta.displayName(Component.text("§7§l← Back to Calendar"));
+            meta.lore(Arrays.asList("§7Return to main calendar").stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             backItem.setItemMeta(meta);
         }
         
@@ -424,7 +430,7 @@ public class CalendarSystem implements Listener {
         
         if (meta != null) {
             String status = isEventActive(event) ? "§a§lACTIVE" : "§7§lUPCOMING";
-            meta.setDisplayName(event.getRarity().getColor() + event.getName() + " " + status);
+            meta.displayName(Component.text(event.getRarity().getColor() + event.getName() + " " + status));
             
             List<String> lore = new ArrayList<>();
             lore.add(event.getDescription());
@@ -439,7 +445,7 @@ public class CalendarSystem implements Listener {
                 lore.add("§7  " + reward);
             }
             
-            meta.setLore(lore);
+            meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         
@@ -551,7 +557,7 @@ public class CalendarSystem implements Listener {
         }
         
         public void participateInEvent(String eventId) {
-            eventParticipations.put(eventId, System.currentTimeMillis());
+            eventParticipations.put(eventId, java.lang.System.currentTimeMillis());
         }
         
         public void completeEvent(String eventId) {

@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.performance;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -17,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Resource-Management
  */
 public class PerformanceManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     
     // Task-Konsolidierung
     private final Map<String, Runnable> updateTasks = new ConcurrentHashMap<>();
@@ -29,8 +32,8 @@ public class PerformanceManager {
     private int updateCount = 0;
     private final long MAX_UPDATE_TIME = 50; // 50ms pro Tick
     
-    public PerformanceManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public PerformanceManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         startConsolidatedUpdateTask();
     }
     
@@ -50,7 +53,7 @@ public class PerformanceManager {
         new BukkitRunnable() {
             @Override
             public void run() {
-                long startTime = System.currentTimeMillis();
+                long startTime = java.lang.System.currentTimeMillis();
                 
                 // Batch-Update aller Tasks
                 for (Map.Entry<String, Runnable> entry : updateTasks.entrySet()) {
@@ -61,32 +64,32 @@ public class PerformanceManager {
                     if (shouldExecuteTask(taskName)) {
                         try {
                             task.run();
-                            lastUpdate.put(taskName, System.currentTimeMillis());
+                            lastUpdate.put(taskName, java.lang.System.currentTimeMillis());
                         } catch (Exception e) {
-                            plugin.getLogger().warning("Error in update task " + taskName + ": " + e.getMessage());
+                            SkyblockPlugin.getLogger().warning("Error in update task " + taskName + ": " + e.getMessage());
                         }
                     }
                     
                     // Performance-Limit: Max 50ms pro Tick
-                    if (System.currentTimeMillis() - startTime > MAX_UPDATE_TIME) {
-                        plugin.getLogger().warning("Update cycle took too long, skipping remaining tasks");
+                    if (java.lang.System.currentTimeMillis() - startTime > MAX_UPDATE_TIME) {
+                        SkyblockPlugin.getLogger().warning("Update cycle took too long, skipping remaining tasks");
                         break;
                     }
                 }
                 
                 // Performance-Metriken
-                long updateTime = System.currentTimeMillis() - startTime;
+                long updateTime = java.lang.System.currentTimeMillis() - startTime;
                 totalUpdateTime += updateTime;
                 updateCount++;
                 
                 if (updateCount % 100 == 0) { // Alle 5 Sekunden
                     double avgUpdateTime = (double) totalUpdateTime / updateCount;
                     if (avgUpdateTime > 30) { // > 30ms Durchschnitt
-                        plugin.getLogger().warning("High update time detected: " + avgUpdateTime + "ms average");
+                        SkyblockPlugin.getLogger().warning("High update time detected: " + avgUpdateTime + "ms average");
                     }
                 }
             }
-        }.runTaskTimer(plugin, 0L, 1L); // Jeden Tick prüfen, aber Tasks haben eigene Intervalle
+        }.runTaskTimer(SkyblockPlugin, 0L, 1L); // Jeden Tick prüfen, aber Tasks haben eigene Intervalle
     }
     
     /**
@@ -95,7 +98,7 @@ public class PerformanceManager {
     private boolean shouldExecuteTask(String taskName) {
         int interval = updateIntervals.get(taskName);
         long last = lastUpdate.get(taskName);
-        long current = System.currentTimeMillis();
+        long current = java.lang.System.currentTimeMillis();
         
         // Konvertiere Ticks zu Millisekunden (20 Ticks = 1 Sekunde)
         long intervalMs = interval * 50L;

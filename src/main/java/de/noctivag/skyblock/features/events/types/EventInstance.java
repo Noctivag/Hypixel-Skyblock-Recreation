@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.events.types;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class EventInstance {
         this.eventType = eventType;
         this.name = name;
         this.description = description;
-        this.startTime = System.currentTimeMillis();
+        this.startTime = java.lang.System.currentTimeMillis();
         this.endTime = 0;
         this.duration = duration;
         this.participants = new java.util.ArrayList<>();
@@ -106,7 +107,7 @@ public class EventInstance {
 
     public long getRemainingTime() {
         if (endTime == 0) {
-            return duration.getDuration() - (System.currentTimeMillis() - startTime);
+            return duration.getDuration() - (java.lang.System.currentTimeMillis() - startTime);
         }
         return 0;
     }

@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.engine.progression;
+import java.util.UUID;
 
 import de.noctivag.skyblock.core.api.Service;
 import de.noctivag.skyblock.core.api.SystemStatus;
@@ -158,7 +159,7 @@ public class EnhancedSkillProgressionSystem implements Service {
     public CompletableFuture<SkillProgressResult> addExperience(UUID playerId, HypixelSkillType skillType, double experience) {
         return CompletableFuture.supplyAsync(() -> {
             if (experience <= 0) {
-                return new SkillProgressResult(false, 0, 0, 0, "Invalid experience amount");
+                return new SkillProgressResult(playerId, skillType.name(), 0, 0, 0.0, 0.0, 0.0);
             }
             
             // Get or create player skill progress
@@ -178,7 +179,7 @@ public class EnhancedSkillProgressionSystem implements Service {
             // Calculate level ups
             int levelsGained = newLevel - oldLevel;
             double xpProgress = skillProgress.getXPProgressInLevel();
-            double xpToNext = skillProgress.getXPToNextLevel();
+            double xpToNext = skillProgress.getExperienceToNextLevel();
             
             // Check if player reached a milestone
             boolean reachedMilestone = isMilestoneLevel(skillType, newLevel);
@@ -186,7 +187,8 @@ public class EnhancedSkillProgressionSystem implements Service {
             String message = String.format("Added %.1f XP to %s (Level %d -> %d)", 
                 experience, skillType.getDisplayName(), oldLevel, newLevel);
             
-            return new SkillProgressResult(true, levelsGained, xpProgress, xpToNext, message);
+            return new SkillProgressResult(playerId, skillType.name(), oldLevel, newLevel, 
+                skillProgress.getTotalExperience() - experience, skillProgress.getTotalExperience(), experience);
         });
     }
     
@@ -216,7 +218,7 @@ public class EnhancedSkillProgressionSystem implements Service {
      * Get XP required for next level
      */
     public double getXPToNextLevel(UUID playerId, HypixelSkillType skillType) {
-        return getPlayerSkillProgress(playerId, skillType).getXPToNextLevel();
+        return getPlayerSkillProgress(playerId, skillType).getExperienceToNextLevel();
     }
     
     /**
@@ -322,8 +324,20 @@ public class EnhancedSkillProgressionSystem implements Service {
             }
         }
         
-        return new PlayerSkillStatistics(playerId, skills, totalLevels, totalXP, 
-            skillsAtMaxLevel, milestoneLevelsReached);
+        // Convert skills map to String -> SkillStatistics map
+        Map<String, SkillStatistics> skillsMap = new HashMap<>();
+        for (Map.Entry<HypixelSkillType, SkillProgress> entry : skills.entrySet()) {
+            SkillProgress progress = entry.getValue();
+            skillsMap.put(entry.getKey().name(), new SkillStatistics(
+                entry.getKey().name(), 
+                progress.getLevel(), 
+                progress.getTotalExperience()
+            ));
+        }
+        PlayerSkillStatistics stats = new PlayerSkillStatistics(playerId, skillsMap);
+        // Note: Additional statistics would need to be stored in the achievements map
+        // or new fields would need to be added to PlayerSkillStatistics
+        return stats;
     }
     
     /**

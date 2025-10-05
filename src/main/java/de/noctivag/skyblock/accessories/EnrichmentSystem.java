@@ -1,5 +1,9 @@
 package de.noctivag.skyblock.accessories;
 
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
@@ -10,10 +14,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 
 /**
  * EnrichmentSystem - Hypixel SkyBlock Enrichment System
@@ -26,17 +32,17 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class EnrichmentSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, Map<String, EnrichmentType>> playerEnrichments = new ConcurrentHashMap<>();
     private final Map<EnrichmentType, EnrichmentConfig> enrichmentConfigs = new HashMap<>();
     
-    public EnrichmentSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public EnrichmentSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
         initializeEnrichmentConfigs();
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeEnrichmentConfigs() {
@@ -105,7 +111,7 @@ public class EnrichmentSystem implements Listener {
     public void openEnrichmentGUI(Player player, String accessoryId) {
         AccessoryBagSystem.AccessoryConfig accessoryConfig = getAccessoryConfig(accessoryId);
         if (accessoryConfig == null || !canBeEnriched(accessoryConfig)) {
-            player.sendMessage("§cThis accessory cannot be enriched!");
+            player.sendMessage(Component.text("§cThis accessory cannot be enriched!"));
             return;
         }
         
@@ -216,13 +222,13 @@ public class EnrichmentSystem implements Listener {
     public boolean applyEnrichment(Player player, String accessoryId, EnrichmentType type) {
         AccessoryBagSystem.AccessoryConfig accessoryConfig = getAccessoryConfig(accessoryId);
         if (accessoryConfig == null || !canBeEnriched(accessoryConfig)) {
-            player.sendMessage("§cThis accessory cannot be enriched!");
+            player.sendMessage(Component.text("§cThis accessory cannot be enriched!"));
             return false;
         }
         
         EnrichmentConfig config = enrichmentConfigs.get(type);
         if (config == null) {
-            player.sendMessage("§cInvalid enrichment type!");
+            player.sendMessage(Component.text("§cInvalid enrichment type!"));
             return false;
         }
         

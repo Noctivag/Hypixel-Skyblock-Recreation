@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.listeners;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.gui.JoinMessageGUI;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.Player;
@@ -9,12 +12,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.meta.ItemMeta;
+import net.kyori.adventure.text.Component;
 
 public class JoinMessageGUIListener implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public JoinMessageGUIListener(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public JoinMessageGUIListener(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     @EventHandler
@@ -31,7 +35,7 @@ public class JoinMessageGUIListener implements Listener {
         if (display == null) return;
 
         if (display.contains("Zurück")) {
-            new de.noctivag.plugin.gui.MainMenu(plugin).open(player);
+            new de.noctivag.skyblock.gui.MainMenu(SkyblockPlugin).open(player);
             return;
         }
 
@@ -41,30 +45,30 @@ public class JoinMessageGUIListener implements Listener {
             case 19 -> {
                 if (rightClick) {
                     // Remove join message
-                    // plugin.clearJoinMessage(player); // TODO: Implement method in Plugin class
-                    player.sendMessage("§aJoin-Message entfernt!");
-                    new JoinMessageGUI(plugin).open(player);
+                    // SkyblockPlugin.clearJoinMessage(player); // TODO: Implement method in SkyblockPlugin class
+                    player.sendMessage(Component.text("§aJoin-Message entfernt!"));
+                    new JoinMessageGUI(SkyblockPlugin).open(player);
                 } else {
                     // Set join message - open chat input
                     player.closeInventory();
-                    player.sendMessage("§eGib die neue Join-Message ein (oder 'cancel' zum Abbrechen):");
-                    player.sendMessage("§cJoin-Message-System benötigt Chat-Input Integration");
+                    player.sendMessage(Component.text("§eGib die neue Join-Message ein (oder 'cancel' zum Abbrechen):"));
+                    player.sendMessage(Component.text("§cJoin-Message-System benötigt Chat-Input Integration"));
                 }
             }
             case 22 -> {
-                // boolean currentlyDisabled = plugin.isMessageDisabled(player.getName()); // TODO: Implement method in Plugin class
-                // plugin.setMessageEnabled(player.getName(), currentlyDisabled); // TODO: Implement method in Plugin class
+                // boolean currentlyDisabled = SkyblockPlugin.isMessageDisabled(player.getName()); // TODO: Implement method in SkyblockPlugin class
+                // SkyblockPlugin.setMessageEnabled(player.getName(), currentlyDisabled); // TODO: Implement method in SkyblockPlugin class
                 boolean currentlyDisabled = false; // Placeholder
                 player.sendMessage(currentlyDisabled ? "§aJoin-Messages aktiviert!" : "§cJoin-Messages deaktiviert!");
-                new JoinMessageGUI(plugin).open(player);
+                new JoinMessageGUI(SkyblockPlugin).open(player);
             }
-            case 25 -> new de.noctivag.plugin.gui.JoinMessagePresetsGUI(plugin).open(player);
-            case 28 -> player.sendMessage("§cDu hast keine Berechtigung für globale Einstellungen!");
+            case 25 -> new de.noctivag.skyblock.gui.JoinMessagePresetsGUI(SkyblockPlugin).open(player);
+            case 28 -> player.sendMessage(Component.text("§cDu hast keine Berechtigung für globale Einstellungen!"));
             case 31 -> {
-                // plugin.clearJoinMessage(player); // TODO: Implement method in Plugin class
-                // plugin.setMessageEnabled(player.getName(), true); // TODO: Implement method in Plugin class
-                player.sendMessage("§aAlle Join-Messages zurückgesetzt!");
-                new JoinMessageGUI(plugin).open(player);
+                // SkyblockPlugin.clearJoinMessage(player); // TODO: Implement method in SkyblockPlugin class
+                // SkyblockPlugin.setMessageEnabled(player.getName(), true); // TODO: Implement method in SkyblockPlugin class
+                player.sendMessage(Component.text("§aAlle Join-Messages zurückgesetzt!"));
+                new JoinMessageGUI(SkyblockPlugin).open(player);
             }
         }
     }

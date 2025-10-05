@@ -15,7 +15,7 @@ public class AccessoryEffect {
     public AccessoryEffect(AccessoryType accessoryType, int level, int durationSeconds) {
         this.accessoryType = accessoryType;
         this.level = level;
-        this.expirationTime = System.currentTimeMillis() + (durationSeconds * 1000L);
+        this.expirationTime = java.lang.System.currentTimeMillis() + (durationSeconds * 1000L);
     }
     
     public AccessoryType getAccessoryType() {
@@ -31,11 +31,11 @@ public class AccessoryEffect {
     }
     
     public boolean isExpired() {
-        return System.currentTimeMillis() >= expirationTime;
+        return java.lang.System.currentTimeMillis() >= expirationTime;
     }
     
     public int getRemainingTime() {
-        long remaining = expirationTime - System.currentTimeMillis();
+        long remaining = expirationTime - java.lang.System.currentTimeMillis();
         return (int) Math.max(0, remaining / 1000);
     }
     

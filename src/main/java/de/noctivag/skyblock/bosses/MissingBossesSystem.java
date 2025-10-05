@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.bosses;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.CorePlatform;
 import de.noctivag.skyblock.core.PlayerProfile;
 import org.bukkit.Location;
@@ -23,13 +27,13 @@ import java.util.*;
  */
 public class MissingBossesSystem {
 
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CorePlatform corePlatform;
     private final Map<UUID, BossFight> activeBossFights;
     private final Map<String, BossConfig> bossConfigs;
 
-    public MissingBossesSystem(SkyblockPlugin plugin, CorePlatform corePlatform) {
-        this.plugin = plugin;
+    public MissingBossesSystem(SkyblockPlugin SkyblockPlugin, CorePlatform corePlatform) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.corePlatform = corePlatform;
         this.activeBossFights = new HashMap<>();
         this.bossConfigs = new HashMap<>();
@@ -83,9 +87,9 @@ public class MissingBossesSystem {
         BossFight fight = new BossFight(boss, player, config);
         activeBossFights.put(boss.getUniqueId(), fight);
 
-        // Use plugin logger so the field is accessed
-        if (plugin != null) {
-            plugin.getLogger().info("Spawned boss '" + config.getName() + "' for player " + player.getName());
+        // Use SkyblockPlugin logger so the field is accessed
+        if (SkyblockPlugin != null) {
+            SkyblockPlugin.getLogger().info("Spawned boss '" + config.getName() + "' for player " + player.getName());
         }
 
         player.sendMessage("§a§lBOSS SPAWNED: " + config.getName());
@@ -103,12 +107,12 @@ public class MissingBossesSystem {
         // Give rewards
         giveBossRewards(player, config);
 
-        if (plugin != null) {
-            plugin.getLogger().info("Boss '" + config.getName() + "' defeated by " + player.getName());
+        if (SkyblockPlugin != null) {
+            SkyblockPlugin.getLogger().info("Boss '" + config.getName() + "' defeated by " + player.getName());
         }
 
         player.sendMessage("§a§lBOSS DEFEATED: " + config.getName());
-        player.sendMessage("§7Rewards have been given!");
+        player.sendMessage(Component.text("§7Rewards have been given!"));
     }
 
     private void giveBossRewards(Player player, BossConfig config) {
@@ -149,7 +153,7 @@ public class MissingBossesSystem {
 
     public void startBossFight(Player player, String bossType) {
         if (activeBossFights.values().stream().anyMatch(fight -> fight.getPlayer().equals(player))) {
-            player.sendMessage("§cYou are already in a boss fight!");
+            player.sendMessage(Component.text("§cYou are already in a boss fight!"));
             return;
         }
 
@@ -223,7 +227,7 @@ public class MissingBossesSystem {
             this.boss = boss;
             this.player = player;
             this.config = config;
-            this.startTime = System.currentTimeMillis();
+            this.startTime = java.lang.System.currentTimeMillis();
         }
 
         // Getters
@@ -231,6 +235,6 @@ public class MissingBossesSystem {
         public Player getPlayer() { return player; }
         public BossConfig getConfig() { return config; }
         public long getStartTime() { return startTime; }
-        public long getDuration() { return System.currentTimeMillis() - startTime; }
+        public long getDuration() { return java.lang.System.currentTimeMillis() - startTime; }
     }
 }

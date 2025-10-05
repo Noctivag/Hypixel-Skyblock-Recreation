@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.armor;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -32,19 +37,19 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Set Bonuses
  */
 public class AdvancedArmorSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerArmor> playerArmor = new ConcurrentHashMap<>();
     private final Map<ArmorType, ArmorConfig> armorConfigs = new HashMap<>();
     private final Map<UUID, BukkitTask> armorTasks = new ConcurrentHashMap<>();
     
-    public AdvancedArmorSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedArmorSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeArmorConfigs();
         startArmorUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeArmorConfigs() {
@@ -258,7 +263,7 @@ public class AdvancedArmorSystem implements Listener {
                     armor.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L);
     }
     
     @EventHandler
@@ -271,7 +276,7 @@ public class AdvancedArmorSystem implements Listener {
     }
     
     private void openArmorGUI(Player player) {
-        player.sendMessage("§aArmor GUI geöffnet!");
+        player.sendMessage(Component.text("§aArmor GUI geöffnet!"));
     }
     
     public ItemStack createArmorPiece(ArmorType type, ArmorPiece piece, int level) {
@@ -282,7 +287,7 @@ public class AdvancedArmorSystem implements Listener {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         
-        meta.setDisplayName(config.getDisplayName() + " " + piece.getDisplayName() + " §7Lv." + level);
+        meta.displayName(Component.text(config.getDisplayName() + " " + piece.getDisplayName() + " §7Lv." + level));
         List<String> lore = new ArrayList<>();
         lore.add(config.getDescription());
         lore.add("");
@@ -295,7 +300,7 @@ public class AdvancedArmorSystem implements Listener {
         lore.add("");
         lore.add("§7Click to use ability!");
         
-        meta.setLore(lore);
+        meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
         item.setItemMeta(meta);
         
         return item;
@@ -451,11 +456,11 @@ public class AdvancedArmorSystem implements Listener {
         
         public PlayerArmor(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long timeDiff = currentTime - lastUpdate;
             
             if (timeDiff >= 60000) {

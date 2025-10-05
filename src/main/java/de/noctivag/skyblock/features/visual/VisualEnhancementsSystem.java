@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.features.visual;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -26,7 +30,7 @@ import java.util.*;
  */
 public class VisualEnhancementsSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<String, HealthBarStyle> healthBarStyles = new HashMap<>();
     private final Map<String, ColorScheme> colorSchemes = new HashMap<>();
@@ -35,8 +39,8 @@ public class VisualEnhancementsSystem implements Listener {
     private final Map<UUID, String> playerHealthBarStyles = new HashMap<>();
     private final Map<UUID, String> playerColorSchemes = new HashMap<>();
     
-    public VisualEnhancementsSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public VisualEnhancementsSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeHealthBarStyles();
         initializeColorSchemes();
@@ -256,14 +260,14 @@ public class VisualEnhancementsSystem implements Listener {
             public void run() {
                 updatePlayerVisuals();
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Jede Sekunde
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Jede Sekunde
     }
     
     /**
      * Aktualisiert visuelle Elemente für alle Spieler
      */
     private void updatePlayerVisuals() {
-        for (Player player : plugin.getServer().getOnlinePlayers()) {
+        for (Player player : SkyblockPlugin.getServer().getOnlinePlayers()) {
             updatePlayerHealthBar(player);
             updatePlayerHUD(player);
         }

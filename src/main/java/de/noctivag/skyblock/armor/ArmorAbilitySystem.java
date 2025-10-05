@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.armor;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -30,17 +35,17 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Ability Activation
  */
 public class ArmorAbilitySystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerArmorAbilities> playerArmorAbilities = new ConcurrentHashMap<>();
     private final Map<UUID, BukkitTask> armorAbilityTasks = new ConcurrentHashMap<>();
     
-    public ArmorAbilitySystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public ArmorAbilitySystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         startArmorAbilityUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void startArmorAbilityUpdateTask() {
@@ -52,7 +57,7 @@ public class ArmorAbilitySystem implements Listener {
                     abilities.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L);
     }
     
     @EventHandler
@@ -161,7 +166,7 @@ public class ArmorAbilitySystem implements Listener {
     
     private void activateSuperiorDragonAbility(Player player, ArmorAbilityConfig config) {
         // Superior Dragon: All-around stat boost
-        player.sendMessage("§6Superior Dragon Ability: §7All stats increased by 25% for 30 seconds!");
+        player.sendMessage(Component.text("§6Superior Dragon Ability: §7All stats increased by 25% for 30 seconds!"));
         // Apply stat boost effect
     }
     
@@ -171,88 +176,88 @@ public class ArmorAbilitySystem implements Listener {
         int effect = random.nextInt(4);
         switch (effect) {
             case 0:
-                player.sendMessage("§5Unstable Dragon Ability: §7Speed boost activated!");
+                player.sendMessage(Component.text("§5Unstable Dragon Ability: §7Speed boost activated!"));
                 break;
             case 1:
-                player.sendMessage("§5Unstable Dragon Ability: §7Strength boost activated!");
+                player.sendMessage(Component.text("§5Unstable Dragon Ability: §7Strength boost activated!"));
                 break;
             case 2:
-                player.sendMessage("§5Unstable Dragon Ability: §7Defense boost activated!");
+                player.sendMessage(Component.text("§5Unstable Dragon Ability: §7Defense boost activated!"));
                 break;
             case 3:
-                player.sendMessage("§5Unstable Dragon Ability: §7Critical chance boost activated!");
+                player.sendMessage(Component.text("§5Unstable Dragon Ability: §7Critical chance boost activated!"));
                 break;
         }
     }
     
     private void activateStrongDragonAbility(Player player, ArmorAbilityConfig config) {
         // Strong Dragon: Damage boost
-        player.sendMessage("§cStrong Dragon Ability: §7Damage increased by 50% for 20 seconds!");
+        player.sendMessage(Component.text("§cStrong Dragon Ability: §7Damage increased by 50% for 20 seconds!"));
     }
     
     private void activateYoungDragonAbility(Player player, ArmorAbilityConfig config) {
         // Young Dragon: Speed boost
-        player.sendMessage("§fYoung Dragon Ability: §7Speed increased by 100% for 15 seconds!");
+        player.sendMessage(Component.text("§fYoung Dragon Ability: §7Speed increased by 100% for 15 seconds!"));
     }
     
     private void activateOldDragonAbility(Player player, ArmorAbilityConfig config) {
         // Old Dragon: Defense boost
-        player.sendMessage("§7Old Dragon Ability: §7Defense increased by 75% for 25 seconds!");
+        player.sendMessage(Component.text("§7Old Dragon Ability: §7Defense increased by 75% for 25 seconds!"));
     }
     
     private void activateProtectorDragonAbility(Player player, ArmorAbilityConfig config) {
         // Protector Dragon: Maximum defense
-        player.sendMessage("§aProtector Dragon Ability: §7Maximum defense activated for 30 seconds!");
+        player.sendMessage(Component.text("§aProtector Dragon Ability: §7Maximum defense activated for 30 seconds!"));
     }
     
     private void activateWiseDragonAbility(Player player, ArmorAbilityConfig config) {
         // Wise Dragon: Intelligence and mana boost
-        player.sendMessage("§bWise Dragon Ability: §7Intelligence and mana increased by 100% for 20 seconds!");
+        player.sendMessage(Component.text("§bWise Dragon Ability: §7Intelligence and mana increased by 100% for 20 seconds!"));
     }
     
     private void activateShadowAssassinAbility(Player player, ArmorAbilityConfig config) {
         // Shadow Assassin: Stealth and speed
-        player.sendMessage("§5Shadow Assassin Ability: §7Stealth mode activated for 10 seconds!");
+        player.sendMessage(Component.text("§5Shadow Assassin Ability: §7Stealth mode activated for 10 seconds!"));
     }
     
     private void activateAdaptiveArmorAbility(Player player, ArmorAbilityConfig config) {
         // Adaptive Armor: Adapts to current situation
-        player.sendMessage("§eAdaptive Armor Ability: §7Armor adapted to current environment!");
+        player.sendMessage(Component.text("§eAdaptive Armor Ability: §7Armor adapted to current environment!"));
     }
     
     private void activateFrozenBlazeAbility(Player player, ArmorAbilityConfig config) {
         // Frozen Blaze: Ice and fire effects
-        player.sendMessage("§bFrozen Blaze Ability: §7Ice and fire effects activated!");
+        player.sendMessage(Component.text("§bFrozen Blaze Ability: §7Ice and fire effects activated!"));
     }
     
     private void activateYetiArmorAbility(Player player, ArmorAbilityConfig config) {
         // Yeti Armor: Cold immunity and strength
-        player.sendMessage("§fYeti Armor Ability: §7Cold immunity and strength boost activated!");
+        player.sendMessage(Component.text("§fYeti Armor Ability: §7Cold immunity and strength boost activated!"));
     }
     
     private void activateRevenantArmorAbility(Player player, ArmorAbilityConfig config) {
         // Revenant Armor: Undead immunity and healing
-        player.sendMessage("§2Revenant Armor Ability: §7Undead immunity and healing activated!");
+        player.sendMessage(Component.text("§2Revenant Armor Ability: §7Undead immunity and healing activated!"));
     }
     
     private void activateTarantulaArmorAbility(Player player, ArmorAbilityConfig config) {
         // Tarantula Armor: Spider abilities and web immunity
-        player.sendMessage("§8Tarantula Armor Ability: §7Spider abilities and web immunity activated!");
+        player.sendMessage(Component.text("§8Tarantula Armor Ability: §7Spider abilities and web immunity activated!"));
     }
     
     private void activateSvenArmorAbility(Player player, ArmorAbilityConfig config) {
         // Sven Armor: Wolf pack abilities
-        player.sendMessage("§fSven Armor Ability: §7Wolf pack abilities activated!");
+        player.sendMessage(Component.text("§fSven Armor Ability: §7Wolf pack abilities activated!"));
     }
     
     private void activateVoidgloomArmorAbility(Player player, ArmorAbilityConfig config) {
         // Voidgloom Armor: Enderman abilities and void immunity
-        player.sendMessage("§5Voidgloom Armor Ability: §7Enderman abilities and void immunity activated!");
+        player.sendMessage(Component.text("§5Voidgloom Armor Ability: §7Enderman abilities and void immunity activated!"));
     }
     
     private void activateInfernoArmorAbility(Player player, ArmorAbilityConfig config) {
         // Inferno Armor: Fire abilities and fire immunity
-        player.sendMessage("§6Inferno Armor Ability: §7Fire abilities and fire immunity activated!");
+        player.sendMessage(Component.text("§6Inferno Armor Ability: §7Fire abilities and fire immunity activated!"));
     }
     
     private void applyArmorDamageBonuses(Player player, EntityDamageByEntityEvent event) {
@@ -407,11 +412,11 @@ public class ArmorAbilitySystem implements Listener {
         
         public PlayerArmorAbilities(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long timeDiff = currentTime - lastUpdate;
             
             if (timeDiff >= 60000) {
@@ -425,19 +430,19 @@ public class ArmorAbilitySystem implements Listener {
         }
         
         public void setCooldown(ArmorSetType armorSet, int cooldownSeconds) {
-            cooldowns.put(armorSet, System.currentTimeMillis() + (cooldownSeconds * 1000L));
+            cooldowns.put(armorSet, java.lang.System.currentTimeMillis() + (cooldownSeconds * 1000L));
             totalAbilitiesUsed++;
         }
         
         public boolean isOnCooldown(ArmorSetType armorSet) {
             Long cooldownEnd = cooldowns.get(armorSet);
-            return cooldownEnd != null && System.currentTimeMillis() < cooldownEnd;
+            return cooldownEnd != null && java.lang.System.currentTimeMillis() < cooldownEnd;
         }
         
         public long getCooldownRemaining(ArmorSetType armorSet) {
             Long cooldownEnd = cooldowns.get(armorSet);
             if (cooldownEnd == null) return 0;
-            long remaining = (cooldownEnd - System.currentTimeMillis()) / 1000;
+            long remaining = (cooldownEnd - java.lang.System.currentTimeMillis()) / 1000;
             return Math.max(0, remaining);
         }
         

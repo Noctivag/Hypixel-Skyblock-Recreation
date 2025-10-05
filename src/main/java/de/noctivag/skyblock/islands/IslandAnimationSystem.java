@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.islands;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -17,13 +22,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * Compatible with Multi-Server System
  */
 public class IslandAnimationSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, IslandAnimation> activeIslandAnimations = new ConcurrentHashMap<>();
     private final Map<UUID, BukkitTask> islandAnimationTasks = new ConcurrentHashMap<>();
     
-    public IslandAnimationSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public IslandAnimationSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
     }
     
@@ -46,8 +51,8 @@ public class IslandAnimationSystem {
         
         // Send message to player
         if (player != null) {
-            player.sendMessage("§a§l✨ Your island has been created!");
-            player.sendMessage("§7Welcome to your new adventure!");
+            player.sendMessage(Component.text("§a§l✨ Your island has been created!"));
+            player.sendMessage(Component.text("§7Welcome to your new adventure!"));
         }
     }
     
@@ -72,9 +77,9 @@ public class IslandAnimationSystem {
         
         // Send message to player
         if (player != null) {
-            player.sendMessage("§6§l🎉 Island Level Up!");
+            player.sendMessage(Component.text("§6§l🎉 Island Level Up!"));
             player.sendMessage("§7Your island is now level §e" + newLevel + "§7!");
-            player.sendMessage("§7New features and areas unlocked!");
+            player.sendMessage(Component.text("§7New features and areas unlocked!"));
         }
     }
     
@@ -97,9 +102,9 @@ public class IslandAnimationSystem {
         
         // Send message to player
         if (player != null) {
-            player.sendMessage("§b§l📈 Island Expanded!");
+            player.sendMessage(Component.text("§b§l📈 Island Expanded!"));
             player.sendMessage("§7Your island size is now §e" + newSize + "x" + newSize + "§7!");
-            player.sendMessage("§7More space for your adventures!");
+            player.sendMessage(Component.text("§7More space for your adventures!"));
         }
     }
     
@@ -122,8 +127,8 @@ public class IslandAnimationSystem {
         
         // Send message to player
         if (player != null) {
-            player.sendMessage("§c§l💥 Island Destroyed!");
-            player.sendMessage("§7Your island has been removed!");
+            player.sendMessage(Component.text("§c§l💥 Island Destroyed!"));
+            player.sendMessage(Component.text("§7Your island has been removed!"));
         }
     }
     
@@ -146,7 +151,7 @@ public class IslandAnimationSystem {
         
         // Send message to player
         if (player != null) {
-            player.sendMessage("§d§l🌍 Teleporting to your island...");
+            player.sendMessage(Component.text("§d§l🌍 Teleporting to your island..."));
         }
     }
     
@@ -169,7 +174,7 @@ public class IslandAnimationSystem {
         
         // Send message to player
         if (player != null) {
-            player.sendMessage("§e§l⚡ Island Upgraded!");
+            player.sendMessage(Component.text("§e§l⚡ Island Upgraded!"));
             player.sendMessage("§7" + upgradeType + " has been upgraded!");
         }
     }
@@ -232,7 +237,7 @@ public class IslandAnimationSystem {
         
         // Send message to player
         if (player != null) {
-            player.sendMessage("§a§l🎉 Special Island Event!");
+            player.sendMessage(Component.text("§a§l🎉 Special Island Event!"));
             player.sendMessage("§7" + eventType + " is happening on your island!");
         }
     }
@@ -260,7 +265,7 @@ public class IslandAnimationSystem {
                 animation.play();
                 ticks++;
             }
-        }.runTaskTimer(plugin, 0L, 1L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 1L);
         
         islandAnimationTasks.put(islandId, task);
     }
@@ -331,9 +336,9 @@ public class IslandAnimationSystem {
         }
         
         public void play() {
-            if (System.currentTimeMillis() - lastPlayed >= interval) {
+            if (java.lang.System.currentTimeMillis() - lastPlayed >= interval) {
                 location.getWorld().spawnParticle(particle, location, count, offsetX, offsetY, offsetZ, 0.1);
-                lastPlayed = System.currentTimeMillis();
+                lastPlayed = java.lang.System.currentTimeMillis();
             }
         }
     }
@@ -354,9 +359,9 @@ public class IslandAnimationSystem {
         }
         
         public void play() {
-            if (System.currentTimeMillis() - lastPlayed >= delay) {
+            if (java.lang.System.currentTimeMillis() - lastPlayed >= delay) {
                 location.getWorld().playSound(location, sound, volume, pitch);
-                lastPlayed = System.currentTimeMillis();
+                lastPlayed = java.lang.System.currentTimeMillis();
             }
         }
     }

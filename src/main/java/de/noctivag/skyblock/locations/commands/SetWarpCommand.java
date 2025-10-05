@@ -1,17 +1,21 @@
 package de.noctivag.skyblock.locations.commands;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class SetWarpCommand implements CommandExecutor {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public SetWarpCommand(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public SetWarpCommand(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     @Override
@@ -23,13 +27,13 @@ public class SetWarpCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        if (!player.hasPermission("plugin.admin")) {
-            player.sendMessage("§cDazu hast du keine Berechtigung!");
+        if (!player.hasPermission("SkyblockPlugin.admin")) {
+            player.sendMessage(Component.text("§cDazu hast du keine Berechtigung!"));
             return true;
         }
 
         if (args.length < 1) {
-            player.sendMessage("§cVerwendung: /setwarp <Name> [Berechtigung] [Beschreibung]");
+            player.sendMessage(Component.text("§cVerwendung: /setwarp <Name> [Berechtigung] [Beschreibung]"));
             return true;
         }
 
@@ -42,7 +46,7 @@ public class SetWarpCommand implements CommandExecutor {
             description.append(args[i]).append(" ");
         }
 
-        plugin.getLocationManager().setWarp(warpName, player.getLocation(),
+        SkyblockPlugin.getLocationManager().setWarp(warpName, player.getLocation(),
             permission, description.toString().trim());
 
         player.sendMessage("§aWarp §e" + warpName + " §awurde gesetzt!");

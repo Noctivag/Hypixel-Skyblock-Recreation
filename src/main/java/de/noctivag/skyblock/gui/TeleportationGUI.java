@@ -1,171 +1,140 @@
 package de.noctivag.skyblock.gui;
-import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
-import org.bukkit.Bukkit;
+import org.bukkit.event.inventory.ClickType;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 
 import java.util.Arrays;
 
 /**
- * Teleportation GUI - Teleportation und Navigation
+ * Teleportation GUI - Advanced teleportation and navigation
  */
-public class TeleportationGUI {
-    
-    private final SkyblockPlugin plugin;
-    
-    public TeleportationGUI(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+public class TeleportationGUI extends CustomGUI {
+    private final SkyblockPlugin SkyblockPlugin;
+    private final Player player;
+
+    public TeleportationGUI(SkyblockPlugin SkyblockPlugin, Player player) {
+        super(54, Component.text("§6§l🧭 Teleportation").color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD));
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.player = player;
+        setupItems();
+        playOpenSound();
     }
-    
-    public void openTeleportationGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lTeleportation");
-        
-        // Main Locations
-        setItem(gui, 10, Material.GRASS_BLOCK, "§a§lSpawn",
-            "§7Hauptspawn",
-            "§7• Server Spawn",
-            "§7• Safe Zone",
-            "§7• Welcome Area",
-            "",
-            "§eKlicke zum Teleportieren");
-            
-        setItem(gui, 11, Material.DIAMOND_ORE, "§b§lMining World",
-            "§7Mining-Welt",
-            "§7• Ores & Resources",
-            "§7• Mining Areas",
-            "§7• Mining Events",
-            "",
-            "§eKlicke zum Teleportieren");
-            
-        setItem(gui, 12, Material.WHEAT, "§a§lFarming World",
-            "§7Farming-Welt",
-            "§7• Crops & Farming",
-            "§7• Farming Areas",
-            "§7• Farming Events",
-            "",
-            "§eKlicke zum Teleportieren");
-            
-        setItem(gui, 13, Material.FISHING_ROD, "§9§lFishing World",
-            "§7Fishing-Welt",
-            "§7• Fishing Spots",
-            "§7• Fishing Areas",
-            "§7• Fishing Events",
-            "",
-            "§eKlicke zum Teleportieren");
-            
-        setItem(gui, 14, Material.OAK_LOG, "§6§lForaging World",
-            "§7Foraging-Welt",
-            "§7• Trees & Wood",
-            "§7• Foraging Areas",
-            "§7• Foraging Events",
-            "",
-            "§eKlicke zum Teleportieren");
-            
-        // Special Locations
-        setItem(gui, 19, Material.ENDER_PEARL, "§d§lEnd World",
-            "§7End-Dimension",
-            "§7• End Islands",
-            "§7• End Cities",
-            "§7• End Bosses",
-            "",
-            "§eKlicke zum Teleportieren");
-            
-        setItem(gui, 20, Material.NETHERRACK, "§c§lNether World",
-            "§7Nether-Dimension",
-            "§7• Nether Fortresses",
-            "§7• Nether Areas",
-            "§7• Nether Bosses",
-            "",
-            "§eKlicke zum Teleportieren");
-            
-        setItem(gui, 21, Material.STONE_BRICKS, "§7§lDungeons",
-            "§7Dungeon-Bereiche",
-            "§7• Dungeon Entrances",
-            "§7• Dungeon Areas",
-            "§7• Dungeon Bosses",
-            "",
-            "§eKlicke zum Öffnen");
-            
-        setItem(gui, 22, Material.NETHER_STAR, "§5§lBoss Areas",
-            "§7Boss-Bereiche",
-            "§7• World Bosses",
-            "§7• Raid Bosses",
-            "§7• Special Bosses",
-            "",
-            "§eKlicke zum Öffnen");
-            
-        setItem(gui, 23, Material.EMERALD, "§a§lMarket",
-            "§7Markt-Bereich",
-            "§7• Auction House",
-            "§7• Bazaar",
-            "§7• NPC Shops",
-            "",
-            "§eKlicke zum Teleportieren");
-            
-        // Personal Locations
-        setItem(gui, 28, Material.GRASS_BLOCK, "§a§lMy Island",
-            "§7Deine Insel",
-            "§7• Private Island",
-            "§7• Island Home",
-            "§7• Island Spawn",
-            "",
-            "§eKlicke zum Teleportieren");
-            
-        setItem(gui, 29, Material.RED_BED, "§c§lMy Home",
-            "§7Dein Zuhause",
-            "§7• Personal Home",
-            "§7• Home Location",
-            "§7• Home Settings",
-            "",
-            "§eKlicke zum Teleportieren");
-            
-        setItem(gui, 30, Material.COMPASS, "§e§lMy Warps",
-            "§7Deine Warps",
-            "§7• Personal Warps",
-            "§7• Warp Management",
-            "§7• Warp Settings",
-            "",
-            "§eKlicke zum Öffnen");
-            
-        // Teleportation Features
-        setItem(gui, 37, Material.ENDER_PEARL, "§d§lRandom Teleport",
-            "§7Zufällige Teleportation",
-            "§7• RTP Command",
-            "§7• Random Location",
-            "§7• Safe Teleportation",
-            "",
-            "§eKlicke zum Teleportieren");
-            
-        setItem(gui, 40, Material.CLOCK, "§e§lTeleport History",
-            "§7Teleportations-Verlauf",
-            "§7• Last Locations",
-            "§7• Teleport History",
-            "§7• Back Command",
-            "",
-            "§eKlicke zum Öffnen");
-            
-        // Navigation
-        setItem(gui, 45, Material.ARROW, "§7« Back",
-            "§7Zurück zum Hauptmenü");
-            
-        setItem(gui, 49, Material.BARRIER, "§c§lClose",
-            "§7GUI schließen");
-            
-        player.openInventory(gui);
+
+    private void setupItems() {
+        // Header
+        setItem(4, createGuiItem(Material.COMPASS, "§6§l🧭 Teleportation",
+            "§7Advanced teleportation and navigation",
+            "§eChoose your destination"));
+
+        // Home System
+        setItem(10, createGuiItem(Material.RED_BED, "§a§l🏠 Home System",
+            "§7Teleport to your homes",
+            "§7• Multiple homes support",
+            "§7• Set and manage homes",
+            "§eClick to open"));
+
+        // TPA System
+        setItem(11, createGuiItem(Material.ENDER_PEARL, "§b§l📞 TPA System",
+            "§7Teleport to other players",
+            "§7• Send teleport requests",
+            "§7• Accept/deny requests",
+            "§eClick to open"));
+
+        // Random Teleport
+        setItem(12, createGuiItem(Material.MAGENTA_GLAZED_TERRACOTTA, "§d§l🎲 Random Teleport",
+            "§7Teleport to random locations",
+            "§7• Safe teleportation",
+            "§7• Cooldown system",
+            "§eClick to teleport"));
+
+        // Spawn
+        setItem(13, createGuiItem(Material.BEACON, "§e§l⭐ Spawn",
+            "§7Teleport to server spawn",
+            "§7• Main spawn location",
+            "§7• Always available",
+            "§eClick to teleport"));
+
+        // Warps
+        setItem(14, createGuiItem(Material.ENDER_EYE, "§5§l🌍 Warps",
+            "§7Access warp system",
+            "§7• Public and private warps",
+            "§7• Categorized warps",
+            "§eClick to open"));
+
+        // Back
+        setItem(49, createGuiItem(Material.BARRIER, "§c§lBack",
+            "§7Return to main menu"));
     }
-    
-    private void setItem(Inventory gui, int slot, Material material, String name, String... lore) {
+
+    public void onClick(Player player, int slot, ItemStack item, ClickType clickType) {
+        switch (slot) {
+            case 10 -> openHomeGUI(player);
+            case 11 -> openTPAGUI(player);
+            case 12 -> performRandomTeleport(player);
+            case 13 -> teleportToSpawn(player);
+            case 14 -> openWarpsGUI(player);
+            case 49 -> {
+                player.closeInventory();
+                new UnifiedMainMenuSystem(SkyblockPlugin, player, UnifiedMainMenuSystem.MenuMode.ENHANCED).open(player);
+            }
+        }
+    }
+
+    private void openHomeGUI(Player player) {
+        player.sendMessage(Component.text("§aHome-System wird geöffnet..."));
+        // TODO: Implement home GUI
+    }
+
+    private void openTPAGUI(Player player) {
+        player.sendMessage(Component.text("§aTPA-System wird geöffnet..."));
+        // TODO: Implement TPA GUI
+    }
+
+    private void performRandomTeleport(Player player) {
+        player.sendMessage(Component.text("§aRandom Teleport wird ausgeführt..."));
+        // TODO: Implement random teleport
+    }
+
+    private void teleportToSpawn(Player player) {
+        if (player.getWorld().getSpawnLocation() != null) {
+            player.teleport(player.getWorld().getSpawnLocation());
+            player.sendMessage(Component.text("§aDu wurdest zum Spawn teleportiert!"));
+        } else {
+            player.sendMessage(Component.text("§cSpawn-Location nicht gefunden!"));
+        }
+    }
+
+    private void openWarpsGUI(Player player) {
+        new WarpGUI(SkyblockPlugin, player).open(player);
+    }
+
+    private void playOpenSound() {
+        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+    }
+
+    public ItemStack createGuiItem(Material material, String name, String... lore) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
+        
         if (meta != null) {
-            meta.setDisplayName(name);
-            meta.setLore(Arrays.asList(lore));
+            meta.displayName(Component.text(name));
+            if (lore.length > 0) {
+                meta.lore(java.util.Arrays.stream(lore).map(Component::text).collect(java.util.stream.Collectors.toList()));
+            }
             item.setItemMeta(meta);
         }
-        gui.setItem(slot, item);
+        
+        return item;
     }
 }

@@ -1,6 +1,9 @@
 package de.noctivag.skyblock.commands;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.multiserver.CentralDatabaseSystem;
 import de.noctivag.skyblock.multiserver.HypixelStyleProxySystem;
 import net.kyori.adventure.text.Component;
@@ -22,13 +25,13 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public class MultiServerCommands implements CommandExecutor, TabCompleter {
 
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final HypixelStyleProxySystem proxySystem;
 
-    public MultiServerCommands(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.proxySystem = plugin.getHypixelProxySystem();
-        CentralDatabaseSystem centralDatabase = plugin.getCentralDatabaseSystem();
+    public MultiServerCommands(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.proxySystem = SkyblockPlugin.getHypixelProxySystem();
+        CentralDatabaseSystem centralDatabase = SkyblockPlugin.getCentralDatabaseSystem();
     }
 
     @Override

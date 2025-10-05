@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.carpentry;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -16,6 +20,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Advanced Carpentry System - Hypixel Skyblock Style
@@ -23,20 +28,20 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AdvancedCarpentrySystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerCarpentryData> playerCarpentryData = new ConcurrentHashMap<>();
     private final Map<FurnitureType, FurnitureConfig> furnitureConfigs = new HashMap<>();
     private final Map<CarpentryLocation, CarpentryConfig> carpentryConfigs = new HashMap<>();
     
-    public AdvancedCarpentrySystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedCarpentrySystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
         initializeFurnitureConfigs();
         initializeCarpentryConfigs();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeFurnitureConfigs() {
@@ -287,7 +292,7 @@ public class AdvancedCarpentrySystem implements Listener {
         addGUIItem(gui, 53, Material.DIAMOND_SWORD, "§6§lBuilding Sword", "§7A tool for building");
         
         player.openInventory(gui);
-        player.sendMessage("§aCarpentry GUI opened!");
+        player.sendMessage(Component.text("§aCarpentry GUI opened!"));
     }
     
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String description) {

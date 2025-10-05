@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.items;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -17,24 +21,25 @@ import net.kyori.adventure.text.Component;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Hypixel Skyblock Items System - Comprehensive Item Collection
  */
 public class HypixelSkyblockItemsSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerItemData> playerItemData = new ConcurrentHashMap<>();
     private final Map<ItemCategory, List<HypixelItem>> itemsByCategory = new HashMap<>();
     private final Map<UUID, BukkitTask> itemTasks = new ConcurrentHashMap<>();
     
-    public HypixelSkyblockItemsSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public HypixelSkyblockItemsSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeAllItems();
         startItemUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeAllItems() {
@@ -270,7 +275,7 @@ public class HypixelSkyblockItemsSystem implements Listener {
                     itemData.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L * 60L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L * 60L);
     }
     
     @EventHandler
@@ -291,7 +296,7 @@ public class HypixelSkyblockItemsSystem implements Listener {
     }
     
     public void openItemsGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lHypixel Skyblock Items");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lHypixel Skyblock Items"));
         
         addGUIItem(gui, 10, Material.DIAMOND_SWORD, "§c§lSwords", "§7View all swords");
         addGUIItem(gui, 11, Material.BOW, "§a§lBows", "§7View all bows");
@@ -301,7 +306,7 @@ public class HypixelSkyblockItemsSystem implements Listener {
         addGUIItem(gui, 15, Material.COOKIE, "§d§lSpecial Items", "§7View all special items");
         
         player.openInventory(gui);
-        player.sendMessage("§aHypixel Skyblock Items GUI geöffnet!");
+        player.sendMessage(Component.text("§aHypixel Skyblock Items GUI geöffnet!"));
     }
     
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String description) {
@@ -410,11 +415,11 @@ public class HypixelSkyblockItemsSystem implements Listener {
         
         public PlayerItemData(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void addItem(String itemId, int amount) {

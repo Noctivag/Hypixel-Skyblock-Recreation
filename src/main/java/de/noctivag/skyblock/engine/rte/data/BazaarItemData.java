@@ -29,14 +29,14 @@ public class BazaarItemData {
         this.averagePrice = averagePrice;
         this.totalVolume = 0;
         this.orderCount = 0;
-        this.lastUpdate = System.currentTimeMillis();
+        this.lastUpdate = java.lang.System.currentTimeMillis();
     }
     
     public void updatePrices(PriceData priceData) {
         this.instantBuyPrice = priceData.getInstantBuyPrice();
         this.instantSellPrice = priceData.getInstantSellPrice();
         this.averagePrice = priceData.getAveragePrice();
-        this.lastUpdate = System.currentTimeMillis();
+        this.lastUpdate = java.lang.System.currentTimeMillis();
     }
     
     public void addTrade(int volume, double price) {
@@ -62,7 +62,7 @@ public class BazaarItemData {
             this.averagePrice = sum / priceHistory.size();
         }
         
-        this.lastUpdate = System.currentTimeMillis();
+        this.lastUpdate = java.lang.System.currentTimeMillis();
     }
     
     public String toJson() {

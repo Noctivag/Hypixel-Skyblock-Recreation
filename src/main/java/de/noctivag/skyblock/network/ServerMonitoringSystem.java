@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.network;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
@@ -10,6 +13,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
+import net.kyori.adventure.text.Component;
 
 /**
  * Server Monitoring System - Überwachung und Analyse von Server-Performance
@@ -24,7 +28,7 @@ import java.util.logging.Level;
  */
 public class ServerMonitoringSystem {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final ServerCommunicationManager communicationManager;
     
@@ -47,9 +51,9 @@ public class ServerMonitoringSystem {
     private final double cpuThreshold = 80.0;
     private final int playerThreshold = 180;
     
-    public ServerMonitoringSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager,
+    public ServerMonitoringSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager,
                                  ServerCommunicationManager communicationManager) {
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         this.communicationManager = communicationManager;
     }
@@ -67,14 +71,14 @@ public class ServerMonitoringSystem {
         // Starte Report-Generation
         startReportGeneration();
         
-        plugin.getLogger().info("Server Monitoring System started");
+        SkyblockPlugin.getLogger().info("Server Monitoring System started");
     }
     
     /**
      * Startet Performance-Monitoring
      */
     private void startPerformanceMonitoring() {
-        monitoringTask = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
+        monitoringTask = Bukkit.getScheduler().runTaskTimerAsynchronously(SkyblockPlugin, () -> {
             try {
                 // Sammle Metriken für alle Server
                 collectServerMetrics();
@@ -83,7 +87,7 @@ public class ServerMonitoringSystem {
                 updatePerformanceReports();
                 
             } catch (Exception e) {
-                plugin.getLogger().log(Level.WARNING, "Error in performance monitoring", e);
+                SkyblockPlugin.getLogger().log(Level.WARNING, "Error in performance monitoring", e);
             }
         }, 0L, monitoringInterval / 50L);
     }
@@ -92,7 +96,7 @@ public class ServerMonitoringSystem {
      * Startet Alert-Checking
      */
     private void startAlertChecking() {
-        alertCheckTask = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
+        alertCheckTask = Bukkit.getScheduler().runTaskTimerAsynchronously(SkyblockPlugin, () -> {
             try {
                 // Prüfe Alerts
                 checkAlerts();
@@ -101,7 +105,7 @@ public class ServerMonitoringSystem {
                 processActiveAlerts();
                 
             } catch (Exception e) {
-                plugin.getLogger().log(Level.WARNING, "Error in alert checking", e);
+                SkyblockPlugin.getLogger().log(Level.WARNING, "Error in alert checking", e);
             }
         }, 0L, alertCheckInterval / 50L);
     }
@@ -110,7 +114,7 @@ public class ServerMonitoringSystem {
      * Startet Report-Generation
      */
     private void startReportGeneration() {
-        reportGenerationTask = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
+        reportGenerationTask = Bukkit.getScheduler().runTaskTimerAsynchronously(SkyblockPlugin, () -> {
             try {
                 // Generiere Performance-Reports
                 generatePerformanceReports();
@@ -119,7 +123,7 @@ public class ServerMonitoringSystem {
                 saveReportsToDatabase();
                 
             } catch (Exception e) {
-                plugin.getLogger().log(Level.WARNING, "Error in report generation", e);
+                SkyblockPlugin.getLogger().log(Level.WARNING, "Error in report generation", e);
             }
         }, 0L, reportInterval / 50L);
     }
@@ -141,7 +145,7 @@ public class ServerMonitoringSystem {
                 serverInfo.getCpuUsage(),
                 serverInfo.getLoad(),
                 serverInfo.getHealth(),
-                System.currentTimeMillis()
+                java.lang.System.currentTimeMillis()
             );
             
             // Speichere Metriken in Datenbank
@@ -204,13 +208,13 @@ public class ServerMonitoringSystem {
         String alertKey = serverId + ":" + type.name();
         
         if (!activeAlerts.containsKey(alertKey)) {
-            Alert alert = new Alert(serverId, type, message, System.currentTimeMillis());
+            Alert alert = new Alert(serverId, type, message, java.lang.System.currentTimeMillis());
             activeAlerts.put(alertKey, alert);
             
             // Sende Alert
             sendAlert(alert);
             
-            plugin.getLogger().warning("ALERT: " + serverId + " - " + type.name() + ": " + message);
+            SkyblockPlugin.getLogger().warning("ALERT: " + serverId + " - " + type.name() + ": " + message);
         }
     }
     
@@ -247,7 +251,7 @@ public class ServerMonitoringSystem {
                 // Alert ist aufgelöst
                 resolveAlert(alert);
                 iterator.remove();
-            } else if (System.currentTimeMillis() - alert.getTimestamp() > 300000) { // 5 Minuten
+            } else if (java.lang.System.currentTimeMillis() - alert.getTimestamp() > 300000) { // 5 Minuten
                 // Alert ist zu alt
                 iterator.remove();
             }
@@ -281,7 +285,7 @@ public class ServerMonitoringSystem {
      * Löst einen Alert auf
      */
     private void resolveAlert(Alert alert) {
-        plugin.getLogger().info("Alert resolved: " + alert.getServerId() + " - " + alert.getType().name());
+        SkyblockPlugin.getLogger().info("Alert resolved: " + alert.getServerId() + " - " + alert.getType().name());
         
         // Sende Resolution-Nachricht
         for (org.bukkit.entity.Player player : Bukkit.getOnlinePlayers()) {
@@ -378,7 +382,7 @@ public class ServerMonitoringSystem {
             reportGenerationTask.cancel();
         }
         
-        plugin.getLogger().info("Server Monitoring System stopped");
+        SkyblockPlugin.getLogger().info("Server Monitoring System stopped");
     }
     
     /**
@@ -424,7 +428,7 @@ public class ServerMonitoringSystem {
         
         public void setServerOffline() {
             this.serverOnline = false;
-            this.timestamp = System.currentTimeMillis();
+            this.timestamp = java.lang.System.currentTimeMillis();
         }
         
         // Getters
@@ -525,7 +529,7 @@ public class ServerMonitoringSystem {
         
         public PerformanceReport(String serverId) {
             this.serverId = serverId;
-            this.timestamp = System.currentTimeMillis();
+            this.timestamp = java.lang.System.currentTimeMillis();
         }
         
         public void updateReport(ServerMetrics metrics) {

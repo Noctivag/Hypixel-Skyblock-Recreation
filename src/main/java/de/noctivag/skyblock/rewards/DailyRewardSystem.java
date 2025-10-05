@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.rewards;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -12,7 +17,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DailyRewardSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, String> lastClaimDate = new ConcurrentHashMap<>();
     private final Map<UUID, Integer> streakCount = new ConcurrentHashMap<>();
     private final Map<UUID, Set<String>> claimedRewards = new ConcurrentHashMap<>();
@@ -35,8 +40,8 @@ public class DailyRewardSystem {
             Arrays.asList(new ItemStack(Material.BEACON), new ItemStack(Material.EMERALD, 5), new ItemStack(Material.DIAMOND, 3)))
     );
     
-    public DailyRewardSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public DailyRewardSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
     
     public boolean canClaimReward(Player player) {
@@ -60,7 +65,7 @@ public class DailyRewardSystem {
     
     public void claimReward(Player player) {
         if (!canClaimReward(player)) {
-            player.sendMessage("§cDu hast deine tägliche Belohnung bereits erhalten!");
+            player.sendMessage(Component.text("§cDu hast deine tägliche Belohnung bereits erhalten!"));
             return;
         }
         
@@ -76,7 +81,7 @@ public class DailyRewardSystem {
             if (todayDate.isAfter(lastClaimDate.plusDays(1))) {
                 // Streak broken
                 currentStreak = 1;
-                player.sendMessage("§cDeine Streak wurde zurückgesetzt!");
+                player.sendMessage(Component.text("§cDeine Streak wurde zurückgesetzt!"));
             } else {
                 // Streak continues
                 currentStreak++;
@@ -116,7 +121,7 @@ public class DailyRewardSystem {
             moneyReward *= 1.5; // 50% bonus for 3+ day streak
         }
         
-        plugin.getEconomyManager().giveMoney(player, moneyReward);
+        SkyblockPlugin.getEconomyManager().giveMoney(player, moneyReward);
         
         // Give items
         for (ItemStack item : reward.getItems()) {
@@ -139,29 +144,29 @@ public class DailyRewardSystem {
     }
     
     private void announceReward(Player player, DailyReward reward, double moneyReward, int streak) {
-        player.sendMessage("§6§l[Tägliche Belohnung erhalten!]");
+        player.sendMessage(Component.text("§6§l[Tägliche Belohnung erhalten!]"));
         player.sendMessage("§e" + reward.getName());
         player.sendMessage("§7" + reward.getDescription());
-        player.sendMessage("§aGeld: §f" + plugin.getEconomyManager().formatMoney(moneyReward));
+        player.sendMessage("§aGeld: §f" + SkyblockPlugin.getEconomyManager().formatMoney(moneyReward));
         
         if (streak >= 7) {
-            player.sendMessage("§6§lStreak-Bonus: §e2x Belohnung!");
+            player.sendMessage(Component.text("§6§lStreak-Bonus: §e2x Belohnung!"));
         } else if (streak >= 3) {
-            player.sendMessage("§6§lStreak-Bonus: §e1.5x Belohnung!");
+            player.sendMessage(Component.text("§6§lStreak-Bonus: §e1.5x Belohnung!"));
         }
         
         player.sendMessage("§7Aktuelle Streak: §e" + streak + " Tage");
     }
     
     private void showStreakInfo(Player player, int streak) {
-        player.sendMessage("§6§l[Streak Info]");
+        player.sendMessage(Component.text("§6§l[Streak Info]"));
         player.sendMessage("§7Aktuelle Streak: §e" + streak + " Tage");
         
         if (streak < 7) {
             int daysUntilBonus = 7 - streak;
             player.sendMessage("§7Noch §e" + daysUntilBonus + " Tage §7bis zum Streak-Bonus!");
         } else {
-            player.sendMessage("§6§lDu erhältst den maximalen Streak-Bonus!");
+            player.sendMessage(Component.text("§6§lDu erhältst den maximalen Streak-Bonus!"));
         }
         
         // Show next reward preview
@@ -176,14 +181,14 @@ public class DailyRewardSystem {
         if (streak == 7) {
             // 7 day streak achievement
             // Placeholder - method not implemented
-            // if (plugin.getAchievementSystem() != null) {
-            //     plugin.getAchievementSystem().checkAchievement(player, "week_streak", 1);
+            // if (SkyblockPlugin.getAchievementSystem() != null) {
+            //     SkyblockPlugin.getAchievementSystem().checkAchievement(player, "week_streak", 1);
             // }
         } else if (streak == 30) {
             // 30 day streak achievement
             // Placeholder - method not implemented
-            // if (plugin.getAchievementSystem() != null) {
-            //     plugin.getAchievementSystem().checkAchievement(player, "month_streak", 1);
+            // if (SkyblockPlugin.getAchievementSystem() != null) {
+            //     SkyblockPlugin.getAchievementSystem().checkAchievement(player, "month_streak", 1);
             // }
         }
     }

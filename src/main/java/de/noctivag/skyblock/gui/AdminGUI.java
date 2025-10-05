@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,20 +12,22 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 
 /**
  * Admin GUI - Admin-Tools und Verwaltung
  */
 public class AdminGUI {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     
-    public AdminGUI(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public AdminGUI(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
     
     public void openAdminGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lAdmin Tools");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lAdmin Tools"));
         
         // Player Management
         setItem(gui, 10, Material.PLAYER_HEAD, "§a§lPlayer Management",
@@ -77,7 +82,7 @@ public class AdminGUI {
         setItem(gui, 20, Material.REDSTONE, "§c§lServer Settings",
             "§7Server-Einstellungen",
             "§7• Server Configuration",
-            "§7• Plugin Settings",
+            "§7• SkyblockPlugin Settings",
             "§7• Performance Settings",
             "",
             "§eKlicke zum Öffnen");
@@ -162,8 +167,8 @@ public class AdminGUI {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(name);
-            meta.setLore(Arrays.asList(lore));
+            meta.displayName(Component.text(name));
+            meta.lore(Arrays.asList(lore).stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         gui.setItem(slot, item);

@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.performance;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.Connection;
@@ -21,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Query Caching
  */
 public class DatabaseOptimizer {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     
     // Batch-Update Queue
     private final Queue<DatabaseOperation> batchQueue = new ConcurrentLinkedQueue<>();
@@ -31,8 +34,8 @@ public class DatabaseOptimizer {
     private final int BATCH_SIZE = 100;
     private final long BATCH_DELAY = 5000; // 5 Sekunden
     
-    public DatabaseOptimizer(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public DatabaseOptimizer(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         startBatchProcessor();
     }
     
@@ -85,13 +88,13 @@ public class DatabaseOptimizer {
                         connection.commit();
                     }
                     
-                    plugin.getLogger().info("Processed " + batch.size() + " database operations in batch");
+                    SkyblockPlugin.getLogger().info("Processed " + batch.size() + " database operations in batch");
                     
                 } catch (SQLException e) {
-                    plugin.getLogger().severe("Batch processing failed: " + e.getMessage());
+                    SkyblockPlugin.getLogger().severe("Batch processing failed: " + e.getMessage());
                 }
             }
-        }.runTaskAsynchronously(plugin);
+        }.runTaskAsynchronously(SkyblockPlugin);
     }
     
     /**
@@ -103,7 +106,7 @@ public class DatabaseOptimizer {
             public void run() {
                 processBatch();
             }
-        }.runTaskTimerAsynchronously(plugin, BATCH_DELAY / 50L, BATCH_DELAY / 50L);
+        }.runTaskTimerAsynchronously(SkyblockPlugin, BATCH_DELAY / 50L, BATCH_DELAY / 50L);
     }
     
     /**
@@ -126,7 +129,7 @@ public class DatabaseOptimizer {
         // Hier würde der Connection Pool implementiert werden
         // Für jetzt: Basic Connection mit Optimierungen
         try {
-            Connection connection = plugin.getMultiServerDatabaseManager().getConnection().get();
+            Connection connection = SkyblockPlugin.getMultiServerDatabaseManager().getConnection().get();
             connection.setAutoCommit(false);
             return connection;
         } catch (Exception e) {

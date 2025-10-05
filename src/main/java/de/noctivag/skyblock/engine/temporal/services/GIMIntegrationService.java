@@ -85,7 +85,7 @@ public class GIMIntegrationService {
                 ScalingRequest request = new ScalingRequest(
                     eventId,
                     expectedPlayerLoad,
-                    System.currentTimeMillis(),
+                    java.lang.System.currentTimeMillis(),
                     ScalingRequest.Priority.HIGH
                 );
                 
@@ -174,7 +174,7 @@ public class GIMIntegrationService {
             
             // Publish scaling release
             ScalingRequest releaseRequest = new ScalingRequest(
-                eventId, 0, System.currentTimeMillis(), ScalingRequest.Priority.LOW
+                eventId, 0, java.lang.System.currentTimeMillis(), ScalingRequest.Priority.LOW
             );
             jedis.publish(SCALING_CHANNEL, releaseRequest.toJson());
             
@@ -224,7 +224,7 @@ public class GIMIntegrationService {
      * Check for scaling timeouts
      */
     private void checkScalingTimeouts() {
-        long currentTime = System.currentTimeMillis();
+        long currentTime = java.lang.System.currentTimeMillis();
         
         for (Map.Entry<String, ScalingRequest> entry : activeRequests.entrySet()) {
             String eventId = entry.getKey();

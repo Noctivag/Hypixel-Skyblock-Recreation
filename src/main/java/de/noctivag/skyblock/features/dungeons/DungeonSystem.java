@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.dungeons;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.core.api.Service;
@@ -88,7 +89,7 @@ public class DungeonSystem implements Service {
     /**
      * Start a dungeon for a party of players
      */
-    public CompletableFuture<DungeonInstance> startDungeon(List<UUID> players, int floor, de.noctivag.plugin.features.dungeons.classes.DungeonClassType classType) {
+    public CompletableFuture<DungeonInstance> startDungeon(List<UUID> players, int floor, de.noctivag.skyblock.features.dungeons.classes.DungeonClassType classType) {
         // TODO: Fix type conversion between different DungeonClassType classes
         // return catacombsDungeon.createInstance(players, floor, classType);
         return CompletableFuture.completedFuture(null); // Placeholder
@@ -97,7 +98,7 @@ public class DungeonSystem implements Service {
     /**
      * Join a dungeon as a specific class
      */
-    public CompletableFuture<Boolean> joinDungeon(UUID playerId, de.noctivag.plugin.features.dungeons.classes.DungeonClassType classType) {
+    public CompletableFuture<Boolean> joinDungeon(UUID playerId, de.noctivag.skyblock.features.dungeons.classes.DungeonClassType classType) {
         // TODO: Fix type conversion between different DungeonClassType classes
         // return classManager.assignClass(playerId, classType);
         return CompletableFuture.completedFuture(false); // Placeholder
@@ -120,7 +121,7 @@ public class DungeonSystem implements Service {
     /**
      * Get dungeon leaderboard
      */
-    public de.noctivag.plugin.features.dungeons.types.DungeonLeaderboard getLeaderboard(int floor) {
+    public de.noctivag.skyblock.features.dungeons.types.DungeonLeaderboard getLeaderboard(int floor) {
         // TODO: Fix type conversion between different DungeonLeaderboard classes
         // return scoreSystem.getLeaderboard(floor);
         return null; // Placeholder

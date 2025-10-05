@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.core;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import org.bukkit.entity.Player;
@@ -45,7 +46,7 @@ public class PlayerProfile {
         this.skillExperience = new ConcurrentHashMap<>();
         this.settings = new ConcurrentHashMap<>();
         this.statistics = new ConcurrentHashMap<>();
-        this.lastLogin = System.currentTimeMillis();
+        this.lastLogin = java.lang.System.currentTimeMillis();
         this.totalPlayTime = 0;
         this.isOnline = false;
         

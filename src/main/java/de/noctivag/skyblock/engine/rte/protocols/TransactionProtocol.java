@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.engine.rte.protocols;
+import java.util.UUID;
 
 import de.noctivag.skyblock.engine.rte.RealTimeEconomyEngine;
 import redis.clients.jedis.Jedis;
@@ -134,7 +135,7 @@ public class TransactionProtocol {
                 String lockKey = "rte:lock:" + fromPlayer + ":" + toPlayer;
                 
                 // Acquire distributed lock
-                String lockValue = String.valueOf(System.currentTimeMillis());
+                String lockValue = String.valueOf(java.lang.System.currentTimeMillis());
                 if (jedis.setnx(lockKey, lockValue) == 0) {
                     throw new ConflictException("Transfer lock already exists");
                 }
@@ -181,7 +182,7 @@ public class TransactionProtocol {
                 String lockKey = "rte:inv_lock:" + fromPlayer + ":" + toPlayer + ":" + itemId;
                 
                 // Acquire distributed lock
-                String lockValue = String.valueOf(System.currentTimeMillis());
+                String lockValue = String.valueOf(java.lang.System.currentTimeMillis());
                 if (jedis.setnx(lockKey, lockValue) == 0) {
                     throw new ConflictException("Inventory transfer lock already exists");
                 }
@@ -225,7 +226,7 @@ public class TransactionProtocol {
                 String lockKey = "rte:market_lock:" + itemId;
                 
                 // Acquire distributed lock
-                String lockValue = String.valueOf(System.currentTimeMillis());
+                String lockValue = String.valueOf(java.lang.System.currentTimeMillis());
                 if (jedis.setnx(lockKey, lockValue) == 0) {
                     throw new ConflictException("Market data lock already exists for " + itemId);
                 }
@@ -235,7 +236,7 @@ public class TransactionProtocol {
                     T result = updateOperation.get();
                     
                     // Update market data timestamp
-                    jedis.hset(dataKey, "last_update", String.valueOf(System.currentTimeMillis()));
+                    jedis.hset(dataKey, "last_update", String.valueOf(java.lang.System.currentTimeMillis()));
                     
                     return result;
                     
@@ -257,7 +258,7 @@ public class TransactionProtocol {
                 String lockKey = "rte:match_lock:" + itemId;
                 
                 // Acquire distributed lock
-                String lockValue = String.valueOf(System.currentTimeMillis());
+                String lockValue = String.valueOf(java.lang.System.currentTimeMillis());
                 if (jedis.setnx(lockKey, lockValue) == 0) {
                     throw new ConflictException("Order matching lock already exists for " + itemId);
                 }
@@ -267,7 +268,7 @@ public class TransactionProtocol {
                     T result = matchingOperation.get();
                     
                     // Update matching timestamp
-                    jedis.hset(matchKey, "last_match", String.valueOf(System.currentTimeMillis()));
+                    jedis.hset(matchKey, "last_match", String.valueOf(java.lang.System.currentTimeMillis()));
                     
                     return result;
                     
@@ -285,7 +286,7 @@ public class TransactionProtocol {
     public boolean canExecuteOperation(String operationKey) {
         try (Jedis jedis = engine.getJedisPool().getResource()) {
             String lockKey = "rte:op_lock:" + operationKey;
-            return jedis.setnx(lockKey, String.valueOf(System.currentTimeMillis())) == 1;
+            return jedis.setnx(lockKey, String.valueOf(java.lang.System.currentTimeMillis())) == 1;
         }
     }
     

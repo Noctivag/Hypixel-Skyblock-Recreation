@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.features.dungeons;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -27,14 +31,14 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DungeonSolutionsSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<String, DungeonSolution> solutions = new HashMap<>();
     private final Map<String, DungeonWaypoint> waypoints = new HashMap<>();
     private final Map<UUID, Set<String>> playerDiscoveredSolutions = new ConcurrentHashMap<>();
     
-    public DungeonSolutionsSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public DungeonSolutionsSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeDungeonSolutions();
         initializeDungeonWaypoints();

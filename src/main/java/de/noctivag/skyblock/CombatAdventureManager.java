@@ -1,6 +1,10 @@
 package de.noctivag.skyblock;
+import net.kyori.adventure.text.Component;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.slayers.CompleteSlayerSystem;
 import de.noctivag.skyblock.dungeons.CompleteDungeonSystem;
 import de.noctivag.skyblock.combat.CompleteCombatSystem;
@@ -26,28 +30,28 @@ import org.bukkit.event.player.PlayerQuitEvent;
 @Getter
 public class CombatAdventureManager implements Listener {
 
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CompleteSlayerSystem slayerSystem;
     private final CompleteDungeonSystem dungeonSystem;
     private final CompleteCombatSystem combatSystem;
     private final CombatAdventureGUI guiSystem;
 
-    public CombatAdventureManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public CombatAdventureManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
 
         // Initialize systems
-        de.noctivag.plugin.core.CorePlatform corePlatform = new de.noctivag.plugin.core.CorePlatform(plugin, plugin.getMultiServerDatabaseManager());
-        this.slayerSystem = new CompleteSlayerSystem(plugin, corePlatform, plugin.getDatabaseManager());
-        this.dungeonSystem = new CompleteDungeonSystem(plugin, plugin.getMultiServerDatabaseManager());
-        this.combatSystem = new CompleteCombatSystem(plugin, plugin.getMultiServerDatabaseManager());
-        this.guiSystem = new CombatAdventureGUI(plugin, slayerSystem, dungeonSystem, combatSystem);
+        de.noctivag.skyblock.core.CorePlatform corePlatform = new de.noctivag.skyblock.core.CorePlatform(SkyblockPlugin, SkyblockPlugin.getMultiServerDatabaseManager());
+        this.slayerSystem = new CompleteSlayerSystem(SkyblockPlugin, corePlatform, SkyblockPlugin.getDatabaseManager());
+        this.dungeonSystem = new CompleteDungeonSystem(SkyblockPlugin, SkyblockPlugin.getMultiServerDatabaseManager());
+        this.combatSystem = new CompleteCombatSystem(SkyblockPlugin, SkyblockPlugin.getMultiServerDatabaseManager());
+        this.guiSystem = new CombatAdventureGUI(SkyblockPlugin, slayerSystem, dungeonSystem, combatSystem);
 
-        plugin.getLogger().info("Combat & Adventure Manager initialized successfully!");
+        SkyblockPlugin.getLogger().info("Combat & Adventure Manager initialized successfully!");
     }
 
     public void initialize() {
         // Register events after full initialization
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
 
     @EventHandler
@@ -63,11 +67,11 @@ public class CombatAdventureManager implements Listener {
         loadPlayerData(player);
 
         // Send welcome message
-        player.sendMessage("§a§lWelcome to Combat & Adventure!");
-        player.sendMessage("§7Use §e/slayer §7for slayer quests");
-        player.sendMessage("§7Use §e/dungeon §7for dungeon runs");
-        player.sendMessage("§7Use §e/combat §7for combat abilities");
-        player.sendMessage("§7Use §e/ca §7to open the main menu");
+        player.sendMessage(Component.text("§a§lWelcome to Combat & Adventure!"));
+        player.sendMessage(Component.text("§7Use §e/slayer §7for slayer quests"));
+        player.sendMessage(Component.text("§7Use §e/dungeon §7for dungeon runs"));
+        player.sendMessage(Component.text("§7Use §e/combat §7for combat abilities"));
+        player.sendMessage(Component.text("§7Use §e/ca §7to open the main menu"));
     }
 
     @EventHandler
@@ -99,7 +103,7 @@ public class CombatAdventureManager implements Listener {
         combatSystem.getPlayerCombatStats(player.getUniqueId()).addCombatXP(xp);
     }
 
-    public void giveSlayerXP(Player player, de.noctivag.plugin.slayers.SlayerType slayerType, double xp) {
+    public void giveSlayerXP(Player player, de.noctivag.skyblock.slayers.SlayerType slayerType, double xp) {
         slayerSystem.getPlayerSlayerData(player.getUniqueId()).addXP(slayerType, xp);
     }
 
@@ -123,11 +127,11 @@ public class CombatAdventureManager implements Listener {
 
     // Performance monitoring
     public void logSystemPerformance() {
-        plugin.getLogger().info("=== Combat & Adventure System Performance ===");
-        // plugin.getLogger().info("Active Slayer Quests: " + slayerSystem.getActiveQuests().size());
-        // plugin.getLogger().info("Active Dungeon Instances: " + dungeonSystem.getActiveInstances().size());
-        // plugin.getLogger().info("Active Combat Sessions: " + combatSystem.getActiveSessions().size());
-        plugin.getLogger().info("=============================================");
+        SkyblockPlugin.getLogger().info("=== Combat & Adventure System Performance ===");
+        // SkyblockPlugin.getLogger().info("Active Slayer Quests: " + slayerSystem.getActiveQuests().size());
+        // SkyblockPlugin.getLogger().info("Active Dungeon Instances: " + dungeonSystem.getActiveInstances().size());
+        // SkyblockPlugin.getLogger().info("Active Combat Sessions: " + combatSystem.getActiveSessions().size());
+        SkyblockPlugin.getLogger().info("=============================================");
     }
 
     // Cleanup methods
@@ -138,7 +142,7 @@ public class CombatAdventureManager implements Listener {
     }
 
     public void shutdown() {
-        plugin.getLogger().info("Shutting down Combat & Adventure Manager...");
+        SkyblockPlugin.getLogger().info("Shutting down Combat & Adventure Manager...");
 
         // Save all player data
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -148,6 +152,6 @@ public class CombatAdventureManager implements Listener {
         // Cleanup systems
         cleanupExpiredData();
 
-        plugin.getLogger().info("Combat & Adventure Manager shutdown complete!");
+        SkyblockPlugin.getLogger().info("Combat & Adventure Manager shutdown complete!");
     }
 }

@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.multiserver;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -21,7 +25,7 @@ import java.util.UUID;
  */
 public class ServerPortal implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final ServerSwitcher serverSwitcher;
     private final Map<Location, String> portals = new HashMap<>();
     private final Map<UUID, Long> lastPortalUse = new HashMap<>();
@@ -29,10 +33,10 @@ public class ServerPortal implements Listener {
     // Cooldown für Portal-Nutzung (in Millisekunden)
     private static final long PORTAL_COOLDOWN = 5000; // 5 Sekunden
     
-    public ServerPortal(SkyblockPlugin plugin, ServerSwitcher serverSwitcher) {
-        this.plugin = plugin;
+    public ServerPortal(SkyblockPlugin SkyblockPlugin, ServerSwitcher serverSwitcher) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.serverSwitcher = serverSwitcher;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        SkyblockPlugin.getServer().getPluginManager().registerEvents(this, SkyblockPlugin);
         initializeDefaultPortals();
     }
     
@@ -41,7 +45,7 @@ public class ServerPortal implements Listener {
      */
     private void initializeDefaultPortals() {
         // Hier würden normalerweise die Portal-Positionen aus der Konfiguration geladen
-        plugin.getLogger().info("Initializing default server portals...");
+        SkyblockPlugin.getLogger().info("Initializing default server portals...");
     }
     
     /**
@@ -49,7 +53,7 @@ public class ServerPortal implements Listener {
      */
     public void registerPortal(Location location, String targetServer) {
         portals.put(location, targetServer);
-        plugin.getLogger().info("Registered portal at " + location + " -> " + targetServer);
+        SkyblockPlugin.getLogger().info("Registered portal at " + location + " -> " + targetServer);
     }
     
     /**
@@ -57,7 +61,7 @@ public class ServerPortal implements Listener {
      */
     public void unregisterPortal(Location location) {
         portals.remove(location);
-        plugin.getLogger().info("Unregistered portal at " + location);
+        SkyblockPlugin.getLogger().info("Unregistered portal at " + location);
     }
     
     /**
@@ -139,7 +143,7 @@ public class ServerPortal implements Listener {
             .thenAccept(success -> {
                 if (success) {
                     // Aktualisiere Cooldown
-                    lastPortalUse.put(playerId, System.currentTimeMillis());
+                    lastPortalUse.put(playerId, java.lang.System.currentTimeMillis());
                 }
             });
     }
@@ -149,8 +153,8 @@ public class ServerPortal implements Listener {
      */
     private String getServerDisplayName(String serverType) {
         // TODO: Implement proper HypixelProxySystem interface
-        // return ((HypixelProxySystem) plugin.getHypixelProxySystem()).getServerTypes().get(serverType) != null ? 
-        //     ((HypixelProxySystem) plugin.getHypixelProxySystem()).getServerTypes().get(serverType).getDisplayName() : serverType;
+        // return ((HypixelProxySystem) SkyblockPlugin.getHypixelProxySystem()).getServerTypes().get(serverType) != null ? 
+        //     ((HypixelProxySystem) SkyblockPlugin.getHypixelProxySystem()).getServerTypes().get(serverType).getDisplayName() : serverType;
         return serverType; // Placeholder
     }
     
@@ -163,7 +167,7 @@ public class ServerPortal implements Listener {
             return false;
         }
         
-        return (System.currentTimeMillis() - lastUse) < PORTAL_COOLDOWN;
+        return (java.lang.System.currentTimeMillis() - lastUse) < PORTAL_COOLDOWN;
     }
     
     /**
@@ -175,7 +179,7 @@ public class ServerPortal implements Listener {
             return 0;
         }
         
-        long elapsed = System.currentTimeMillis() - lastUse;
+        long elapsed = java.lang.System.currentTimeMillis() - lastUse;
         return Math.max(0, PORTAL_COOLDOWN - elapsed);
     }
     
@@ -189,7 +193,7 @@ public class ServerPortal implements Listener {
         // Registriere Portal
         registerPortal(location, targetServer);
         
-        plugin.getLogger().info("Created portal at " + location + " -> " + targetServer);
+        SkyblockPlugin.getLogger().info("Created portal at " + location + " -> " + targetServer);
     }
     
     /**
@@ -202,7 +206,7 @@ public class ServerPortal implements Listener {
         // Entferne Portal-Registrierung
         unregisterPortal(location);
         
-        plugin.getLogger().info("Removed portal at " + location);
+        SkyblockPlugin.getLogger().info("Removed portal at " + location);
     }
     
     /**

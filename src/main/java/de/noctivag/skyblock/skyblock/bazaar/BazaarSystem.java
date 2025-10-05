@@ -1,4 +1,8 @@
 package de.noctivag.skyblock.skyblock.bazaar;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
@@ -10,7 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import net.kyori.adventure.text.Component;
 
@@ -30,18 +34,18 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class BazaarSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerBazaarData> playerBazaarData = new ConcurrentHashMap<>();
     private final Map<Material, BazaarItem> bazaarItems = new ConcurrentHashMap<>();
     private final Map<String, BazaarOrder> activeOrders = new ConcurrentHashMap<>();
     private final Map<UUID, List<BazaarOrder>> playerOrders = new ConcurrentHashMap<>();
     
-    public BazaarSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public BazaarSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
         initializeBazaarItems();
         startBazaarUpdateTask();
     }
@@ -122,7 +126,7 @@ public class BazaarSystem implements Listener {
                 updateBazaarPrices();
                 processOrders();
             }
-        }.runTaskTimer(plugin, 0L, 20L * 30L); // Every 30 seconds
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L * 30L); // Every 30 seconds
     }
     
     private void updateBazaarPrices() {
@@ -287,7 +291,7 @@ public class BazaarSystem implements Listener {
     public void quickBuy(Player player, Material material, int amount) {
         BazaarItem item = bazaarItems.get(material);
         if (item == null) {
-            player.sendMessage("§cItem not available in bazaar!");
+            player.sendMessage(Component.text("§cItem not available in bazaar!"));
             return;
         }
         
@@ -310,7 +314,7 @@ public class BazaarSystem implements Listener {
     public void quickSell(Player player, Material material, int amount) {
         BazaarItem item = bazaarItems.get(material);
         if (item == null) {
-            player.sendMessage("§cItem not available in bazaar!");
+            player.sendMessage(Component.text("§cItem not available in bazaar!"));
             return;
         }
         
@@ -335,7 +339,7 @@ public class BazaarSystem implements Listener {
     public void createOrder(Player player, Material material, BazaarOrderType type, double price, int amount) {
         BazaarItem item = bazaarItems.get(material);
         if (item == null) {
-            player.sendMessage("§cItem not available in bazaar!");
+            player.sendMessage(Component.text("§cItem not available in bazaar!"));
             return;
         }
         
@@ -414,12 +418,12 @@ public class BazaarSystem implements Listener {
     
     private void openQuickBuy(Player player) {
         // Open quick buy interface
-        player.sendMessage("§eOpening quick buy interface...");
+        player.sendMessage(Component.text("§eOpening quick buy interface..."));
     }
     
     private void openQuickSell(Player player) {
         // Open quick sell interface
-        player.sendMessage("§eOpening quick sell interface...");
+        player.sendMessage(Component.text("§eOpening quick sell interface..."));
     }
     
     private void openPlayerOrders(Player player) {
@@ -522,7 +526,7 @@ public class BazaarSystem implements Listener {
             lore.add("§eClick to buy!");
             lore.add("§aShift-click to sell!");
             
-            meta.lore(lore.stream().map(Component::text).toList());
+            meta.lore(lore.stream().toList());
             displayItem.setItemMeta(meta);
         }
         gui.setItem(slot, displayItem);
@@ -545,7 +549,7 @@ public class BazaarSystem implements Listener {
             lore.add("");
             lore.add("§cClick to cancel order!");
             
-            meta.lore(lore.stream().map(Component::text).toList());
+            meta.lore(lore.stream().toList());
             displayItem.setItemMeta(meta);
         }
         gui.setItem(slot, displayItem);
@@ -658,7 +662,7 @@ public class BazaarSystem implements Listener {
             this.type = type;
             this.price = price;
             this.amount = amount;
-            this.timestamp = System.currentTimeMillis();
+            this.timestamp = java.lang.System.currentTimeMillis();
         }
         
         public void reduceAmount(int amount) {

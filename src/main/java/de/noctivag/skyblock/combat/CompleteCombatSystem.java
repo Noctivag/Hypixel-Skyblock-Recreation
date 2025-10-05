@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.combat;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
@@ -21,6 +25,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Complete Combat System - Full Implementation with Advanced Damage Calculation, Critical Hits, Enchantments, and PvP Balancing
@@ -36,24 +41,24 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CompleteCombatSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerCombatStats> playerCombatStats = new ConcurrentHashMap<>();
     private final Map<UUID, List<CombatEffect>> activeEffects = new ConcurrentHashMap<>();
     private final Map<UUID, BukkitTask> effectTasks = new ConcurrentHashMap<>();
     private final Map<UUID, CombatSession> activeSessions = new ConcurrentHashMap<>();
     
-    public CompleteCombatSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public CompleteCombatSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
         startCombatUpdateTask();
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void startCombatUpdateTask() {
         Thread.ofVirtual().start(() -> {
-            while (plugin.isEnabled()) {
+            while (SkyblockPlugin.isEnabled()) {
                 try {
                     updateActiveEffects();
                     updateActiveSessions();
@@ -204,7 +209,7 @@ public class CompleteCombatSystem implements Listener {
         addGUIItem(gui, 53, Material.ARROW, "§7§lNext Page", "§7Go to next page.");
         
         player.openInventory(gui);
-        player.sendMessage("§aCombat GUI opened!");
+        player.sendMessage(Component.text("§aCombat GUI opened!"));
     }
     
     private CombatDamage calculateCombatDamage(Player attacker, LivingEntity target, double baseDamage) {
@@ -712,11 +717,11 @@ public class CompleteCombatSystem implements Listener {
         public CombatEffect(String name, long duration) {
             this.name = name;
             this.duration = duration;
-            this.startTime = System.currentTimeMillis();
+            this.startTime = java.lang.System.currentTimeMillis();
         }
         
         public boolean isExpired() {
-            return System.currentTimeMillis() - startTime > duration;
+            return java.lang.System.currentTimeMillis() - startTime > duration;
         }
         
         public abstract void onTick(Player player);
@@ -725,7 +730,7 @@ public class CompleteCombatSystem implements Listener {
         public String getName() { return name; }
         public long getDuration() { return duration; }
         public long getTimeRemaining() {
-            return Math.max(0, duration - (System.currentTimeMillis() - startTime));
+            return Math.max(0, duration - (java.lang.System.currentTimeMillis() - startTime));
         }
     }
     
@@ -738,7 +743,7 @@ public class CompleteCombatSystem implements Listener {
         
         public CombatSession(UUID playerId) {
             this.playerId = playerId;
-            this.startTime = System.currentTimeMillis();
+            this.startTime = java.lang.System.currentTimeMillis();
         }
         
         public void addDamage(UUID targetId, double damage) {
@@ -746,7 +751,7 @@ public class CompleteCombatSystem implements Listener {
         }
         
         public boolean isExpired() {
-            return System.currentTimeMillis() - startTime > duration;
+            return java.lang.System.currentTimeMillis() - startTime > duration;
         }
         
         public void update() {

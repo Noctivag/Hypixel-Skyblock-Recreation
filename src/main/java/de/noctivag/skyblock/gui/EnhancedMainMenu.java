@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.inventory.meta.ItemMeta;
 import net.kyori.adventure.text.Component;
@@ -9,11 +12,11 @@ import net.kyori.adventure.text.Component;
 import java.util.Arrays;
 
 public class EnhancedMainMenu extends CustomGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public EnhancedMainMenu(SkyblockPlugin plugin) {
+    public EnhancedMainMenu(SkyblockPlugin SkyblockPlugin) {
         super(54, Component.text("§6§lEnhanced Hauptmenü"));
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         setupItems();
     }
 
@@ -130,7 +133,7 @@ public class EnhancedMainMenu extends CustomGUI {
         if (meta != null) {
             meta.displayName(Component.text(name));
             if (lore.length > 0) {
-                meta.lore(Arrays.stream(lore).map(Component::text).toList());
+                meta.lore(java.util.Arrays.stream(lore).map(Component::text).collect(java.util.stream.Collectors.toList()));
             }
             item.setItemMeta(meta);
         }

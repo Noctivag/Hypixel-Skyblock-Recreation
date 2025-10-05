@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.commands;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,12 +15,12 @@ import java.util.List;
 import java.util.Map;
 
 public class HelpCommand implements CommandExecutor {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<String, String> featureDescriptions;
     private final int ITEMS_PER_PAGE = 5;
 
-    public HelpCommand(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public HelpCommand(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.featureDescriptions = new HashMap<>();
         initializeDescriptions();
     }
@@ -48,7 +51,7 @@ public class HelpCommand implements CommandExecutor {
             "§e/cartography §7- Öffnet einen Kartentisch");
 
         // Admin-Befehle
-        featureDescriptions.put("admin", "§e/status §7- Zeigt den Plugin-Status\n" +
+        featureDescriptions.put("admin", "§e/status §7- Zeigt den SkyblockPlugin-Status\n" +
             "§7Nur für Administratoren verfügbar.");
     }
 

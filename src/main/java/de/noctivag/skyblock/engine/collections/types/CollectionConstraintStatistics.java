@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.engine.collections.types;
+import java.util.UUID;
 
 import java.util.List;
 import java.util.Map;

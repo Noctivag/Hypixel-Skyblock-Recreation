@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.performance;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.concurrent.*;
@@ -20,7 +23,7 @@ import java.util.logging.Level;
  * - Performance monitoring
  */
 public class MultithreadingManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     
     // Custom thread pools for different operation types
     private final ExecutorService databaseExecutor;
@@ -40,8 +43,8 @@ public class MultithreadingManager {
     private final ConcurrentHashMap<String, Long> operationTimes = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, AtomicInteger> operationCounts = new ConcurrentHashMap<>();
     
-    public MultithreadingManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public MultithreadingManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         
         // Calculate optimal thread pool sizes based on CPU cores
         int cpuCores = Runtime.getRuntime().availableProcessors();
@@ -51,8 +54,8 @@ public class MultithreadingManager {
         int networkThreads = Math.max(2, cpuCores / 3);
         int guiThreads = Math.max(2, cpuCores / 4);
         
-        plugin.getLogger().info("Initializing MultithreadingManager with " + cpuCores + " CPU cores");
-        plugin.getLogger().info("Thread pool sizes - DB: " + databaseThreads + ", FileIO: " + fileIOThreads + 
+        SkyblockPlugin.getLogger().info("Initializing MultithreadingManager with " + cpuCores + " CPU cores");
+        SkyblockPlugin.getLogger().info("Thread pool sizes - DB: " + databaseThreads + ", FileIO: " + fileIOThreads + 
                               ", Computation: " + computationThreads + ", Network: " + networkThreads + ", GUI: " + guiThreads);
         
         // Create custom thread pools
@@ -111,7 +114,7 @@ public class MultithreadingManager {
             try {
                 return task.call();
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Database task failed", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Database task failed", e);
                 throw new RuntimeException(e);
             } finally {
                 long endTime = System.nanoTime();
@@ -148,7 +151,7 @@ public class MultithreadingManager {
             try {
                 return task.call();
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "File I/O task failed", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "File I/O task failed", e);
                 throw new RuntimeException(e);
             } finally {
                 long endTime = System.nanoTime();
@@ -185,7 +188,7 @@ public class MultithreadingManager {
             try {
                 return task.call();
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Computation task failed", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Computation task failed", e);
                 throw new RuntimeException(e);
             } finally {
                 long endTime = System.nanoTime();
@@ -222,7 +225,7 @@ public class MultithreadingManager {
             try {
                 return task.call();
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Network task failed", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Network task failed", e);
                 throw new RuntimeException(e);
             } finally {
                 long endTime = System.nanoTime();
@@ -256,7 +259,7 @@ public class MultithreadingManager {
         if (org.bukkit.Bukkit.isPrimaryThread()) {
             task.run();
         } else {
-            org.bukkit.Bukkit.getScheduler().runTask(plugin, task);
+            org.bukkit.Bukkit.getScheduler().runTask(SkyblockPlugin, task);
         }
     }
     
@@ -276,7 +279,7 @@ public class MultithreadingManager {
         Thread.ofVirtual().start(() -> {
             try {
                 Thread.sleep(6000L * 50); // Initial delay: 5 minutes = 300,000 ms
-                while (plugin.isEnabled()) {
+                while (SkyblockPlugin.isEnabled()) {
                     // Log thread pool statistics every 5 minutes
                     logThreadPoolStats();
                     
@@ -295,8 +298,8 @@ public class MultithreadingManager {
      * Log thread pool statistics
      */
     private void logThreadPoolStats() {
-        plugin.getLogger().info("=== Thread Pool Statistics ===");
-        plugin.getLogger().info("Active Tasks - DB: " + activeDatabaseTasks.get() + 
+        SkyblockPlugin.getLogger().info("=== Thread Pool Statistics ===");
+        SkyblockPlugin.getLogger().info("Active Tasks - DB: " + activeDatabaseTasks.get() + 
                               ", FileIO: " + activeFileIOTasks.get() + 
                               ", Computation: " + activeComputationTasks.get() + 
                               ", Network: " + activeNetworkTasks.get() + 
@@ -308,7 +311,7 @@ public class MultithreadingManager {
             int count = operationCounts.get(operationType).get();
             if (count > 0) {
                 double avgTimeMs = (totalTime / (double) count) / 1_000_000.0;
-                plugin.getLogger().info(operationType + " operations: " + count + " total, avg: " + 
+                SkyblockPlugin.getLogger().info(operationType + " operations: " + count + " total, avg: " + 
                                       String.format("%.2f", avgTimeMs) + "ms");
             }
         }
@@ -345,7 +348,7 @@ public class MultithreadingManager {
      * Shutdown all thread pools
      */
     public void shutdown() {
-        plugin.getLogger().info("Shutting down MultithreadingManager...");
+        SkyblockPlugin.getLogger().info("Shutting down MultithreadingManager...");
         
         shutdownExecutor(databaseExecutor, "Database");
         shutdownExecutor(fileIOExecutor, "FileIO");
@@ -353,17 +356,17 @@ public class MultithreadingManager {
         shutdownExecutor(networkExecutor, "Network");
         shutdownExecutor(guiExecutor, "GUI");
         
-        plugin.getLogger().info("MultithreadingManager shutdown complete");
+        SkyblockPlugin.getLogger().info("MultithreadingManager shutdown complete");
     }
     
     private void shutdownExecutor(ExecutorService executor, String name) {
         try {
             executor.shutdown();
             if (!executor.awaitTermination(30, TimeUnit.SECONDS)) {
-                plugin.getLogger().warning(name + " executor did not terminate gracefully");
+                SkyblockPlugin.getLogger().warning(name + " executor did not terminate gracefully");
                 executor.shutdownNow();
                 if (!executor.awaitTermination(10, TimeUnit.SECONDS)) {
-                    plugin.getLogger().severe(name + " executor did not terminate");
+                    SkyblockPlugin.getLogger().severe(name + " executor did not terminate");
                 }
             }
         } catch (InterruptedException e) {

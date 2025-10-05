@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.gui;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.npcs.AdvancedNPCSystem;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -16,13 +20,13 @@ import java.util.List;
 import java.util.UUID;
 
 public class NPCCreationGUI extends CustomGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Player player;
     private final Location location;
 
-    public NPCCreationGUI(SkyblockPlugin plugin, Player player, Location location) {
+    public NPCCreationGUI(SkyblockPlugin SkyblockPlugin, Player player, Location location) {
         super(54, Component.text("§6§lNPC Creation").color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD));
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.player = player;
         this.location = location;
         setupItems();
@@ -199,7 +203,7 @@ public class NPCCreationGUI extends CustomGUI {
         if (meta != null) {
             meta.displayName(Component.text(name));
             if (lore.length > 0) {
-                meta.lore(Arrays.stream(lore).map(Component::text).toList());
+                meta.lore(java.util.Arrays.stream(lore).map(Component::text).collect(java.util.stream.Collectors.toList()));
             }
             item.setItemMeta(meta);
         }

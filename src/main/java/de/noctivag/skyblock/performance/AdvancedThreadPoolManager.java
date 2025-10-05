@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.performance;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -22,7 +25,7 @@ import java.util.logging.Level;
  */
 public class AdvancedThreadPoolManager {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     
     // Thread Pools für verschiedene Aufgaben
     private final ExecutorService worldExecutor;
@@ -58,8 +61,8 @@ public class AdvancedThreadPoolManager {
     private final PerformanceMetrics metrics = new PerformanceMetrics();
     private ScheduledFuture<?> metricsTask;
     
-    public AdvancedThreadPoolManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public AdvancedThreadPoolManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         
         // Dynamische Thread-Pool-Größen basierend auf CPU-Kernen
         int cpuCores = Runtime.getRuntime().availableProcessors();
@@ -85,7 +88,7 @@ public class AdvancedThreadPoolManager {
         // Starte Performance-Monitoring
         startPerformanceMonitoring();
         
-        plugin.getLogger().info("Advanced Thread Pool Manager initialized with " + 
+        SkyblockPlugin.getLogger().info("Advanced Thread Pool Manager initialized with " + 
             (worldThreads + networkThreads + databaseThreads + asyncThreads + schedulerThreads + parallelThreads) + 
             " total threads across " + cpuCores + " CPU cores");
     }
@@ -231,7 +234,7 @@ public class AdvancedThreadPoolManager {
                 totalExecutionTime.addAndGet(executionTime);
                 return result;
             } catch (Exception e) {
-                plugin.getLogger().log(Level.WARNING, "Task execution failed", e);
+                SkyblockPlugin.getLogger().log(Level.WARNING, "Task execution failed", e);
                 throw new RuntimeException(e);
             } finally {
                 activeCounter.decrementAndGet();
@@ -259,7 +262,7 @@ public class AdvancedThreadPoolManager {
             try {
                 task.run();
             } catch (Exception e) {
-                plugin.getLogger().log(Level.WARNING, "Scheduled task failed", e);
+                SkyblockPlugin.getLogger().log(Level.WARNING, "Scheduled task failed", e);
             }
         }, initialDelay, period, unit);
     }
@@ -272,7 +275,7 @@ public class AdvancedThreadPoolManager {
             try {
                 task.run();
             } catch (Exception e) {
-                plugin.getLogger().log(Level.WARNING, "Delayed task failed", e);
+                SkyblockPlugin.getLogger().log(Level.WARNING, "Delayed task failed", e);
             }
         }, delay, unit);
     }
@@ -346,7 +349,7 @@ public class AdvancedThreadPoolManager {
         metrics.setAvailableProcessors(runtime.availableProcessors());
         
         // Aktualisiere Timestamp
-        metrics.setLastUpdate(System.currentTimeMillis());
+        metrics.setLastUpdate(java.lang.System.currentTimeMillis());
     }
     
     /**
@@ -374,7 +377,7 @@ public class AdvancedThreadPoolManager {
      * Schließt alle Thread Pools
      */
     public void shutdown() {
-        plugin.getLogger().info("Shutting down Advanced Thread Pool Manager...");
+        SkyblockPlugin.getLogger().info("Shutting down Advanced Thread Pool Manager...");
         
         // Stoppe Performance-Monitoring
         if (metricsTask != null) {
@@ -389,7 +392,7 @@ public class AdvancedThreadPoolManager {
         shutdownExecutor(scheduler, "Scheduler");
         shutdownExecutor(parallelExecutor, "Parallel");
         
-        plugin.getLogger().info("Advanced Thread Pool Manager shutdown complete");
+        SkyblockPlugin.getLogger().info("Advanced Thread Pool Manager shutdown complete");
     }
     
     /**
@@ -399,14 +402,14 @@ public class AdvancedThreadPoolManager {
         try {
             executor.shutdown();
             if (!executor.awaitTermination(30, TimeUnit.SECONDS)) {
-                plugin.getLogger().warning(name + " executor did not terminate gracefully, forcing shutdown");
+                SkyblockPlugin.getLogger().warning(name + " executor did not terminate gracefully, forcing shutdown");
                 executor.shutdownNow();
                 if (!executor.awaitTermination(10, TimeUnit.SECONDS)) {
-                    plugin.getLogger().severe(name + " executor did not terminate after forced shutdown");
+                    SkyblockPlugin.getLogger().severe(name + " executor did not terminate after forced shutdown");
                 }
             }
         } catch (InterruptedException e) {
-            plugin.getLogger().warning(name + " executor shutdown interrupted");
+            SkyblockPlugin.getLogger().warning(name + " executor shutdown interrupted");
             executor.shutdownNow();
             Thread.currentThread().interrupt();
         }

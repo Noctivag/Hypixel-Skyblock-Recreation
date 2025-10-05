@@ -20,7 +20,7 @@ public class ServerData {
     public ServerData(String serverId) {
         this.serverId = serverId;
         this.playerCount = 0;
-        this.lastUpdate = System.currentTimeMillis();
+        this.lastUpdate = java.lang.System.currentTimeMillis();
         this.status = "unknown";
     }
     
@@ -35,7 +35,7 @@ public class ServerData {
     
     public void setPlayerCount(int playerCount) {
         this.playerCount = playerCount;
-        this.lastUpdate = System.currentTimeMillis();
+        this.lastUpdate = java.lang.System.currentTimeMillis();
     }
     
     public long getLastUpdate() {
@@ -52,7 +52,7 @@ public class ServerData {
     
     public void setStatus(String status) {
         this.status = status;
-        this.lastUpdate = System.currentTimeMillis();
+        this.lastUpdate = java.lang.System.currentTimeMillis();
     }
     
     // Metadata Management

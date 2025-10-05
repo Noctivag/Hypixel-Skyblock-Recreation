@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.pets;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.CorePlatform;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -15,6 +19,7 @@ import net.kyori.adventure.text.Component;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Pet Training System - Hypixel Skyblock Style
@@ -27,18 +32,18 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Pet training GUI interface
  */
 public class PetTrainingSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CorePlatform corePlatform;
     private final PetSystem petSystem;
     private final Map<UUID, PlayerPetTraining> playerTraining = new ConcurrentHashMap<>();
     private final Map<UUID, List<AutopetRule>> autopetRules = new ConcurrentHashMap<>();
     
-    public PetTrainingSystem(SkyblockPlugin plugin, CorePlatform corePlatform, PetSystem petSystem) {
-        this.plugin = plugin;
+    public PetTrainingSystem(SkyblockPlugin SkyblockPlugin, CorePlatform corePlatform, PetSystem petSystem) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.corePlatform = corePlatform;
         this.petSystem = petSystem;
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     @EventHandler
@@ -58,7 +63,7 @@ public class PetTrainingSystem implements Listener {
     }
     
     public void openPetTrainingGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§d§lPet Training");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§d§lPet Training"));
         
         // Training activities
         addGUIItem(gui, 10, Material.DIAMOND_SWORD, "§c§lCombat Training", 
@@ -99,7 +104,7 @@ public class PetTrainingSystem implements Listener {
     }
     
     public void openAutopetRulesGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§c§lAutopet Rules");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§c§lAutopet Rules"));
         
         List<AutopetRule> rules = autopetRules.getOrDefault(player.getUniqueId(), new ArrayList<>());
         
@@ -138,7 +143,7 @@ public class PetTrainingSystem implements Listener {
         int newLevel = petTraining.getTrainingLevel();
         
         if (newLevel > oldLevel) {
-            player.sendMessage("§a§lPET TRAINING LEVEL UP!");
+            player.sendMessage(Component.text("§a§lPET TRAINING LEVEL UP!"));
             player.sendMessage("§7Pet: §e" + pet.getType().getName());
             player.sendMessage("§7Training: §e" + type.getDisplayName());
             player.sendMessage("§7Level: §e" + oldLevel + " §7→ §e" + newLevel);
@@ -152,19 +157,19 @@ public class PetTrainingSystem implements Listener {
         // Apply training-based bonuses to the pet
         switch (trainingLevel) {
             case 5:
-                player.sendMessage("§aReward: §7+5% Pet Effectiveness");
+                player.sendMessage(Component.text("§aReward: §7+5% Pet Effectiveness"));
                 break;
             case 10:
-                player.sendMessage("§aReward: §7+10% Pet Effectiveness");
+                player.sendMessage(Component.text("§aReward: §7+10% Pet Effectiveness"));
                 break;
             case 15:
-                player.sendMessage("§aReward: §7+15% Pet Effectiveness");
+                player.sendMessage(Component.text("§aReward: §7+15% Pet Effectiveness"));
                 break;
             case 20:
-                player.sendMessage("§aReward: §7+20% Pet Effectiveness");
+                player.sendMessage(Component.text("§aReward: §7+20% Pet Effectiveness"));
                 break;
             case 25:
-                player.sendMessage("§aReward: §7+25% Pet Effectiveness");
+                player.sendMessage(Component.text("§aReward: §7+25% Pet Effectiveness"));
                 break;
         }
     }
@@ -173,7 +178,7 @@ public class PetTrainingSystem implements Listener {
         List<AutopetRule> rules = autopetRules.computeIfAbsent(player.getUniqueId(), k -> new ArrayList<>());
         rules.add(rule);
         
-        player.sendMessage("§a§lAUTOPET RULE ADDED!");
+        player.sendMessage(Component.text("§a§lAUTOPET RULE ADDED!"));
         player.sendMessage("§7Condition: §e" + rule.getCondition().getDisplayName());
         player.sendMessage("§7Pet: §e" + rule.getPetType().getName());
     }
@@ -182,7 +187,7 @@ public class PetTrainingSystem implements Listener {
         List<AutopetRule> rules = autopetRules.get(player.getUniqueId());
         if (rules != null) {
             rules.remove(rule);
-            player.sendMessage("§c§lAUTOPET RULE REMOVED!");
+            player.sendMessage(Component.text("§c§lAUTOPET RULE REMOVED!"));
         }
     }
     
@@ -200,7 +205,7 @@ public class PetTrainingSystem implements Listener {
                 
                 if (targetPet != null && !targetPet.isActive()) {
                     petSystem.activatePet(player, targetPet);
-                    player.sendMessage("§a§lAUTOPET ACTIVATED!");
+                    player.sendMessage(Component.text("§a§lAUTOPET ACTIVATED!"));
                     player.sendMessage("§7Switched to: §e" + targetPet.getType().getName());
                 }
             }
@@ -231,28 +236,28 @@ public class PetTrainingSystem implements Listener {
     private void handleTrainingGUIClick(Player player, int slot) {
         switch (slot) {
             case 10: // Combat Training
-                player.sendMessage("§eCombat Training coming soon!");
+                player.sendMessage(Component.text("§eCombat Training coming soon!"));
                 break;
             case 11: // Mining Training
-                player.sendMessage("§eMining Training coming soon!");
+                player.sendMessage(Component.text("§eMining Training coming soon!"));
                 break;
             case 12: // Farming Training
-                player.sendMessage("§eFarming Training coming soon!");
+                player.sendMessage(Component.text("§eFarming Training coming soon!"));
                 break;
             case 13: // Foraging Training
-                player.sendMessage("§eForaging Training coming soon!");
+                player.sendMessage(Component.text("§eForaging Training coming soon!"));
                 break;
             case 14: // Fishing Training
-                player.sendMessage("§eFishing Training coming soon!");
+                player.sendMessage(Component.text("§eFishing Training coming soon!"));
                 break;
             case 19: // Training Progress
-                player.sendMessage("§eTraining Progress coming soon!");
+                player.sendMessage(Component.text("§eTraining Progress coming soon!"));
                 break;
             case 20: // Autopet Rules
                 openAutopetRulesGUI(player);
                 break;
             case 21: // Training Rewards
-                player.sendMessage("§eTraining Rewards coming soon!");
+                player.sendMessage(Component.text("§eTraining Rewards coming soon!"));
                 break;
             case 49: // Close
                 player.closeInventory();
@@ -262,7 +267,7 @@ public class PetTrainingSystem implements Listener {
     
     private void handleAutopetGUIClick(Player player, int slot) {
         if (slot == 22) { // Add New Rule
-            player.sendMessage("§eAdd New Rule coming soon!");
+            player.sendMessage(Component.text("§eAdd New Rule coming soon!"));
         } else if (slot == 45) { // Back
             openPetTrainingGUI(player);
         }

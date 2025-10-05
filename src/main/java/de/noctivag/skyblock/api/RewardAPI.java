@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import java.time.LocalDateTime;
 
 /**
- * API interface for managing daily rewards in the plugin.
+ * API interface for managing daily rewards in the SkyblockPlugin.
  */
 public interface RewardAPI {
     /**

@@ -1,4 +1,8 @@
 package de.noctivag.skyblock.skyblock;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
@@ -11,10 +15,11 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import net.kyori.adventure.text.Component;
 
 /**
  * Advanced Skills System inspired by Hypixel Skyblock
@@ -27,18 +32,18 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AdvancedSkillsSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final HealthManaSystem healthManaSystem;
     private final Map<UUID, PlayerSkillsData> playerSkills = new ConcurrentHashMap<>();
     
-    public AdvancedSkillsSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager, 
+    public AdvancedSkillsSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager, 
                                HealthManaSystem healthManaSystem) {
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         this.healthManaSystem = healthManaSystem;
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     @EventHandler
@@ -514,6 +519,6 @@ public class AdvancedSkillsSystem implements Listener {
     
     public void openSkillsMenu(Player player) {
         // Open skills menu for player
-        player.sendMessage("Skills menu opened!");
+        player.sendMessage(Component.text("Skills menu opened!"));
     }
 }

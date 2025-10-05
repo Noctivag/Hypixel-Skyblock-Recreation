@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.slayers.CompleteSlayerSystem;
 import de.noctivag.skyblock.dungeons.CompleteDungeonSystem;
 import de.noctivag.skyblock.combat.CompleteCombatSystem;
@@ -20,6 +23,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Combat & Adventure GUI System - Centralized GUI for all combat and adventure features
@@ -33,19 +37,19 @@ import java.util.*;
  */
 public class CombatAdventureGUI implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CompleteSlayerSystem slayerSystem;
     private final CompleteDungeonSystem dungeonSystem;
     private final CompleteCombatSystem combatSystem;
     
-    public CombatAdventureGUI(SkyblockPlugin plugin, CompleteSlayerSystem slayerSystem, 
+    public CombatAdventureGUI(SkyblockPlugin SkyblockPlugin, CompleteSlayerSystem slayerSystem, 
                             CompleteDungeonSystem dungeonSystem, CompleteCombatSystem combatSystem) {
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.slayerSystem = slayerSystem;
         this.dungeonSystem = dungeonSystem;
         this.combatSystem = combatSystem;
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     public void openMainGUI(Player player) {
@@ -149,7 +153,7 @@ public class CombatAdventureGUI implements Listener {
             var activeInstance = dungeonSystem.getActiveInstance(player.getUniqueId());
             addGUIItem(gui, 22, Material.CLOCK, "§a§lActive Dungeon", 
                 "§7Floor: §e" + activeInstance.getFloor().getDisplayName() + 
-                "\n§7Time: §e" + formatTime(System.currentTimeMillis() - activeInstance.getStartTime()));
+                "\n§7Time: §e" + formatTime(java.lang.System.currentTimeMillis() - activeInstance.getStartTime()));
         } else {
             addGUIItem(gui, 22, Material.BARRIER, "§c§lNo Active Dungeon", 
                 "§7You are not currently\n§7in a dungeon run.");
@@ -300,7 +304,7 @@ public class CombatAdventureGUI implements Listener {
             slayerSystem.startSlayerQuest(player, SlayerType.BLAZE, 1);
         } else if (itemName.contains("Start Tier 1 Quest")) {
             // Quick start logic
-            player.sendMessage("§aSelect a slayer type from above!");
+            player.sendMessage(Component.text("§aSelect a slayer type from above!"));
         } else if (itemName.contains("Back")) {
             openMainGUI(player);
         } else if (itemName.contains("Close")) {
@@ -325,19 +329,19 @@ public class CombatAdventureGUI implements Listener {
             dungeonSystem.startDungeonRun(player, DungeonFloor.F7);
         } else if (itemName.contains("Berserker")) {
             dungeonSystem.getPlayerDungeonData(player.getUniqueId()).setSelectedClass(DungeonClass.BERSERKER);
-            player.sendMessage("§a§lCLASS SELECTED: Berserker");
+            player.sendMessage(Component.text("§a§lCLASS SELECTED: Berserker"));
         } else if (itemName.contains("Archer")) {
             dungeonSystem.getPlayerDungeonData(player.getUniqueId()).setSelectedClass(DungeonClass.ARCHER);
-            player.sendMessage("§a§lCLASS SELECTED: Archer");
+            player.sendMessage(Component.text("§a§lCLASS SELECTED: Archer"));
         } else if (itemName.contains("Mage")) {
             dungeonSystem.getPlayerDungeonData(player.getUniqueId()).setSelectedClass(DungeonClass.MAGE);
-            player.sendMessage("§a§lCLASS SELECTED: Mage");
+            player.sendMessage(Component.text("§a§lCLASS SELECTED: Mage"));
         } else if (itemName.contains("Tank")) {
             dungeonSystem.getPlayerDungeonData(player.getUniqueId()).setSelectedClass(DungeonClass.TANK);
-            player.sendMessage("§a§lCLASS SELECTED: Tank");
+            player.sendMessage(Component.text("§a§lCLASS SELECTED: Tank"));
         } else if (itemName.contains("Healer")) {
             dungeonSystem.getPlayerDungeonData(player.getUniqueId()).setSelectedClass(DungeonClass.HEALER);
-            player.sendMessage("§a§lCLASS SELECTED: Healer");
+            player.sendMessage(Component.text("§a§lCLASS SELECTED: Healer"));
         } else if (itemName.contains("Back")) {
             openMainGUI(player);
         } else if (itemName.contains("Close")) {
@@ -348,24 +352,24 @@ public class CombatAdventureGUI implements Listener {
     private void handleCombatGUIClick(Player player, String itemName) {
         if (itemName.contains("Berserker Rage")) {
             // Activate berserker rage ability
-            player.sendMessage("§c§lBERSERKER RAGE ACTIVATED!");
-            player.sendMessage("§7+50% damage for 10 seconds!");
+            player.sendMessage(Component.text("§c§lBERSERKER RAGE ACTIVATED!"));
+            player.sendMessage(Component.text("§7+50% damage for 10 seconds!"));
         } else if (itemName.contains("Defensive Stance")) {
             // Activate defensive stance ability
-            player.sendMessage("§e§lDEFENSIVE STANCE ACTIVATED!");
-            player.sendMessage("§7-30% damage taken for 15 seconds!");
+            player.sendMessage(Component.text("§e§lDEFENSIVE STANCE ACTIVATED!"));
+            player.sendMessage(Component.text("§7-30% damage taken for 15 seconds!"));
         } else if (itemName.contains("Precision Shot")) {
             // Activate precision shot ability
-            player.sendMessage("§a§lPRECISION SHOT READY!");
-            player.sendMessage("§7Next attack deals 200% damage!");
+            player.sendMessage(Component.text("§a§lPRECISION SHOT READY!"));
+            player.sendMessage(Component.text("§7Next attack deals 200% damage!"));
         } else if (itemName.contains("Battle Heal")) {
             // Activate battle heal ability
-            player.sendMessage("§d§lBATTLE HEAL ACTIVATED!");
-            player.sendMessage("§7Healed 50% of max health!");
+            player.sendMessage(Component.text("§d§lBATTLE HEAL ACTIVATED!"));
+            player.sendMessage(Component.text("§7Healed 50% of max health!"));
         } else if (itemName.contains("Shadow Strike")) {
             // Activate shadow strike ability
-            player.sendMessage("§5§lSHADOW STRIKE READY!");
-            player.sendMessage("§7Next attack teleports behind target!");
+            player.sendMessage(Component.text("§5§lSHADOW STRIKE READY!"));
+            player.sendMessage(Component.text("§7Next attack teleports behind target!"));
         } else if (itemName.contains("Back")) {
             openMainGUI(player);
         } else if (itemName.contains("Close")) {

@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.combat;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -36,19 +40,19 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Custom Entity Names
  */
 public class HealthDisplaySystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, HealthDisplay> entityHealthDisplays = new ConcurrentHashMap<>();
     private final Map<UUID, BukkitTask> healthUpdateTasks = new ConcurrentHashMap<>();
     private final Map<UUID, List<DamageNumber>> damageNumbers = new ConcurrentHashMap<>();
     
-    public HealthDisplaySystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public HealthDisplaySystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         startHealthUpdateTask();
         
         // Register events
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void startHealthUpdateTask() {
@@ -58,7 +62,7 @@ public class HealthDisplaySystem implements Listener {
                 updateAllHealthDisplays();
                 updateDamageNumbers();
             }
-        }.runTaskTimer(plugin, 0L, 2L); // Every 2 ticks (0.1 seconds)
+        }.runTaskTimer(SkyblockPlugin, 0L, 2L); // Every 2 ticks (0.1 seconds)
     }
     
     @EventHandler
@@ -123,7 +127,7 @@ public class HealthDisplaySystem implements Listener {
                 
                 updateHealthDisplay(entity);
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Every second
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Every second
         
         healthUpdateTasks.put(entityId, task);
     }
@@ -216,7 +220,7 @@ public class HealthDisplaySystem implements Listener {
             entity.getLocation().add(0, 2, 0), // Above entity
             damage,
             isCritical,
-            System.currentTimeMillis()
+            java.lang.System.currentTimeMillis()
         );
         
         // Add to damage numbers
@@ -285,7 +289,7 @@ public class HealthDisplaySystem implements Listener {
     }
     
     private void updateDamageNumbers() {
-        long currentTime = System.currentTimeMillis();
+        long currentTime = java.lang.System.currentTimeMillis();
         
         for (Map.Entry<UUID, List<DamageNumber>> entry : damageNumbers.entrySet()) {
             List<DamageNumber> numbers = entry.getValue();

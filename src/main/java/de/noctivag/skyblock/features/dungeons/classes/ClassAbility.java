@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.dungeons.classes;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import org.bukkit.Bukkit;
@@ -31,7 +32,7 @@ public class ClassAbility {
      */
     public boolean canUse(UUID playerId) {
         long lastUsedTime = lastUsed.getOrDefault(playerId, 0L);
-        long currentTime = System.currentTimeMillis();
+        long currentTime = java.lang.System.currentTimeMillis();
         long cooldownMs = cooldownSeconds * 1000L;
         
         return (currentTime - lastUsedTime) >= cooldownMs;
@@ -45,7 +46,7 @@ public class ClassAbility {
             return false;
         }
         
-        lastUsed.put(playerId, System.currentTimeMillis());
+        lastUsed.put(playerId, java.lang.System.currentTimeMillis());
         
         // Execute ability effect
         executeAbility(playerId);
@@ -69,7 +70,7 @@ public class ClassAbility {
      */
     public int getRemainingCooldown(UUID playerId) {
         long lastUsedTime = lastUsed.getOrDefault(playerId, 0L);
-        long currentTime = System.currentTimeMillis();
+        long currentTime = java.lang.System.currentTimeMillis();
         long cooldownMs = cooldownSeconds * 1000L;
         
         long remaining = cooldownMs - (currentTime - lastUsedTime);

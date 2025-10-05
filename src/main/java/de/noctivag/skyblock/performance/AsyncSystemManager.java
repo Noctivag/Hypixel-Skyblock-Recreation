@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.performance;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -20,13 +23,13 @@ import java.util.concurrent.atomic.AtomicInteger;
  * - Performance monitoring
  */
 public class AsyncSystemManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultithreadingManager multithreadingManager;
     private final ConcurrentHashMap<String, BukkitTask> asyncTasks = new ConcurrentHashMap<>();
     private final AtomicInteger activeSystemUpdates = new AtomicInteger(0);
     
-    public AsyncSystemManager(SkyblockPlugin plugin, MultithreadingManager multithreadingManager) {
-        this.plugin = plugin;
+    public AsyncSystemManager(SkyblockPlugin SkyblockPlugin, MultithreadingManager multithreadingManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.multithreadingManager = multithreadingManager;
     }
     
@@ -56,10 +59,10 @@ public class AsyncSystemManager {
                     }
                 });
             }
-        }.runTaskTimerAsynchronously(plugin, 0L, intervalTicks);
+        }.runTaskTimerAsynchronously(SkyblockPlugin, 0L, intervalTicks);
         
         asyncTasks.put(systemName, task);
-        plugin.getLogger().info("Started async system update: " + systemName);
+        SkyblockPlugin.getLogger().info("Started async system update: " + systemName);
     }
     
     /**
@@ -69,7 +72,7 @@ public class AsyncSystemManager {
         BukkitTask task = asyncTasks.remove(systemName);
         if (task != null) {
             task.cancel();
-            plugin.getLogger().info("Stopped async system update: " + systemName);
+            SkyblockPlugin.getLogger().info("Stopped async system update: " + systemName);
         }
     }
     
@@ -77,7 +80,7 @@ public class AsyncSystemManager {
      * Execute heavy computation asynchronously
      */
     public CompletableFuture<Void> executeHeavyComputation(String computationName, Runnable computation) {
-        plugin.getLogger().info("Starting heavy computation: " + computationName);
+        SkyblockPlugin.getLogger().info("Starting heavy computation: " + computationName);
         
         return multithreadingManager.executeComputationAsync(() -> {
             long startTime = System.nanoTime();
@@ -85,11 +88,11 @@ public class AsyncSystemManager {
                 computation.run();
                 long endTime = System.nanoTime();
                 double durationMs = (endTime - startTime) / 1_000_000.0;
-                plugin.getLogger().info("Completed heavy computation: " + computationName + " in " + 
+                SkyblockPlugin.getLogger().info("Completed heavy computation: " + computationName + " in " + 
                                       String.format("%.2f", durationMs) + "ms");
             } catch (Exception e) {
-                plugin.getLogger().severe("Heavy computation failed: " + computationName);
-                plugin.getLogger().severe(e.getMessage());
+                SkyblockPlugin.getLogger().severe("Heavy computation failed: " + computationName);
+                SkyblockPlugin.getLogger().severe(e.getMessage());
                 throw e;
             }
         });
@@ -100,7 +103,7 @@ public class AsyncSystemManager {
      */
     public <T> CompletableFuture<Void> executeBatchProcessing(String batchName, T[] items, 
                                                              java.util.function.Consumer<T> processor) {
-        plugin.getLogger().info("Starting batch processing: " + batchName + " (" + items.length + " items)");
+        SkyblockPlugin.getLogger().info("Starting batch processing: " + batchName + " (" + items.length + " items)");
         
         return multithreadingManager.executeComputationAsync(() -> {
             long startTime = System.nanoTime();
@@ -119,13 +122,13 @@ public class AsyncSystemManager {
                 
                 long endTime = System.nanoTime();
                 double durationMs = (endTime - startTime) / 1_000_000.0;
-                plugin.getLogger().info("Completed batch processing: " + batchName + 
+                SkyblockPlugin.getLogger().info("Completed batch processing: " + batchName + 
                                       " (" + processedCount + " items) in " + 
                                       String.format("%.2f", durationMs) + "ms");
                                       
             } catch (Exception e) {
-                plugin.getLogger().severe("Batch processing failed: " + batchName);
-                plugin.getLogger().severe(e.getMessage());
+                SkyblockPlugin.getLogger().severe("Batch processing failed: " + batchName);
+                SkyblockPlugin.getLogger().severe(e.getMessage());
                 throw e;
             }
         });
@@ -137,7 +140,7 @@ public class AsyncSystemManager {
     public <T> CompletableFuture<Void> executeParallelProcessing(String processName, T[] items, 
                                                                 java.util.function.Consumer<T> processor, 
                                                                 int batchSize) {
-        plugin.getLogger().info("Starting parallel processing: " + processName + " (" + items.length + " items)");
+        SkyblockPlugin.getLogger().info("Starting parallel processing: " + processName + " (" + items.length + " items)");
         
         @SuppressWarnings("unchecked")
         CompletableFuture<Void>[] futures = new CompletableFuture[(items.length + batchSize - 1) / batchSize];
@@ -154,7 +157,7 @@ public class AsyncSystemManager {
         }
         
         return CompletableFuture.allOf(futures).thenRun(() -> {
-            plugin.getLogger().info("Completed parallel processing: " + processName);
+            SkyblockPlugin.getLogger().info("Completed parallel processing: " + processName);
         });
     }
     
@@ -251,20 +254,20 @@ public class AsyncSystemManager {
      * Stop all async system updates
      */
     public void stopAllAsyncUpdates() {
-        plugin.getLogger().info("Stopping all async system updates...");
+        SkyblockPlugin.getLogger().info("Stopping all async system updates...");
         
         for (String systemName : asyncTasks.keySet()) {
             stopAsyncSystemUpdate(systemName);
         }
         
-        plugin.getLogger().info("All async system updates stopped");
+        SkyblockPlugin.getLogger().info("All async system updates stopped");
     }
     
     /**
      * Shutdown async system manager
      */
     public void shutdown() {
-        plugin.getLogger().info("Shutting down AsyncSystemManager...");
+        SkyblockPlugin.getLogger().info("Shutting down AsyncSystemManager...");
         
         stopAllAsyncUpdates();
         
@@ -278,6 +281,6 @@ public class AsyncSystemManager {
             }
         }
         
-        plugin.getLogger().info("AsyncSystemManager shutdown complete");
+        SkyblockPlugin.getLogger().info("AsyncSystemManager shutdown complete");
     }
 }

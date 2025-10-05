@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.economy.data;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
@@ -21,7 +22,7 @@ public class PlayerEconomy {
         this.coins = 0.0;
         this.bankBalance = 0.0;
         this.purseBalance = 0.0;
-        this.lastLogin = System.currentTimeMillis();
+        this.lastLogin = java.lang.System.currentTimeMillis();
         this.totalCoinsEarned = 0;
         this.totalCoinsSpent = 0;
         this.transactionsCount = 0;

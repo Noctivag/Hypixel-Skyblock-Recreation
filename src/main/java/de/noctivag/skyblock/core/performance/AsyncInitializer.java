@@ -1,8 +1,11 @@
 package de.noctivag.skyblock.core.performance;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.core.api.Service;
-import org.bukkit.plugin.java.JavaPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.concurrent.*;
 import java.util.logging.Logger;
@@ -14,14 +17,14 @@ import java.util.ArrayList;
  */
 public class AsyncInitializer {
     
-    private final JavaSkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Logger logger;
     private final ExecutorService executorService;
     private final ScheduledExecutorService scheduledExecutor;
     
-    public AsyncInitializer(JavaSkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.logger = plugin.getLogger();
+    public AsyncInitializer(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.logger = SkyblockPlugin.getLogger();
         
         // Create thread pool for initialization
         this.executorService = Executors.newFixedThreadPool(
@@ -67,7 +70,7 @@ public class AsyncInitializer {
      */
     public CompletableFuture<Void> initializeService(Service service) {
         return CompletableFuture.runAsync(() -> {
-            long startTime = System.currentTimeMillis();
+            long startTime = java.lang.System.currentTimeMillis();
             
             try {
                 logger.info("Initializing service: " + service.getName());
@@ -75,7 +78,7 @@ public class AsyncInitializer {
                 // Initialize the service
                 service.initialize().get(30, TimeUnit.SECONDS);
                 
-                long duration = System.currentTimeMillis() - startTime;
+                long duration = java.lang.System.currentTimeMillis() - startTime;
                 logger.info("Service initialized successfully: " + service.getName() + " (took " + duration + "ms)");
                 
             } catch (TimeoutException e) {

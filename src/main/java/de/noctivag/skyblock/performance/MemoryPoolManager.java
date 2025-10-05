@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.performance;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -21,7 +24,7 @@ import java.util.logging.Level;
  */
 public class MemoryPoolManager {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final ConcurrentHashMap<Class<?>, ObjectPool<?>> objectPools = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, BufferPool> bufferPools = new ConcurrentHashMap<>();
     
@@ -36,8 +39,8 @@ public class MemoryPoolManager {
     private volatile boolean poolingEnabled = true;
     private volatile long lastGcTime = 0;
     
-    public MemoryPoolManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public MemoryPoolManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         initializeDefaultPools();
     }
     
@@ -66,7 +69,7 @@ public class MemoryPoolManager {
         createBufferPool("char-1024", 1024, 100);
         createBufferPool("char-4096", 4096, 50);
         
-        plugin.getLogger().info("Memory Pool Manager initialized with default pools");
+        SkyblockPlugin.getLogger().info("Memory Pool Manager initialized with default pools");
     }
     
     /**
@@ -75,7 +78,7 @@ public class MemoryPoolManager {
     public <T> void createObjectPool(Class<T> clazz, int maxSize, java.util.function.Supplier<T> factory) {
         ObjectPool<T> pool = new ObjectPool<>(maxSize, factory);
         objectPools.put(clazz, pool);
-        plugin.getLogger().info("Created object pool for " + clazz.getSimpleName() + " with max size " + maxSize);
+        SkyblockPlugin.getLogger().info("Created object pool for " + clazz.getSimpleName() + " with max size " + maxSize);
     }
     
     /**
@@ -84,7 +87,7 @@ public class MemoryPoolManager {
     public void createBufferPool(String name, int bufferSize, int maxBuffers) {
         BufferPool pool = new BufferPool(bufferSize, maxBuffers);
         bufferPools.put(name, pool);
-        plugin.getLogger().info("Created buffer pool '" + name + "' with size " + bufferSize + " and max buffers " + maxBuffers);
+        SkyblockPlugin.getLogger().info("Created buffer pool '" + name + "' with size " + bufferSize + " and max buffers " + maxBuffers);
     }
     
     /**
@@ -213,7 +216,7 @@ public class MemoryPoolManager {
                 return clazz.getDeclaredConstructor().newInstance();
             }
         } catch (Exception e) {
-            plugin.getLogger().log(Level.WARNING, "Failed to create new object of type " + clazz.getSimpleName(), e);
+            SkyblockPlugin.getLogger().log(Level.WARNING, "Failed to create new object of type " + clazz.getSimpleName(), e);
             return null;
         }
     }
@@ -232,19 +235,19 @@ public class MemoryPoolManager {
      * Führt Garbage Collection aus
      */
     public void performGarbageCollection() {
-        long startTime = System.currentTimeMillis();
+        long startTime = java.lang.System.currentTimeMillis();
         long startMemory = getUsedMemory();
         
         System.gc();
         
-        long endTime = System.currentTimeMillis();
+        long endTime = java.lang.System.currentTimeMillis();
         long endMemory = getUsedMemory();
         
         long freedMemory = startMemory - endMemory;
         totalMemoryFreed.add(freedMemory);
         lastGcTime = endTime;
         
-        plugin.getLogger().info("Garbage collection completed in " + (endTime - startTime) + "ms, freed " + 
+        SkyblockPlugin.getLogger().info("Garbage collection completed in " + (endTime - startTime) + "ms, freed " + 
             (freedMemory / 1024 / 1024) + "MB");
     }
     
@@ -262,7 +265,7 @@ public class MemoryPoolManager {
         // Trigger GC if memory usage is high
         long maxMemory = Runtime.getRuntime().maxMemory();
         if (currentMemory > maxMemory * 0.8) { // 80% of max memory
-            plugin.getLogger().warning("High memory usage detected: " + (currentMemory / 1024 / 1024) + "MB / " + 
+            SkyblockPlugin.getLogger().warning("High memory usage detected: " + (currentMemory / 1024 / 1024) + "MB / " + 
                 (maxMemory / 1024 / 1024) + "MB");
             performGarbageCollection();
         }
@@ -308,14 +311,14 @@ public class MemoryPoolManager {
      */
     public void setPoolingEnabled(boolean enabled) {
         this.poolingEnabled = enabled;
-        plugin.getLogger().info("Object pooling " + (enabled ? "enabled" : "disabled"));
+        SkyblockPlugin.getLogger().info("Object pooling " + (enabled ? "enabled" : "disabled"));
     }
     
     /**
      * Schließt alle Pools
      */
     public void shutdown() {
-        plugin.getLogger().info("Shutting down Memory Pool Manager...");
+        SkyblockPlugin.getLogger().info("Shutting down Memory Pool Manager...");
         
         objectPools.clear();
         bufferPools.clear();
@@ -323,7 +326,7 @@ public class MemoryPoolManager {
         // Final garbage collection
         performGarbageCollection();
         
-        plugin.getLogger().info("Memory Pool Manager shutdown complete");
+        SkyblockPlugin.getLogger().info("Memory Pool Manager shutdown complete");
     }
     
     /**

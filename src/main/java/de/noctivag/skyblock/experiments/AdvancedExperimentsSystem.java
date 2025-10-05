@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.experiments;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -19,15 +24,15 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AdvancedExperimentsSystem {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerExperimentData> playerExperimentData = new ConcurrentHashMap<>();
     private final Map<String, ExperimentType> experimentTypes = new HashMap<>();
     private final Map<String, ResearchProject> researchProjects = new HashMap<>();
     private final Map<UUID, List<ActiveExperiment>> activeExperiments = new ConcurrentHashMap<>();
     
-    public AdvancedExperimentsSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedExperimentsSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeExperimentTypes();
         initializeResearchProjects();
@@ -296,7 +301,7 @@ public class AdvancedExperimentsSystem {
             public void run() {
                 updateActiveExperiments();
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Every second
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Every second
     }
     
     /**
@@ -453,7 +458,7 @@ public class AdvancedExperimentsSystem {
     private void applyExperimentResults(Player player, String experimentId) {
         // This would apply the experiment results to the player
         // For now, we'll just send a message
-        player.sendMessage("§aExperiment completed! Results applied.");
+        player.sendMessage(Component.text("§aExperiment completed! Results applied."));
     }
     
     /**
@@ -488,7 +493,7 @@ public class AdvancedExperimentsSystem {
         ItemMeta meta = item.getItemMeta();
         
         if (meta != null) {
-            meta.setDisplayName("§6" + experiment.getName() + " Experiment");
+            meta.displayName(Component.text("§6" + experiment.getName() + " Experiment"));
             List<String> lore = new ArrayList<>(experiment.getDescription());
             lore.add("");
             lore.add("§7Category: " + experiment.getCategory().getDisplayName());
@@ -499,7 +504,7 @@ public class AdvancedExperimentsSystem {
             lore.add("§7and unlock new improvements!");
             lore.add("");
             lore.add("§8A scientific experiment");
-            meta.setLore(lore);
+            meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             
             item.setItemMeta(meta);
         }
@@ -607,7 +612,7 @@ public class AdvancedExperimentsSystem {
                 playerExperimentData.put(playerId, data);
             }
         } catch (Exception e) {
-            plugin.getLogger().warning("Failed to load experiment data for player " + playerId + ": " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Failed to load experiment data for player " + playerId + ": " + e.getMessage());
         }
     }
     

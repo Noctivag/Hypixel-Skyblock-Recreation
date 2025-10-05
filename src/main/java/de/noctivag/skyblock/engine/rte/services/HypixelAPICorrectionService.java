@@ -118,11 +118,11 @@ public class HypixelAPICorrectionService {
             basePrice,        // averagePrice
             0,               // volume
             0.0,             // priceChange
-            System.currentTimeMillis()
+            java.lang.System.currentTimeMillis()
         );
         
         priceCache.put(itemId, priceData);
-        lastUpdateTime.put(itemId, System.currentTimeMillis());
+        lastUpdateTime.put(itemId, java.lang.System.currentTimeMillis());
     }
     
     /**
@@ -227,17 +227,17 @@ public class HypixelAPICorrectionService {
                     averagePrice,
                     volume,
                     priceChange,
-                    System.currentTimeMillis()
+                    java.lang.System.currentTimeMillis()
                 );
                 
                 priceCache.put(itemId, newData);
-                lastUpdateTime.put(itemId, System.currentTimeMillis());
+                lastUpdateTime.put(itemId, java.lang.System.currentTimeMillis());
                 
             } else {
                 // Use cached data if no market data available
                 CorrectedPriceData cachedData = priceCache.get(itemId);
                 if (cachedData != null) {
-                    cachedData.setLastUpdate(System.currentTimeMillis());
+                    cachedData.setLastUpdate(java.lang.System.currentTimeMillis());
                 }
             }
             
@@ -395,7 +395,7 @@ public class HypixelAPICorrectionService {
         }
         
         // Check if cache is still valid
-        if (System.currentTimeMillis() - lastUpdate > MAX_CACHE_AGE) {
+        if (java.lang.System.currentTimeMillis() - lastUpdate > MAX_CACHE_AGE) {
             // Update price if cache is stale
             updateItemPrice(itemId);
             priceData = priceCache.get(itemId);
@@ -475,11 +475,11 @@ public class HypixelAPICorrectionService {
             averagePrice,
             volume,
             0.0, // Price change will be calculated
-            System.currentTimeMillis()
+            java.lang.System.currentTimeMillis()
         );
         
         priceCache.put(itemId, priceData);
-        lastUpdateTime.put(itemId, System.currentTimeMillis());
+        lastUpdateTime.put(itemId, java.lang.System.currentTimeMillis());
     }
     
     /**
@@ -491,7 +491,7 @@ public class HypixelAPICorrectionService {
         stats.put("cacheDuration", CACHE_DURATION);
         stats.put("maxCacheAge", MAX_CACHE_AGE);
         
-        long now = System.currentTimeMillis();
+        long now = java.lang.System.currentTimeMillis();
         int staleItems = 0;
         for (Long lastUpdate : lastUpdateTime.values()) {
             if (now - lastUpdate > MAX_CACHE_AGE) {

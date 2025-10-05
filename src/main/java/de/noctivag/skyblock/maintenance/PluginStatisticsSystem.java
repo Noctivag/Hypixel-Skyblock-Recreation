@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.maintenance;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -16,7 +20,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * PluginStatisticsSystem - Generiert umfassende Plugin-Statistiken
+ * PluginStatisticsSystem - Generiert umfassende SkyblockPlugin-Statistiken
  * 
  * Features:
  * - System-Nutzungsstatistiken
@@ -28,14 +32,14 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class PluginStatisticsSystem {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<String, Object> statistics = new ConcurrentHashMap<>();
     private final Map<String, Long> performanceMetrics = new ConcurrentHashMap<>();
     private final Map<String, Integer> usageCounters = new ConcurrentHashMap<>();
     private final Map<String, Long> lastUpdateTimes = new ConcurrentHashMap<>();
     
-    public PluginStatisticsSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public PluginStatisticsSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         initializeStatistics();
     }
     
@@ -44,16 +48,16 @@ public class PluginStatisticsSystem {
      */
     private void initializeStatistics() {
         // System statistics
-        statistics.put("plugin_version", plugin.getDescription().getVersion());
+        statistics.put("plugin_version", SkyblockPlugin.getDescription().getVersion());
         statistics.put("bukkit_version", Bukkit.getVersion());
-        statistics.put("java_version", System.getProperty("java.version"));
+        statistics.put("java_version", java.lang.System.getProperty("java.version"));
         statistics.put("server_name", Bukkit.getServer().getName());
         statistics.put("server_port", Bukkit.getPort());
         statistics.put("max_players", Bukkit.getMaxPlayers());
         
         // Performance metrics
-        performanceMetrics.put("startup_time", System.currentTimeMillis());
-        performanceMetrics.put("last_update", System.currentTimeMillis());
+        performanceMetrics.put("startup_time", java.lang.System.currentTimeMillis());
+        performanceMetrics.put("last_update", java.lang.System.currentTimeMillis());
         
         // Usage counters
         usageCounters.put("commands_executed", 0);
@@ -64,16 +68,16 @@ public class PluginStatisticsSystem {
         usageCounters.put("players_left", 0);
         
         // Last update times
-        lastUpdateTimes.put("system_stats", System.currentTimeMillis());
-        lastUpdateTimes.put("performance_stats", System.currentTimeMillis());
-        lastUpdateTimes.put("usage_stats", System.currentTimeMillis());
+        lastUpdateTimes.put("system_stats", java.lang.System.currentTimeMillis());
+        lastUpdateTimes.put("performance_stats", java.lang.System.currentTimeMillis());
+        lastUpdateTimes.put("usage_stats", java.lang.System.currentTimeMillis());
     }
     
     /**
      * Generiert alle Statistiken
      */
     public void generateAllStatistics() {
-        plugin.getLogger().info("§e[Statistics] Generating comprehensive plugin statistics...");
+        SkyblockPlugin.getLogger().info("§e[Statistics] Generating comprehensive SkyblockPlugin statistics...");
         
         // Generate system statistics
         generateSystemStatistics();
@@ -94,9 +98,9 @@ public class PluginStatisticsSystem {
         generateFeatureStatistics();
         
         // Update last update time
-        lastUpdateTimes.put("last_update", System.currentTimeMillis());
+        lastUpdateTimes.put("last_update", java.lang.System.currentTimeMillis());
         
-        plugin.getLogger().info("§a[Statistics] Statistics generation completed!");
+        SkyblockPlugin.getLogger().info("§a[Statistics] Statistics generation completed!");
     }
     
     /**
@@ -126,7 +130,7 @@ public class PluginStatisticsSystem {
         statistics.put("cpu_cores", Runtime.getRuntime().availableProcessors());
         statistics.put("jvm_uptime", runtimeBean.getUptime());
         
-        lastUpdateTimes.put("system_stats", System.currentTimeMillis());
+        lastUpdateTimes.put("system_stats", java.lang.System.currentTimeMillis());
     }
     
     /**
@@ -134,7 +138,7 @@ public class PluginStatisticsSystem {
      */
     private void generatePerformanceStatistics() {
         // TPS (Ticks Per Second) - simplified calculation
-        long currentTime = System.currentTimeMillis();
+        long currentTime = java.lang.System.currentTimeMillis();
         long lastUpdate = lastUpdateTimes.getOrDefault("performance_stats", currentTime);
         long timeDiff = currentTime - lastUpdate;
         
@@ -151,7 +155,7 @@ public class PluginStatisticsSystem {
         performanceMetrics.put("db_query_time_avg", 0L); // Placeholder
         performanceMetrics.put("db_connection_pool_size", 0L); // Placeholder
         
-        // Plugin performance
+        // SkyblockPlugin performance
         performanceMetrics.put("plugin_memory_usage", getPluginMemoryUsage());
         performanceMetrics.put("plugin_cpu_usage", 0L); // Placeholder
         
@@ -178,7 +182,7 @@ public class PluginStatisticsSystem {
         statistics.put("most_used_gui", getMostUsedGUI());
         statistics.put("most_active_player", getMostActivePlayer());
         
-        lastUpdateTimes.put("usage_stats", System.currentTimeMillis());
+        lastUpdateTimes.put("usage_stats", java.lang.System.currentTimeMillis());
     }
     
     /**
@@ -287,56 +291,56 @@ public class PluginStatisticsSystem {
      * Generiert einen detaillierten Bericht
      */
     public void generateDetailedReport() {
-        plugin.getLogger().info("§6=== PLUGIN STATISTICS REPORT ===");
+        SkyblockPlugin.getLogger().info("§6=== SkyblockPlugin STATISTICS REPORT ===");
         
         // System statistics
-        plugin.getLogger().info("§eSystem Statistics:");
-        plugin.getLogger().info("  §7Plugin Version: §a" + statistics.get("plugin_version"));
-        plugin.getLogger().info("  §7Bukkit Version: §a" + statistics.get("bukkit_version"));
-        plugin.getLogger().info("  §7Java Version: §a" + statistics.get("java_version"));
-        plugin.getLogger().info("  §7Server Name: §a" + statistics.get("server_name"));
-        plugin.getLogger().info("  §7Max Players: §a" + statistics.get("max_players"));
-        plugin.getLogger().info("  §7Online Players: §a" + statistics.get("online_players"));
-        plugin.getLogger().info("  §7Total Players: §a" + statistics.get("total_players"));
-        plugin.getLogger().info("  §7Loaded Worlds: §a" + statistics.get("loaded_worlds"));
-        plugin.getLogger().info("  §7Loaded Plugins: §a" + statistics.get("loaded_plugins"));
+        SkyblockPlugin.getLogger().info("§eSystem Statistics:");
+        SkyblockPlugin.getLogger().info("  §7Plugin Version: §a" + statistics.get("plugin_version"));
+        SkyblockPlugin.getLogger().info("  §7Bukkit Version: §a" + statistics.get("bukkit_version"));
+        SkyblockPlugin.getLogger().info("  §7Java Version: §a" + statistics.get("java_version"));
+        SkyblockPlugin.getLogger().info("  §7Server Name: §a" + statistics.get("server_name"));
+        SkyblockPlugin.getLogger().info("  §7Max Players: §a" + statistics.get("max_players"));
+        SkyblockPlugin.getLogger().info("  §7Online Players: §a" + statistics.get("online_players"));
+        SkyblockPlugin.getLogger().info("  §7Total Players: §a" + statistics.get("total_players"));
+        SkyblockPlugin.getLogger().info("  §7Loaded Worlds: §a" + statistics.get("loaded_worlds"));
+        SkyblockPlugin.getLogger().info("  §7Loaded Plugins: §a" + statistics.get("loaded_plugins"));
         
         // Memory statistics
-        plugin.getLogger().info("§eMemory Statistics:");
-        plugin.getLogger().info("  §7Used Memory: §a" + statistics.get("used_memory_mb") + " MB");
-        plugin.getLogger().info("  §7Max Memory: §a" + statistics.get("max_memory_mb") + " MB");
-        plugin.getLogger().info("  §7Free Memory: §a" + statistics.get("free_memory_mb") + " MB");
-        plugin.getLogger().info("  §7Memory Usage: §a" + String.format("%.2f", statistics.get("memory_usage_percent")) + "%");
+        SkyblockPlugin.getLogger().info("§eMemory Statistics:");
+        SkyblockPlugin.getLogger().info("  §7Used Memory: §a" + statistics.get("used_memory_mb") + " MB");
+        SkyblockPlugin.getLogger().info("  §7Max Memory: §a" + statistics.get("max_memory_mb") + " MB");
+        SkyblockPlugin.getLogger().info("  §7Free Memory: §a" + statistics.get("free_memory_mb") + " MB");
+        SkyblockPlugin.getLogger().info("  §7Memory Usage: §a" + String.format("%.2f", statistics.get("memory_usage_percent")) + "%");
         
         // Performance statistics
-        plugin.getLogger().info("§ePerformance Statistics:");
-        plugin.getLogger().info("  §7TPS: §a" + performanceMetrics.get("tps"));
-        plugin.getLogger().info("  §7Lag Ticks: §a" + performanceMetrics.get("lag_ticks"));
-        plugin.getLogger().info("  §7CPU Cores: §a" + statistics.get("cpu_cores"));
-        plugin.getLogger().info("  §7JVM Uptime: §a" + formatUptime((Long) statistics.get("jvm_uptime")));
+        SkyblockPlugin.getLogger().info("§ePerformance Statistics:");
+        SkyblockPlugin.getLogger().info("  §7TPS: §a" + performanceMetrics.get("tps"));
+        SkyblockPlugin.getLogger().info("  §7Lag Ticks: §a" + performanceMetrics.get("lag_ticks"));
+        SkyblockPlugin.getLogger().info("  §7CPU Cores: §a" + statistics.get("cpu_cores"));
+        SkyblockPlugin.getLogger().info("  §7JVM Uptime: §a" + formatUptime((Long) statistics.get("jvm_uptime")));
         
         // Usage statistics
-        plugin.getLogger().info("§eUsage Statistics:");
-        plugin.getLogger().info("  §7Commands Executed: §a" + usageCounters.get("commands_executed"));
-        plugin.getLogger().info("  §7GUI Interactions: §a" + usageCounters.get("gui_interactions"));
-        plugin.getLogger().info("  §7Database Queries: §a" + usageCounters.get("database_queries"));
-        plugin.getLogger().info("  §7Events Triggered: §a" + usageCounters.get("events_triggered"));
-        plugin.getLogger().info("  §7Players Joined: §a" + usageCounters.get("players_joined"));
-        plugin.getLogger().info("  §7Players Left: §a" + usageCounters.get("players_left"));
+        SkyblockPlugin.getLogger().info("§eUsage Statistics:");
+        SkyblockPlugin.getLogger().info("  §7Commands Executed: §a" + usageCounters.get("commands_executed"));
+        SkyblockPlugin.getLogger().info("  §7GUI Interactions: §a" + usageCounters.get("gui_interactions"));
+        SkyblockPlugin.getLogger().info("  §7Database Queries: §a" + usageCounters.get("database_queries"));
+        SkyblockPlugin.getLogger().info("  §7Events Triggered: §a" + usageCounters.get("events_triggered"));
+        SkyblockPlugin.getLogger().info("  §7Players Joined: §a" + usageCounters.get("players_joined"));
+        SkyblockPlugin.getLogger().info("  §7Players Left: §a" + usageCounters.get("players_left"));
         
         // Feature statistics
-        plugin.getLogger().info("§eFeature Statistics:");
-        plugin.getLogger().info("  §7Skills System Usage: §a" + statistics.get("skills_system_usage"));
-        plugin.getLogger().info("  §7Collections System Usage: §a" + statistics.get("collections_system_usage"));
-        plugin.getLogger().info("  §7Minions System Usage: §a" + statistics.get("minions_system_usage"));
-        plugin.getLogger().info("  §7Pets System Usage: §a" + statistics.get("pets_system_usage"));
-        plugin.getLogger().info("  §7Guilds System Usage: §a" + statistics.get("guilds_system_usage"));
-        plugin.getLogger().info("  §7Auctions System Usage: §a" + statistics.get("auctions_system_usage"));
-        plugin.getLogger().info("  §7Bazaar System Usage: §a" + statistics.get("bazaar_system_usage"));
-        plugin.getLogger().info("  §7Dungeons System Usage: §a" + statistics.get("dungeons_system_usage"));
-        plugin.getLogger().info("  §7Slayers System Usage: §a" + statistics.get("slayers_system_usage"));
+        SkyblockPlugin.getLogger().info("§eFeature Statistics:");
+        SkyblockPlugin.getLogger().info("  §7Skills System Usage: §a" + statistics.get("skills_system_usage"));
+        SkyblockPlugin.getLogger().info("  §7Collections System Usage: §a" + statistics.get("collections_system_usage"));
+        SkyblockPlugin.getLogger().info("  §7Minions System Usage: §a" + statistics.get("minions_system_usage"));
+        SkyblockPlugin.getLogger().info("  §7Pets System Usage: §a" + statistics.get("pets_system_usage"));
+        SkyblockPlugin.getLogger().info("  §7Guilds System Usage: §a" + statistics.get("guilds_system_usage"));
+        SkyblockPlugin.getLogger().info("  §7Auctions System Usage: §a" + statistics.get("auctions_system_usage"));
+        SkyblockPlugin.getLogger().info("  §7Bazaar System Usage: §a" + statistics.get("bazaar_system_usage"));
+        SkyblockPlugin.getLogger().info("  §7Dungeons System Usage: §a" + statistics.get("dungeons_system_usage"));
+        SkyblockPlugin.getLogger().info("  §7Slayers System Usage: §a" + statistics.get("slayers_system_usage"));
         
-        plugin.getLogger().info("§6==========================================");
+        SkyblockPlugin.getLogger().info("§6==========================================");
     }
     
     /**
@@ -344,7 +348,7 @@ public class PluginStatisticsSystem {
      */
     public void saveStatisticsToFile() {
         try {
-            File statsFile = new File(plugin.getDataFolder(), "statistics.yml");
+            File statsFile = new File(SkyblockPlugin.getDataFolder(), "statistics.yml");
             FileConfiguration config = new YamlConfiguration();
             
             // Save all statistics
@@ -368,10 +372,10 @@ public class PluginStatisticsSystem {
             }
             
             config.save(statsFile);
-            plugin.getLogger().info("§a[Statistics] Statistics saved to file!");
+            SkyblockPlugin.getLogger().info("§a[Statistics] Statistics saved to file!");
             
         } catch (Exception e) {
-            plugin.getLogger().warning("Error saving statistics: " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Error saving statistics: " + e.getMessage());
         }
     }
     
@@ -380,7 +384,7 @@ public class PluginStatisticsSystem {
      */
     public void loadStatisticsFromFile() {
         try {
-            File statsFile = new File(plugin.getDataFolder(), "statistics.yml");
+            File statsFile = new File(SkyblockPlugin.getDataFolder(), "statistics.yml");
             if (statsFile.exists()) {
                 FileConfiguration config = YamlConfiguration.loadConfiguration(statsFile);
                 
@@ -412,17 +416,17 @@ public class PluginStatisticsSystem {
                     }
                 }
                 
-                plugin.getLogger().info("§a[Statistics] Statistics loaded from file!");
+                SkyblockPlugin.getLogger().info("§a[Statistics] Statistics loaded from file!");
             }
         } catch (Exception e) {
-            plugin.getLogger().warning("Error loading statistics: " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Error loading statistics: " + e.getMessage());
         }
     }
     
     // Helper methods for statistics calculation
     
     private long getUptime() {
-        return System.currentTimeMillis() - performanceMetrics.get("startup_time");
+        return java.lang.System.currentTimeMillis() - performanceMetrics.get("startup_time");
     }
     
     private long getPluginMemoryUsage() {
@@ -579,7 +583,7 @@ public class PluginStatisticsSystem {
         ItemMeta meta = item.getItemMeta();
         
         if (meta != null) {
-            meta.setDisplayName("§6§lPlugin Statistics");
+            meta.displayName(Component.text("§6§lPlugin Statistics"));
             
             List<String> lore = new ArrayList<>();
             lore.add("§7Plugin Version: §a" + statistics.get("plugin_version"));
@@ -592,7 +596,7 @@ public class PluginStatisticsSystem {
             lore.add("§eClick to view detailed statistics");
             lore.add("§eRight-click to save statistics");
             
-            meta.setLore(lore);
+            meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         

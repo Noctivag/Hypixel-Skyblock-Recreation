@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.commands;
+import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.accessories.AccessoryBagSystem;
@@ -58,7 +59,7 @@ public class AccessoryCommands implements CommandExecutor {
         
         if (command.getName().equalsIgnoreCase("enrich")) {
             if (args.length < 1) {
-                player.sendMessage("§cUsage: /enrich <accessory_name>");
+                player.sendMessage(Component.text("§cUsage: /enrich <accessory_name>"));
                 return true;
             }
             
@@ -73,7 +74,7 @@ public class AccessoryCommands implements CommandExecutor {
             
             Map<String, Double> accessoryPowers = integrationSystem.getPlayerStats(player.getUniqueId()).getAccessoryPowers();
             if (!accessoryPowers.isEmpty()) {
-                player.sendMessage("§7Available Accessory Powers:");
+                player.sendMessage(Component.text("§7Available Accessory Powers:"));
                 for (Map.Entry<String, Double> entry : accessoryPowers.entrySet()) {
                     player.sendMessage("§7- " + entry.getKey() + ": §a" + entry.getValue());
                 }
@@ -84,15 +85,15 @@ public class AccessoryCommands implements CommandExecutor {
         if (command.getName().equalsIgnoreCase("accessorystats")) {
             AccessoryIntegrationSystem.PlayerAccessoryStats stats = integrationSystem.getPlayerStats(player.getUniqueId());
             
-            player.sendMessage("§6§lAccessory Statistics:");
+            player.sendMessage(Component.text("§6§lAccessory Statistics:"));
             player.sendMessage("§7Magical Power: §e" + stats.getMagicalPower());
             player.sendMessage("");
             
             Map<String, Double> bonuses = stats.getAllBonuses();
             if (bonuses.isEmpty()) {
-                player.sendMessage("§7No accessory bonuses active.");
+                player.sendMessage(Component.text("§7No accessory bonuses active."));
             } else {
-                player.sendMessage("§7Active Bonuses:");
+                player.sendMessage(Component.text("§7Active Bonuses:"));
                 for (Map.Entry<String, Double> entry : bonuses.entrySet()) {
                     String statName = formatStatName(entry.getKey());
                     double value = entry.getValue();

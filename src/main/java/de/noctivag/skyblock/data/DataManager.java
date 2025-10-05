@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.data;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -10,12 +13,12 @@ import java.io.IOException;
 import java.util.logging.Level;
 
 public class DataManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private File file;
     private FileConfiguration config;
 
-    public DataManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public DataManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
     
     public void initialize() {
@@ -23,27 +26,27 @@ public class DataManager {
     }
 
     public void loadData() {
-        file = new File(plugin.getDataFolder(), "prefixes.yml");
+        file = new File(SkyblockPlugin.getDataFolder(), "prefixes.yml");
 
         if (!file.exists()) {
             try {
                 // Ensure parent directory exists
-                if (!plugin.getDataFolder().exists()) {
-                    boolean dirsCreated = plugin.getDataFolder().mkdirs();
-                    if (!dirsCreated && !plugin.getDataFolder().exists()) {
-                        plugin.getLogger().warning("Could not create plugin data folder: " + plugin.getDataFolder().getAbsolutePath());
+                if (!SkyblockPlugin.getDataFolder().exists()) {
+                    boolean dirsCreated = SkyblockPlugin.getDataFolder().mkdirs();
+                    if (!dirsCreated && !SkyblockPlugin.getDataFolder().exists()) {
+                        SkyblockPlugin.getLogger().warning("Could not create SkyblockPlugin data folder: " + SkyblockPlugin.getDataFolder().getAbsolutePath());
                     }
                 }
 
                 boolean created = file.createNewFile();
                 if (created) {
-                    plugin.getLogger().info("prefixes.yml wurde neu erstellt.");
+                    SkyblockPlugin.getLogger().info("prefixes.yml wurde neu erstellt.");
                 } else {
-                    plugin.getLogger().info("prefixes.yml exists or could not be created (createNewFile returned false)");
+                    SkyblockPlugin.getLogger().info("prefixes.yml exists or could not be created (createNewFile returned false)");
                 }
             } catch (IOException e) {
-                plugin.getLogger().severe("Konnte prefixes.yml nicht erstellen!");
-                plugin.getLogger().log(Level.SEVERE, "Exception while creating prefixes.yml", e);
+                SkyblockPlugin.getLogger().severe("Konnte prefixes.yml nicht erstellen!");
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Exception while creating prefixes.yml", e);
             }
         }
 
@@ -58,10 +61,10 @@ public class DataManager {
         if (config == null || file == null) return;
         try {
             config.save(file);
-            plugin.getLogger().info("prefixes.yml gespeichert.");
+            SkyblockPlugin.getLogger().info("prefixes.yml gespeichert.");
         } catch (IOException e) {
-            plugin.getLogger().severe("Konnte prefixes.yml nicht speichern!");
-            plugin.getLogger().log(Level.SEVERE, "Exception while saving prefixes.yml", e);
+            SkyblockPlugin.getLogger().severe("Konnte prefixes.yml nicht speichern!");
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Exception while saving prefixes.yml", e);
         }
     }
 }

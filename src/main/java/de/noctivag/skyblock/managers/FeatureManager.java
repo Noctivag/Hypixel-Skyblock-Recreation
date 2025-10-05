@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.managers;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.cosmetics.ParticleEffect;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -16,7 +20,7 @@ import java.util.*;
 
 @SuppressWarnings("unused")
 public class FeatureManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, Set<String>> unlockedCosmetics;
     private final Map<UUID, String> activeEffects;
     private final Map<String, ParticleEffect> availableEffects;
@@ -24,8 +28,8 @@ public class FeatureManager {
     private final Map<UUID, String> playerStatus;
     private final Map<String, Team> teams;
 
-    public FeatureManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public FeatureManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.unlockedCosmetics = new HashMap<>();
         this.activeEffects = new HashMap<>();
         this.availableEffects = new HashMap<>();
@@ -37,7 +41,7 @@ public class FeatureManager {
     }
 
     private void loadData() {
-        FileConfiguration config = plugin.getConfig();
+        FileConfiguration config = SkyblockPlugin.getConfig();
 
         // Lade Kosmetik-Daten
         Optional.ofNullable(config.getConfigurationSection("cosmetics.unlocked"))
@@ -47,7 +51,7 @@ public class FeatureManager {
                     List<String> effects = config.getStringList("cosmetics.unlocked." + uuidStr);
                     unlockedCosmetics.put(uuid, new HashSet<>(effects));
                 } catch (IllegalArgumentException e) {
-                    plugin.getLogger().warning("Ungültige UUID in cosmetics.unlocked: " + uuidStr);
+                    SkyblockPlugin.getLogger().warning("Ungültige UUID in cosmetics.unlocked: " + uuidStr);
                 }
             }));
 
@@ -61,7 +65,7 @@ public class FeatureManager {
                         activeEffects.put(uuid, effect);
                     }
                 } catch (IllegalArgumentException e) {
-                    plugin.getLogger().warning("Ungültige UUID in cosmetics.active: " + uuidStr);
+                    SkyblockPlugin.getLogger().warning("Ungültige UUID in cosmetics.active: " + uuidStr);
                 }
             }));
 
@@ -75,13 +79,13 @@ public class FeatureManager {
                         playerStatus.put(uuid, status);
                     }
                 } catch (IllegalArgumentException e) {
-                    plugin.getLogger().warning("Ungültige UUID in status: " + uuidStr);
+                    SkyblockPlugin.getLogger().warning("Ungültige UUID in status: " + uuidStr);
                 }
             }));
     }
 
     public void saveData() {
-        FileConfiguration config = plugin.getConfig();
+        FileConfiguration config = SkyblockPlugin.getConfig();
 
         // Speichere Kosmetik-Daten
         for (Map.Entry<UUID, Set<String>> entry : unlockedCosmetics.entrySet()) {
@@ -101,7 +105,7 @@ public class FeatureManager {
         }
 
         // TODO: Implement proper ConfigManager interface
-        // ((ConfigManager) plugin.getConfigManager()).saveConfig("config");
+        // ((ConfigManager) SkyblockPlugin.getConfigManager()).saveConfig("config");
     }
 
     // Kosmetik-Methoden
@@ -129,7 +133,7 @@ public class FeatureManager {
                 effect.spawn(player.getLocation());
             }
         };
-        task.runTaskTimer(plugin, 0L, 5L);
+        task.runTaskTimer(SkyblockPlugin, 0L, 5L);
         activeTasks.put(uuid, task);
     }
 
@@ -168,8 +172,8 @@ public class FeatureManager {
 
     public void updatePlayerDisplays(Player player) {
         // TODO: Implement proper PrefixMap and NickMap interfaces
-        // String prefix = ((Map<String, String>) plugin.getPrefixMap()).getOrDefault(player.getUniqueId().toString(), "");
-        // String nickname = ((Map<String, String>) plugin.getNickMap()).getOrDefault(player.getUniqueId().toString(), player.getName());
+        // String prefix = ((Map<String, String>) SkyblockPlugin.getPrefixMap()).getOrDefault(player.getUniqueId().toString(), "");
+        // String nickname = ((Map<String, String>) SkyblockPlugin.getNickMap()).getOrDefault(player.getUniqueId().toString(), player.getName());
         String prefix = "";
         String nickname = player.getName();
         String status = getStatus(player);

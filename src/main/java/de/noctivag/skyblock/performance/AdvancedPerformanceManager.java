@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.performance;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -9,16 +12,16 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class AdvancedPerformanceManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<String, Object> metrics = new ConcurrentHashMap<>();
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
     private boolean monitoring = false;
 
-    public AdvancedPerformanceManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public AdvancedPerformanceManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         initializeMetrics();
         // Defer monitoring start to avoid "this"-escape
-        plugin.getLogger().info("AdvancedPerformanceManager initialized");
+        SkyblockPlugin.getLogger().info("AdvancedPerformanceManager initialized");
     }
     
     public void startMonitoring() {
@@ -55,15 +58,15 @@ public class AdvancedPerformanceManager {
             metrics.put("memory_used", usedMemory);
             
             // Update player count
-            metrics.put("players_online", plugin.getServer().getOnlinePlayers().size());
+            metrics.put("players_online", SkyblockPlugin.getServer().getOnlinePlayers().size());
             
             // Update chunk count
-            metrics.put("chunks_loaded", plugin.getServer().getWorlds().stream()
+            metrics.put("chunks_loaded", SkyblockPlugin.getServer().getWorlds().stream()
                 .mapToInt(world -> world.getLoadedChunks().length)
                 .sum());
                 
         } catch (Exception e) {
-            plugin.getLogger().warning("Error updating performance metrics: " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Error updating performance metrics: " + e.getMessage());
         }
     }
 
@@ -75,10 +78,10 @@ public class AdvancedPerformanceManager {
             
             if (usedMemory > maxMemory * 0.8) { // If using more than 80% of max memory
                 System.gc();
-                plugin.getLogger().info("Forced garbage collection due to high memory usage");
+                SkyblockPlugin.getLogger().info("Forced garbage collection due to high memory usage");
             }
         } catch (Exception e) {
-            plugin.getLogger().warning("Error during resource cleanup: " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Error during resource cleanup: " + e.getMessage());
         }
     }
 
@@ -122,7 +125,7 @@ public class AdvancedPerformanceManager {
             Thread.currentThread().interrupt();
         }
         metrics.clear();
-        plugin.getLogger().info("AdvancedPerformanceManager shutdown");
+        SkyblockPlugin.getLogger().info("AdvancedPerformanceManager shutdown");
     }
     
     // Missing methods for MultithreadingCommands

@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.features.minions;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.api.Service;
 import de.noctivag.skyblock.core.api.SystemStatus;
 import org.bukkit.entity.Player;
@@ -14,11 +18,11 @@ import java.util.concurrent.CompletableFuture;
  * Advanced Minion System for managing minions
  */
 public class AdvancedMinionSystem implements Service {
-    private SkyblockPlugin plugin;
+    private SkyblockPlugin SkyblockPlugin;
     private Map<UUID, PlayerMinions> playerMinions;
 
-    public AdvancedMinionSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public AdvancedMinionSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.playerMinions = new HashMap<>();
     }
 

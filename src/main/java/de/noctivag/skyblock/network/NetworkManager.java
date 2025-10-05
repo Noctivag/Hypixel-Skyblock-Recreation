@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.network;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -27,7 +31,7 @@ import java.util.logging.Level;
  */
 public class NetworkManager implements Listener {
 
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final NetworkArchitecture.NetworkConfig config;
     private final NetworkArchitecture.ServerType serverType;
@@ -41,20 +45,20 @@ public class NetworkManager implements Listener {
     private JedisPool jedisPool;
     private boolean isInitialized = false;
 
-    public NetworkManager(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager,
+    public NetworkManager(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager,
                          NetworkArchitecture.NetworkConfig config, NetworkArchitecture.ServerType serverType) {
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         this.config = config;
         this.serverType = serverType;
 
         // Register events
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
 
     public void initialize() {
         try {
-            plugin.getLogger().info("Initializing Network Manager...");
+            SkyblockPlugin.getLogger().info("Initializing Network Manager...");
 
             // Initialize Redis connection
             initializeRedis();
@@ -70,17 +74,17 @@ public class NetworkManager implements Listener {
             connectToNetwork();
 
             isInitialized = true;
-            plugin.getLogger().info("Network Manager initialized successfully!");
+            SkyblockPlugin.getLogger().info("Network Manager initialized successfully!");
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to initialize Network Manager: " + e.getMessage());
-            plugin.getLogger().log(Level.SEVERE, "Exception during NetworkManager.initialize", e);
+            SkyblockPlugin.getLogger().severe("Failed to initialize Network Manager: " + e.getMessage());
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Exception during NetworkManager.initialize", e);
         }
     }
 
     public void shutdown() {
         try {
-            plugin.getLogger().info("Shutting down Network Manager...");
+            SkyblockPlugin.getLogger().info("Shutting down Network Manager...");
 
             if (isInitialized) {
                 // Disconnect from network
@@ -98,11 +102,11 @@ public class NetworkManager implements Listener {
             }
 
             isInitialized = false;
-            plugin.getLogger().info("Network Manager shutdown complete!");
+            SkyblockPlugin.getLogger().info("Network Manager shutdown complete!");
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to shutdown Network Manager: " + e.getMessage());
-            plugin.getLogger().log(Level.SEVERE, "Exception during NetworkManager.shutdown", e);
+            SkyblockPlugin.getLogger().severe("Failed to shutdown Network Manager: " + e.getMessage());
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Exception during NetworkManager.shutdown", e);
         }
     }
 
@@ -110,33 +114,33 @@ public class NetworkManager implements Listener {
         try {
             // Redis connection is already initialized in ServerManager
             // We'll get the pool from there
-            plugin.getLogger().info("Redis connection initialized");
+            SkyblockPlugin.getLogger().info("Redis connection initialized");
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to initialize Redis: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to initialize Redis: " + e.getMessage());
             throw e;
         }
     }
 
     private void initializeServerManager() {
         try {
-            serverManager = new ServerManager(plugin, databaseManager, config, serverType);
+            serverManager = new ServerManager(SkyblockPlugin, databaseManager, config, serverType);
             jedisPool = serverManager.getJedisPool(); // Get the pool for other components
-            plugin.getLogger().info("Server Manager initialized");
+            SkyblockPlugin.getLogger().info("Server Manager initialized");
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to initialize Server Manager: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to initialize Server Manager: " + e.getMessage());
             throw e;
         }
     }
 
     private void initializeNetworkCommunication() {
         try {
-            networkCommunication = new NetworkCommunication(plugin, jedisPool, serverManager.getServerId());
-            plugin.getLogger().info("Network Communication initialized");
+            networkCommunication = new NetworkCommunication(SkyblockPlugin, jedisPool, serverManager.getServerId());
+            SkyblockPlugin.getLogger().info("Network Communication initialized");
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to initialize Network Communication: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to initialize Network Communication: " + e.getMessage());
             throw e;
         }
     }
@@ -144,13 +148,13 @@ public class NetworkManager implements Listener {
     private void initializeIslandServerManager() {
         try {
             islandServerManager = new IslandServerManager(
-                plugin, databaseManager, serverManager, jedisPool,
+                SkyblockPlugin, databaseManager, serverManager, jedisPool,
                 config.getMaxIslandsPerServer(), 100, 200 // island size and spacing
             );
-            plugin.getLogger().info("Island Server Manager initialized");
+            SkyblockPlugin.getLogger().info("Island Server Manager initialized");
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to initialize Island Server Manager: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to initialize Island Server Manager: " + e.getMessage());
             throw e;
         }
     }
@@ -158,13 +162,13 @@ public class NetworkManager implements Listener {
     private void initializePlayerTransferSystem() {
         try {
             playerTransferSystem = new PlayerTransferSystem(
-                plugin, databaseManager, serverManager, networkCommunication, jedisPool,
+                SkyblockPlugin, databaseManager, serverManager, networkCommunication, jedisPool,
                 10, 30000 // max concurrent transfers, transfer timeout
             );
-            plugin.getLogger().info("Player Transfer System initialized");
+            SkyblockPlugin.getLogger().info("Player Transfer System initialized");
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to initialize Player Transfer System: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to initialize Player Transfer System: " + e.getMessage());
             throw e;
         }
     }
@@ -172,13 +176,13 @@ public class NetworkManager implements Listener {
     private void initializeDataSynchronization() {
         try {
             dataSynchronization = new DataSynchronization(
-                plugin, databaseManager, networkCommunication, jedisPool,
+                SkyblockPlugin, databaseManager, networkCommunication, jedisPool,
                 10000, 30000 // sync interval, conflict resolution timeout
             );
-            plugin.getLogger().info("Data Synchronization initialized");
+            SkyblockPlugin.getLogger().info("Data Synchronization initialized");
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to initialize Data Synchronization: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to initialize Data Synchronization: " + e.getMessage());
             throw e;
         }
     }
@@ -186,10 +190,10 @@ public class NetworkManager implements Listener {
     private void connectToNetwork() {
         try {
             serverManager.connect();
-            plugin.getLogger().info("Connected to network");
+            SkyblockPlugin.getLogger().info("Connected to network");
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to connect to network: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to connect to network: " + e.getMessage());
             throw e;
         }
     }
@@ -197,60 +201,60 @@ public class NetworkManager implements Listener {
     private void disconnectFromNetwork() {
         try {
             serverManager.disconnect();
-            plugin.getLogger().info("Disconnected from network");
+            SkyblockPlugin.getLogger().info("Disconnected from network");
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to disconnect from network: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to disconnect from network: " + e.getMessage());
         }
     }
 
     private void shutdownDataSynchronization() {
         try {
             // DataSynchronization doesn't need explicit shutdown
-            plugin.getLogger().info("Data Synchronization shutdown");
+            SkyblockPlugin.getLogger().info("Data Synchronization shutdown");
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to shutdown Data Synchronization: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to shutdown Data Synchronization: " + e.getMessage());
         }
     }
 
     private void shutdownPlayerTransferSystem() {
         try {
             // PlayerTransferSystem doesn't need explicit shutdown
-            plugin.getLogger().info("Player Transfer System shutdown");
+            SkyblockPlugin.getLogger().info("Player Transfer System shutdown");
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to shutdown Player Transfer System: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to shutdown Player Transfer System: " + e.getMessage());
         }
     }
 
     private void shutdownIslandServerManager() {
         try {
             // IslandServerManager doesn't need explicit shutdown
-            plugin.getLogger().info("Island Server Manager shutdown");
+            SkyblockPlugin.getLogger().info("Island Server Manager shutdown");
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to shutdown Island Server Manager: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to shutdown Island Server Manager: " + e.getMessage());
         }
     }
 
     private void shutdownNetworkCommunication() {
         try {
             networkCommunication.stopListening();
-            plugin.getLogger().info("Network Communication shutdown");
+            SkyblockPlugin.getLogger().info("Network Communication shutdown");
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to shutdown Network Communication: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to shutdown Network Communication: " + e.getMessage());
         }
     }
 
     private void shutdownServerManager() {
         try {
             // ServerManager shutdown is handled in disconnectFromNetwork
-            plugin.getLogger().info("Server Manager shutdown");
+            SkyblockPlugin.getLogger().info("Server Manager shutdown");
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to shutdown Server Manager: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to shutdown Server Manager: " + e.getMessage());
         }
     }
 
@@ -259,10 +263,10 @@ public class NetworkManager implements Listener {
             if (jedisPool != null && !jedisPool.isClosed()) {
                 jedisPool.close();
             }
-            plugin.getLogger().info("Redis connection closed");
+            SkyblockPlugin.getLogger().info("Redis connection closed");
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to close Redis connection: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to close Redis connection: " + e.getMessage());
         }
     }
 
@@ -271,7 +275,7 @@ public class NetworkManager implements Listener {
     public void onServerLoad(ServerLoadEvent event) {
         if (event.getType() == ServerLoadEvent.LoadType.STARTUP) {
             // Server is starting up
-            plugin.getLogger().info("Server startup detected");
+            SkyblockPlugin.getLogger().info("Server startup detected");
         }
     }
 
@@ -279,7 +283,7 @@ public class NetworkManager implements Listener {
     // @EventHandler
     // public void onServerShutdown(ServerShutdownEvent event) {
     //     // Server is shutting down
-    //     plugin.getLogger().info("Server shutdown detected");
+    //     SkyblockPlugin.getLogger().info("Server shutdown detected");
     //     shutdown();
     // }
 
@@ -294,7 +298,7 @@ public class NetworkManager implements Listener {
             // Sync player data
             dataSynchronization.syncPlayerData(player.getUniqueId());
 
-            plugin.getLogger().info("Player " + player.getName() + " joined server " + serverManager.getServerId());
+            SkyblockPlugin.getLogger().info("Player " + player.getName() + " joined server " + serverManager.getServerId());
         }
     }
 
@@ -306,7 +310,7 @@ public class NetworkManager implements Listener {
             // Notify other servers about player leave
             networkCommunication.notifyPlayerLeave(player.getUniqueId(), serverManager.getServerId());
 
-            plugin.getLogger().info("Player " + player.getName() + " left server " + serverManager.getServerId());
+            SkyblockPlugin.getLogger().info("Player " + player.getName() + " left server " + serverManager.getServerId());
         }
     }
 
@@ -403,14 +407,14 @@ public class NetworkManager implements Listener {
     }
 
     public void logInfo(String message) {
-        plugin.getLogger().info(message);
+        SkyblockPlugin.getLogger().info(message);
     }
 
     public void logWarning(String message) {
-        plugin.getLogger().warning(message);
+        SkyblockPlugin.getLogger().warning(message);
     }
 
     public void logError(String message) {
-        plugin.getLogger().severe(message);
+        SkyblockPlugin.getLogger().severe(message);
     }
 }

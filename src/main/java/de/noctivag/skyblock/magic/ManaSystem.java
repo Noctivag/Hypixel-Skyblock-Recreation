@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.magic;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Bukkit;
@@ -15,6 +19,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import net.kyori.adventure.text.Component;
 
 /**
  * Mana System - Hypixel Skyblock Style
@@ -38,20 +43,20 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Mana Bonuses from Fairy Souls
  */
 public class ManaSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerMana> playerMana = new ConcurrentHashMap<>();
     private final Map<UUID, BukkitTask> manaTasks = new ConcurrentHashMap<>();
 
-    public ManaSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public ManaSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         startManaUpdateTask();
     }
     
     public void initialize() {
         // Register events after constructor is complete
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
 
     private void startManaUpdateTask() {
@@ -63,7 +68,7 @@ public class ManaSystem implements Listener {
                     mana.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Every second
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Every second
     }
 
     @EventHandler
@@ -104,7 +109,7 @@ public class ManaSystem implements Listener {
                 PlayerMana mana = getPlayerMana(playerId);
                 displayMana(player, mana);
             }
-        }.runTaskTimer(plugin, 0L, 10L); // Every 0.5 seconds
+        }.runTaskTimer(SkyblockPlugin, 0L, 10L); // Every 0.5 seconds
 
         manaTasks.put(playerId, task);
     }
@@ -264,7 +269,7 @@ public class ManaSystem implements Listener {
             this.currentMana = 100.0; // Base mana
             this.maxMana = 100.0; // Base max mana
             this.manaRegeneration = 1.0; // Base regeneration
-            this.lastRegeneration = System.currentTimeMillis();
+            this.lastRegeneration = java.lang.System.currentTimeMillis();
 
             // Initialize base bonuses
             manaBonuses.put(ManaBonusType.BASE, 100.0);
@@ -272,7 +277,7 @@ public class ManaSystem implements Listener {
 
         public void update() {
             // Regenerate mana
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long timeDiff = currentTime - lastRegeneration;
 
             if (timeDiff >= 1000) { // Every second

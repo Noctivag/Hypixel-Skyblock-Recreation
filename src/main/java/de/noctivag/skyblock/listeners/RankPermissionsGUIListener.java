@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.listeners;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.gui.RankPermissionsGUI;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.Player;
@@ -9,12 +12,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.meta.ItemMeta;
+import net.kyori.adventure.text.Component;
 
 public class RankPermissionsGUIListener implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public RankPermissionsGUIListener(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public RankPermissionsGUIListener(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     @EventHandler
@@ -30,7 +34,7 @@ public class RankPermissionsGUIListener implements Listener {
         if (display == null) return;
 
         if (display.contains("Zurück")) {
-            new de.noctivag.plugin.gui.RanksGUI(plugin, admin).open(admin);
+            new de.noctivag.skyblock.gui.RanksGUI(SkyblockPlugin, admin).open(admin);
             return;
         }
 
@@ -38,16 +42,16 @@ public class RankPermissionsGUIListener implements Listener {
         String permission = display.replace("§a", "").replace("§c", "");
         String rankKey = permsGUI.getRankKey();
 
-        if (plugin.getRankManager().hasPermission(rankKey, permission)) {
-            plugin.getRankManager().removePermission(rankKey, permission);
+        if (SkyblockPlugin.getRankManager().hasPermission(rankKey, permission)) {
+            SkyblockPlugin.getRankManager().removePermission(rankKey, permission);
             admin.sendMessage("§ePermission entfernt: §c" + permission);
         } else {
-            plugin.getRankManager().addPermission(rankKey, permission);
+            SkyblockPlugin.getRankManager().addPermission(rankKey, permission);
             admin.sendMessage("§ePermission hinzugefügt: §a" + permission);
         }
 
         // Refresh GUI
-        new de.noctivag.plugin.gui.RankPermissionsGUI(plugin, rankKey).open(admin);
+        new de.noctivag.skyblock.gui.RankPermissionsGUI(SkyblockPlugin, rankKey).open(admin);
     }
 }
 

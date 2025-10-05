@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.dungeons;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.features.dungeons.score.PlayerDungeonStats;

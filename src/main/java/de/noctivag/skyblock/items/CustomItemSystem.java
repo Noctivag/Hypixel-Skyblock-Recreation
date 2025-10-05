@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.items;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.CorePlatform;
 import de.noctivag.skyblock.core.PlayerProfile;
 import org.bukkit.Material;
@@ -11,6 +14,7 @@ import net.kyori.adventure.text.Component;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Custom Item System - Einzigartige Items mit Stats, Effekten, Reforging, Enchantments
@@ -24,14 +28,14 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Item-Upgrades
  */
 public class CustomItemSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CorePlatform corePlatform;
     private final Map<String, CustomItem> customItems = new ConcurrentHashMap<>();
     private final Map<String, ItemRarity> itemRarities = new HashMap<>();
     private final Map<String, CustomEnchantment> customEnchantments = new HashMap<>();
     
-    public CustomItemSystem(SkyblockPlugin plugin, CorePlatform corePlatform) {
-        this.plugin = plugin;
+    public CustomItemSystem(SkyblockPlugin SkyblockPlugin, CorePlatform corePlatform) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.corePlatform = corePlatform;
         initializeItemRarities();
         initializeCustomEnchantments();
@@ -186,7 +190,7 @@ public class CustomItemSystem {
         // Apply reforge
         applyReforge(item, reforgeType);
         
-        player.sendMessage("§a§lITEM REFORGED!");
+        player.sendMessage(Component.text("§a§lITEM REFORGED!"));
         player.sendMessage("§7Reforge: §e" + reforgeType);
         player.sendMessage("§7Cost: §6" + cost + " coins");
     }
@@ -276,7 +280,7 @@ public class CustomItemSystem {
         // Apply enchantment
         applyEnchantment(item, enchantment, level);
         
-        player.sendMessage("§a§lITEM ENCHANTED!");
+        player.sendMessage(Component.text("§a§lITEM ENCHANTED!"));
         player.sendMessage("§7Enchantment: §e" + enchantment.getName() + " " + level);
         player.sendMessage("§7Cost: §6" + cost + " coins");
     }

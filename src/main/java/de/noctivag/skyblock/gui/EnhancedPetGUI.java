@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.pets.PetSystem;
 import de.noctivag.skyblock.pets.Pet;
 import de.noctivag.skyblock.pets.PetEvolutionSystem;
@@ -17,6 +20,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.kyori.adventure.text.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Enhanced Pet GUI System - Advanced interface for pet management
@@ -30,18 +34,18 @@ import java.util.*;
  * - Pet trading
  */
 public class EnhancedPetGUI implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final PetSystem petSystem;
     private final PetEvolutionSystem evolutionSystem;
     private final PetCandySystem candySystem;
     
-    public EnhancedPetGUI(SkyblockPlugin plugin, PetSystem petSystem, PetEvolutionSystem evolutionSystem, PetCandySystem candySystem) {
-        this.plugin = plugin;
+    public EnhancedPetGUI(SkyblockPlugin SkyblockPlugin, PetSystem petSystem, PetEvolutionSystem evolutionSystem, PetCandySystem candySystem) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.petSystem = petSystem;
         this.evolutionSystem = evolutionSystem;
         this.candySystem = candySystem;
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     @EventHandler
@@ -286,10 +290,10 @@ public class EnhancedPetGUI implements Listener {
                 openPetCollectionGUI(player);
                 break;
             case 20: // Pet Shop
-                player.sendMessage("§ePet Shop coming soon!");
+                player.sendMessage(Component.text("§ePet Shop coming soon!"));
                 break;
             case 21: // Pet Leveling
-                player.sendMessage("§ePet Leveling coming soon!");
+                player.sendMessage(Component.text("§ePet Leveling coming soon!"));
                 break;
             case 22: // Pet Evolution
                 openPetEvolutionGUI(player);
@@ -298,19 +302,19 @@ public class EnhancedPetGUI implements Listener {
                 openPetCandyGUI(player);
                 break;
             case 24: // Pet Guide
-                player.sendMessage("§ePet Guide coming soon!");
+                player.sendMessage(Component.text("§ePet Guide coming soon!"));
                 break;
             case 28: // Pet Statistics
-                player.sendMessage("§ePet Statistics coming soon!");
+                player.sendMessage(Component.text("§ePet Statistics coming soon!"));
                 break;
             case 29: // Pet Achievements
-                player.sendMessage("§ePet Achievements coming soon!");
+                player.sendMessage(Component.text("§ePet Achievements coming soon!"));
                 break;
             case 30: // Pet Storage
-                player.sendMessage("§ePet Storage coming soon!");
+                player.sendMessage(Component.text("§ePet Storage coming soon!"));
                 break;
             case 34: // Pet Settings
-                player.sendMessage("§ePet Settings coming soon!");
+                player.sendMessage(Component.text("§ePet Settings coming soon!"));
                 break;
             case 49: // Close
                 player.closeInventory();
@@ -323,7 +327,7 @@ public class EnhancedPetGUI implements Listener {
             ItemStack item = player.getOpenInventory().getTopInventory().getItem(slot);
             if (item != null && item.hasItemMeta()) {
                 // Handle pet activation/deactivation
-                player.sendMessage("§ePet interaction coming soon!");
+                player.sendMessage(Component.text("§ePet interaction coming soon!"));
             }
         } else if (slot == 49) {
             openMainPetGUI(player);
@@ -335,7 +339,7 @@ public class EnhancedPetGUI implements Listener {
             ItemStack item = player.getOpenInventory().getTopInventory().getItem(slot);
             if (item != null && item.hasItemMeta()) {
                 // Handle pet evolution
-                player.sendMessage("§ePet evolution coming soon!");
+                player.sendMessage(Component.text("§ePet evolution coming soon!"));
             }
         } else if (slot == 45 || slot == 49) {
             openMainPetGUI(player);
@@ -347,7 +351,7 @@ public class EnhancedPetGUI implements Listener {
             ItemStack item = player.getOpenInventory().getTopInventory().getItem(slot);
             if (item != null && item.hasItemMeta()) {
                 // Handle candy usage
-                player.sendMessage("§eCandy usage coming soon!");
+                player.sendMessage(Component.text("§eCandy usage coming soon!"));
             }
         } else if (slot == 45 || slot == 49) {
             openMainPetGUI(player);

@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.features.kuudra;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -30,15 +34,15 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class KuudraSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, KuudraPlayerData> playerData = new ConcurrentHashMap<>();
     private final Map<String, KuudraBoss> kuudraBosses = new HashMap<>();
     private final Map<String, KuudraEquipment> kuudraEquipment = new HashMap<>();
     private final Map<String, KuudraWarning> kuudraWarnings = new HashMap<>();
     
-    public KuudraSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public KuudraSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeKuudraBosses();
         initializeKuudraEquipment();
@@ -104,7 +108,7 @@ public class KuudraSystem implements Listener {
             EntityType.WITHER_SKELETON
         ));
         
-        plugin.getLogger().info("§a[KuudraSystem] Initialized " + kuudraBosses.size() + " Kuudra bosses");
+        SkyblockPlugin.getLogger().info("§a[KuudraSystem] Initialized " + kuudraBosses.size() + " Kuudra bosses");
     }
     
     /**
@@ -227,7 +231,7 @@ public class KuudraSystem implements Listener {
             "INFERNAL"
         ));
         
-        plugin.getLogger().info("§a[KuudraSystem] Initialized " + kuudraEquipment.size() + " Kuudra equipment pieces");
+        SkyblockPlugin.getLogger().info("§a[KuudraSystem] Initialized " + kuudraEquipment.size() + " Kuudra equipment pieces");
     }
     
     /**
@@ -270,7 +274,7 @@ public class KuudraSystem implements Listener {
             2000L // 2 Sekunden
         ));
         
-        plugin.getLogger().info("§a[KuudraSystem] Initialized " + kuudraWarnings.size() + " Kuudra warnings");
+        SkyblockPlugin.getLogger().info("§a[KuudraSystem] Initialized " + kuudraWarnings.size() + " Kuudra warnings");
     }
     
     /**
@@ -335,7 +339,7 @@ public class KuudraSystem implements Listener {
         
         KuudraPlayerData data = getPlayerData(player);
         data.setCurrentBoss(bossId);
-        data.setFightStartTime(System.currentTimeMillis());
+        data.setFightStartTime(java.lang.System.currentTimeMillis());
         
         // Zeige Warnung
         KuudraWarning warning = getKuudraWarning("KUUDRA_SPAWN");

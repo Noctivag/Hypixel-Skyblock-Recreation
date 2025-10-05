@@ -1,4 +1,8 @@
 package de.noctivag.skyblock.skyblock.slayers;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
@@ -12,7 +16,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import net.kyori.adventure.text.Component;
 
@@ -31,17 +35,17 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SlayerSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerSlayerData> playerSlayerData = new ConcurrentHashMap<>();
     private final Map<UUID, SlayerQuest> activeQuests = new ConcurrentHashMap<>();
     private final Map<UUID, SlayerBoss> activeBosses = new ConcurrentHashMap<>();
     
-    public SlayerSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public SlayerSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
         initializeSlayerTypes();
     }
     
@@ -91,13 +95,13 @@ public class SlayerSystem implements Listener {
         
         // Check requirements
         if (!canStartSlayerQuest(player, slayerType, tier)) {
-            player.sendMessage("§cYou don't meet the requirements for this slayer quest!");
+            player.sendMessage(Component.text("§cYou don't meet the requirements for this slayer quest!"));
             return;
         }
         
         // Check if player already has an active quest
         if (activeQuests.containsKey(playerId)) {
-            player.sendMessage("§cYou already have an active slayer quest!");
+            player.sendMessage(Component.text("§cYou already have an active slayer quest!"));
             return;
         }
         
@@ -117,17 +121,17 @@ public class SlayerSystem implements Listener {
         SlayerQuest quest = activeQuests.get(playerId);
         
         if (quest == null) {
-            player.sendMessage("§cYou don't have an active slayer quest!");
+            player.sendMessage(Component.text("§cYou don't have an active slayer quest!"));
             return;
         }
         
         if (quest.getType() != slayerType || quest.getTier() != tier) {
-            player.sendMessage("§cThis doesn't match your active quest!");
+            player.sendMessage(Component.text("§cThis doesn't match your active quest!"));
             return;
         }
         
         if (!quest.isReadyForBoss()) {
-            player.sendMessage("§cYou need to kill more mobs before spawning the boss!");
+            player.sendMessage(Component.text("§cYou need to kill more mobs before spawning the boss!"));
             return;
         }
         
@@ -178,7 +182,7 @@ public class SlayerSystem implements Listener {
                 // Update quest progress
                 updateSlayerQuest(quest);
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Every second
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Every second
     }
     
     private void updateSlayerQuest(SlayerQuest quest) {
@@ -403,7 +407,7 @@ public class SlayerSystem implements Listener {
             this.requiredKills = getRequiredKills(tier);
             this.completed = false;
             this.failed = false;
-            this.startTime = System.currentTimeMillis();
+            this.startTime = java.lang.System.currentTimeMillis();
         }
         
         private int getRequiredKills(SlayerTier tier) {

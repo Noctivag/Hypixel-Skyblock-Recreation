@@ -1,15 +1,19 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import net.kyori.adventure.text.Component;
 
 public class CosmeticShopGUI extends CustomGUI {
     private final Player player;
     
-    public CosmeticShopGUI(SkyblockPlugin plugin, Player player) {
-        super(plugin, "§d§lCosmetic Shop", 54);
+    public CosmeticShopGUI(SkyblockPlugin SkyblockPlugin, Player player) {
+        super(SkyblockPlugin, "§d§lCosmetic Shop", 54);
         this.player = player;
         setupItems();
     }

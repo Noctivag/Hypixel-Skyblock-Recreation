@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.utils.ColorUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -15,13 +18,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RestartGUI implements org.bukkit.inventory.InventoryHolder {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Inventory inventory;
 
     public static final String TITLE = "§c» §6Server-Restart §c«";
 
-    public RestartGUI(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public RestartGUI(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.inventory = Bukkit.createInventory(this, 27, ColorUtils.translate(TITLE));
         setupItems();
     }

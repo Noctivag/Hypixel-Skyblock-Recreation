@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.economy;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.CorePlatform;
 import de.noctivag.skyblock.core.PlayerProfile;
 import org.bukkit.Material;
@@ -24,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Price Fluctuations
  */
 public class EconomySystem {
-    public final SkyblockPlugin plugin;
+    public final SkyblockPlugin SkyblockPlugin;
     public final CorePlatform corePlatform;
     private final AuctionHouse auctionHouse;
     private final BazaarSystem bazaarSystem;
@@ -37,10 +41,10 @@ public class EconomySystem {
     private final Map<String, Double> currentPrices = new ConcurrentHashMap<>();
     private final Map<String, MarketTrend> marketTrends = new ConcurrentHashMap<>();
     
-    public EconomySystem(SkyblockPlugin plugin, CorePlatform corePlatform) {
-        this.plugin = plugin;
+    public EconomySystem(SkyblockPlugin SkyblockPlugin, CorePlatform corePlatform) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.corePlatform = corePlatform;
-        this.auctionHouse = new AuctionHouse(this, plugin.getMultiServerDatabaseManager());
+        this.auctionHouse = new AuctionHouse(this, SkyblockPlugin.getMultiServerDatabaseManager());
         this.bazaarSystem = new BazaarSystem(this);
         this.npcShopSystem = new NPCShopSystem(this);
         this.tradingSystem = new TradingSystem(this);
@@ -152,7 +156,7 @@ public class EconomySystem {
             public void run() {
                 updatePrices();
             }
-        }.runTaskTimer(plugin, 0L, 20L * 60L * 5L); // Every 5 minutes
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L * 60L * 5L); // Every 5 minutes
     }
     
     private void startMarketAnalysis() {
@@ -161,7 +165,7 @@ public class EconomySystem {
             public void run() {
                 marketAnalyzer.analyzeMarket();
             }
-        }.runTaskTimer(plugin, 0L, 20L * 60L * 10L); // Every 10 minutes
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L * 60L * 10L); // Every 10 minutes
     }
     
     private void updatePrices() {
@@ -218,7 +222,7 @@ public class EconomySystem {
         // Update market trend
         updateMarketTrend(itemId, -amount); // Negative because buying increases demand
         
-        player.sendMessage("§a§lITEM PURCHASED!");
+        player.sendMessage(Component.text("§a§lITEM PURCHASED!"));
         player.sendMessage("§7Item: §e" + itemId);
         player.sendMessage("§7Amount: §e" + amount);
         player.sendMessage("§7Total Cost: §6" + totalCost + " coins");
@@ -230,7 +234,7 @@ public class EconomySystem {
         
         Material material = Material.valueOf(itemId);
         if (!player.getInventory().contains(material, amount)) {
-            player.sendMessage("§cYou don't have enough items!");
+            player.sendMessage(Component.text("§cYou don't have enough items!"));
             return;
         }
         
@@ -247,7 +251,7 @@ public class EconomySystem {
         // Update market trend
         updateMarketTrend(itemId, amount); // Positive because selling increases supply
         
-        player.sendMessage("§a§lITEM SOLD!");
+        player.sendMessage(Component.text("§a§lITEM SOLD!"));
         player.sendMessage("§7Item: §e" + itemId);
         player.sendMessage("§7Amount: §e" + amount);
         player.sendMessage("§7Total Earnings: §6" + totalEarnings + " coins");

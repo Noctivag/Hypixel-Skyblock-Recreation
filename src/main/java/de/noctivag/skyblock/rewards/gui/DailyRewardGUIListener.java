@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.rewards.gui;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.rewards.DailyReward;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -17,11 +21,11 @@ import java.util.List;
 import java.util.Map;
 
 public class DailyRewardGUIListener implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<Player, RewardEditSession> editingSessions;
 
-    public DailyRewardGUIListener(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public DailyRewardGUIListener(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.editingSessions = new HashMap<>();
     }
 
@@ -55,13 +59,13 @@ public class DailyRewardGUIListener implements Listener {
 
     private void handleMainMenuClick(Player player, ItemStack clickedItem) {
         if (clickedItem.getType() == Material.EXPERIENCE_BOTTLE) {
-            if (plugin.getDailyRewardManager().canClaimReward(player)) {
-                plugin.getDailyRewardManager().claimReward(player);
-                new DailyRewardGUI(plugin).openRewardGUI(player); // Aktualisiere GUI
+            if (SkyblockPlugin.getDailyRewardManager().canClaimReward(player)) {
+                SkyblockPlugin.getDailyRewardManager().claimReward(player);
+                new DailyRewardGUI(SkyblockPlugin).openRewardGUI(player); // Aktualisiere GUI
             }
         }
-        else if (clickedItem.getType() == Material.COMMAND_BLOCK && player.hasPermission("plugin.admin")) {
-            new DailyRewardGUI(plugin).openAdminGUI(player);
+        else if (clickedItem.getType() == Material.COMMAND_BLOCK && player.hasPermission("SkyblockPlugin.admin")) {
+            new DailyRewardGUI(SkyblockPlugin).openAdminGUI(player);
         }
     }
 
@@ -73,7 +77,7 @@ public class DailyRewardGUIListener implements Listener {
 
             if (isRightClick) {
                 // Lösche Belohnung
-                plugin.getDailyRewardManager().removeReward(day);
+                SkyblockPlugin.getDailyRewardManager().removeReward(day);
                 player.sendMessage("§aBelohnung für Tag " + day + " wurde entfernt!");
             } else {
                 // Bearbeite Belohnung
@@ -84,7 +88,7 @@ public class DailyRewardGUIListener implements Listener {
             openRewardEditor(player, findNextAvailableDay());
         }
         else if (itemName.equals("§c« Zurück")) {
-            new DailyRewardGUI(plugin).openRewardGUI(player);
+            new DailyRewardGUI(SkyblockPlugin).openRewardGUI(player);
         }
     }
 
@@ -94,14 +98,14 @@ public class DailyRewardGUIListener implements Listener {
 
         player.closeInventory();
         player.sendMessage("§6=== Belohnung für Tag " + day + " bearbeiten ===");
-        player.sendMessage("§7Gib die Belohnungen im Format ein:");
-        player.sendMessage("§eTYP MENGE WERT");
-        player.sendMessage("§7Beispiele:");
-        player.sendMessage("§eCOINS 100");
-        player.sendMessage("§eEXP 500");
-        player.sendMessage("§eITEM DIAMOND 5");
-        player.sendMessage("§eKIT vip");
-        player.sendMessage("§7Oder §ccancel §7zum Abbrechen, §afertig §7zum Speichern");
+        player.sendMessage(Component.text("§7Gib die Belohnungen im Format ein:"));
+        player.sendMessage(Component.text("§eTYP MENGE WERT"));
+        player.sendMessage(Component.text("§7Beispiele:"));
+        player.sendMessage(Component.text("§eCOINS 100"));
+        player.sendMessage(Component.text("§eEXP 500"));
+        player.sendMessage(Component.text("§eITEM DIAMOND 5"));
+        player.sendMessage(Component.text("§eKIT vip"));
+        player.sendMessage(Component.text("§7Oder §ccancel §7zum Abbrechen, §afertig §7zum Speichern"));
     }
 
     @EventHandler
@@ -126,12 +130,12 @@ public class DailyRewardGUIListener implements Listener {
         event.setCancelled(true); // swallow chat while editing
         String message = event.getMessage();
         // delegate to the existing handler on the main thread
-        getServerScheduler().runTask(plugin, () -> handleChatInput(player, message));
+        getServerScheduler().runTask(SkyblockPlugin, () -> handleChatInput(player, message));
     }
 
     // Helper to schedule tasks on main thread (avoids adding Bukkit imports here)
     private org.bukkit.scheduler.BukkitScheduler getServerScheduler() {
-        return plugin.getServer().getScheduler();
+        return SkyblockPlugin.getServer().getScheduler();
     }
 
     public void handleChatInput(Player player, String message) {
@@ -140,14 +144,14 @@ public class DailyRewardGUIListener implements Listener {
 
         if (message.equalsIgnoreCase("cancel")) {
             editingSessions.remove(player);
-            player.sendMessage("§cBearbeitung abgebrochen!");
-            new DailyRewardGUI(plugin).openAdminGUI(player);
+            player.sendMessage(Component.text("§cBearbeitung abgebrochen!"));
+            new DailyRewardGUI(SkyblockPlugin).openAdminGUI(player);
             return;
         }
 
         if (message.equalsIgnoreCase("fertig")) {
             if (session.rewards.isEmpty()) {
-                player.sendMessage("§cDu musst mindestens eine Belohnung hinzufügen!");
+                player.sendMessage(Component.text("§cDu musst mindestens eine Belohnung hinzufügen!"));
                 return;
             }
 
@@ -159,10 +163,10 @@ public class DailyRewardGUIListener implements Listener {
                 Material.CHEST // Standard-Icon
             );
 
-            plugin.getDailyRewardManager().setReward(session.day, reward);
+            SkyblockPlugin.getDailyRewardManager().setReward(session.day, reward);
             editingSessions.remove(player);
             player.sendMessage("§aBelohnungen für Tag " + session.day + " gespeichert!");
-            new DailyRewardGUI(plugin).openAdminGUI(player);
+            new DailyRewardGUI(SkyblockPlugin).openAdminGUI(player);
             return;
         }
 
@@ -193,20 +197,20 @@ public class DailyRewardGUIListener implements Listener {
                     break;
             }
 
-            player.sendMessage("§aBelohnung hinzugefügt! Gib weitere ein oder schreibe §efertig§a.");
+            player.sendMessage(Component.text("§aBelohnung hinzugefügt! Gib weitere ein oder schreibe §efertig§a."));
 
         } catch (Exception e) {
-            player.sendMessage("§cUngültiges Format! Beispiele:");
-            player.sendMessage("§eCOINS 100");
-            player.sendMessage("§eEXP 500");
-            player.sendMessage("§eITEM DIAMOND 5");
-            player.sendMessage("§eKIT vip");
+            player.sendMessage(Component.text("§cUngültiges Format! Beispiele:"));
+            player.sendMessage(Component.text("§eCOINS 100"));
+            player.sendMessage(Component.text("§eEXP 500"));
+            player.sendMessage(Component.text("§eITEM DIAMOND 5"));
+            player.sendMessage(Component.text("§eKIT vip"));
         }
     }
 
     private int findNextAvailableDay() {
         for (int i = 1; i <= 7; i++) {
-            if (plugin.getDailyRewardManager().getReward(i) == null) {
+            if (SkyblockPlugin.getDailyRewardManager().getReward(i) == null) {
                 return i;
             }
         }

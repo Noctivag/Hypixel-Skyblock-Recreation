@@ -1,23 +1,27 @@
 package de.noctivag.skyblock.npcs;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.HashMap;
 import java.util.Map;
+import net.kyori.adventure.text.Component;
 
 /**
  * NPC Skin Manager - Manages custom skins for Player-based NPCs
  */
 public class NPCSkinManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<String, NPCSkin> npcSkins = new HashMap<>();
     
-    public NPCSkinManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public NPCSkinManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         initializeDefaultSkins();
     }
     
@@ -129,8 +133,8 @@ public class NPCSkinManager {
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
         
         if (meta != null) {
-            meta.setDisplayName(skin.getDisplayName());
-            meta.setLore(java.util.Arrays.asList(skin.getDescription()));
+            meta.displayName(Component.text(skin.getDisplayName()));
+            meta.lore(java.util.Arrays.asList(Component.text(skin.getDescription())));
             // Note: In a real implementation, you would set the skin texture here
             // This requires additional libraries or custom packet manipulation
             skull.setItemMeta(meta);

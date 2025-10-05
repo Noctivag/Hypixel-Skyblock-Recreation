@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.performance;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -22,13 +26,13 @@ import java.util.logging.Level;
  * - Error handling and retry logic
  */
 public class AsyncConfigManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultithreadingManager multithreadingManager;
     private final ConcurrentHashMap<String, FileConfiguration> configCache = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Long> configLastModified = new ConcurrentHashMap<>();
     
-    public AsyncConfigManager(SkyblockPlugin plugin, MultithreadingManager multithreadingManager) {
-        this.plugin = plugin;
+    public AsyncConfigManager(SkyblockPlugin SkyblockPlugin, MultithreadingManager multithreadingManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.multithreadingManager = multithreadingManager;
     }
     
@@ -38,12 +42,12 @@ public class AsyncConfigManager {
     public CompletableFuture<FileConfiguration> loadConfigAsync(String fileName) {
         return multithreadingManager.executeFileIOAsync(() -> {
             try {
-                File configFile = new File(plugin.getDataFolder(), fileName);
+                File configFile = new File(SkyblockPlugin.getDataFolder(), fileName);
                 
                 // Check if file exists, create if not
                 if (!configFile.exists()) {
-                    if (plugin.getResource(fileName) != null) {
-                        plugin.saveResource(fileName, false);
+                    if (SkyblockPlugin.getResource(fileName) != null) {
+                        SkyblockPlugin.saveResource(fileName, false);
                     } else {
                         configFile.getParentFile().mkdirs();
                         configFile.createNewFile();
@@ -70,7 +74,7 @@ public class AsyncConfigManager {
                 return config;
                 
             } catch (IOException e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to load config file: " + fileName, e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to load config file: " + fileName, e);
                 throw new RuntimeException(e);
             }
         });
@@ -82,7 +86,7 @@ public class AsyncConfigManager {
     public CompletableFuture<Boolean> saveConfigAsync(String fileName, FileConfiguration config) {
         return multithreadingManager.executeFileIOAsync(() -> {
             try {
-                File configFile = new File(plugin.getDataFolder(), fileName);
+                File configFile = new File(SkyblockPlugin.getDataFolder(), fileName);
                 config.save(configFile);
                 
                 // Update cache
@@ -93,7 +97,7 @@ public class AsyncConfigManager {
                 return true;
                 
             } catch (IOException e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to save config file: " + fileName, e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to save config file: " + fileName, e);
                 return false;
             }
         });
@@ -117,7 +121,7 @@ public class AsyncConfigManager {
                 try {
                     configs.put(fileNames[i], futures[i].get());
                 } catch (Exception e) {
-                    plugin.getLogger().log(Level.WARNING, "Failed to load config: " + fileNames[i], e);
+                    SkyblockPlugin.getLogger().log(Level.WARNING, "Failed to load config: " + fileNames[i], e);
                 }
             }
             return configs;
@@ -143,7 +147,7 @@ public class AsyncConfigManager {
                         return false;
                     }
                 } catch (Exception e) {
-                    plugin.getLogger().log(Level.WARNING, "Failed to save config", e);
+                    SkyblockPlugin.getLogger().log(Level.WARNING, "Failed to save config", e);
                     return false;
                 }
             }
@@ -157,7 +161,7 @@ public class AsyncConfigManager {
     public CompletableFuture<FileConfiguration> loadPlayerDataAsync(String playerUUID) {
         return multithreadingManager.executeFileIOAsync(() -> {
             try {
-                File playerDataFile = new File(plugin.getDataFolder() + "/playerdata", playerUUID + ".yml");
+                File playerDataFile = new File(SkyblockPlugin.getDataFolder() + "/playerdata", playerUUID + ".yml");
                 
                 if (!playerDataFile.exists()) {
                     playerDataFile.getParentFile().mkdirs();
@@ -167,7 +171,7 @@ public class AsyncConfigManager {
                 return YamlConfiguration.loadConfiguration(playerDataFile);
                 
             } catch (IOException e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to load player data: " + playerUUID, e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to load player data: " + playerUUID, e);
                 throw new RuntimeException(e);
             }
         });
@@ -179,12 +183,12 @@ public class AsyncConfigManager {
     public CompletableFuture<Boolean> savePlayerDataAsync(String playerUUID, FileConfiguration config) {
         return multithreadingManager.executeFileIOAsync(() -> {
             try {
-                File playerDataFile = new File(plugin.getDataFolder() + "/playerdata", playerUUID + ".yml");
+                File playerDataFile = new File(SkyblockPlugin.getDataFolder() + "/playerdata", playerUUID + ".yml");
                 config.save(playerDataFile);
                 return true;
                 
             } catch (IOException e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to save player data: " + playerUUID, e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to save player data: " + playerUUID, e);
                 return false;
             }
         });
@@ -196,7 +200,7 @@ public class AsyncConfigManager {
     public CompletableFuture<FileConfiguration> loadWorldConfigAsync(String worldName) {
         return multithreadingManager.executeFileIOAsync(() -> {
             try {
-                File worldConfigFile = new File(plugin.getDataFolder() + "/worlds", worldName + ".yml");
+                File worldConfigFile = new File(SkyblockPlugin.getDataFolder() + "/worlds", worldName + ".yml");
                 
                 if (!worldConfigFile.exists()) {
                     worldConfigFile.getParentFile().mkdirs();
@@ -206,7 +210,7 @@ public class AsyncConfigManager {
                 return YamlConfiguration.loadConfiguration(worldConfigFile);
                 
             } catch (IOException e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to load world config: " + worldName, e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to load world config: " + worldName, e);
                 throw new RuntimeException(e);
             }
         });
@@ -218,12 +222,12 @@ public class AsyncConfigManager {
     public CompletableFuture<Boolean> saveWorldConfigAsync(String worldName, FileConfiguration config) {
         return multithreadingManager.executeFileIOAsync(() -> {
             try {
-                File worldConfigFile = new File(plugin.getDataFolder() + "/worlds", worldName + ".yml");
+                File worldConfigFile = new File(SkyblockPlugin.getDataFolder() + "/worlds", worldName + ".yml");
                 config.save(worldConfigFile);
                 return true;
                 
             } catch (IOException e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to save world config: " + worldName, e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to save world config: " + worldName, e);
                 return false;
             }
         });
@@ -241,7 +245,7 @@ public class AsyncConfigManager {
      * Get cached configuration
      */
     public FileConfiguration getCachedConfig(String fileName) {
-        File configFile = new File(plugin.getDataFolder(), fileName);
+        File configFile = new File(SkyblockPlugin.getDataFolder(), fileName);
         return configCache.get(configFile.getAbsolutePath());
     }
     
@@ -249,7 +253,7 @@ public class AsyncConfigManager {
      * Check if configuration is cached
      */
     public boolean isConfigCached(String fileName) {
-        File configFile = new File(plugin.getDataFolder(), fileName);
+        File configFile = new File(SkyblockPlugin.getDataFolder(), fileName);
         return configCache.containsKey(configFile.getAbsolutePath());
     }
 }

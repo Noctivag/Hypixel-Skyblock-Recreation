@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.crimson;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -20,6 +25,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Crimson Isle System - Complete Hypixel SkyBlock Crimson Isle Implementation
@@ -34,22 +40,22 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CrimsonIsleSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerCrimsonData> playerCrimsonData = new ConcurrentHashMap<>();
     private final Map<CrimsonFaction, FactionConfig> factionConfigs = new HashMap<>();
     private final Map<CrimsonLocation, LocationConfig> locationConfigs = new HashMap<>();
     private final Map<CrimsonMob, MobConfig> mobConfigs = new HashMap<>();
     
-    public CrimsonIsleSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public CrimsonIsleSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeFactionConfigs();
         initializeLocationConfigs();
         initializeMobConfigs();
         startCrimsonUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeFactionConfigs() {
@@ -213,7 +219,7 @@ public class CrimsonIsleSystem implements Listener {
     }
     
     private void startCrimsonUpdateTask() {
-        Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+        Bukkit.getScheduler().runTaskTimer(SkyblockPlugin, () -> {
             // Update faction events, reputation, etc.
             updateFactionEvents();
         }, 0L, 20L * 60L); // Every minute
@@ -227,7 +233,7 @@ public class CrimsonIsleSystem implements Listener {
         PlayerCrimsonData data = getPlayerCrimsonData(player);
         
         if (data.getFaction() != null) {
-            player.sendMessage("§cYou are already in a faction!");
+            player.sendMessage(Component.text("§cYou are already in a faction!"));
             return;
         }
         
@@ -243,7 +249,7 @@ public class CrimsonIsleSystem implements Listener {
         PlayerCrimsonData data = getPlayerCrimsonData(player);
         
         if (data.getFaction() == null) {
-            player.sendMessage("§cYou are not in a faction!");
+            player.sendMessage(Component.text("§cYou are not in a faction!"));
             return;
         }
         
@@ -258,7 +264,7 @@ public class CrimsonIsleSystem implements Listener {
         PlayerCrimsonData data = getPlayerCrimsonData(player);
         
         if (data.getFaction() == null) {
-            player.sendMessage("§cYou must be in a faction to gain reputation!");
+            player.sendMessage(Component.text("§cYou must be in a faction to gain reputation!"));
             return;
         }
         
@@ -352,13 +358,13 @@ public class CrimsonIsleSystem implements Listener {
     private ItemStack createCrimsonItem(String name, Material material, String displayName) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(displayName);
-        meta.setLore(Arrays.asList(
+        meta.displayName(Component.text(displayName));
+        meta.lore(Arrays.asList(
             "§7A powerful item from the Crimson Isle",
             "§7Faction reward",
             "",
             "§7Rarity: §6Rare"
-        ));
+        ).stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
         item.setItemMeta(meta);
         return item;
     }

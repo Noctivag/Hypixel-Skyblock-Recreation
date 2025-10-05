@@ -93,7 +93,7 @@ public class PlayerEnchantments {
     /**
      * Get enchantments by rarity
      */
-    public Map<CompleteEnchantmentType, Integer> getEnchantmentsByRarity(de.noctivag.plugin.features.enchantments.types.EnchantmentRarity rarity) {
+    public Map<CompleteEnchantmentType, Integer> getEnchantmentsByRarity(de.noctivag.skyblock.features.enchantments.types.EnchantmentRarity rarity) {
         Map<CompleteEnchantmentType, Integer> result = new HashMap<>();
         
         for (Map.Entry<CompleteEnchantmentType, Integer> entry : ownedEnchantments.entrySet()) {
@@ -108,7 +108,7 @@ public class PlayerEnchantments {
     /**
      * Get enchantments by category
      */
-    public Map<CompleteEnchantmentType, Integer> getEnchantmentsByCategory(de.noctivag.plugin.features.enchantments.types.EnchantmentCategory category) {
+    public Map<CompleteEnchantmentType, Integer> getEnchantmentsByCategory(de.noctivag.skyblock.features.enchantments.types.EnchantmentCategory category) {
         Map<CompleteEnchantmentType, Integer> result = new HashMap<>();
         
         for (Map.Entry<CompleteEnchantmentType, Integer> entry : ownedEnchantments.entrySet()) {
@@ -149,11 +149,11 @@ public class PlayerEnchantments {
     /**
      * Get enchantment count by rarity
      */
-    public Map<de.noctivag.plugin.features.enchantments.types.EnchantmentRarity, Integer> getEnchantmentCountByRarity() {
-        Map<de.noctivag.plugin.features.enchantments.types.EnchantmentRarity, Integer> counts = new HashMap<>();
+    public Map<de.noctivag.skyblock.features.enchantments.types.EnchantmentRarity, Integer> getEnchantmentCountByRarity() {
+        Map<de.noctivag.skyblock.features.enchantments.types.EnchantmentRarity, Integer> counts = new HashMap<>();
         
         for (CompleteEnchantmentType enchantment : ownedEnchantments.keySet()) {
-            de.noctivag.plugin.features.enchantments.types.EnchantmentRarity rarity = enchantment.getRarity();
+            de.noctivag.skyblock.features.enchantments.types.EnchantmentRarity rarity = enchantment.getRarity();
             counts.put(rarity, counts.getOrDefault(rarity, 0) + 1);
         }
         
@@ -163,11 +163,11 @@ public class PlayerEnchantments {
     /**
      * Get enchantment count by category
      */
-    public Map<de.noctivag.plugin.features.enchantments.types.EnchantmentCategory, Integer> getEnchantmentCountByCategory() {
-        Map<de.noctivag.plugin.features.enchantments.types.EnchantmentCategory, Integer> counts = new HashMap<>();
+    public Map<de.noctivag.skyblock.features.enchantments.types.EnchantmentCategory, Integer> getEnchantmentCountByCategory() {
+        Map<de.noctivag.skyblock.features.enchantments.types.EnchantmentCategory, Integer> counts = new HashMap<>();
         
         for (CompleteEnchantmentType enchantment : ownedEnchantments.keySet()) {
-            de.noctivag.plugin.features.enchantments.types.EnchantmentCategory category = enchantment.getCategory();
+            de.noctivag.skyblock.features.enchantments.types.EnchantmentCategory category = enchantment.getCategory();
             counts.put(category, counts.getOrDefault(category, 0) + 1);
         }
         
@@ -177,10 +177,10 @@ public class PlayerEnchantments {
     /**
      * Get completion percentage for each rarity
      */
-    public Map<de.noctivag.plugin.features.enchantments.types.EnchantmentRarity, Double> getCompletionPercentageByRarity() {
-        Map<de.noctivag.plugin.features.enchantments.types.EnchantmentRarity, Double> percentages = new HashMap<>();
+    public Map<de.noctivag.skyblock.features.enchantments.types.EnchantmentRarity, Double> getCompletionPercentageByRarity() {
+        Map<de.noctivag.skyblock.features.enchantments.types.EnchantmentRarity, Double> percentages = new HashMap<>();
         
-        for (de.noctivag.plugin.features.enchantments.types.EnchantmentRarity rarity : de.noctivag.plugin.features.enchantments.types.EnchantmentRarity.values()) {
+        for (de.noctivag.skyblock.features.enchantments.types.EnchantmentRarity rarity : de.noctivag.skyblock.features.enchantments.types.EnchantmentRarity.values()) {
             List<CompleteEnchantmentType> allEnchantmentsOfRarity = CompleteEnchantmentType.getEnchantmentsByRarity(rarity);
             Map<CompleteEnchantmentType, Integer> ownedEnchantmentsOfRarity = getEnchantmentsByRarity(rarity);
             
@@ -196,10 +196,10 @@ public class PlayerEnchantments {
     /**
      * Get completion percentage for each category
      */
-    public Map<de.noctivag.plugin.features.enchantments.types.EnchantmentCategory, Double> getCompletionPercentageByCategory() {
-        Map<de.noctivag.plugin.features.enchantments.types.EnchantmentCategory, Double> percentages = new HashMap<>();
+    public Map<de.noctivag.skyblock.features.enchantments.types.EnchantmentCategory, Double> getCompletionPercentageByCategory() {
+        Map<de.noctivag.skyblock.features.enchantments.types.EnchantmentCategory, Double> percentages = new HashMap<>();
         
-        for (de.noctivag.plugin.features.enchantments.types.EnchantmentCategory category : de.noctivag.plugin.features.enchantments.types.EnchantmentCategory.values()) {
+        for (de.noctivag.skyblock.features.enchantments.types.EnchantmentCategory category : de.noctivag.skyblock.features.enchantments.types.EnchantmentCategory.values()) {
             List<CompleteEnchantmentType> allEnchantmentsOfCategory = CompleteEnchantmentType.getEnchantmentsByCategory(category);
             Map<CompleteEnchantmentType, Integer> ownedEnchantmentsOfCategory = getEnchantmentsByCategory(category);
             

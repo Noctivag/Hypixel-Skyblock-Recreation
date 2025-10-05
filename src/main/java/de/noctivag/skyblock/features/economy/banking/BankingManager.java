@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.economy.banking;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import org.bukkit.entity.Player;
@@ -21,7 +22,7 @@ public class BankingManager {
             this.playerId = playerId;
             this.balance = 0.0;
             this.interestRate = 0.01; // 1% per day
-            this.lastInterestTime = System.currentTimeMillis();
+            this.lastInterestTime = java.lang.System.currentTimeMillis();
             this.properties = Map.of();
         }
         

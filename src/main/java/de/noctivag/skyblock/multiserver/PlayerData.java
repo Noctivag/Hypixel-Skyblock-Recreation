@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.multiserver;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
@@ -28,7 +29,7 @@ public class PlayerData {
     
     public PlayerData(UUID playerId) {
         this.playerId = playerId;
-        this.lastSeen = System.currentTimeMillis();
+        this.lastSeen = java.lang.System.currentTimeMillis();
         this.totalPlayTime = 0;
         this.level = 1;
         this.experience = 0;

@@ -1,5 +1,9 @@
 package de.noctivag.skyblock.engine;
 
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+
 import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Material;
@@ -36,7 +40,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CustomEnchantmentEngine implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<String, CustomEnchantment> enchantments = new ConcurrentHashMap<>();
     private final Map<UUID, Map<String, Long>> playerEnchantmentCooldowns = new ConcurrentHashMap<>();
@@ -142,11 +146,11 @@ public class CustomEnchantmentEngine implements Listener {
         void onEntityHit(Player player, LivingEntity target, int level);
     }
     
-    public CustomEnchantmentEngine(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public CustomEnchantmentEngine(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeEnchantments();
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        SkyblockPlugin.getServer().getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     /**
@@ -225,7 +229,7 @@ public class CustomEnchantmentEngine implements Listener {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return false;
         
-        NamespacedKey key = new NamespacedKey(plugin, enchantmentId.toLowerCase());
+        NamespacedKey key = new NamespacedKey(SkyblockPlugin, enchantmentId.toLowerCase());
         meta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, level);
         
         // Update lore
@@ -237,7 +241,7 @@ public class CustomEnchantmentEngine implements Listener {
         
         // Add new enchantment lore
         lore.add(enchantment.getDisplayName() + " " + level);
-        meta.setLore(lore);
+        meta.lore(lore.stream().map(net.kyori.adventure.text.Component::text).toList());
         
         item.setItemMeta(meta);
         return true;
@@ -249,7 +253,7 @@ public class CustomEnchantmentEngine implements Listener {
     public int getEnchantmentLevel(ItemStack item, String enchantmentId) {
         if (item == null || item.getItemMeta() == null) return 0;
         
-        NamespacedKey key = new NamespacedKey(plugin, enchantmentId.toLowerCase());
+        NamespacedKey key = new NamespacedKey(SkyblockPlugin, enchantmentId.toLowerCase());
         return item.getItemMeta().getPersistentDataContainer()
             .getOrDefault(key, PersistentDataType.INTEGER, 0);
     }

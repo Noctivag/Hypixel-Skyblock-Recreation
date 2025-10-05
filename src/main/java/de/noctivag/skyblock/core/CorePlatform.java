@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.core;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.entity.Player;
 
@@ -9,7 +13,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Core Platform - Zentrale Plattform für alle Plugin-Systeme
+ * Core Platform - Zentrale Plattform für alle SkyblockPlugin-Systeme
  * 
  * Verantwortlich für:
  * - Player Profile Management
@@ -18,13 +22,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Data Synchronization
  */
 public class CorePlatform {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerProfile> playerProfiles = new ConcurrentHashMap<>();
     private final Map<UUID, IslandManager> playerIslands = new ConcurrentHashMap<>();
     
-    public CorePlatform(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public CorePlatform(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
     }
     
@@ -73,8 +77,8 @@ public class CorePlatform {
         return new HashMap<>(playerIslands);
     }
     
-    public Plugin getPlugin() {
-        return plugin;
+    public SkyblockPlugin getPlugin() {
+        return SkyblockPlugin;
     }
     
     public MultiServerDatabaseManager getDatabaseManager() {

@@ -103,7 +103,7 @@ public class PlayerAccessories {
     /**
      * Get accessories by rarity
      */
-    public Set<CompleteAccessoryType> getAccessoriesByRarity(de.noctivag.plugin.features.accessories.types.AccessoryRarity rarity) {
+    public Set<CompleteAccessoryType> getAccessoriesByRarity(de.noctivag.skyblock.features.accessories.types.AccessoryRarity rarity) {
         return ownedAccessories.stream()
             .filter(accessory -> accessory.getRarity() == rarity)
             .collect(HashSet::new, HashSet::add, HashSet::addAll);
@@ -121,11 +121,11 @@ public class PlayerAccessories {
     /**
      * Get accessory count by rarity
      */
-    public Map<de.noctivag.plugin.features.accessories.types.AccessoryRarity, Integer> getAccessoryCountByRarity() {
-        Map<de.noctivag.plugin.features.accessories.types.AccessoryRarity, Integer> counts = new HashMap<>();
+    public Map<de.noctivag.skyblock.features.accessories.types.AccessoryRarity, Integer> getAccessoryCountByRarity() {
+        Map<de.noctivag.skyblock.features.accessories.types.AccessoryRarity, Integer> counts = new HashMap<>();
         
         for (CompleteAccessoryType accessory : ownedAccessories) {
-            de.noctivag.plugin.features.accessories.types.AccessoryRarity rarity = accessory.getRarity();
+            de.noctivag.skyblock.features.accessories.types.AccessoryRarity rarity = accessory.getRarity();
             counts.put(rarity, counts.getOrDefault(rarity, 0) + 1);
         }
         
@@ -135,10 +135,10 @@ public class PlayerAccessories {
     /**
      * Get completion percentage for each rarity
      */
-    public Map<de.noctivag.plugin.features.accessories.types.AccessoryRarity, Double> getCompletionPercentageByRarity() {
-        Map<de.noctivag.plugin.features.accessories.types.AccessoryRarity, Double> percentages = new HashMap<>();
+    public Map<de.noctivag.skyblock.features.accessories.types.AccessoryRarity, Double> getCompletionPercentageByRarity() {
+        Map<de.noctivag.skyblock.features.accessories.types.AccessoryRarity, Double> percentages = new HashMap<>();
         
-        for (de.noctivag.plugin.features.accessories.types.AccessoryRarity rarity : de.noctivag.plugin.features.accessories.types.AccessoryRarity.values()) {
+        for (de.noctivag.skyblock.features.accessories.types.AccessoryRarity rarity : de.noctivag.skyblock.features.accessories.types.AccessoryRarity.values()) {
             List<CompleteAccessoryType> allAccessoriesOfRarity = CompleteAccessoryType.getAccessoriesByRarity(rarity);
             Set<CompleteAccessoryType> ownedAccessoriesOfRarity = getAccessoriesByRarity(rarity);
             

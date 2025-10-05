@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.events;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -27,7 +28,7 @@ public class PlayerEvents {
     
     public PlayerEvents(UUID playerId) {
         this.playerId = playerId;
-        this.lastActivity = System.currentTimeMillis();
+        this.lastActivity = java.lang.System.currentTimeMillis();
         
         // Initialize settings
         this.autoJoinEvents = false;
@@ -50,7 +51,7 @@ public class PlayerEvents {
         EventParticipation participation = new EventParticipation(eventId, event);
         activeEvents.put(eventId, participation);
         eventStatistics.put("total_events", eventStatistics.get("total_events") + 1);
-        lastActivity = System.currentTimeMillis();
+        lastActivity = java.lang.System.currentTimeMillis();
     }
     
     public void updateEventProgress(String eventId, String objectiveId, int amount) {
@@ -58,7 +59,7 @@ public class PlayerEvents {
         if (participation == null) return;
         
         participation.updateObjective(objectiveId, amount);
-        lastActivity = System.currentTimeMillis();
+        lastActivity = java.lang.System.currentTimeMillis();
         
         // Check if event is completed
         if (participation.isCompleted()) {
@@ -74,7 +75,7 @@ public class PlayerEvents {
         eventStatistics.put("completed_events", eventStatistics.get("completed_events") + 1);
         eventStatistics.put("total_rewards", eventStatistics.get("total_rewards") + participation.getEvent().getRewards().size());
         eventStatistics.put("total_score", eventStatistics.get("total_score") + participation.getScore());
-        lastActivity = System.currentTimeMillis();
+        lastActivity = java.lang.System.currentTimeMillis();
     }
     
     public void failEvent(String eventId) {
@@ -82,7 +83,7 @@ public class PlayerEvents {
         if (participation == null) return;
         
         eventStatistics.put("failed_events", eventStatistics.get("failed_events") + 1);
-        lastActivity = System.currentTimeMillis();
+        lastActivity = java.lang.System.currentTimeMillis();
     }
     
     public boolean hasActiveEvent(String eventId) {
@@ -188,7 +189,7 @@ public class PlayerEvents {
         activeEvents.clear();
         completedEvents.clear();
         eventStatistics.clear();
-        lastActivity = System.currentTimeMillis();
+        lastActivity = java.lang.System.currentTimeMillis();
         
         // Reset settings
         this.autoJoinEvents = false;
@@ -243,8 +244,8 @@ public class PlayerEvents {
         public EventParticipation(String eventId, Event event) {
             this.eventId = eventId;
             this.event = event;
-            this.startTime = System.currentTimeMillis();
-            this.lastUpdate = System.currentTimeMillis();
+            this.startTime = java.lang.System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
             this.score = 0;
             
             // Initialize objective progress
@@ -255,7 +256,7 @@ public class PlayerEvents {
         
         public void updateObjective(String objectiveId, int amount) {
             objectiveProgress.put(objectiveId, objectiveProgress.getOrDefault(objectiveId, 0) + amount);
-            lastUpdate = System.currentTimeMillis();
+            lastUpdate = java.lang.System.currentTimeMillis();
             
             // Update score based on objective completion
             EventObjective objective = event.getObjective(objectiveId);
@@ -312,7 +313,7 @@ public class PlayerEvents {
         }
         
         public long getDuration() {
-            return System.currentTimeMillis() - startTime;
+            return java.lang.System.currentTimeMillis() - startTime;
         }
         
         public int getScore() {

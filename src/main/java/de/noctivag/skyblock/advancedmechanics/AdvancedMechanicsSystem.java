@@ -1,4 +1,8 @@
 package de.noctivag.skyblock.advancedmechanics;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
@@ -10,22 +14,24 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 
 public class AdvancedMechanicsSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerMechanicsData> playerMechanicsData = new ConcurrentHashMap<>();
     
-    public AdvancedMechanicsSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedMechanicsSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     @EventHandler
@@ -46,7 +52,7 @@ public class AdvancedMechanicsSystem implements Listener {
     }
     
     public void openMechanicsGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§c§lAdvanced Mechanics");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§c§lAdvanced Mechanics"));
         
         // Add mechanics categories
         addGUIItem(gui, 10, Material.ENCHANTED_BOOK, "§d§lEnchanting", "§7Advanced enchanting mechanics.");
@@ -65,11 +71,11 @@ public class AdvancedMechanicsSystem implements Listener {
         addGUIItem(gui, 53, Material.ARROW, "§7§lNext Page", "§7Go to next page.");
         
         player.openInventory(gui);
-        player.sendMessage("§aAdvanced Mechanics GUI geöffnet!");
+        player.sendMessage(Component.text("§aAdvanced Mechanics GUI geöffnet!"));
     }
     
     public void openEnchantingGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§d§lAdvanced Enchanting");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§d§lAdvanced Enchanting"));
         
         // Add enchanting features
         addGUIItem(gui, 10, Material.ENCHANTED_BOOK, "§d§lEnchant", "§7Enchant items with advanced mechanics.");
@@ -91,7 +97,7 @@ public class AdvancedMechanicsSystem implements Listener {
     }
     
     public void openForgingGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§7§lAdvanced Forging");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§7§lAdvanced Forging"));
         
         // Add forging features
         addGUIItem(gui, 10, Material.ANVIL, "§7§lAnvil", "§7Use anvil for forging.");
@@ -113,7 +119,7 @@ public class AdvancedMechanicsSystem implements Listener {
     }
     
     public void openAlchemyGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§5§lAdvanced Alchemy");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§5§lAdvanced Alchemy"));
         
         // Add alchemy features
         addGUIItem(gui, 10, Material.BREWING_STAND, "§5§lBrewing Stand", "§7Use brewing stand.");
@@ -135,7 +141,7 @@ public class AdvancedMechanicsSystem implements Listener {
     }
     
     public void openCraftingGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lAdvanced Crafting");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lAdvanced Crafting"));
         
         // Add crafting features
         addGUIItem(gui, 10, Material.CRAFTING_TABLE, "§6§lCrafting Table", "§7Use crafting table.");
@@ -157,7 +163,7 @@ public class AdvancedMechanicsSystem implements Listener {
     }
     
     public void openSmeltingGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§8§lAdvanced Smelting");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§8§lAdvanced Smelting"));
         
         // Add smelting features
         addGUIItem(gui, 10, Material.FURNACE, "§8§lFurnace", "§7Use furnace.");
@@ -179,7 +185,7 @@ public class AdvancedMechanicsSystem implements Listener {
     }
     
     public void openBrewingGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§b§lAdvanced Brewing");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§b§lAdvanced Brewing"));
         
         // Add brewing features
         addGUIItem(gui, 10, Material.BREWING_STAND, "§b§lBrewing Stand", "§7Use brewing stand.");
@@ -201,7 +207,7 @@ public class AdvancedMechanicsSystem implements Listener {
     }
     
     public void openRunesGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§c§lAdvanced Runes");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§c§lAdvanced Runes"));
         
         // Add rune features
         addGUIItem(gui, 10, Material.ENCHANTING_TABLE, "§c§lRune Table", "§7Use rune table.");
@@ -223,7 +229,7 @@ public class AdvancedMechanicsSystem implements Listener {
     }
     
     public void openFusionGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§e§lAdvanced Fusion");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§e§lAdvanced Fusion"));
         
         // Add fusion features
         addGUIItem(gui, 10, Material.NETHER_STAR, "§e§lFusion Core", "§7Use fusion core.");
@@ -270,8 +276,8 @@ public class AdvancedMechanicsSystem implements Listener {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(name);
-            meta.setLore(Arrays.asList(description));
+            meta.displayName(Component.text(name));
+            meta.lore(Arrays.asList(Component.text(description)));
             item.setItemMeta(meta);
         }
         gui.setItem(slot, item);
@@ -289,11 +295,11 @@ public class AdvancedMechanicsSystem implements Listener {
         
         public PlayerMechanicsData(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void setMechanicsLevel(String mechanics, int level) {

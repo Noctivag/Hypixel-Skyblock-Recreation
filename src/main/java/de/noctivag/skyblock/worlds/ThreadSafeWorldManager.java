@@ -1,7 +1,7 @@
 package de.noctivag.skyblock.worlds;
-import org.bukkit.inventory.ItemStack;
-
+import net.kyori.adventure.text.Component;
 import de.noctivag.skyblock.SkyblockPlugin;
+import java.util.UUID;
 import de.noctivag.skyblock.utils.FileUtils;
 import de.noctivag.skyblock.worlds.generators.VoidGenerator;
 import de.noctivag.skyblock.worlds.generators.IslandGenerator;
@@ -49,7 +49,7 @@ import java.nio.file.attribute.BasicFileAttributes;
  */
 public class ThreadSafeWorldManager {
 
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<String, WorldConfig> worldConfigs = new ConcurrentHashMap<>();
     private final Map<String, World> managedWorlds = new ConcurrentHashMap<>();
     private final Map<String, WorldLock> worldLocks = new ConcurrentHashMap<>();
@@ -80,9 +80,9 @@ public class ThreadSafeWorldManager {
     private final Map<String, WorldMetrics> worldMetrics = new ConcurrentHashMap<>();
     private BukkitTask metricsTask;
 
-    public ThreadSafeWorldManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.privateIslandsContainer = new File(plugin.getServer().getWorldContainer(), "private_islands");
+    public ThreadSafeWorldManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.privateIslandsContainer = new File(SkyblockPlugin.getServer().getWorldContainer(), "private_islands");
         
         if (!privateIslandsContainer.exists()) {
             privateIslandsContainer.mkdirs();
@@ -180,7 +180,7 @@ public class ThreadSafeWorldManager {
             true, false, "End-Dimension Welten"
         ));
 
-        plugin.getLogger().info("Initialized " + worldConfigs.size() + " world configurations with multithreading support");
+        SkyblockPlugin.getLogger().info("Initialized " + worldConfigs.size() + " world configurations with multithreading support");
     }
 
     /**
@@ -189,7 +189,7 @@ public class ThreadSafeWorldManager {
     public CompletableFuture<Boolean> initializeAllWorlds() {
         CompletableFuture<Boolean> future = new CompletableFuture<>();
 
-        plugin.getLogger().info("Initializing all worlds with multithreading...");
+        SkyblockPlugin.getLogger().info("Initializing all worlds with multithreading...");
 
         worldExecutor.submit(() -> {
             try {
@@ -218,27 +218,27 @@ public class ThreadSafeWorldManager {
                                 successCount[0]++;
                             }
                         } catch (Exception e) {
-                            plugin.getLogger().log(Level.WARNING, "Failed to get world result", e);
+                            SkyblockPlugin.getLogger().log(Level.WARNING, "Failed to get world result", e);
                         }
                     }
 
                     isInitialized.set(successCount[0] > 0);
 
-                    Bukkit.getScheduler().runTask(plugin, () -> {
+                    Bukkit.getScheduler().runTask(SkyblockPlugin, () -> {
                         if (isInitialized.get()) {
-                            plugin.getLogger().info("Multithreaded world initialization completed: " +
+                            SkyblockPlugin.getLogger().info("Multithreaded world initialization completed: " +
                                 successCount[0] + "/" + worldConfigs.size() + " worlds ready");
                             future.complete(true);
                         } else {
-                            plugin.getLogger().severe("Multithreaded world initialization failed");
+                            SkyblockPlugin.getLogger().severe("Multithreaded world initialization failed");
                             future.complete(false);
                         }
                     });
                 });
 
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Critical error during multithreaded world initialization", e);
-                Bukkit.getScheduler().runTask(plugin, () -> future.complete(false));
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Critical error during multithreaded world initialization", e);
+                Bukkit.getScheduler().runTask(SkyblockPlugin, () -> future.complete(false));
             }
         });
 
@@ -286,7 +286,7 @@ public class ThreadSafeWorldManager {
                 future.complete(world);
 
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to initialize world: " + worldName, e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to initialize world: " + worldName, e);
                 future.complete(null);
             } finally {
                 activeOperations.decrementAndGet();
@@ -306,16 +306,16 @@ public class ThreadSafeWorldManager {
             creator.generator(config.getGenerator());
 
             // Ensure world creation runs on main thread
-            java.util.concurrent.Future<World> syncFuture = Bukkit.getScheduler().callSyncMethod(plugin, creator::createWorld);
+            java.util.concurrent.Future<World> syncFuture = Bukkit.getScheduler().callSyncMethod(SkyblockPlugin, creator::createWorld);
 
             World world = null;
             try {
                 world = syncFuture.get();
             } catch (InterruptedException ie) {
                 Thread.currentThread().interrupt();
-                plugin.getLogger().log(Level.WARNING, "Interrupted while creating world: " + worldName, ie);
+                SkyblockPlugin.getLogger().log(Level.WARNING, "Interrupted while creating world: " + worldName, ie);
             } catch (java.util.concurrent.ExecutionException ee) {
-                plugin.getLogger().log(Level.SEVERE, "Exception while creating world (sync): " + worldName, ee.getCause());
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Exception while creating world (sync): " + worldName, ee.getCause());
             }
 
             if (world != null) {
@@ -323,7 +323,7 @@ public class ThreadSafeWorldManager {
             }
             return world;
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to load existing world: " + worldName, e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to load existing world: " + worldName, e);
             return null;
         }
     }
@@ -347,31 +347,31 @@ public class ThreadSafeWorldManager {
                 } catch (NoSuchMethodException nsme) {
                     // Method not available on this server's API - ignore silently
                 } catch (Exception ex) {
-                    plugin.getLogger().log(Level.FINE, "Failed to call keepSpawnLoaded reflectively", ex);
+                    SkyblockPlugin.getLogger().log(Level.FINE, "Failed to call keepSpawnLoaded reflectively", ex);
                 }
             }
 
             // Ensure world creation runs on main thread
-            java.util.concurrent.Future<World> syncFuture = Bukkit.getScheduler().callSyncMethod(plugin, creator::createWorld);
+            java.util.concurrent.Future<World> syncFuture = Bukkit.getScheduler().callSyncMethod(SkyblockPlugin, creator::createWorld);
 
             World world = null;
             try {
                 world = syncFuture.get();
             } catch (InterruptedException ie) {
                 Thread.currentThread().interrupt();
-                plugin.getLogger().log(Level.WARNING, "Interrupted while creating world: " + worldName, ie);
+                SkyblockPlugin.getLogger().log(Level.WARNING, "Interrupted while creating world: " + worldName, ie);
             } catch (java.util.concurrent.ExecutionException ee) {
-                plugin.getLogger().log(Level.SEVERE, "Exception while creating world (sync): " + worldName, ee.getCause());
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Exception while creating world (sync): " + worldName, ee.getCause());
             }
 
             if (world != null) {
                 configureWorld(world, config);
-                plugin.getLogger().info("Successfully created world: " + worldName);
+                SkyblockPlugin.getLogger().info("Successfully created world: " + worldName);
             }
             return world;
 
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to create new world: " + worldName, e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to create new world: " + worldName, e);
             return null;
         }
     }
@@ -393,7 +393,7 @@ public class ThreadSafeWorldManager {
             configureWorldSpecific(world);
 
         } catch (Exception e) {
-            plugin.getLogger().log(Level.WARNING, "Failed to configure world: " + world.getName(), e);
+            SkyblockPlugin.getLogger().log(Level.WARNING, "Failed to configure world: " + world.getName(), e);
         }
     }
 
@@ -655,15 +655,15 @@ public class ThreadSafeWorldManager {
                 if (world != null) {
                     managedWorlds.put(worldName, world);
                     worldMetrics.put(worldName, new WorldMetrics(worldName));
-                    plugin.getLogger().info("Successfully loaded custom world: " + worldName);
+                    SkyblockPlugin.getLogger().info("Successfully loaded custom world: " + worldName);
                     future.complete(true);
                 } else {
-                    plugin.getLogger().warning("Failed to load custom world: " + worldName);
+                    SkyblockPlugin.getLogger().warning("Failed to load custom world: " + worldName);
                     future.complete(false);
                 }
 
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Error loading custom world: " + worldName, e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Error loading custom world: " + worldName, e);
                 future.complete(false);
             } finally {
                 activeOperations.decrementAndGet();
@@ -690,7 +690,7 @@ public class ThreadSafeWorldManager {
                         try {
                             Files.createDirectories(resolved);
                         } catch (Exception e) {
-                            plugin.getLogger().log(Level.WARNING, "Failed to create directory while copying world: " + resolved, e);
+                            SkyblockPlugin.getLogger().log(Level.WARNING, "Failed to create directory while copying world: " + resolved, e);
                             return FileVisitResult.SKIP_SUBTREE;
                         }
                     }
@@ -704,14 +704,14 @@ public class ThreadSafeWorldManager {
                     try {
                         Files.copy(file, resolved, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
                     } catch (Exception e) {
-                        plugin.getLogger().log(Level.WARNING, "Failed to copy file while copying world: " + file + " -> " + resolved, e);
+                        SkyblockPlugin.getLogger().log(Level.WARNING, "Failed to copy file while copying world: " + file + " -> " + resolved, e);
                     }
                     return FileVisitResult.CONTINUE;
                 }
             });
 
         } catch (Exception e) {
-            plugin.getLogger().log(Level.WARNING, "Error copying world folder", e);
+            SkyblockPlugin.getLogger().log(Level.WARNING, "Error copying world folder", e);
         }
     }
 
@@ -720,7 +720,7 @@ public class ThreadSafeWorldManager {
      */
     public World getWorld(String worldName) {
         if (!isInitialized.get()) {
-            plugin.getLogger().warning("ThreadSafeWorldManager not initialized, attempting to get world: " + worldName);
+            SkyblockPlugin.getLogger().warning("ThreadSafeWorldManager not initialized, attempting to get world: " + worldName);
             return Bukkit.getWorld(worldName);
         }
 
@@ -772,7 +772,7 @@ public class ThreadSafeWorldManager {
                 future.complete(world);
 
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to load world: " + worldName, e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to load world: " + worldName, e);
                 future.complete(null);
             }
         });
@@ -791,7 +791,7 @@ public class ThreadSafeWorldManager {
                 World world = Bukkit.getWorld(worldName);
                 if (world != null) {
                     if (!world.getPlayers().isEmpty()) {
-                        plugin.getLogger().warning("Cannot unload world " + worldName + ": Players are still in the world");
+                        SkyblockPlugin.getLogger().warning("Cannot unload world " + worldName + ": Players are still in the world");
                         future.complete(false);
                         return;
                     }
@@ -800,7 +800,7 @@ public class ThreadSafeWorldManager {
                     if (success) {
                         managedWorlds.remove(worldName);
                         worldMetrics.remove(worldName);
-                        plugin.getLogger().info("Successfully unloaded world: " + worldName);
+                        SkyblockPlugin.getLogger().info("Successfully unloaded world: " + worldName);
                     }
 
                     future.complete(success);
@@ -809,7 +809,7 @@ public class ThreadSafeWorldManager {
                 }
 
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to unload world: " + worldName, e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to unload world: " + worldName, e);
                 future.complete(false);
             }
         });
@@ -845,7 +845,7 @@ public class ThreadSafeWorldManager {
      * Startet Performance-Monitoring
      */
     public void startPerformanceMonitoring() {
-        metricsTask = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
+        metricsTask = Bukkit.getScheduler().runTaskTimerAsynchronously(SkyblockPlugin, () -> {
             for (Map.Entry<String, WorldMetrics> entry : worldMetrics.entrySet()) {
                 String worldName = entry.getKey();
                 WorldMetrics metrics = entry.getValue();
@@ -913,7 +913,7 @@ public class ThreadSafeWorldManager {
      * Schließt den WorldManager
      */
     public void shutdown() {
-        plugin.getLogger().info("Shutting down ThreadSafeWorldManager...");
+        SkyblockPlugin.getLogger().info("Shutting down ThreadSafeWorldManager...");
 
         // Stoppe Performance-Monitoring
         stopPerformanceMonitoring();
@@ -950,7 +950,7 @@ public class ThreadSafeWorldManager {
 
         isInitialized.set(false);
 
-        plugin.getLogger().info("ThreadSafeWorldManager shutdown complete");
+        SkyblockPlugin.getLogger().info("ThreadSafeWorldManager shutdown complete");
     }
 
     /**
@@ -965,7 +965,7 @@ public class ThreadSafeWorldManager {
         public WorldLock(String worldName, String lockOwner, LockType lockType) {
             this.worldName = worldName;
             this.lockOwner = lockOwner;
-            this.lockTime = System.currentTimeMillis();
+            this.lockTime = java.lang.System.currentTimeMillis();
             this.lockType = lockType;
         }
 
@@ -998,7 +998,7 @@ public class ThreadSafeWorldManager {
             this.worldType = worldType;
             this.generator = generator;
             this.customConfig = customConfig != null ? new HashMap<>(customConfig) : new HashMap<>();
-            this.loadTime = System.currentTimeMillis();
+            this.loadTime = java.lang.System.currentTimeMillis();
         }
 
         // Getters
@@ -1019,11 +1019,11 @@ public class ThreadSafeWorldManager {
         String worldNameA = alias + "_a";
         String worldNameB = alias + "_b";
 
-        loadOrCopyWorld(worldNameA, "oeffentlich");
-        loadOrCopyWorld(worldNameB, "oeffentlich");
+        loadOrCopyWorldWithMapping(worldNameA, "oeffentlich", alias, SkyblockPlugin.getServer().getWorldContainer());
+        loadOrCopyWorldWithMapping(worldNameB, "oeffentlich", alias, SkyblockPlugin.getServer().getWorldContainer());
 
         liveWorldAliases.put(alias, worldNameA);
-        plugin.getLogger().info("'" + worldNameA + "' ist jetzt die LIVE-Instanz für den Alias '" + alias + "'.");
+        SkyblockPlugin.getLogger().info("'" + worldNameA + "' ist jetzt die LIVE-Instanz für den Alias '" + alias + "'.");
         
         scheduleNextSwap(alias);
     }
@@ -1039,15 +1039,15 @@ public class ThreadSafeWorldManager {
         World nextLiveWorld = Bukkit.getWorld(nextLiveName);
 
         if (currentLiveWorld == null || nextLiveWorld == null) {
-            plugin.getLogger().severe("Konnte den Welt-Swap für '" + alias + "' nicht durchführen: Eine der Welten ist nicht geladen!");
+            SkyblockPlugin.getLogger().severe("Konnte den Welt-Swap für '" + alias + "' nicht durchführen: Eine der Welten ist nicht geladen!");
             scheduleNextSwap(alias);
             return;
         }
 
-        plugin.getLogger().info("Starte Welt-Swap für '" + alias + "'. Neue LIVE-Instanz: '" + nextLiveName + "'.");
+        SkyblockPlugin.getLogger().info("Starte Welt-Swap für '" + alias + "'. Neue LIVE-Instanz: '" + nextLiveName + "'.");
 
         for (Player player : currentLiveWorld.getPlayers()) {
-            player.sendMessage("§e[Skyblock] §7Diese Welt wird zurückgesetzt. Du wirst zur neuen Instanz teleportiert.");
+            player.sendMessage(Component.text("§e[Skyblock] §7Diese Welt wird zurückgesetzt. Du wirst zur neuen Instanz teleportiert."));
             player.teleport(nextLiveWorld.getSpawnLocation());
         }
 
@@ -1069,10 +1069,10 @@ public class ThreadSafeWorldManager {
             public void run() {
                 performSwap(alias);
             }
-        }.runTaskLater(plugin, fourHoursInTicks);
+        }.runTaskLater(SkyblockPlugin, fourHoursInTicks);
 
         restartTasks.put(alias, task);
-        plugin.getLogger().info("Nächster Reset für '" + alias + "' geplant in 4 Stunden.");
+        SkyblockPlugin.getLogger().info("Nächster Reset für '" + alias + "' geplant in 4 Stunden.");
     }
 
     /**
@@ -1100,7 +1100,7 @@ public class ThreadSafeWorldManager {
         File islandFolder = new File(privateIslandsContainer, playerUUID.toString());
         
         if (!islandFolder.exists()) {
-            plugin.getLogger().info("Erstelle neue private Insel für " + playerUUID);
+            SkyblockPlugin.getLogger().info("Erstelle neue private Insel für " + playerUUID);
             loadOrCopyWorld(playerUUID.toString(), "privat", "standard_insel", privateIslandsContainer);
         }
         
@@ -1116,12 +1116,12 @@ public class ThreadSafeWorldManager {
 
         if (world != null) {
             if (!world.getPlayers().isEmpty()) {
-                plugin.getLogger().warning("Versuch, eine bewohnte Insel zu entladen: " + worldName);
+                SkyblockPlugin.getLogger().warning("Versuch, eine bewohnte Insel zu entladen: " + worldName);
                 return;
             }
             world.save();
             Bukkit.unloadWorld(world, true);
-            plugin.getLogger().info("Private Insel für " + playerUUID + " gespeichert und entladen.");
+            SkyblockPlugin.getLogger().info("Private Insel für " + playerUUID + " gespeichert und entladen.");
         }
     }
 
@@ -1135,15 +1135,52 @@ public class ThreadSafeWorldManager {
         String templatePath = "vorlagen/" + templateSubfolder + "/" + templateName + ".zip";
 
         if (!worldFolder.exists()) {
-            try (InputStream templateStream = plugin.getResource(templatePath)) {
+            try (InputStream templateStream = SkyblockPlugin.getResource(templatePath)) {
                 if (templateStream == null) {
-                    plugin.getLogger().severe("Vorlage nicht gefunden: " + templatePath);
+                    SkyblockPlugin.getLogger().severe("Vorlage nicht gefunden: " + templatePath);
                     return;
                 }
                 FileUtils.unzip(templateStream, worldFolder);
-                plugin.getLogger().info("Welt '" + worldName + "' erfolgreich aus Vorlage erstellt.");
+                SkyblockPlugin.getLogger().info("Welt '" + worldName + "' erfolgreich aus Vorlage erstellt.");
             } catch (IOException e) {
-                plugin.getLogger().log(Level.SEVERE, "Fehler beim Erstellen der Welt '" + worldName + "'", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Fehler beim Erstellen der Welt '" + worldName + "'", e);
+            }
+        }
+    }
+    
+    /**
+     * Lädt oder kopiert eine Welt aus einer Vorlage mit Mapping für Dungeon-Namen
+     */
+    private void loadOrCopyWorldWithMapping(String worldName, String templateSubfolder, String templateName, File parentContainer) {
+        File worldFolder = new File(parentContainer, worldName);
+        
+        // Mapping für Dungeon-Namen zu ursprünglichen Dateinamen
+        String actualTemplateName = templateName;
+        if (templateSubfolder.equals("oeffentlich")) {
+            switch (templateName) {
+                case "entrance": actualTemplateName = "[Dungeons] The Entrance"; break;
+                case "f1": actualTemplateName = "[Dungeons] Floor I"; break;
+                case "f2": actualTemplateName = "[Dungeons] Floor II"; break;
+                case "f3": actualTemplateName = "[Dungeons] Floor III"; break;
+                case "f4": actualTemplateName = "[Dungeons] Floor IV"; break;
+                case "f5": actualTemplateName = "[Dungeons] Floor V"; break;
+                case "f6": actualTemplateName = "[Dungeons] Floor VI"; break;
+                case "f7": actualTemplateName = "[Dungeons] Floor VI (1)"; break;
+            }
+        }
+        
+        String templatePath = "vorlagen/" + templateSubfolder + "/" + actualTemplateName + ".zip";
+
+        if (!worldFolder.exists()) {
+            try (InputStream templateStream = SkyblockPlugin.getResource(templatePath)) {
+                if (templateStream == null) {
+                    SkyblockPlugin.getLogger().severe("Vorlage nicht gefunden: " + templatePath);
+                    return;
+                }
+                FileUtils.unzip(templateStream, worldFolder);
+                SkyblockPlugin.getLogger().info("Welt '" + worldName + "' erfolgreich aus Vorlage erstellt.");
+            } catch (IOException e) {
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Fehler beim Erstellen der Welt '" + worldName + "'", e);
             }
         }
     }
@@ -1152,7 +1189,7 @@ public class ThreadSafeWorldManager {
      * Überladene Methode für öffentliche Welten
      */
     private void loadOrCopyWorld(String worldName, String templateSubfolder) {
-        loadOrCopyWorld(worldName, templateSubfolder, worldName, plugin.getServer().getWorldContainer());
+        loadOrCopyWorld(worldName, templateSubfolder, worldName, SkyblockPlugin.getServer().getWorldContainer());
         Bukkit.createWorld(new WorldCreator(worldName));
     }
     
@@ -1172,23 +1209,25 @@ public class ThreadSafeWorldManager {
                         new BukkitRunnable() {
                             @Override
                             public void run() {
-                                File worldFolder = new File(plugin.getServer().getWorldContainer(), worldName);
+                                File worldFolder = new File(SkyblockPlugin.getServer().getWorldContainer(), worldName);
                                 FileUtils.deleteDirectory(worldFolder);
-                                loadOrCopyWorld(worldName, templateSubfolder);
+                                // Extrahiere den Alias aus dem Weltnamen (entferne _a oder _b)
+                                String alias = worldName.replaceAll("_[ab]$", "");
+                                loadOrCopyWorldWithMapping(worldName, templateSubfolder, alias, SkyblockPlugin.getServer().getWorldContainer());
                                 
                                 new BukkitRunnable() {
                                     @Override
                                     public void run() {
                                         Bukkit.createWorld(new WorldCreator(worldName));
-                                        plugin.getLogger().info("'" + worldName + "' wurde zurückgesetzt und ist als STANDBY bereit.");
+                                        SkyblockPlugin.getLogger().info("'" + worldName + "' wurde zurückgesetzt und ist als STANDBY bereit.");
                                     }
-                                }.runTask(plugin);
+                                }.runTask(SkyblockPlugin);
                             }
-                        }.runTaskAsynchronously(plugin);
+                        }.runTaskAsynchronously(SkyblockPlugin);
                     }
-                }.runTask(plugin);
+                }.runTask(SkyblockPlugin);
             }
-        }.runTask(plugin);
+        }.runTask(SkyblockPlugin);
     }
 
     /**
@@ -1204,13 +1243,13 @@ public class ThreadSafeWorldManager {
 
         public WorldMetrics(String worldName) {
             this.worldName = worldName;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
 
         public void updateMetrics(int playerCount, int loadedChunks) {
             this.playerCount = playerCount;
             this.loadedChunks = loadedChunks;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
 
             // Behalte nur die letzten 100 Einträge
             playerCountHistory.add(playerCount);

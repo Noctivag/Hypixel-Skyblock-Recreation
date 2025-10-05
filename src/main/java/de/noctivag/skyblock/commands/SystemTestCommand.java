@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.commands;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,10 +17,10 @@ import net.kyori.adventure.text.Component;
  * Comprehensive system test command to verify all menu restrictions and functionality
  */
 public class SystemTestCommand implements CommandExecutor {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public SystemTestCommand(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public SystemTestCommand(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     @Override
@@ -28,7 +31,7 @@ public class SystemTestCommand implements CommandExecutor {
         }
 
         if (!player.hasPermission("basics.admin")) {
-            player.sendMessage("§cDu hast keine Berechtigung für diesen Befehl!");
+            player.sendMessage(Component.text("§cDu hast keine Berechtigung für diesen Befehl!"));
             return true;
         }
 
@@ -56,7 +59,7 @@ public class SystemTestCommand implements CommandExecutor {
                 runFullSystemTest(player);
                 break;
             default:
-                player.sendMessage("§cUngültiger Test-Typ! Verwende: menus, restrictions, islands, guis, full");
+                player.sendMessage(Component.text("§cUngültiger Test-Typ! Verwende: menus, restrictions, islands, guis, full"));
                 break;
         }
 
@@ -64,95 +67,95 @@ public class SystemTestCommand implements CommandExecutor {
     }
 
     private void showHelp(Player player) {
-        player.sendMessage("§6§l=== SYSTEM TEST COMMAND ===");
-        player.sendMessage("§e/systemtest menus §7- Testet alle Menü-Systeme");
-        player.sendMessage("§e/systemtest restrictions §7- Testet Menü-Beschränkungen");
-        player.sendMessage("§e/systemtest islands §7- Testet Insel-System");
-        player.sendMessage("§e/systemtest guis §7- Testet alle GUI-Systeme");
-        player.sendMessage("§e/systemtest full §7- Führt vollständigen System-Test durch");
+        player.sendMessage(Component.text("§6§l=== SYSTEM TEST COMMAND ==="));
+        player.sendMessage(Component.text("§e/systemtest menus §7- Testet alle Menü-Systeme"));
+        player.sendMessage(Component.text("§e/systemtest restrictions §7- Testet Menü-Beschränkungen"));
+        player.sendMessage(Component.text("§e/systemtest islands §7- Testet Insel-System"));
+        player.sendMessage(Component.text("§e/systemtest guis §7- Testet alle GUI-Systeme"));
+        player.sendMessage(Component.text("§e/systemtest full §7- Führt vollständigen System-Test durch"));
     }
 
     private void testAllMenus(Player player) {
-        player.sendMessage("§a§l=== TESTING ALL MENU SYSTEMS ===");
+        player.sendMessage(Component.text("§a§l=== TESTING ALL MENU SYSTEMS ==="));
         
         // Test Main Menu
-        player.sendMessage("§eTesting Main Menu...");
-        new de.noctivag.plugin.gui.MainMenu(plugin).open(player);
-        player.sendMessage("§a✓ Main Menu opened successfully");
+        player.sendMessage(Component.text("§eTesting Main Menu..."));
+        new de.noctivag.skyblock.gui.MainMenu(SkyblockPlugin).open(player);
+        player.sendMessage(Component.text("§a✓ Main Menu opened successfully"));
         
         // Wait a bit then test Ultimate Menu
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            player.sendMessage("§eTesting Ultimate Menu...");
-            new de.noctivag.plugin.gui.UltimateMainMenu(plugin, player).open(player);
-            player.sendMessage("§a✓ Ultimate Menu opened successfully");
+        SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
+            player.sendMessage(Component.text("§eTesting Ultimate Menu..."));
+            new de.noctivag.skyblock.gui.UltimateMainMenu(SkyblockPlugin, player).open(player);
+            player.sendMessage(Component.text("§a✓ Ultimate Menu opened successfully"));
         }, 20L);
         
         // Test Island Menu
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            player.sendMessage("§eTesting Island Menu...");
+        SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
+            player.sendMessage(Component.text("§eTesting Island Menu..."));
             // Island system not implemented yet
-            player.sendMessage("§cIsland system not implemented yet!");
-            player.sendMessage("§a✓ Island Menu opened successfully");
+            player.sendMessage(Component.text("§cIsland system not implemented yet!"));
+            player.sendMessage(Component.text("§a✓ Island Menu opened successfully"));
         }, 40L);
         
         // Test Cosmetics Menu
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            player.sendMessage("§eTesting Cosmetics Menu...");
-            new de.noctivag.plugin.gui.CosmeticsMenu(plugin, plugin.getCosmeticsManager()).open(player);
-            player.sendMessage("§a✓ Cosmetics Menu opened successfully");
+        SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
+            player.sendMessage(Component.text("§eTesting Cosmetics Menu..."));
+            new de.noctivag.skyblock.gui.CosmeticsMenu(SkyblockPlugin, SkyblockPlugin.getCosmeticsManager()).open(player);
+            player.sendMessage(Component.text("§a✓ Cosmetics Menu opened successfully"));
         }, 60L);
         
         // Test Warp Menu
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            player.sendMessage("§eTesting Warp Menu...");
-            new de.noctivag.plugin.locations.gui.WarpGUI(plugin).openMainMenu(player);
-            player.sendMessage("§a✓ Warp Menu opened successfully");
+        SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
+            player.sendMessage(Component.text("§eTesting Warp Menu..."));
+            new de.noctivag.skyblock.locations.gui.WarpGUI(SkyblockPlugin).openMainMenu(player);
+            player.sendMessage(Component.text("§a✓ Warp Menu opened successfully"));
         }, 80L);
         
-        player.sendMessage("§a§l=== ALL MENU TESTS COMPLETED ===");
+        player.sendMessage(Component.text("§a§l=== ALL MENU TESTS COMPLETED ==="));
     }
 
     private void testMenuRestrictions(Player player) {
-        player.sendMessage("§a§l=== TESTING MENU RESTRICTIONS ===");
+        player.sendMessage(Component.text("§a§l=== TESTING MENU RESTRICTIONS ==="));
         
         // Give menu items in different slots
         giveMenuItemInSlot(player, 0, "§6✧ Hauptmenü ✧", Material.NETHER_STAR);
         giveMenuItemInSlot(player, 4, "§a§lIsland Menu", Material.GRASS_BLOCK);
         giveMenuItemInSlot(player, 8, "§c§lEvent Menü", Material.FIREWORK_ROCKET);
         
-        player.sendMessage("§eMenu items placed in slots 0, 4, and 8");
-        player.sendMessage("§eTry to drop the item in slot 8 (last slot) - it should be blocked!");
-        player.sendMessage("§eTry to take items from any menu - it should be blocked!");
-        player.sendMessage("§eTry to drag items in menus - it should be blocked!");
+        player.sendMessage(Component.text("§eMenu items placed in slots 0, 4, and 8"));
+        player.sendMessage(Component.text("§eTry to drop the item in slot 8 (last slot) - it should be blocked!"));
+        player.sendMessage(Component.text("§eTry to take items from any menu - it should be blocked!"));
+        player.sendMessage(Component.text("§eTry to drag items in menus - it should be blocked!"));
     }
 
     private void testIslandSystem(Player player) {
-        player.sendMessage("§a§l=== TESTING ISLAND SYSTEM ===");
+        player.sendMessage(Component.text("§a§l=== TESTING ISLAND SYSTEM ==="));
         
         // Test island GUI opening
-        player.sendMessage("§eTesting Island GUI...");
+        player.sendMessage(Component.text("§eTesting Island GUI..."));
         // Island system not implemented yet
-        player.sendMessage("§cIsland system not implemented yet!");
-        player.sendMessage("§a✓ Island GUI opened successfully");
+        player.sendMessage(Component.text("§cIsland system not implemented yet!"));
+        player.sendMessage(Component.text("§a✓ Island GUI opened successfully"));
         
         // Test island categories
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            player.sendMessage("§eTesting Island Categories...");
+        SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
+            player.sendMessage(Component.text("§eTesting Island Categories..."));
             // Island system not implemented yet
-            player.sendMessage("§cIsland system not implemented yet!");
-            player.sendMessage("§a✓ Basic Islands category opened successfully");
+            player.sendMessage(Component.text("§cIsland system not implemented yet!"));
+            player.sendMessage(Component.text("§a✓ Basic Islands category opened successfully"));
         }, 20L);
         
         // Test individual island
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            player.sendMessage("§eTesting Individual Island...");
+        SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
+            player.sendMessage(Component.text("§eTesting Individual Island..."));
             // Island system not implemented yet
-            player.sendMessage("§cIsland system not implemented yet!");
+            player.sendMessage(Component.text("§cIsland system not implemented yet!"));
         }, 40L);
     }
 
     private void testAllGUIs(Player player) {
-        player.sendMessage("§a§l=== TESTING ALL GUI SYSTEMS ===");
+        player.sendMessage(Component.text("§a§l=== TESTING ALL GUI SYSTEMS ==="));
         
         // Test different GUI types
         String[] guiTypes = {
@@ -162,14 +165,14 @@ public class SystemTestCommand implements CommandExecutor {
         
         for (int i = 0; i < guiTypes.length; i++) {
             final int index = i;
-            plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+            SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
                 player.sendMessage("§eTesting " + guiTypes[index] + "...");
                 openGUIType(player, guiTypes[index]);
             }, i * 20L);
         }
         
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            player.sendMessage("§a§l=== ALL GUI TESTS COMPLETED ===");
+        SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
+            player.sendMessage(Component.text("§a§l=== ALL GUI TESTS COMPLETED ==="));
         }, guiTypes.length * 20L);
     }
 
@@ -177,32 +180,32 @@ public class SystemTestCommand implements CommandExecutor {
         try {
             switch (guiType) {
                 case "MainMenu":
-                    new de.noctivag.plugin.gui.MainMenu(plugin).open(player);
+                    new de.noctivag.skyblock.gui.MainMenu(SkyblockPlugin).open(player);
                     break;
                 case "UltimateMainMenu":
-                    new de.noctivag.plugin.gui.UltimateMainMenu(plugin, player).open(player);
+                    new de.noctivag.skyblock.gui.UltimateMainMenu(SkyblockPlugin, player).open(player);
                     break;
                 case "CosmeticsMenu":
-                    new de.noctivag.plugin.gui.CosmeticsMenu(plugin, plugin.getCosmeticsManager()).open(player);
+                    new de.noctivag.skyblock.gui.CosmeticsMenu(SkyblockPlugin, SkyblockPlugin.getCosmeticsManager()).open(player);
                     break;
                 case "WarpGUI":
-                    new de.noctivag.plugin.locations.gui.WarpGUI(plugin).openMainMenu(player);
+                    new de.noctivag.skyblock.locations.gui.WarpGUI(SkyblockPlugin).openMainMenu(player);
                     break;
                 case "IslandGUI":
                     // Island system not implemented yet
-            player.sendMessage("§cIsland system not implemented yet!");
+            player.sendMessage(Component.text("§cIsland system not implemented yet!"));
                     break;
                 case "EventMenu":
-                    new de.noctivag.plugin.gui.EventMenu(plugin).open(player);
+                    new de.noctivag.skyblock.gui.EventMenu(SkyblockPlugin).open(player);
                     break;
                 case "SettingsGUI":
-                    new de.noctivag.plugin.gui.SettingsGUI(plugin).openGUI(player);
+                    new de.noctivag.skyblock.gui.SettingsGUI(SkyblockPlugin).openGUI(player);
                     break;
                 case "FriendsGUI":
-                    new de.noctivag.plugin.gui.FriendsGUI(plugin).openGUI(player);
+                    new de.noctivag.skyblock.gui.FriendsGUI(SkyblockPlugin, player).openGUI(player);
                     break;
                 case "PartyGUI":
-                    new de.noctivag.plugin.gui.PartyGUI(plugin).openGUI(player);
+                    new de.noctivag.skyblock.gui.PartyGUI(SkyblockPlugin).openGUI(player);
                     break;
             }
             player.sendMessage("§a✓ " + guiType + " opened successfully");
@@ -212,26 +215,26 @@ public class SystemTestCommand implements CommandExecutor {
     }
 
     private void runFullSystemTest(Player player) {
-        player.sendMessage("§6§l=== RUNNING FULL SYSTEM TEST ===");
+        player.sendMessage(Component.text("§6§l=== RUNNING FULL SYSTEM TEST ==="));
         
         // Test all systems in sequence
         testAllMenus(player);
         
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+        SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
             testMenuRestrictions(player);
         }, 100L);
         
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+        SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
             testIslandSystem(player);
         }, 200L);
         
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+        SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
             testAllGUIs(player);
         }, 300L);
         
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            player.sendMessage("§6§l=== FULL SYSTEM TEST COMPLETED ===");
-            player.sendMessage("§aAll systems have been tested successfully!");
+        SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
+            player.sendMessage(Component.text("§6§l=== FULL SYSTEM TEST COMPLETED ==="));
+            player.sendMessage(Component.text("§aAll systems have been tested successfully!"));
         }, 400L);
     }
 

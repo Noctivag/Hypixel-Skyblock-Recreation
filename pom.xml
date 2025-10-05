@@ -30,6 +30,16 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <nonFilteredFileExtensions>
+                        <nonFilteredFileExtension>zip</nonFilteredFileExtension>
+                    </nonFilteredFileExtensions>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven.compiler.plugin.version}</version>
                 <configuration>
@@ -167,14 +177,17 @@
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
+        <!-- Minestom repository temporarily disabled due to network issues
         <repository>
             <id>minestom-repo</id>
             <url>https://repo.minestom.net/repository/maven-public/</url>
         </repository>
+        -->
     </repositories>
 
     <dependencies>
         <!-- Minestom - Modern multi-threaded Minecraft server framework -->
+        <!-- Temporarily disabled due to network issues
         <dependency>
             <groupId>net.minestom</groupId>
             <artifactId>minestom-core</artifactId>
@@ -190,6 +203,7 @@
             <artifactId>minestom-ce</artifactId>
             <version>1.21.1</version>
         </dependency>
+        -->
         <!-- Keep Paper API for compatibility during migration -->
         <dependency>
             <groupId>io.papermc.paper</groupId>

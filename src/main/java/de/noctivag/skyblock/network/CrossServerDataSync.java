@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.network;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -25,7 +29,7 @@ import java.util.logging.Level;
  */
 public class CrossServerDataSync {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final ServerCommunicationManager communicationManager;
     
@@ -38,9 +42,9 @@ public class CrossServerDataSync {
     private final int maxRetries = 3;
     private final long lockTimeout = 30000; // 30 Sekunden
     
-    public CrossServerDataSync(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager,
+    public CrossServerDataSync(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager,
                               ServerCommunicationManager communicationManager) {
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         this.communicationManager = communicationManager;
     }
@@ -50,12 +54,12 @@ public class CrossServerDataSync {
      */
     public void startSync() {
         // Starte Sync-Timer
-        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this::processSyncQueues, 0L, syncInterval / 50L);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(SkyblockPlugin, this::processSyncQueues, 0L, syncInterval / 50L);
         
         // Starte Version-Check
-        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this::checkDataVersions, 0L, 20L * 10L);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(SkyblockPlugin, this::checkDataVersions, 0L, 20L * 10L);
         
-        plugin.getLogger().info("Cross-Server Data Sync started");
+        SkyblockPlugin.getLogger().info("Cross-Server Data Sync started");
     }
     
     /**
@@ -77,7 +81,7 @@ public class CrossServerDataSync {
                 SyncType.PLAYER_DATA,
                 playerId.toString(),
                 playerData,
-                System.currentTimeMillis()
+                java.lang.System.currentTimeMillis()
             );
             
             // Füge zur Sync-Queue hinzu
@@ -86,7 +90,7 @@ public class CrossServerDataSync {
             future.complete(true);
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Error syncing player data", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Error syncing player data", e);
             future.complete(false);
         }
         
@@ -112,7 +116,7 @@ public class CrossServerDataSync {
                 SyncType.ISLAND_DATA,
                 islandId,
                 islandData,
-                System.currentTimeMillis()
+                java.lang.System.currentTimeMillis()
             );
             
             // Füge zur Sync-Queue hinzu
@@ -121,7 +125,7 @@ public class CrossServerDataSync {
             future.complete(true);
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Error syncing island data", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Error syncing island data", e);
             future.complete(false);
         }
         
@@ -147,7 +151,7 @@ public class CrossServerDataSync {
                 SyncType.GUILD_DATA,
                 guildId,
                 guildData,
-                System.currentTimeMillis()
+                java.lang.System.currentTimeMillis()
             );
             
             // Füge zur Sync-Queue hinzu
@@ -156,7 +160,7 @@ public class CrossServerDataSync {
             future.complete(true);
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Error syncing guild data", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Error syncing guild data", e);
             future.complete(false);
         }
         
@@ -208,7 +212,7 @@ public class CrossServerDataSync {
             });
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.WARNING, "Error processing sync request", e);
+            SkyblockPlugin.getLogger().log(Level.WARNING, "Error processing sync request", e);
             removeSyncLock(request.getDataType(), request.getDataId());
         }
     }
@@ -235,7 +239,7 @@ public class CrossServerDataSync {
                     break;
             }
         } catch (Exception e) {
-            plugin.getLogger().log(Level.WARNING, "Error performing sync", e);
+            SkyblockPlugin.getLogger().log(Level.WARNING, "Error performing sync", e);
             future.complete(false);
         }
         
@@ -265,7 +269,7 @@ public class CrossServerDataSync {
                 last_seen = VALUES(last_seen)
             """, playerData.getUuid().toString(), playerData.getUsername(), 
                 databaseManager.getServerId(), playerData.getCoins(), playerData.getGems(),
-                playerData.getLevel(), playerData.getExperience(), System.currentTimeMillis())
+                playerData.getLevel(), playerData.getExperience(), java.lang.System.currentTimeMillis())
             .thenAccept(success -> {
                 if (success) {
                     // Aktualisiere Version
@@ -275,7 +279,7 @@ public class CrossServerDataSync {
             });
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.WARNING, "Error syncing player data to database", e);
+            SkyblockPlugin.getLogger().log(Level.WARNING, "Error syncing player data to database", e);
             future.complete(false);
         }
         
@@ -303,7 +307,7 @@ public class CrossServerDataSync {
                 last_visit = VALUES(last_visit)
             """, islandData.getIslandId(), islandData.getOwnerUuid().toString(),
                 databaseManager.getServerId(), islandData.getIslandType().name(),
-                islandData.getLevel(), islandData.getExperience(), System.currentTimeMillis())
+                islandData.getLevel(), islandData.getExperience(), java.lang.System.currentTimeMillis())
             .thenAccept(success -> {
                 if (success) {
                     // Aktualisiere Version
@@ -313,7 +317,7 @@ public class CrossServerDataSync {
             });
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.WARNING, "Error syncing island data to database", e);
+            SkyblockPlugin.getLogger().log(Level.WARNING, "Error syncing island data to database", e);
             future.complete(false);
         }
         
@@ -354,7 +358,7 @@ public class CrossServerDataSync {
             });
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.WARNING, "Error syncing guild data to database", e);
+            SkyblockPlugin.getLogger().log(Level.WARNING, "Error syncing guild data to database", e);
             future.complete(false);
         }
         
@@ -379,7 +383,7 @@ public class CrossServerDataSync {
         
         if (lock != null) {
             // Prüfe ob Lock abgelaufen ist
-            if (System.currentTimeMillis() - lock.getTimestamp() > lockTimeout) {
+            if (java.lang.System.currentTimeMillis() - lock.getTimestamp() > lockTimeout) {
                 syncLocks.remove(lockKey);
                 return false;
             }
@@ -394,7 +398,7 @@ public class CrossServerDataSync {
      */
     private void createSyncLock(String dataType, String dataId) {
         String lockKey = dataType + ":" + dataId;
-        syncLocks.put(lockKey, new SyncLock(databaseManager.getServerId(), System.currentTimeMillis()));
+        syncLocks.put(lockKey, new SyncLock(databaseManager.getServerId(), java.lang.System.currentTimeMillis()));
     }
     
     /**
@@ -410,7 +414,7 @@ public class CrossServerDataSync {
      */
     private void updateDataVersion(String dataType, String dataId) {
         String versionKey = dataType + ":" + dataId;
-        dataVersions.put(versionKey, new DataVersion(databaseManager.getServerId(), System.currentTimeMillis()));
+        dataVersions.put(versionKey, new DataVersion(databaseManager.getServerId(), java.lang.System.currentTimeMillis()));
     }
     
     /**

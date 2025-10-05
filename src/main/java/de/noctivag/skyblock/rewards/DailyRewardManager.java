@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.rewards;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.api.RewardAPI;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -13,27 +17,28 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
+import net.kyori.adventure.text.Component;
 
 @SuppressWarnings("deprecation")
 public class DailyRewardManager implements RewardAPI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<Integer, DailyReward> rewards;
     private final Map<UUID, LocalDateTime> lastClaimTimes;
     private final Map<UUID, Integer> streaks;
     private final File rewardsFile;
     private FileConfiguration rewardsConfig;
 
-    public DailyRewardManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public DailyRewardManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.rewards = new HashMap<>();
         this.lastClaimTimes = new HashMap<>();
         this.streaks = new HashMap<>();
-        this.rewardsFile = new File(plugin.getDataFolder(), "daily_rewards.yml");
+        this.rewardsFile = new File(SkyblockPlugin.getDataFolder(), "daily_rewards.yml");
         // Defer heavy initialization to avoid 'this' escaping during construction
     }
 
     /**
-     * Initialize data and defaults. Call once after construction when plugin is ready.
+     * Initialize data and defaults. Call once after construction when SkyblockPlugin is ready.
      */
     public void init() {
         loadData();
@@ -42,7 +47,7 @@ public class DailyRewardManager implements RewardAPI {
 
     private void loadData() {
         if (!rewardsFile.exists()) {
-            plugin.saveResource("daily_rewards.yml", false);
+            SkyblockPlugin.saveResource("daily_rewards.yml", false);
         }
         rewardsConfig = YamlConfiguration.loadConfiguration(rewardsFile);
 
@@ -59,14 +64,14 @@ public class DailyRewardManager implements RewardAPI {
                         streaks.put(uuid, streak);
                     }
                 } catch (IllegalArgumentException e) {
-                    plugin.getLogger().warning("Invalid UUID in rewards data: " + uuidStr);
+                    SkyblockPlugin.getLogger().warning("Invalid UUID in rewards data: " + uuidStr);
                 }
             }
         }
 
         ConfigurationSection rewardsData = rewardsConfig.getConfigurationSection("rewards");
         if (rewardsData == null) {
-            plugin.getLogger().warning("No rewards data found, initializing defaults");
+            SkyblockPlugin.getLogger().warning("No rewards data found, initializing defaults");
             initializeDefaultRewards();
             return;
         }
@@ -75,7 +80,7 @@ public class DailyRewardManager implements RewardAPI {
             try {
                 loadReward(rewardsData, dayStr);
             } catch (Exception e) {
-                plugin.getLogger().warning("Error loading reward for day " + dayStr + ": " + e.getMessage());
+                SkyblockPlugin.getLogger().warning("Error loading reward for day " + dayStr + ": " + e.getMessage());
             }
         }
     }
@@ -96,7 +101,7 @@ public class DailyRewardManager implements RewardAPI {
 
                 String typeStr = itemSection.getString("type");
                 if (typeStr == null) {
-                    plugin.getLogger().warning("Missing type for reward item in day " + dayStr);
+                    SkyblockPlugin.getLogger().warning("Missing type for reward item in day " + dayStr);
                     continue;
                 }
 
@@ -104,13 +109,13 @@ public class DailyRewardManager implements RewardAPI {
                     DailyReward.RewardType type = DailyReward.RewardType.valueOf(typeStr.toUpperCase());
                     Object value = itemSection.get("value");
                     if (value == null) {
-                        plugin.getLogger().warning("Missing value for reward item in day " + dayStr);
+                        SkyblockPlugin.getLogger().warning("Missing value for reward item in day " + dayStr);
                         continue;
                     }
                     int amount = itemSection.getInt("amount", 1);
                     items.add(new DailyReward.RewardItem(type, value, amount));
                 } catch (IllegalArgumentException e) {
-                    plugin.getLogger().warning("Invalid reward type: " + typeStr + " in day " + dayStr);
+                    SkyblockPlugin.getLogger().warning("Invalid reward type: " + typeStr + " in day " + dayStr);
                 }
             }
         }
@@ -152,7 +157,7 @@ public class DailyRewardManager implements RewardAPI {
         try {
             rewardsConfig.save(rewardsFile);
         } catch (IOException e) {
-            plugin.getLogger().severe("Fehler beim Speichern der Daily Rewards: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Fehler beim Speichern der Daily Rewards: " + e.getMessage());
         }
     }
 
@@ -233,7 +238,7 @@ public class DailyRewardManager implements RewardAPI {
     @SuppressWarnings("unused")
     public void claimReward(Player player) {
         if (!canClaimReward(player)) {
-            player.sendMessage("§cDu hast deine tägliche Belohnung bereits abgeholt!");
+            player.sendMessage(Component.text("§cDu hast deine tägliche Belohnung bereits abgeholt!"));
             return;
         }
 
@@ -248,11 +253,11 @@ public class DailyRewardManager implements RewardAPI {
         DailyReward reward = rewards.get(currentStreak % 7 == 0 ? 7 : currentStreak % 7);
         if (reward != null) {
             giveRewards(player, reward);
-            player.sendMessage("§aDu hast deine tägliche Belohnung abgeholt!");
+            player.sendMessage(Component.text("§aDu hast deine tägliche Belohnung abgeholt!"));
             player.sendMessage("§7Aktuelle Streak: §e" + currentStreak + " Tage");
         } else {
-            plugin.getLogger().warning("No reward found for streak day: " + currentStreak % 7);
-            player.sendMessage("§cEs ist ein Fehler aufgetreten. Bitte kontaktiere einen Administrator.");
+            SkyblockPlugin.getLogger().warning("No reward found for streak day: " + currentStreak % 7);
+            player.sendMessage(Component.text("§cEs ist ein Fehler aufgetreten. Bitte kontaktiere einen Administrator."));
         }
 
         saveData();
@@ -281,7 +286,7 @@ public class DailyRewardManager implements RewardAPI {
                     // Give access to a specific kit
                     String kitName = item.getValue().toString();
                     // TODO: Implement proper KitManager interface
-                    // ((KitManager) plugin.getKitManager()).giveKit(player, kitName);
+                    // ((KitManager) SkyblockPlugin.getKitManager()).giveKit(player, kitName);
                     player.sendMessage("§7+ §6Kit: §e" + kitName);
                     break;
 
@@ -311,7 +316,7 @@ public class DailyRewardManager implements RewardAPI {
                 item.addUnsafeEnchantment(enchantment, level);
             }
         } catch (Exception e) {
-            plugin.getLogger().warning("Could not add enchantment " + enchantmentName + " to " + material);
+            SkyblockPlugin.getLogger().warning("Could not add enchantment " + enchantmentName + " to " + material);
         }
         return item;
     }
@@ -345,13 +350,13 @@ public class DailyRewardManager implements RewardAPI {
 
     private void loadRewards() {
         // TODO: Implement proper ConfigManager interface
-        // FileConfiguration config = ((ConfigManager) plugin.getConfigManager()).getConfig();
+        // FileConfiguration config = ((ConfigManager) SkyblockPlugin.getConfigManager()).getConfig();
         FileConfiguration config = null; // Placeholder
         rewards.clear();
 
         ConfigurationSection rewardsSection = config.getConfigurationSection("daily-rewards");
         if (rewardsSection == null) {
-            plugin.getLogger().warning("No daily-rewards section found in config");
+            SkyblockPlugin.getLogger().warning("No daily-rewards section found in config");
             return;
         }
 
@@ -360,7 +365,7 @@ public class DailyRewardManager implements RewardAPI {
                 int day = Integer.parseInt(dayKey);
                 ConfigurationSection daySection = rewardsSection.getConfigurationSection(dayKey);
                 if (daySection == null) {
-                    plugin.getLogger().warning("Invalid day section for day " + dayKey);
+                    SkyblockPlugin.getLogger().warning("Invalid day section for day " + dayKey);
                     continue;
                 }
 
@@ -373,7 +378,7 @@ public class DailyRewardManager implements RewardAPI {
 
                         String typeStr = itemSection.getString("type");
                         if (typeStr == null) {
-                            plugin.getLogger().warning("Missing type for reward item in day " + dayKey);
+                            SkyblockPlugin.getLogger().warning("Missing type for reward item in day " + dayKey);
                             continue;
                         }
 
@@ -381,13 +386,13 @@ public class DailyRewardManager implements RewardAPI {
                             DailyReward.RewardType type = DailyReward.RewardType.valueOf(typeStr.toUpperCase());
                             Object value = itemSection.get("value");
                             if (value == null) {
-                                plugin.getLogger().warning("Missing value for reward item in day " + dayKey);
+                                SkyblockPlugin.getLogger().warning("Missing value for reward item in day " + dayKey);
                                 continue;
                             }
                             int amount = itemSection.getInt("amount", 1);
                             items.add(new DailyReward.RewardItem(type, value, amount));
                         } catch (IllegalArgumentException e) {
-                            plugin.getLogger().warning("Invalid reward type: " + typeStr + " in day " + dayKey);
+                            SkyblockPlugin.getLogger().warning("Invalid reward type: " + typeStr + " in day " + dayKey);
                         }
                     }
                 }
@@ -397,9 +402,9 @@ public class DailyRewardManager implements RewardAPI {
                 Material icon = Material.valueOf(iconStr != null ? iconStr : "CHEST");
                 rewards.put(day, new DailyReward(day, items, isSpecial, icon));
             } catch (NumberFormatException e) {
-                plugin.getLogger().warning("Invalid day number: " + dayKey);
+                SkyblockPlugin.getLogger().warning("Invalid day number: " + dayKey);
             } catch (IllegalArgumentException e) {
-                plugin.getLogger().warning("Invalid material for icon in day " + dayKey + ": " + e.getMessage());
+                SkyblockPlugin.getLogger().warning("Invalid material for icon in day " + dayKey + ": " + e.getMessage());
             }
         }
     }

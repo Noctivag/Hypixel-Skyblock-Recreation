@@ -1,4 +1,9 @@
 package de.noctivag.skyblock.qualityoflife;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
@@ -12,24 +17,25 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class QualityOfLifeSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerQoLData> playerQoLData = new ConcurrentHashMap<>();
     
-    public QualityOfLifeSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public QualityOfLifeSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     @EventHandler
@@ -44,7 +50,7 @@ public class QualityOfLifeSystem implements Listener {
         
         // Send welcome message
         player.sendMessage("§aWillkommen zurück, " + player.getName() + "!");
-        player.sendMessage("§7Verwende /qol für Quality of Life Features!");
+        player.sendMessage(Component.text("§7Verwende /qol für Quality of Life Features!"));
     }
     
     @EventHandler
@@ -66,13 +72,13 @@ public class QualityOfLifeSystem implements Listener {
         PlayerQoLData data = getPlayerQoLData(playerId);
         
         // Apply saved effects after respawn
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+        Bukkit.getScheduler().runTaskLater(SkyblockPlugin, () -> {
             applySavedEffects(player, data);
         }, 20L); // 1 second delay
     }
     
     public void openQoLGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§a§lQuality of Life");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§a§lQuality of Life"));
         
         // Add QoL categories
         addGUIItem(gui, 10, Material.POTION, "§d§lEffects", "§7Manage your potion effects.");
@@ -91,11 +97,11 @@ public class QualityOfLifeSystem implements Listener {
         addGUIItem(gui, 53, Material.ARROW, "§7§lNext Page", "§7Go to next page.");
         
         player.openInventory(gui);
-        player.sendMessage("§aQuality of Life GUI geöffnet!");
+        player.sendMessage(Component.text("§aQuality of Life GUI geöffnet!"));
     }
     
     public void openEffectsGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§d§lEffects");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§d§lEffects"));
         
         // Add effect categories
         addGUIItem(gui, 10, Material.POTION, "§d§lPotion Effects", "§7Manage potion effects.");
@@ -113,7 +119,7 @@ public class QualityOfLifeSystem implements Listener {
     }
     
     public void openNavigationGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§e§lNavigation");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§e§lNavigation"));
         
         // Add navigation features
         addGUIItem(gui, 10, Material.COMPASS, "§e§lCompass", "§7Set compass target.");
@@ -131,7 +137,7 @@ public class QualityOfLifeSystem implements Listener {
     }
     
     public void openTimeGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lTime & Weather");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lTime & Weather"));
         
         // Add time features
         addGUIItem(gui, 10, Material.CLOCK, "§6§lTime", "§7Control time.");
@@ -150,7 +156,7 @@ public class QualityOfLifeSystem implements Listener {
     }
     
     public void openTeleportationGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§5§lTeleportation");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§5§lTeleportation"));
         
         // Add teleportation features
         addGUIItem(gui, 10, Material.ENDER_PEARL, "§5§lTeleport", "§7Teleport to location.");
@@ -169,7 +175,7 @@ public class QualityOfLifeSystem implements Listener {
     }
     
     public void openInventoryGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§b§lInventory Management");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§b§lInventory Management"));
         
         // Add inventory features
         addGUIItem(gui, 10, Material.CHEST, "§b§lSort Inventory", "§7Sort your inventory.");
@@ -188,7 +194,7 @@ public class QualityOfLifeSystem implements Listener {
     }
     
     public void openEnchantmentsGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§c§lEnchantments");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§c§lEnchantments"));
         
         // Add enchantment features
         addGUIItem(gui, 10, Material.ENCHANTED_BOOK, "§c§lEnchant", "§7Enchant items.");
@@ -207,7 +213,7 @@ public class QualityOfLifeSystem implements Listener {
     }
     
     public void openRepairGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§7§lRepair & Maintenance");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§7§lRepair & Maintenance"));
         
         // Add repair features
         addGUIItem(gui, 10, Material.ANVIL, "§7§lAnvil", "§7Use anvil for repair.");
@@ -226,7 +232,7 @@ public class QualityOfLifeSystem implements Listener {
     }
     
     public void openEconomyGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§a§lEconomy & Trading");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§a§lEconomy & Trading"));
         
         // Add economy features
         addGUIItem(gui, 10, Material.EMERALD, "§a§lBalance", "§7Check your balance.");
@@ -245,7 +251,7 @@ public class QualityOfLifeSystem implements Listener {
     }
     
     public void openInformationGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§f§lInformation & Statistics");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§f§lInformation & Statistics"));
         
         // Add information features
         addGUIItem(gui, 10, Material.BOOK, "§f§lPlayer Info", "§7View player information.");
@@ -253,7 +259,7 @@ public class QualityOfLifeSystem implements Listener {
         addGUIItem(gui, 12, Material.CLOCK, "§6§lTime Info", "§7View time information.");
         addGUIItem(gui, 13, Material.COMPASS, "§e§lLocation Info", "§7View location information.");
         addGUIItem(gui, 14, Material.ENDER_PEARL, "§5§lServer Info", "§7View server information.");
-        addGUIItem(gui, 15, Material.NETHER_STAR, "§c§lPlugin Info", "§7View plugin information.");
+        addGUIItem(gui, 15, Material.NETHER_STAR, "§c§lPlugin Info", "§7View SkyblockPlugin information.");
         
         // Add navigation items
         addGUIItem(gui, 45, Material.ARROW, "§7§lBack", "§7Go back to QoL menu.");
@@ -267,8 +273,10 @@ public class QualityOfLifeSystem implements Listener {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(name);
-            meta.setLore(Arrays.asList(description));
+            meta.displayName(Component.text(name));
+            meta.lore(Arrays.asList(description).stream()
+                .map(desc -> Component.text(desc))
+                .collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         gui.setItem(slot, item);
@@ -300,11 +308,11 @@ public class QualityOfLifeSystem implements Listener {
         
         public PlayerQoLData(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public Map<PotionEffectType, Integer> getSavedEffects() {

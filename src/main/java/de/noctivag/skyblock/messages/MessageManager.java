@@ -1,11 +1,14 @@
 package de.noctivag.skyblock.messages;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.config.ConfigManager;
 import de.noctivag.skyblock.utils.ColorUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,14 +26,14 @@ import java.util.logging.Level;
  */
 public class MessageManager {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final ConfigManager configManager;
     private final Map<String, String> messages;
     private final Map<String, String> playerLanguages;
     private String defaultLanguage;
     
-    public MessageManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public MessageManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.configManager = null; // Will be set later if needed
         this.messages = new HashMap<>();
         this.playerLanguages = new HashMap<>();
@@ -39,8 +42,8 @@ public class MessageManager {
         loadMessages();
     }
     
-    public MessageManager(SkyblockPlugin plugin, ConfigManager configManager) {
-        this.plugin = plugin;
+    public MessageManager(SkyblockPlugin SkyblockPlugin, ConfigManager configManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.configManager = configManager;
         this.messages = new HashMap<>();
         this.playerLanguages = new HashMap<>();
@@ -125,7 +128,7 @@ public class MessageManager {
     public String getMessage(String key, String language) {
         String message = messages.get(key);
         if (message == null) {
-            plugin.getLogger().log(Level.WARNING, "Message key not found: " + key);
+            SkyblockPlugin.getLogger().log(Level.WARNING, "Message key not found: " + key);
             return "&cMessage not found: " + key;
         }
         return message;
@@ -204,7 +207,7 @@ public class MessageManager {
      */
     public void broadcastMessage(String key) {
         Component message = getMessageComponent(key);
-        plugin.getServer().broadcast(message);
+        SkyblockPlugin.getServer().broadcast(message);
     }
     
     /**
@@ -212,7 +215,7 @@ public class MessageManager {
      */
     public void broadcastMessage(String key, Map<String, String> replacements) {
         Component message = getMessageComponent(key, replacements);
-        plugin.getServer().broadcast(message);
+        SkyblockPlugin.getServer().broadcast(message);
     }
     
     /**
@@ -221,7 +224,7 @@ public class MessageManager {
     public void broadcastMessageWithPrefix(String key) {
         Component prefix = ColorUtils.translate(getMessage("prefix"));
         Component message = getMessageComponent(key);
-        plugin.getServer().broadcast(prefix.append(message));
+        SkyblockPlugin.getServer().broadcast(prefix.append(message));
     }
     
     /**

@@ -1,15 +1,23 @@
-package de.noctivag.plugin.mobs;
+package de.noctivag.skyblock.mobs;
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.mobs.AdvancedMobSystem;
+import de.noctivag.skyblock.mobs.MobType;
+import de.noctivag.skyblock.mobs.MobConfig;
+import de.noctivag.skyblock.mobs.ZoneBasedSpawningSystem;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import net.kyori.adventure.text.Component;
 
 /**
  * Instance-Based Spawning System - Implements proximity-based mob respawning
@@ -22,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class InstanceBasedSpawningSystem {
     
-    private final org.bukkit.plugin.Plugin plugin;
+    private final de.noctivag.skyblock.SkyblockPlugin SkyblockPlugin;
     private final ZoneBasedSpawningSystem zoneSystem;
     private final Map<Location, SpawnInstance> spawnInstances = new ConcurrentHashMap<>();
     private final Map<UUID, Set<Location>> playerProximity = new ConcurrentHashMap<>();
@@ -33,8 +41,8 @@ public class InstanceBasedSpawningSystem {
     private static final long RESPAWN_CHECK_INTERVAL = 5000L; // 5 seconds
     private static final long PROXIMITY_UPDATE_INTERVAL = 2000L; // 2 seconds
     
-    public InstanceBasedSpawningSystem(org.bukkit.plugin.Plugin plugin, ZoneBasedSpawningSystem zoneSystem) {
-        this.plugin = plugin;
+    public InstanceBasedSpawningSystem(de.noctivag.skyblock.SkyblockPlugin SkyblockPlugin, ZoneBasedSpawningSystem zoneSystem) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.zoneSystem = zoneSystem;
         
         startProximityUpdateTask();
@@ -44,7 +52,7 @@ public class InstanceBasedSpawningSystem {
     /**
      * Register a spawn location for instance-based spawning
      */
-    public void registerSpawnLocation(Location location, AdvancedMobSystem.MobType mobType, int maxMobs) {
+    public void registerSpawnLocation(Location location, MobType mobType, int maxMobs) {
         SpawnInstance instance = new SpawnInstance(location, mobType, maxMobs);
         spawnInstances.put(location, instance);
     }
@@ -120,7 +128,7 @@ public class InstanceBasedSpawningSystem {
             public void run() {
                 updatePlayerProximity();
             }
-        }.runTaskTimer(plugin, 0L, PROXIMITY_UPDATE_INTERVAL / 50L); // Convert to ticks
+        }.runTaskTimer(SkyblockPlugin, 0L, PROXIMITY_UPDATE_INTERVAL / 50L); // Convert to ticks
     }
     
     /**
@@ -132,7 +140,7 @@ public class InstanceBasedSpawningSystem {
             public void run() {
                 checkForRespawns();
             }
-        }.runTaskTimer(plugin, 0L, RESPAWN_CHECK_INTERVAL / 50L); // Convert to ticks
+        }.runTaskTimer(SkyblockPlugin, 0L, RESPAWN_CHECK_INTERVAL / 50L); // Convert to ticks
     }
     
     /**
@@ -205,14 +213,14 @@ public class InstanceBasedSpawningSystem {
      */
     private class SpawnInstance {
         private final Location location;
-        private final AdvancedMobSystem.MobType mobType;
+        private final MobType mobType;
         private final int maxMobs;
         private final List<LivingEntity> spawnedMobs = new ArrayList<>();
         private final List<DeathRecord> deathRecords = new ArrayList<>();
         private long lastRespawnTime = 0L;
         private static final long RESPAWN_DELAY = 10000L; // 10 seconds
         
-        public SpawnInstance(Location location, AdvancedMobSystem.MobType mobType, int maxMobs) {
+        public SpawnInstance(Location location, MobType mobType, int maxMobs) {
             this.location = location;
             this.mobType = mobType;
             this.maxMobs = maxMobs;
@@ -231,7 +239,7 @@ public class InstanceBasedSpawningSystem {
             }
             
             // Check respawn delay
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             if (currentTime - lastRespawnTime < RESPAWN_DELAY) {
                 return false; // Still in cooldown
             }
@@ -255,18 +263,37 @@ public class InstanceBasedSpawningSystem {
                 spawnMobAtLocation(deathRecord.getDeathLocation());
             }
             
-            lastRespawnTime = System.currentTimeMillis();
+            lastRespawnTime = java.lang.System.currentTimeMillis();
         }
         
         /**
          * Record mob death
          */
         public void recordMobDeath(Location deathLocation) {
-            deathRecords.add(new DeathRecord(deathLocation, System.currentTimeMillis()));
+            deathRecords.add(new DeathRecord(deathLocation, java.lang.System.currentTimeMillis()));
             
             // Limit death records to prevent memory issues
             if (deathRecords.size() > maxMobs * 2) {
                 deathRecords.remove(0); // Remove oldest record
+            }
+        }
+        
+        /**
+         * Convert MobType to AdvancedMobSystem.MobType
+         */
+        private AdvancedMobSystem.MobType convertToAdvancedMobType(MobType mobType) {
+            switch (mobType) {
+                case ZOMBIE: return AdvancedMobSystem.MobType.ZOMBIE;
+                case SKELETON: return AdvancedMobSystem.MobType.SKELETON;
+                case CREEPER: return AdvancedMobSystem.MobType.CREEPER;
+                case SPIDER: return AdvancedMobSystem.MobType.SPIDER;
+                case ENDERMAN: return AdvancedMobSystem.MobType.ENDERMAN;
+                case BLAZE: return AdvancedMobSystem.MobType.BLAZE;
+                case GHAST: return AdvancedMobSystem.MobType.GHAST;
+                case MAGMA_CUBE: return AdvancedMobSystem.MobType.MAGMA_CUBE;
+                case WITCH: return AdvancedMobSystem.MobType.WITCH;
+                case WARDEN: return AdvancedMobSystem.MobType.WARDEN;
+                default: return AdvancedMobSystem.MobType.ZOMBIE;
             }
         }
         
@@ -276,7 +303,9 @@ public class InstanceBasedSpawningSystem {
         private void spawnMobAtLocation(Location spawnLocation) {
             try {
                 // Get mob configuration
-                AdvancedMobSystem.MobConfig config = AdvancedMobSystem.getMobConfig(mobType);
+                // Get mob configuration - need to access through instance
+                EntityType entityType = EntityType.valueOf(mobType.name());
+                MobConfig config = new MobConfig(entityType, 10, 20.0, 5000L, false);
                 if (config == null) {
                     return;
                 }

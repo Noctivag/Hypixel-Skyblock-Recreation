@@ -1,4 +1,6 @@
 package de.noctivag.skyblock.economy;
+import net.kyori.adventure.text.Component;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.core.PlayerProfile;
@@ -87,7 +89,7 @@ public class AuctionHouse {
                     processExpiredAuction(auctionId);
                 }
             }
-        }.runTaskTimer(economySystem.plugin, 0L, 20L); // Check every second
+        }.runTaskTimer(economySystem.SkyblockPlugin, 0L, 20L); // Check every second
     }
     
     public void createAuction(Player player, ItemStack item, double startingBid, double binPrice, int durationHours) {
@@ -95,17 +97,17 @@ public class AuctionHouse {
         
         // Validate inputs
         if (item == null || item.getType().isAir()) {
-            player.sendMessage("§cInvalid item!");
+            player.sendMessage(Component.text("§cInvalid item!"));
             return;
         }
         
         if (startingBid <= 0 || binPrice <= 0 || durationHours <= 0) {
-            player.sendMessage("§cInvalid auction parameters!");
+            player.sendMessage(Component.text("§cInvalid auction parameters!"));
             return;
         }
         
         if (binPrice < startingBid) {
-            player.sendMessage("§cBIN price must be higher than starting bid!");
+            player.sendMessage(Component.text("§cBIN price must be higher than starting bid!"));
             return;
         }
         
@@ -118,7 +120,7 @@ public class AuctionHouse {
         
         // Check if player has the item
         if (!player.getInventory().containsAtLeast(item, item.getAmount())) {
-            player.sendMessage("§cYou don't have enough items!");
+            player.sendMessage(Component.text("§cYou don't have enough items!"));
             return;
         }
         
@@ -132,7 +134,7 @@ public class AuctionHouse {
         
         // Create auction
         UUID auctionId = UUID.randomUUID();
-        long endTime = System.currentTimeMillis() + (durationHours * 60 * 60 * 1000L);
+        long endTime = java.lang.System.currentTimeMillis() + (durationHours * 60 * 60 * 1000L);
         
         Auction auction = new Auction(auctionId, playerId, item.clone(), startingBid, binPrice, endTime);
         auctions.put(auctionId, auction);
@@ -150,7 +152,7 @@ public class AuctionHouse {
         // Save to database
         saveAuctionToDatabase(auction);
         
-        player.sendMessage("§a§lAUCTION CREATED!");
+        player.sendMessage(Component.text("§a§lAUCTION CREATED!"));
         player.sendMessage("§7Item: §e" + item.getType().name());
         player.sendMessage("§7Starting Bid: §6" + startingBid + " coins");
         player.sendMessage("§7BIN Price: §6" + binPrice + " coins");
@@ -162,18 +164,18 @@ public class AuctionHouse {
     public boolean placeBid(Player player, UUID auctionId, double bidAmount) {
         Auction auction = auctions.get(auctionId);
         if (auction == null) {
-            player.sendMessage("§cAuction not found!");
+            player.sendMessage(Component.text("§cAuction not found!"));
             return false;
         }
         
         // Validate auction state
         if (auction.isExpired()) {
-            player.sendMessage("§cThis auction has expired!");
+            player.sendMessage(Component.text("§cThis auction has expired!"));
             return false;
         }
         
         if (auction.getSeller().equals(player.getUniqueId())) {
-            player.sendMessage("§cYou cannot bid on your own auction!");
+            player.sendMessage(Component.text("§cYou cannot bid on your own auction!"));
             return false;
         }
         
@@ -188,14 +190,14 @@ public class AuctionHouse {
         synchronized (auction) {
             // Double-check auction state after acquiring lock
             if (auction.isExpired()) {
-                player.sendMessage("§cThis auction has expired!");
+                player.sendMessage(Component.text("§cThis auction has expired!"));
                 return false;
             }
             
             // Check if player has enough money
             PlayerProfile profile = economySystem.corePlatform.getPlayerProfile(player.getUniqueId());
             if (profile == null || !profile.hasBalance(bidAmount)) {
-                player.sendMessage("§cYou don't have enough coins!");
+                player.sendMessage(Component.text("§cYou don't have enough coins!"));
                 return false;
             }
             
@@ -225,7 +227,7 @@ public class AuctionHouse {
             // Update database
             updateBidInDatabase(auction);
             
-            player.sendMessage("§a§lBID PLACED!");
+            player.sendMessage(Component.text("§a§lBID PLACED!"));
             player.sendMessage("§7Auction: §e" + auction.getItem().getType().name());
             player.sendMessage("§7Your Bid: §6" + bidAmount + " coins");
             player.sendMessage("§7Time Left: §e" + formatTime(auction.getTimeRemaining()));
@@ -267,7 +269,7 @@ public class AuctionHouse {
         // Add to player's bought items
         playerBought.computeIfAbsent(player.getUniqueId(), k -> new ArrayList<>()).add(auction);
         
-        player.sendMessage("§a§lITEM PURCHASED!");
+        player.sendMessage(Component.text("§a§lITEM PURCHASED!"));
         player.sendMessage("§7Item: §e" + auction.getItem().getType().name());
         player.sendMessage("§7Price: §6" + auction.getBinPrice() + " coins");
         player.sendMessage("§7Fee: §6" + fee + " coins");
@@ -288,13 +290,13 @@ public class AuctionHouse {
             if (profile != null) {
                 profile.addCoins(auction.getCurrentBid());
             }
-            player.sendMessage("§a§lAUCTION SOLD!");
+            player.sendMessage(Component.text("§a§lAUCTION SOLD!"));
             player.sendMessage("§7Item: §e" + auction.getItem().getType().name());
             player.sendMessage("§7Sold for: §6" + auction.getCurrentBid() + " coins");
         } else {
             // Auction expired without bids
             player.getInventory().addItem(auction.getItem());
-            player.sendMessage("§c§lAUCTION EXPIRED!");
+            player.sendMessage(Component.text("§c§lAUCTION EXPIRED!"));
             player.sendMessage("§7Item returned: §e" + auction.getItem().getType().name());
         }
         
@@ -383,7 +385,7 @@ public class AuctionHouse {
                 lore.add("§eLeft Click to Bid");
                 lore.add("§eRight Click to Buy Now");
                 
-                meta.setLore(lore);
+                meta.lore(lore.stream().map(Component::text).toList());
                 displayItem.setItemMeta(meta);
             }
             
@@ -536,15 +538,15 @@ public class AuctionHouse {
             this.endTime = endTime;
             this.currentBid = startingBid;
             this.currentBidder = null;
-            this.createdAt = System.currentTimeMillis();
+            this.createdAt = java.lang.System.currentTimeMillis();
         }
         
         public boolean isExpired() {
-            return System.currentTimeMillis() >= endTime;
+            return java.lang.System.currentTimeMillis() >= endTime;
         }
         
         public long getTimeRemaining() {
-            return Math.max(0, endTime - System.currentTimeMillis());
+            return Math.max(0, endTime - java.lang.System.currentTimeMillis());
         }
         
         // Getters and Setters

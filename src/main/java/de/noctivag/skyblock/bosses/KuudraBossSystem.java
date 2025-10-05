@@ -1,4 +1,9 @@
 package de.noctivag.skyblock.bosses;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
@@ -10,29 +15,30 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class KuudraBossSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerBossData> playerBossData = new ConcurrentHashMap<>();
     private final Map<BossType, BossConfig> bossConfigs = new HashMap<>();
     private final Map<BossPhase, PhaseConfig> phaseConfigs = new HashMap<>();
     
-    public KuudraBossSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public KuudraBossSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
         initializeBossConfigs();
         initializePhaseConfigs();
         startBossUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeBossConfigs() {
@@ -125,7 +131,7 @@ public class KuudraBossSystem implements Listener {
             public void run() {
                 updateAllPlayerBossData();
             }
-        }.runTaskTimer(plugin, 0L, 20L * 60L); // Update every minute
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L * 60L); // Update every minute
     }
     
     private void updateAllPlayerBossData() {
@@ -152,7 +158,7 @@ public class KuudraBossSystem implements Listener {
     }
     
     public void openBossGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§c§lBoss System");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§c§lBoss System"));
         
         // Add boss categories
         addGUIItem(gui, 10, Material.WITHER_SKELETON_SKULL, "§c§lKuudra", "§7Fight the Kuudra boss.");
@@ -180,15 +186,15 @@ public class KuudraBossSystem implements Listener {
         addGUIItem(gui, 53, Material.ARROW, "§7§lNext Page", "§7Go to next page.");
         
         player.openInventory(gui);
-        player.sendMessage("§aBoss GUI geöffnet!");
+        player.sendMessage(Component.text("§aBoss GUI geöffnet!"));
     }
     
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String description) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(name);
-            meta.setLore(Arrays.asList(description));
+            meta.displayName(Component.text(name));
+            meta.lore(Arrays.asList(description).stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         gui.setItem(slot, item);
@@ -334,11 +340,11 @@ public class KuudraBossSystem implements Listener {
         
         public PlayerBossData(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void addBossKill(BossType type) {

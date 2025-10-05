@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.cosmetics.AdvancedParticleManager;
 import de.noctivag.skyblock.cosmetics.ParticleShape;
 import net.kyori.adventure.text.Component;
@@ -10,18 +13,18 @@ import org.bukkit.entity.Player;
 
 
 public class AdvancedCosmeticsMenu extends CustomGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final AdvancedParticleManager particleManager;
 
-    public AdvancedCosmeticsMenu(SkyblockPlugin plugin, AdvancedParticleManager particleManager) {
+    public AdvancedCosmeticsMenu(SkyblockPlugin SkyblockPlugin, AdvancedParticleManager particleManager) {
         super(54, Component.text("§d§lAdvanced Kosmetik"));
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.particleManager = particleManager;
     }
 
-    public AdvancedCosmeticsMenu(SkyblockPlugin plugin) {
+    public AdvancedCosmeticsMenu(SkyblockPlugin SkyblockPlugin) {
         super(54, Component.text("§d§lAdvanced Kosmetik"));
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         // Placeholder - method not implemented
         this.particleManager = null;
     }

@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.commands;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,10 +17,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class EconomyCommand implements CommandExecutor, TabCompleter {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public EconomyCommand(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public EconomyCommand(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     @Override
@@ -43,9 +46,9 @@ public class EconomyCommand implements CommandExecutor, TabCompleter {
                     sender.sendMessage("§cSpieler nicht gefunden!");
                     return true;
                 }
-                double balance = plugin.getEconomyManager().getBalance(target);
+                double balance = SkyblockPlugin.getEconomyManager().getBalance(target);
                 sender.sendMessage("§aKontostand von §e" + target.getName() + "§a: §6" + 
-                    plugin.getEconomyManager().formatMoney(balance));
+                    SkyblockPlugin.getEconomyManager().formatMoney(balance));
             }
             
             case "give" -> {
@@ -60,9 +63,9 @@ public class EconomyCommand implements CommandExecutor, TabCompleter {
                 }
                 try {
                     double amount = Double.parseDouble(args[2]);
-                    plugin.getEconomyManager().giveMoney(target, amount);
+                    SkyblockPlugin.getEconomyManager().giveMoney(target, amount);
                     sender.sendMessage("§a§l" + amount + " Coins §agegeben an §e" + target.getName());
-                    target.sendMessage("§aDu hast §6" + plugin.getEconomyManager().formatMoney(amount) + " §aerhalten!");
+                    target.sendMessage("§aDu hast §6" + SkyblockPlugin.getEconomyManager().formatMoney(amount) + " §aerhalten!");
                 } catch (NumberFormatException e) {
                     sender.sendMessage("§cUngültiger Betrag!");
                 }
@@ -80,7 +83,7 @@ public class EconomyCommand implements CommandExecutor, TabCompleter {
                 }
                 try {
                     double amount = Double.parseDouble(args[2]);
-                    if (plugin.getEconomyManager().withdrawMoney(target, amount)) {
+                    if (SkyblockPlugin.getEconomyManager().withdrawMoney(target, amount)) {
                         sender.sendMessage("§a§l" + amount + " Coins §aabgezogen von §e" + target.getName());
                     } else {
                         sender.sendMessage("§cTransaktion fehlgeschlagen!");
@@ -102,11 +105,11 @@ public class EconomyCommand implements CommandExecutor, TabCompleter {
                 }
                 try {
                     double amount = Double.parseDouble(args[2]);
-                    plugin.getEconomyManager().setBalanceSilent(target, amount);
+                    SkyblockPlugin.getEconomyManager().setBalanceSilent(target, amount);
                     sender.sendMessage("§aKontostand von §e" + target.getName() + " §agesetzt auf §6" + 
-                        plugin.getEconomyManager().formatMoney(amount));
+                        SkyblockPlugin.getEconomyManager().formatMoney(amount));
                     target.sendMessage("§aDein Kontostand wurde auf §6" + 
-                        plugin.getEconomyManager().formatMoney(amount) + " §agesetzt!");
+                        SkyblockPlugin.getEconomyManager().formatMoney(amount) + " §agesetzt!");
                 } catch (NumberFormatException e) {
                     sender.sendMessage("§cUngültiger Betrag!");
                 }
@@ -122,7 +125,7 @@ public class EconomyCommand implements CommandExecutor, TabCompleter {
                     sender.sendMessage("§cSpieler nicht gefunden!");
                     return true;
                 }
-                plugin.getEconomyManager().resetBalance(target);
+                SkyblockPlugin.getEconomyManager().resetBalance(target);
                 sender.sendMessage("§aKontostand von §e" + target.getName() + " §azurückgesetzt!");
                 target.sendMessage("§aDein Kontostand wurde zurückgesetzt!");
             }
@@ -137,14 +140,14 @@ public class EconomyCommand implements CommandExecutor, TabCompleter {
                     sender.sendMessage("§cSpieler nicht gefunden!");
                     return true;
                 }
-                boolean exempt = plugin.getEconomyManager().hasCostExemption(target);
+                boolean exempt = SkyblockPlugin.getEconomyManager().hasCostExemption(target);
                 sender.sendMessage("§e" + target.getName() + " §7hat " + 
                     (exempt ? "§aKostenbefreiung" : "§ckeine Kostenbefreiung"));
             }
             
             case "reload" -> {
                 // TODO: Implement proper ConfigManager interface
-                // ((ConfigManager) plugin.getConfigManager()).reloadConfig();
+                // ((ConfigManager) SkyblockPlugin.getConfigManager()).reloadConfig();
                 sender.sendMessage("§aEconomy-Konfiguration neu geladen!");
             }
             

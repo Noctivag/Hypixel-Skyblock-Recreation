@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.commands;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.performance.AdvancedPerformanceManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,11 +14,11 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class AdvancedPerformanceCommands implements CommandExecutor, TabCompleter {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final AdvancedPerformanceManager performanceManager;
 
-    public AdvancedPerformanceCommands(SkyblockPlugin plugin, AdvancedPerformanceManager performanceManager) {
-        this.plugin = plugin;
+    public AdvancedPerformanceCommands(SkyblockPlugin SkyblockPlugin, AdvancedPerformanceManager performanceManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.performanceManager = performanceManager;
     }
 
@@ -26,7 +29,7 @@ public class AdvancedPerformanceCommands implements CommandExecutor, TabComplete
             sender.sendMessage("§e/performance stats §7- Show server performance statistics");
             sender.sendMessage("§e/performance optimize §7- Optimize server performance");
             sender.sendMessage("§e/performance monitor §7- Start performance monitoring");
-            plugin.getLogger().info("Performance command executed by " + sender.getName());
+            SkyblockPlugin.getLogger().info("Performance command executed by " + sender.getName());
             return true;
         }
 
@@ -54,14 +57,14 @@ public class AdvancedPerformanceCommands implements CommandExecutor, TabComplete
         sender.sendMessage("§7Max Memory: §a" + performanceManager.getMemoryMax() / 1024 / 1024 + "MB");
         sender.sendMessage("§7Players Online: §a" + performanceManager.getPlayersOnline());
         sender.sendMessage("§7Chunks Loaded: §a" + performanceManager.getChunksLoaded());
-        plugin.getLogger().info("Performance stats requested by " + sender.getName());
+        SkyblockPlugin.getLogger().info("Performance stats requested by " + sender.getName());
     }
 
     private void optimizePerformance(CommandSender sender) {
         System.gc(); // Force garbage collection
         performanceManager.cleanupResources();
         sender.sendMessage("§aPerformance optimization completed!");
-        plugin.getLogger().info("Performance optimization executed by " + sender.getName());
+        SkyblockPlugin.getLogger().info("Performance optimization executed by " + sender.getName());
     }
 
     private void toggleMonitoring(CommandSender sender) {
@@ -72,7 +75,7 @@ public class AdvancedPerformanceCommands implements CommandExecutor, TabComplete
             performanceManager.startPerformanceMonitoring();
             sender.sendMessage("§aPerformance monitoring started!");
         }
-        plugin.getLogger().info("Performance monitoring toggled by " + sender.getName());
+        SkyblockPlugin.getLogger().info("Performance monitoring toggled by " + sender.getName());
     }
 
     @Override
@@ -84,7 +87,7 @@ public class AdvancedPerformanceCommands implements CommandExecutor, TabComplete
             completions.add("monitor");
         }
         // Use fields to avoid warnings
-        if (plugin != null && performanceManager != null) {
+        if (SkyblockPlugin != null && performanceManager != null) {
             // Fields are used
         }
         return completions;

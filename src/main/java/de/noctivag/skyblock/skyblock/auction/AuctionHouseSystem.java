@@ -1,4 +1,8 @@
 package de.noctivag.skyblock.skyblock.auction;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
@@ -10,7 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import net.kyori.adventure.text.Component;
 
@@ -31,18 +35,18 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AuctionHouseSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerAuctionData> playerAuctionData = new ConcurrentHashMap<>();
     private final Map<String, Auction> activeAuctions = new ConcurrentHashMap<>();
     private final Map<String, Auction> expiredAuctions = new ConcurrentHashMap<>();
     private final Map<UUID, List<Auction>> playerAuctions = new ConcurrentHashMap<>();
     
-    public AuctionHouseSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AuctionHouseSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
         startAuctionUpdateTask();
     }
     
@@ -72,7 +76,7 @@ public class AuctionHouseSystem implements Listener {
             public void run() {
                 updateAuctions();
             }
-        }.runTaskTimer(plugin, 0L, 20L * 60L); // Every minute
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L * 60L); // Every minute
     }
     
     private void updateAuctions() {
@@ -177,7 +181,7 @@ public class AuctionHouseSystem implements Listener {
         
         // Check if player has the item
         if (!player.getInventory().containsAtLeast(item, item.getAmount())) {
-            player.sendMessage("§cYou don't have this item!");
+            player.sendMessage(Component.text("§cYou don't have this item!"));
             return;
         }
         
@@ -201,12 +205,12 @@ public class AuctionHouseSystem implements Listener {
     public void placeBid(Player player, String auctionId, double bidAmount) {
         Auction auction = activeAuctions.get(auctionId);
         if (auction == null) {
-            player.sendMessage("§cAuction not found!");
+            player.sendMessage(Component.text("§cAuction not found!"));
             return;
         }
         
         if (auction.isExpired()) {
-            player.sendMessage("§cThis auction has expired!");
+            player.sendMessage(Component.text("§cThis auction has expired!"));
             return;
         }
         
@@ -216,12 +220,12 @@ public class AuctionHouseSystem implements Listener {
         // Check if bid is higher than current highest bid
         Bid currentHighest = auction.getHighestBid();
         if (currentHighest != null && bidAmount <= currentHighest.getAmount()) {
-            player.sendMessage("§cYour bid must be higher than the current highest bid!");
+            player.sendMessage(Component.text("§cYour bid must be higher than the current highest bid!"));
             return;
         }
         
         // Place bid
-        Bid bid = new Bid(player.getUniqueId(), bidAmount, System.currentTimeMillis());
+        Bid bid = new Bid(player.getUniqueId(), bidAmount, java.lang.System.currentTimeMillis());
         auction.addBid(bid);
         
         player.sendMessage("§aBid placed: §6" + String.format("%.0f", bidAmount) + " coins");
@@ -236,17 +240,17 @@ public class AuctionHouseSystem implements Listener {
     public void buyItNow(Player player, String auctionId) {
         Auction auction = activeAuctions.get(auctionId);
         if (auction == null) {
-            player.sendMessage("§cAuction not found!");
+            player.sendMessage(Component.text("§cAuction not found!"));
             return;
         }
         
         if (auction.getBinPrice() <= 0) {
-            player.sendMessage("§cThis auction doesn't have a BIN price!");
+            player.sendMessage(Component.text("§cThis auction doesn't have a BIN price!"));
             return;
         }
         
         if (auction.isExpired()) {
-            player.sendMessage("§cThis auction has expired!");
+            player.sendMessage(Component.text("§cThis auction has expired!"));
             return;
         }
         
@@ -345,12 +349,12 @@ public class AuctionHouseSystem implements Listener {
     
     private void openPlayerBids(Player player) {
         // Open player's active bids
-        player.sendMessage("§eOpening your active bids...");
+        player.sendMessage(Component.text("§eOpening your active bids..."));
     }
     
     private void openCreateAuction(Player player) {
         // Open create auction interface
-        player.sendMessage("§eOpening create auction interface...");
+        player.sendMessage(Component.text("§eOpening create auction interface..."));
     }
     
     private List<Auction> getAuctionsByCategory(AuctionCategory category) {
@@ -440,14 +444,14 @@ public class AuctionHouseSystem implements Listener {
                 lore.add("§aShift-click to buy now!");
             }
             
-            meta.lore(lore.stream().map(Component::text).toList());
+            meta.lore(lore.stream().toList());
             item.setItemMeta(meta);
         }
         gui.setItem(slot, item);
     }
     
     private String formatTimeRemaining(long expirationTime) {
-        long timeLeft = expirationTime - System.currentTimeMillis();
+        long timeLeft = expirationTime - java.lang.System.currentTimeMillis();
         if (timeLeft <= 0) return "§cExpired";
         
         long hours = timeLeft / (1000 * 60 * 60);
@@ -492,7 +496,7 @@ public class AuctionHouseSystem implements Listener {
             this.item = item;
             this.startingBid = startingBid;
             this.binPrice = binPrice;
-            this.expirationTime = System.currentTimeMillis() + (durationHours * 60 * 60 * 1000L);
+            this.expirationTime = java.lang.System.currentTimeMillis() + (durationHours * 60 * 60 * 1000L);
             this.bids = new ArrayList<>();
         }
         
@@ -501,7 +505,7 @@ public class AuctionHouseSystem implements Listener {
         }
         
         public boolean isExpired() {
-            return System.currentTimeMillis() >= expirationTime;
+            return java.lang.System.currentTimeMillis() >= expirationTime;
         }
         
         public Bid getHighestBid() {

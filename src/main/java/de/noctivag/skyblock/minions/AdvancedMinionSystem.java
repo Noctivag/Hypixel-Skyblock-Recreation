@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.minions;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import de.noctivag.skyblock.data.DatabaseManager;
 import org.bukkit.Bukkit;
@@ -26,7 +30,7 @@ import java.util.logging.Logger;
 @SuppressWarnings({"unused", "ConstantConditions"})
 public class AdvancedMinionSystem implements Listener {
 
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Logger logger;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerMinionData> playerMinionData = new ConcurrentHashMap<>();
@@ -35,9 +39,9 @@ public class AdvancedMinionSystem implements Listener {
     private final Map<UUID, MinionUpgrade> minionUpgrades = new ConcurrentHashMap<>();
     private final Map<UUID, MinionFuel> minionFuel = new ConcurrentHashMap<>();
 
-    public AdvancedMinionSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = Objects.requireNonNull(plugin, "plugin");
-        this.logger = plugin.getLogger();
+    public AdvancedMinionSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = Objects.requireNonNull(SkyblockPlugin, "SkyblockPlugin");
+        this.logger = SkyblockPlugin.getLogger();
         this.databaseManager = databaseManager;
 
         initializeMinions();
@@ -46,7 +50,7 @@ public class AdvancedMinionSystem implements Listener {
         Thread.ofVirtual().start(() -> {
             try {
                 Thread.sleep(20L * 60L * 5L * 50); // Initial delay: 5 minutes = 15,000,000 ms
-                while (plugin.isEnabled()) {
+                while (SkyblockPlugin.isEnabled()) {
                     saveAllMinions();
                     Thread.sleep(20L * 60L * 5L * 50); // Every 5 minutes = 15,000,000 ms
                 }
@@ -57,7 +61,7 @@ public class AdvancedMinionSystem implements Listener {
     }
 
     public void registerEvents() {
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
 
     private void initializeMinions() {
@@ -312,7 +316,7 @@ public class AdvancedMinionSystem implements Listener {
 
     private void startMinionUpdateTask() {
         Thread.ofVirtual().start(() -> {
-            while (plugin.isEnabled()) {
+            while (SkyblockPlugin.isEnabled()) {
                 try {
                     updateAllMinions();
                     Thread.sleep(20L * 5L * 50); // Every 5 seconds = 5,000 ms
@@ -337,7 +341,7 @@ public class AdvancedMinionSystem implements Listener {
     }
 
     private void updateMinion(UUID playerId, Minion minion) {
-        long currentTime = System.currentTimeMillis();
+        long currentTime = java.lang.System.currentTimeMillis();
         long timeSinceLastAction = currentTime - minion.getLastAction();
 
         // Calculate production time with upgrades and fuel
@@ -423,7 +427,7 @@ public class AdvancedMinionSystem implements Listener {
         if (player != null) {
             // Use EconomyManager to deposit money (handles Vault or internal storage)
             try {
-                plugin.getEconomyManager().depositMoney(player, totalValue);
+                SkyblockPlugin.getEconomyManager().depositMoney(player, totalValue);
             } catch (Exception e) {
                 // Fallback: send message anyway
                 player.sendMessage("§aMinion " + minion.getName() + " sold resources for §6" + String.format("%.2f", totalValue) + " coins!");
@@ -435,7 +439,7 @@ public class AdvancedMinionSystem implements Listener {
 
         // Save economy transaction if a database manager is available
         try {
-            plugin.getDatabaseManager().saveEconomyTransaction(playerId.toString(), "minion_sell", totalValue, totalValue, "Minion auto-sell");
+            SkyblockPlugin.getDatabaseManager().saveEconomyTransaction(playerId.toString(), "minion_sell", totalValue, totalValue, "Minion auto-sell");
         } catch (Exception ignored) {}
     }
 
@@ -482,7 +486,7 @@ public class AdvancedMinionSystem implements Listener {
         addGUIItem(gui, 53, Material.ARROW, "§7§lNext Page", "§7Go to next page.");
 
         player.openInventory(gui);
-        player.sendMessage("§aMinion GUI geöffnet!");
+        player.sendMessage(Component.text("§aMinion GUI geöffnet!"));
     }
 
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String description) {
@@ -643,8 +647,8 @@ public class AdvancedMinionSystem implements Listener {
     public void saveMinionData(UUID playerId) {
         // Save minion data to database using the main DatabaseManager when available.
         try {
-            if (plugin.getDatabaseManager() != null) {
-                DatabaseManager db = plugin.getDatabaseManager();
+            if (SkyblockPlugin.getDatabaseManager() != null) {
+                DatabaseManager db = SkyblockPlugin.getDatabaseManager();
                 List<Minion> playerMinions = getPlayerMinions(playerId);
                 if (playerMinions == null || playerMinions.isEmpty()) {
                     logger.info("No minions to save for player " + playerId);
@@ -762,7 +766,7 @@ public class AdvancedMinionSystem implements Listener {
                     logger.warning("Failed to acquire DB connection to load minions: " + ex.getMessage());
                     return null;
                 });
-            } else if (plugin.getDatabaseManager() != null) {
+            } else if (SkyblockPlugin.getDatabaseManager() != null) {
                 // If the main DatabaseManager implements a loader in the future, call it here (backwards-compat placeholder)
                 logger.info("DatabaseManager available but no MultiServer DB - loading via DatabaseManager.");
                 // Load via DatabaseManager
@@ -854,7 +858,7 @@ public class AdvancedMinionSystem implements Listener {
             this.maxStorage = maxStorage;
             this.productionTime = productionTime;
             this.isActive = true;
-            this.lastAction = System.currentTimeMillis();
+            this.lastAction = java.lang.System.currentTimeMillis();
             this.autoSellEnabled = false;
         }
 
@@ -889,13 +893,13 @@ public class AdvancedMinionSystem implements Listener {
         private long lastUpdate;
 
         public PlayerMinionData(UUID playerId) {
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
 
         // Removed unused getPlayerId method
 
         public void update() {
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
 
         public void setMinionLevel(String minionName, int level) {

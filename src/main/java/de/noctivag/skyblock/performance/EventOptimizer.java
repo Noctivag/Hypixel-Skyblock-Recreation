@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.performance;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -24,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Priority-Management
  */
 public class EventOptimizer implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     
     // Event-Routing
     private final Map<String, List<java.util.function.Consumer<Event>>> eventHandlers = new ConcurrentHashMap<>();
@@ -34,9 +38,9 @@ public class EventOptimizer implements Listener {
     private final long DEFAULT_COOLDOWN = 100; // 100ms
     private final int MAX_HANDLERS_PER_EVENT = 10;
     
-    public EventOptimizer(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        org.bukkit.Bukkit.getPluginManager().registerEvents(this, plugin);
+    public EventOptimizer(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        org.bukkit.Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     /**
@@ -115,7 +119,7 @@ public class EventOptimizer implements Listener {
                 }
                 
             } catch (Exception e) {
-                plugin.getLogger().warning("Error in event handler: " + e.getMessage());
+                SkyblockPlugin.getLogger().warning("Error in event handler: " + e.getMessage());
             }
         }
     }
@@ -128,16 +132,16 @@ public class EventOptimizer implements Listener {
         Long lastAction = playerCooldowns.get(playerId);
         
         if (lastAction == null) {
-            playerCooldowns.put(playerId, System.currentTimeMillis());
+            playerCooldowns.put(playerId, java.lang.System.currentTimeMillis());
             return false;
         }
         
         long cooldownTime = getCooldownTime(actionType);
-        if (System.currentTimeMillis() - lastAction < cooldownTime) {
+        if (java.lang.System.currentTimeMillis() - lastAction < cooldownTime) {
             return true;
         }
         
-        playerCooldowns.put(playerId, System.currentTimeMillis());
+        playerCooldowns.put(playerId, java.lang.System.currentTimeMillis());
         return false;
     }
     
@@ -190,11 +194,11 @@ public class EventOptimizer implements Listener {
             @Override
             public void run() {
                 // Entferne alte Cooldowns
-                long currentTime = System.currentTimeMillis();
+                long currentTime = java.lang.System.currentTimeMillis();
                 playerCooldowns.entrySet().removeIf(entry -> 
                     currentTime - entry.getValue() > 60000); // 1 Minute
             }
-        }.runTaskTimerAsynchronously(plugin, 6000L, 6000L); // Alle 5 Minuten
+        }.runTaskTimerAsynchronously(SkyblockPlugin, 6000L, 6000L); // Alle 5 Minuten
     }
     
     /**

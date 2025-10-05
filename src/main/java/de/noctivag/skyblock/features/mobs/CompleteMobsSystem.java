@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.features.mobs;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.api.System;
 import de.noctivag.skyblock.core.api.SystemStatus;
 import de.noctivag.skyblock.features.mobs.types.CompleteMobType;
@@ -15,12 +18,12 @@ import java.util.logging.Level;
 
 public class CompleteMobsSystem implements System {
 
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private SystemStatus status = SystemStatus.UNINITIALIZED;
     private boolean enabled = false;
 
-    public CompleteMobsSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public CompleteMobsSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     @Override
@@ -36,20 +39,20 @@ public class CompleteMobsSystem implements System {
     @Override
     public CompletableFuture<Void> initialize() {
         status = SystemStatus.INITIALIZING;
-        plugin.getLogger().info("Initializing Complete Mobs System...");
+        SkyblockPlugin.getLogger().info("Initializing Complete Mobs System...");
         try {
             // Load all mob types
             int totalMobs = CompleteMobType.values().length;
-            plugin.getLogger().info("Loaded " + totalMobs + " mob types.");
+            SkyblockPlugin.getLogger().info("Loaded " + totalMobs + " mob types.");
 
             // Register event listeners if any (e.g., for mob spawning, combat, drops)
-            // plugin.getServer().getPluginManager().registerEvents(new MobListener(), plugin);
+            // SkyblockPlugin.getServer().getPluginManager().registerEvents(new MobListener(), SkyblockPlugin);
 
             status = SystemStatus.INITIALIZED;
-            plugin.getLogger().info("Complete Mobs System initialized successfully.");
+            SkyblockPlugin.getLogger().info("Complete Mobs System initialized successfully.");
             return CompletableFuture.completedFuture(null);
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to initialize Complete Mobs System", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to initialize Complete Mobs System", e);
             status = SystemStatus.ERROR;
             return CompletableFuture.failedFuture(e);
         }
@@ -58,10 +61,10 @@ public class CompleteMobsSystem implements System {
     @Override
     public CompletableFuture<Void> shutdown() {
         status = SystemStatus.SHUTTING_DOWN;
-        plugin.getLogger().info("Shutting down Complete Mobs System...");
+        SkyblockPlugin.getLogger().info("Shutting down Complete Mobs System...");
         // Unregister listeners, save data, etc.
         status = SystemStatus.SHUTDOWN;
-        plugin.getLogger().info("Complete Mobs System shut down.");
+        SkyblockPlugin.getLogger().info("Complete Mobs System shut down.");
         return CompletableFuture.completedFuture(null);
     }
 
@@ -79,7 +82,7 @@ public class CompleteMobsSystem implements System {
     public CompletableFuture<Void> enable() {
         enabled = true;
         status = SystemStatus.ENABLED;
-        plugin.getLogger().info("Complete Mobs System enabled.");
+        SkyblockPlugin.getLogger().info("Complete Mobs System enabled.");
         return CompletableFuture.completedFuture(null);
     }
 
@@ -87,7 +90,7 @@ public class CompleteMobsSystem implements System {
     public CompletableFuture<Void> disable() {
         enabled = false;
         status = SystemStatus.DISABLED;
-        plugin.getLogger().info("Complete Mobs System disabled.");
+        SkyblockPlugin.getLogger().info("Complete Mobs System disabled.");
         return CompletableFuture.completedFuture(null);
     }
 

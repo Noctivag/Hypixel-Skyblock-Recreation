@@ -1,38 +1,41 @@
 package de.noctivag.skyblock.core.lifecycle;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.core.api.Service;
 import de.noctivag.skyblock.core.api.System;
 import de.noctivag.skyblock.core.api.SystemStatus;
 import de.noctivag.skyblock.core.di.ServiceLocator;
-import org.bukkit.plugin.java.JavaPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 /**
- * Manages the plugin lifecycle and system initialization.
+ * Manages the SkyblockPlugin lifecycle and system initialization.
  */
 public class PluginLifecycleManager {
     
-    private final JavaSkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final ServiceLocator serviceLocator;
     private final Logger logger;
     private final LifecyclePhase currentPhase = new LifecyclePhase();
     
-    public PluginLifecycleManager(JavaSkyblockPlugin plugin, ServiceLocator serviceLocator) {
-        this.plugin = plugin;
+    public PluginLifecycleManager(SkyblockPlugin SkyblockPlugin, ServiceLocator serviceLocator) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.serviceLocator = serviceLocator;
-        this.logger = plugin.getLogger();
+        this.logger = SkyblockPlugin.getLogger();
     }
     
     /**
-     * Initialize the plugin
+     * Initialize the SkyblockPlugin
      * @return CompletableFuture that completes when initialization is done
      */
     public CompletableFuture<Void> initialize() {
-        logger.info("Starting plugin initialization...");
+        logger.info("Starting SkyblockPlugin initialization...");
         currentPhase.setPhase(LifecyclePhase.Phase.INITIALIZING);
         
         return initializeInfrastructure()
@@ -42,7 +45,7 @@ public class PluginLifecycleManager {
             .thenCompose(v -> finalizeInitialization())
             .orTimeout(60, TimeUnit.SECONDS)
             .exceptionally(throwable -> {
-                logger.severe("Plugin initialization failed: " + throwable.getMessage());
+                logger.severe("SkyblockPlugin initialization failed: " + throwable.getMessage());
                 currentPhase.setPhase(LifecyclePhase.Phase.FAILED);
                 return null;
             });
@@ -119,30 +122,30 @@ public class PluginLifecycleManager {
      * Finalize initialization
      */
     private CompletableFuture<Void> finalizeInitialization() {
-        logger.info("Finalizing plugin initialization...");
+        logger.info("Finalizing SkyblockPlugin initialization...");
         
         return CompletableFuture.runAsync(() -> {
             // Final setup tasks
             currentPhase.setPhase(LifecyclePhase.Phase.READY);
-            logger.info("Plugin initialization completed successfully!");
+            logger.info("SkyblockPlugin initialization completed successfully!");
         });
     }
     
     /**
-     * Shutdown the plugin
+     * Shutdown the SkyblockPlugin
      * @return CompletableFuture that completes when shutdown is done
      */
     public CompletableFuture<Void> shutdown() {
-        logger.info("Starting plugin shutdown...");
+        logger.info("Starting SkyblockPlugin shutdown...");
         currentPhase.setPhase(LifecyclePhase.Phase.SHUTTING_DOWN);
         
         return serviceLocator.shutdownAll()
             .thenRun(() -> {
                 currentPhase.setPhase(LifecyclePhase.Phase.SHUTDOWN);
-                logger.info("Plugin shutdown completed");
+                logger.info("SkyblockPlugin shutdown completed");
             })
             .exceptionally(throwable -> {
-                logger.severe("Plugin shutdown failed: " + throwable.getMessage());
+                logger.severe("SkyblockPlugin shutdown failed: " + throwable.getMessage());
                 currentPhase.setPhase(LifecyclePhase.Phase.FAILED);
                 return null;
             });
@@ -157,7 +160,7 @@ public class PluginLifecycleManager {
     }
     
     /**
-     * Check if plugin is ready
+     * Check if SkyblockPlugin is ready
      * @return true if ready, false otherwise
      */
     public boolean isReady() {
@@ -165,7 +168,7 @@ public class PluginLifecycleManager {
     }
     
     /**
-     * Check if plugin is shutting down
+     * Check if SkyblockPlugin is shutting down
      * @return true if shutting down, false otherwise
      */
     public boolean isShuttingDown() {

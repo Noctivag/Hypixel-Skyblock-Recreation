@@ -1,15 +1,19 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import net.kyori.adventure.text.Component;
 
 public class ReportsGUI extends CustomGUI {
     private final Player player;
     
-    public ReportsGUI(SkyblockPlugin plugin, Player player) {
-        super(plugin, "§c§lReports", 54);
+    public ReportsGUI(SkyblockPlugin SkyblockPlugin, Player player) {
+        super(SkyblockPlugin, "§c§lReports", 54);
         this.player = player;
         setupItems();
     }

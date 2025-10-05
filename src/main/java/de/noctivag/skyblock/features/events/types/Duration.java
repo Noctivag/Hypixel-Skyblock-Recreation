@@ -21,7 +21,7 @@ public class Duration implements Service {
     }
 
     public Duration(long duration) {
-        this.startTime = System.currentTimeMillis();
+        this.startTime = java.lang.System.currentTimeMillis();
         this.endTime = startTime + duration;
         this.duration = duration;
     }
@@ -77,15 +77,15 @@ public class Duration implements Service {
     }
 
     public boolean isActive() {
-        return System.currentTimeMillis() < endTime;
+        return java.lang.System.currentTimeMillis() < endTime;
     }
 
     public long getRemainingTime() {
-        return Math.max(0, endTime - System.currentTimeMillis());
+        return Math.max(0, endTime - java.lang.System.currentTimeMillis());
     }
 
     public double getProgress() {
-        long elapsed = System.currentTimeMillis() - startTime;
+        long elapsed = java.lang.System.currentTimeMillis() - startTime;
         return Math.min(1.0, (double) elapsed / duration);
     }
 }

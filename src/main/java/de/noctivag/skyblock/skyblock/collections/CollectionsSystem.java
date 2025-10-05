@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.skyblock.collections;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -19,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CollectionsSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, Map<String, Integer>> playerCollections = new ConcurrentHashMap<>();
     
     // Collection-Definitionen
@@ -111,9 +116,9 @@ public class CollectionsSystem implements Listener {
         100000, 10
     );
     
-    public CollectionsSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    public CollectionsSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        SkyblockPlugin.getServer().getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     /**
@@ -146,9 +151,9 @@ public class CollectionsSystem implements Listener {
     private void checkMilestones(UUID playerId, Collection collection, int amount) {
         for (Map.Entry<Integer, Integer> milestone : MILESTONES.entrySet()) {
             if (amount >= milestone.getKey()) {
-                Player player = plugin.getServer().getPlayer(playerId);
+                Player player = SkyblockPlugin.getServer().getPlayer(playerId);
                 if (player != null) {
-                    player.sendMessage("§6§lCOLLECTION MILESTONE!");
+                    player.sendMessage(Component.text("§6§lCOLLECTION MILESTONE!"));
                     player.sendMessage("§e" + collection.getName() + " Level " + milestone.getValue());
                     player.sendMessage("§7" + amount + " " + collection.getName() + " gesammelt!");
                 }

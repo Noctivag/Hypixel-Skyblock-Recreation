@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.core.performance;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -10,20 +13,20 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 /**
- * Performance monitoring system for tracking plugin performance metrics.
+ * Performance monitoring system for tracking SkyblockPlugin performance metrics.
  */
 public class PerformanceMonitor {
     
-    private final JavaSkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Logger logger;
     private final ScheduledExecutorService scheduler;
     private final ConcurrentHashMap<String, PerformanceMetrics> metrics;
     
     private boolean monitoring = false;
     
-    public PerformanceMonitor(JavaSkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.logger = plugin.getLogger();
+    public PerformanceMonitor(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.logger = SkyblockPlugin.getLogger();
         this.scheduler = Executors.newScheduledThreadPool(2, r -> {
             Thread thread = new Thread(r, "PerformanceMonitor-Thread");
             thread.setDaemon(true);
@@ -87,7 +90,7 @@ public class PerformanceMonitor {
      * @param startTime the start time in milliseconds
      */
     public void recordTiming(String name, long startTime) {
-        long duration = System.currentTimeMillis() - startTime;
+        long duration = java.lang.System.currentTimeMillis() - startTime;
         recordMetric(name, duration);
     }
     
@@ -126,9 +129,9 @@ public class PerformanceMonitor {
         // TPS metrics (simplified)
         recordMetric("tps", 20.0); // This would be calculated from actual tick times
         
-        // Plugin metrics
-        recordMetric("plugin.players", plugin.getServer().getOnlinePlayers().size());
-        recordMetric("plugin.worlds", plugin.getServer().getWorlds().size());
+        // SkyblockPlugin metrics
+        recordMetric("SkyblockPlugin.players", SkyblockPlugin.getServer().getOnlinePlayers().size());
+        recordMetric("SkyblockPlugin.worlds", SkyblockPlugin.getServer().getWorlds().size());
     }
     
     /**
@@ -151,7 +154,7 @@ public class PerformanceMonitor {
             }
             
             // Player count report
-            PerformanceMetrics players = metrics.get("plugin.players");
+            PerformanceMetrics players = metrics.get("SkyblockPlugin.players");
             if (players != null) {
                 logger.info("Average Players: " + String.format("%.2f", players.getAverage()));
             }

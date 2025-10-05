@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.core.architecture;
+import java.util.UUID;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -180,7 +181,7 @@ public class DistributedHypixelAPIService {
                             // Create new price data
                             StateSynchronizationLayer.BazaarPrice newPrice = 
                                 new StateSynchronizationLayer.BazaarPrice(
-                                    itemId, newBuyPrice, newSellPrice, System.currentTimeMillis()
+                                    itemId, newBuyPrice, newSellPrice, java.lang.System.currentTimeMillis()
                                 );
                             
                             // Update Redis cache
@@ -284,7 +285,7 @@ public class DistributedHypixelAPIService {
                     itemId,
                     basePrice * 1.05, // buyPrice (players buy from system)
                     basePrice * 0.95, // sellPrice (players sell to system)
-                    System.currentTimeMillis()
+                    java.lang.System.currentTimeMillis()
                 );
             
             // Update Redis cache
@@ -452,7 +453,7 @@ public class DistributedHypixelAPIService {
                 
                 StateSynchronizationLayer.BazaarPrice price = 
                     new StateSynchronizationLayer.BazaarPrice(
-                        itemId, basePrice * 1.05, basePrice * 0.95, System.currentTimeMillis()
+                        itemId, basePrice * 1.05, basePrice * 0.95, java.lang.System.currentTimeMillis()
                     );
                 
                 return createQuickStatusResponse(itemId, price);
@@ -538,7 +539,7 @@ public class DistributedHypixelAPIService {
         JsonObject response = new JsonObject();
         response.addProperty("success", false);
         response.addProperty("error", errorMessage);
-        response.addProperty("timestamp", System.currentTimeMillis());
+        response.addProperty("timestamp", java.lang.System.currentTimeMillis());
         return response;
     }
 }

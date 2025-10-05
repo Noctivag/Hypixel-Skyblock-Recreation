@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.network;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -28,7 +32,7 @@ import java.util.logging.Level;
  */
 public class ServerManager {
 
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final NetworkArchitecture.NetworkConfig config;
     private final JedisPool jedisPool;
 
@@ -52,9 +56,9 @@ public class ServerManager {
         playerServerMap.remove(playerId);
     }
 
-    public ServerManager(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager,
+    public ServerManager(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager,
                         NetworkArchitecture.NetworkConfig config, NetworkArchitecture.ServerType serverType) {
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.config = config;
         this.serverType = serverType;
         this.serverId = generateServerId();
@@ -83,7 +87,7 @@ public class ServerManager {
     }
 
     private String generateServerId() {
-        return serverType.getName().toLowerCase() + "_" + System.currentTimeMillis() + "_" +
+        return serverType.getName().toLowerCase() + "_" + java.lang.System.currentTimeMillis() + "_" +
                (int)(Math.random() * 1000);
     }
 
@@ -96,11 +100,11 @@ public class ServerManager {
             subscribeToServerEvents();
 
             isConnected = true;
-            plugin.getLogger().info("Connected to network as " + serverId);
+            SkyblockPlugin.getLogger().info("Connected to network as " + serverId);
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to connect to network: " + e.getMessage());
-            plugin.getLogger().log(Level.SEVERE, "Exception during ServerManager.connect", e);
+            SkyblockPlugin.getLogger().severe("Failed to connect to network: " + e.getMessage());
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Exception during ServerManager.connect", e);
         }
     }
 
@@ -110,10 +114,10 @@ public class ServerManager {
             unregisterServer();
 
             isConnected = false;
-            plugin.getLogger().info("Disconnected from network");
+            SkyblockPlugin.getLogger().info("Disconnected from network");
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to disconnect from network: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to disconnect from network: " + e.getMessage());
         }
     }
 
@@ -127,7 +131,7 @@ public class ServerManager {
                 Bukkit.getPort(),
                 Bukkit.getOnlinePlayers().size(),
                 config.getMaxPlayersPerServer(),
-                System.currentTimeMillis(),
+                java.lang.System.currentTimeMillis(),
                 true
             );
 
@@ -154,7 +158,7 @@ public class ServerManager {
             serversByType.get(serverType).add(serverInfo);
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to register server: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to register server: " + e.getMessage());
         }
     }
 
@@ -169,7 +173,7 @@ public class ServerManager {
             serversByType.get(serverType).removeIf(server -> server.getId().equals(serverId));
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to unregister server: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to unregister server: " + e.getMessage());
         }
     }
 
@@ -181,18 +185,18 @@ public class ServerManager {
                     sendHeartbeat();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Every second
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Every second
     }
 
     private void sendHeartbeat() {
         try (Jedis jedis = jedisPool.getResource()) {
             String serverKey = "server:" + serverId;
             jedis.hset(serverKey, "onlinePlayers", String.valueOf(Bukkit.getOnlinePlayers().size()));
-            jedis.hset(serverKey, "lastHeartbeat", String.valueOf(System.currentTimeMillis()));
+            jedis.hset(serverKey, "lastHeartbeat", String.valueOf(java.lang.System.currentTimeMillis()));
             jedis.expire(serverKey, 30);
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to send heartbeat: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to send heartbeat: " + e.getMessage());
         }
     }
 
@@ -204,7 +208,7 @@ public class ServerManager {
                     discoverServers();
                 }
             }
-        }.runTaskTimerAsynchronously(plugin, 0L, 100L); // Every 5 seconds
+        }.runTaskTimerAsynchronously(SkyblockPlugin, 0L, 100L); // Every 5 seconds
     }
 
     private void discoverServers() {
@@ -230,7 +234,7 @@ public class ServerManager {
             }
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to discover servers: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to discover servers: " + e.getMessage());
         }
     }
 
@@ -261,10 +265,10 @@ public class ServerManager {
                     jedis.subscribe(new PlayerTransferListener(), "player_transfer");
 
                 } catch (Exception e) {
-                    plugin.getLogger().severe("Failed to subscribe to server events: " + e.getMessage());
+                    SkyblockPlugin.getLogger().severe("Failed to subscribe to server events: " + e.getMessage());
                 }
             }
-        }.runTaskAsynchronously(plugin);
+        }.runTaskAsynchronously(SkyblockPlugin);
     }
 
     public boolean transferPlayer(Player player, NetworkArchitecture.ServerType targetServerType,
@@ -292,7 +296,7 @@ public class ServerManager {
             return true;
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to transfer player: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to transfer player: " + e.getMessage());
             return false;
         }
     }
@@ -319,7 +323,7 @@ public class ServerManager {
             transferData.put("sourceServer", serverId);
             transferData.put("targetServer", targetServer.getId());
             transferData.put("reason", reason.name());
-            transferData.put("timestamp", String.valueOf(System.currentTimeMillis()));
+            transferData.put("timestamp", String.valueOf(java.lang.System.currentTimeMillis()));
 
             jedis.hset("transfer_request:" + player.getUniqueId(), transferData);
             jedis.expire("transfer_request:" + player.getUniqueId(), 60); // 1 minute expiration
@@ -328,7 +332,7 @@ public class ServerManager {
             jedis.publish("player_transfer", player.getUniqueId().toString());
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to send transfer request: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to send transfer request: " + e.getMessage());
         }
     }
 
@@ -377,14 +381,14 @@ public class ServerManager {
                 }
 
             } catch (Exception e) {
-                plugin.getLogger().severe("Failed to handle player transfer: " + e.getMessage());
+                SkyblockPlugin.getLogger().severe("Failed to handle player transfer: " + e.getMessage());
             }
         }
 
         private void prepareForPlayerArrival(UUID playerId, Map<String, String> transferData) {
             // Prepare server for player arrival
             // This could include loading player data, setting up spawn location, etc.
-            plugin.getLogger().info("Preparing for player arrival: " + playerId);
+            SkyblockPlugin.getLogger().info("Preparing for player arrival: " + playerId);
         }
     }
 
@@ -430,7 +434,7 @@ public class ServerManager {
         }
 
         public boolean isHealthy() {
-            return isOnline && (System.currentTimeMillis() - lastHeartbeat) < 30000; // 30 seconds
+            return isOnline && (java.lang.System.currentTimeMillis() - lastHeartbeat) < 30000; // 30 seconds
         }
     }
 }

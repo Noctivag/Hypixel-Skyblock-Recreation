@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.data;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -19,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  * - Cache Statistics
  */
 public class CacheManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<String, CacheEntry> cache = new ConcurrentHashMap<>();
     private final Map<String, Long> accessTimes = new ConcurrentHashMap<>();
     private final Map<String, Integer> accessCounts = new ConcurrentHashMap<>();
@@ -35,8 +38,8 @@ public class CacheManager {
     private long totalMisses = 0;
     private long totalEvictions = 0;
     
-    public CacheManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public CacheManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         startCleanupTask();
     }
     
@@ -47,7 +50,7 @@ public class CacheManager {
                 cleanupExpiredEntries();
                 evictLeastRecentlyUsed();
             }
-        }.runTaskTimerAsynchronously(plugin, 0L, CLEANUP_INTERVAL / 50L); // Convert to ticks
+        }.runTaskTimerAsynchronously(SkyblockPlugin, 0L, CLEANUP_INTERVAL / 50L); // Convert to ticks
     }
     
     public void put(String key, Object value) {
@@ -55,9 +58,9 @@ public class CacheManager {
     }
     
     public void put(String key, Object value, long ttl) {
-        long expiryTime = System.currentTimeMillis() + ttl;
+        long expiryTime = java.lang.System.currentTimeMillis() + ttl;
         cache.put(key, new CacheEntry(value, expiryTime));
-        accessTimes.put(key, System.currentTimeMillis());
+        accessTimes.put(key, java.lang.System.currentTimeMillis());
         accessCounts.put(key, 0);
         
         // Check if we need to evict entries
@@ -83,7 +86,7 @@ public class CacheManager {
         }
         
         // Update access statistics
-        accessTimes.put(key, System.currentTimeMillis());
+        accessTimes.put(key, java.lang.System.currentTimeMillis());
         accessCounts.put(key, accessCounts.getOrDefault(key, 0) + 1);
         totalHits++;
         
@@ -115,7 +118,7 @@ public class CacheManager {
     }
     
     private void cleanupExpiredEntries() {
-        long currentTime = System.currentTimeMillis();
+        long currentTime = java.lang.System.currentTimeMillis();
         List<String> expiredKeys = new ArrayList<>();
         
         for (Map.Entry<String, CacheEntry> entry : cache.entrySet()) {
@@ -131,7 +134,7 @@ public class CacheManager {
         }
         
         if (!expiredKeys.isEmpty()) {
-            plugin.getLogger().info("Cleaned up " + expiredKeys.size() + " expired cache entries");
+            SkyblockPlugin.getLogger().info("Cleaned up " + expiredKeys.size() + " expired cache entries");
         }
     }
     
@@ -154,7 +157,7 @@ public class CacheManager {
             totalEvictions++;
         }
         
-        plugin.getLogger().info("Evicted " + entriesToEvict + " cache entries (LRU)");
+        SkyblockPlugin.getLogger().info("Evicted " + entriesToEvict + " cache entries (LRU)");
     }
     
     public CacheStatistics getStatistics() {
@@ -196,14 +199,14 @@ public class CacheManager {
             remove(key);
         }
         
-        plugin.getLogger().info("Invalidated " + keysToRemove.size() + " cache entries matching pattern: " + pattern);
+        SkyblockPlugin.getLogger().info("Invalidated " + keysToRemove.size() + " cache entries matching pattern: " + pattern);
     }
     
     public void warmupCache(Map<String, Object> data) {
         for (Map.Entry<String, Object> entry : data.entrySet()) {
             put(entry.getKey(), entry.getValue());
         }
-        plugin.getLogger().info("Warmed up cache with " + data.size() + " entries");
+        SkyblockPlugin.getLogger().info("Warmed up cache with " + data.size() + " entries");
     }
     
     // Cache Entry Class
@@ -221,7 +224,7 @@ public class CacheManager {
         }
         
         public boolean isExpired() {
-            return System.currentTimeMillis() > expiryTime;
+            return java.lang.System.currentTimeMillis() > expiryTime;
         }
         
         public long getExpiryTime() {

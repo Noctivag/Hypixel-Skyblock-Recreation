@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.mining;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.data.DatabaseManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,6 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.kyori.adventure.text.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Heart of the Mountain System - Hypixel Skyblock Style
@@ -21,12 +26,12 @@ import java.util.*;
  * - Mining challenges
  */
 public class HeartOfTheMountainSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final DatabaseManager databaseManager;
     private final Map<UUID, HeartStats> playerStats = new HashMap<>();
 
-    public HeartOfTheMountainSystem(SkyblockPlugin plugin, DatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public HeartOfTheMountainSystem(SkyblockPlugin SkyblockPlugin, DatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
     }
 
@@ -98,7 +103,7 @@ public class HeartOfTheMountainSystem {
 
     public boolean resetHeart(Player player) {
         playerStats.remove(player.getUniqueId());
-        player.sendMessage("§aHeart of the Mountain zurückgesetzt!");
+        player.sendMessage(Component.text("§aHeart of the Mountain zurückgesetzt!"));
         return true;
     }
 

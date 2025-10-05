@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.skyblock.auction;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -12,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AuctionHouse {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, List<Auction>> playerAuctions = new ConcurrentHashMap<>();
     private final Map<UUID, List<Auction>> playerBids = new ConcurrentHashMap<>();
     private final List<Auction> activeAuctions = Collections.synchronizedList(new ArrayList<>());
@@ -34,7 +38,7 @@ public class AuctionHouse {
             this.auctionId = auctionId;
             this.sellerId = sellerId;
             this.item = item;
-            this.startTime = System.currentTimeMillis();
+            this.startTime = java.lang.System.currentTimeMillis();
             this.endTime = startTime + duration;
             this.startingBid = startingBid;
             this.binPrice = binPrice;
@@ -54,7 +58,7 @@ public class AuctionHouse {
         public boolean isBin() { return isBin; }
         
         public boolean isExpired() {
-            return System.currentTimeMillis() > endTime;
+            return java.lang.System.currentTimeMillis() > endTime;
         }
         
         public Bid getHighestBid() {
@@ -78,7 +82,7 @@ public class AuctionHouse {
         public Bid(UUID bidderId, double amount) {
             this.bidderId = bidderId;
             this.amount = amount;
-            this.timestamp = System.currentTimeMillis();
+            this.timestamp = java.lang.System.currentTimeMillis();
         }
         
         public UUID getBidderId() { return bidderId; }
@@ -86,8 +90,8 @@ public class AuctionHouse {
         public long getTimestamp() { return timestamp; }
     }
     
-    public AuctionHouse(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public AuctionHouse(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         startAuctionCleanup();
     }
     
@@ -185,7 +189,7 @@ public class AuctionHouse {
             .orElse(null);
         
         if (previousHighest != null) {
-            Player previousBidder = plugin.getServer().getPlayer(previousHighest.getBidderId());
+            Player previousBidder = SkyblockPlugin.getServer().getPlayer(previousHighest.getBidderId());
             if (previousBidder != null) {
                 previousBidder.sendMessage("§eDein Gebot wurde überboten!");
                 previousBidder.sendMessage("§7Neues Höchstgebot: " + amount + " Coins");
@@ -240,13 +244,13 @@ public class AuctionHouse {
         activeAuctions.remove(auction);
         
         // Gib Item an Käufer
-        Player buyer = plugin.getServer().getPlayer(buyerId);
+        Player buyer = SkyblockPlugin.getServer().getPlayer(buyerId);
         if (buyer != null) {
             buyer.getInventory().addItem(auction.getItem());
         }
         
         // Gib Coins an Verkäufer
-        Player seller = plugin.getServer().getPlayer(auction.getSellerId());
+        Player seller = SkyblockPlugin.getServer().getPlayer(auction.getSellerId());
         if (seller != null) {
             seller.sendMessage("§aDeine Auktion wurde verkauft!");
             seller.sendMessage("§7Preis: " + price + " Coins");
@@ -257,7 +261,7 @@ public class AuctionHouse {
         if (!auction.isBin() && auction.getBids().size() > 1) {
             for (Bid bid : auction.getBids()) {
                 if (!bid.getBidderId().equals(buyerId)) {
-                    Player bidder = plugin.getServer().getPlayer(bid.getBidderId());
+                    Player bidder = SkyblockPlugin.getServer().getPlayer(bid.getBidderId());
                     if (bidder != null) {
                         bidder.sendMessage("§eDein Gebot wurde zurückerstattet!");
                         // Hier würde normalerweise das Economy-System verwendet werden
@@ -311,7 +315,7 @@ public class AuctionHouse {
      * Startet Auktion-Cleanup
      */
     private void startAuctionCleanup() {
-        plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
+        SkyblockPlugin.getServer().getScheduler().runTaskTimer(SkyblockPlugin, () -> {
             List<Auction> expiredAuctions = activeAuctions.stream()
                 .filter(Auction::isExpired)
                 .toList();
@@ -322,7 +326,7 @@ public class AuctionHouse {
                     completeAuction(auction, highestBid.getBidderId(), highestBid.getAmount());
                 } else {
                     // Kein Gebot - gib Item an Verkäufer zurück
-                    Player seller = plugin.getServer().getPlayer(auction.getSellerId());
+                    Player seller = SkyblockPlugin.getServer().getPlayer(auction.getSellerId());
                     if (seller != null) {
                         seller.getInventory().addItem(auction.getItem());
                         seller.sendMessage("§eDeine Auktion ist abgelaufen ohne Gebote!");

@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.slayers;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -16,6 +20,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import net.kyori.adventure.text.Component;
 
 /**
  * Slayers System - Complete Hypixel SkyBlock Slayers Implementation
@@ -31,21 +36,21 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SlayersSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerSlayerData> playerSlayerData = new ConcurrentHashMap<>();
     private final Map<UUID, SlayerQuest> activeQuests = new ConcurrentHashMap<>();
     private final Map<SlayerType, SlayerConfig> slayerConfigs = new HashMap<>();
     private final Map<SlayerTier, SlayerTierConfig> tierConfigs = new HashMap<>();
     
-    public SlayersSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public SlayersSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeSlayerConfigs();
         initializeTierConfigs();
         startSlayerUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeSlayerConfigs() {
@@ -116,7 +121,7 @@ public class SlayersSystem implements Listener {
     }
     
     private void startSlayerUpdateTask() {
-        Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+        Bukkit.getScheduler().runTaskTimer(SkyblockPlugin, () -> {
             for (SlayerQuest quest : activeQuests.values()) {
                 updateSlayerQuest(quest);
             }
@@ -136,7 +141,7 @@ public class SlayersSystem implements Listener {
     
     public void startSlayerQuest(Player player, SlayerType slayerType, SlayerTier tier) {
         if (activeQuests.containsKey(player.getUniqueId())) {
-            player.sendMessage("§cYou already have an active slayer quest!");
+            player.sendMessage(Component.text("§cYou already have an active slayer quest!"));
             return;
         }
         
@@ -155,12 +160,12 @@ public class SlayersSystem implements Listener {
             tier,
             slayerConfig,
             tierConfig,
-            System.currentTimeMillis()
+            java.lang.System.currentTimeMillis()
         );
         
         activeQuests.put(player.getUniqueId(), quest);
         
-        player.sendMessage("§aSlayer Quest Started!");
+        player.sendMessage(Component.text("§aSlayer Quest Started!"));
         player.sendMessage("§7Type: " + slayerConfig.getDisplayName());
         player.sendMessage("§7Tier: " + tier.getDisplayName());
         player.sendMessage("§7Time Limit: " + tierConfig.getTimeLimit() + " seconds");
@@ -213,7 +218,7 @@ public class SlayersSystem implements Listener {
         // Clean up
         activeQuests.remove(quest.getPlayerId());
         
-        player.sendMessage("§aSlayer Quest Completed!");
+        player.sendMessage(Component.text("§aSlayer Quest Completed!"));
         player.sendMessage("§7XP Gained: §e+" + rewards.getXp());
         player.sendMessage("§7Coins Gained: §e+" + rewards.getCoins());
     }
@@ -232,8 +237,8 @@ public class SlayersSystem implements Listener {
         // Clean up
         activeQuests.remove(quest.getPlayerId());
         
-        player.sendMessage("§cSlayer Quest Failed!");
-        player.sendMessage("§7Time limit exceeded.");
+        player.sendMessage(Component.text("§cSlayer Quest Failed!"));
+        player.sendMessage(Component.text("§7Time limit exceeded."));
     }
     
     private SlayerRewards calculateSlayerRewards(SlayerQuest quest) {

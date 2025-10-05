@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.events;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.core.api.Service;
@@ -95,7 +96,7 @@ public class AdvancedEventsSystem implements Service {
                 eventType.name(),
                 config.getDisplayName(),
                 config.getDescription(),
-                new de.noctivag.plugin.features.events.types.Duration(config.getDuration().toMillis())
+                new de.noctivag.skyblock.features.events.types.Duration(config.getDuration().toMillis())
             );
             activeEvents.put(eventType, instance);
             

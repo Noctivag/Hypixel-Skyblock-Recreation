@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.commands;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.worlds.ThreadSafeWorldManager;
 import de.noctivag.skyblock.worlds.generators.CustomWorldGenerator;
 import de.noctivag.skyblock.network.ExtendedServerTypes;
@@ -32,11 +35,11 @@ import java.util.*;
  */
 public class AdvancedWorldCommands implements CommandExecutor, TabCompleter {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final ThreadSafeWorldManager worldManager;
     
-    public AdvancedWorldCommands(SkyblockPlugin plugin, ThreadSafeWorldManager worldManager) {
-        this.plugin = plugin;
+    public AdvancedWorldCommands(SkyblockPlugin SkyblockPlugin, ThreadSafeWorldManager worldManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.worldManager = worldManager;
     }
     
@@ -188,7 +191,7 @@ public class AdvancedWorldCommands implements CommandExecutor, TabCompleter {
         // Zeige alle verfügbaren Welten
         sender.sendMessage(Component.text(""));
         sender.sendMessage(Component.text("§e§lAlle verfügbaren Welten:"));
-        for (org.bukkit.World world : plugin.getServer().getWorlds()) {
+        for (org.bukkit.World world : SkyblockPlugin.getServer().getWorlds()) {
             String status = managedWorlds.containsKey(world.getName()) ? "§aVerwaltet" : "§7Nicht verwaltet";
             sender.sendMessage(Component.text("§7- " + world.getName() + " " + status));
         }

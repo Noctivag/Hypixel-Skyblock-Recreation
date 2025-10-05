@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.auction;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -16,24 +21,25 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Dark Auction System - Hypixel Skyblock Style
  */
 public class DarkAuctionSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerDarkAuctionData> playerDarkAuctionData = new ConcurrentHashMap<>();
     private final Map<DarkAuctionItem, DarkAuctionConfig> auctionConfigs = new HashMap<>();
     private final Map<UUID, BukkitTask> auctionTasks = new ConcurrentHashMap<>();
     
-    public DarkAuctionSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public DarkAuctionSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeAuctionConfigs();
         startDarkAuctionUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeAuctionConfigs() {
@@ -71,7 +77,7 @@ public class DarkAuctionSystem implements Listener {
                     auctionData.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L * 60L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L * 60L);
     }
     
     @EventHandler
@@ -92,22 +98,22 @@ public class DarkAuctionSystem implements Listener {
     }
     
     public void openDarkAuctionGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§5§lDark Auction");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§5§lDark Auction"));
         
         addGUIItem(gui, 10, Material.NETHER_STAR, "§5§lDark Artifact", "§7A powerful dark artifact.");
         addGUIItem(gui, 11, Material.DIAMOND_SWORD, "§5§lShadow Fury", "§7A legendary shadow sword.");
         addGUIItem(gui, 12, Material.NETHERITE_CHESTPLATE, "§5§lDark Armor", "§7A powerful dark armor set.");
         
         player.openInventory(gui);
-        player.sendMessage("§aDark Auction GUI geöffnet!");
+        player.sendMessage(Component.text("§aDark Auction GUI geöffnet!"));
     }
     
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String description) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(name);
-            meta.setLore(Arrays.asList(description));
+            meta.displayName(Component.text(name));
+            meta.lore(Arrays.asList(Component.text(description)));
             item.setItemMeta(meta);
         }
         gui.setItem(slot, item);
@@ -205,11 +211,11 @@ public class DarkAuctionSystem implements Listener {
         
         public PlayerDarkAuctionData(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void addPurchasedItem(DarkAuctionItem item, int amount) {

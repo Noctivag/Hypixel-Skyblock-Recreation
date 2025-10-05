@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.items;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.CorePlatform;
 import de.noctivag.skyblock.core.PlayerProfile;
 import org.bukkit.Material;
@@ -25,14 +29,14 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Stat Integration with Accessories
  */
 public class StatModificationSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CorePlatform corePlatform;
     private final Map<UUID, PlayerStats> playerStats = new ConcurrentHashMap<>();
     private final Map<String, StatType> statTypes = new HashMap<>();
     private final Map<String, StatModifier> statModifiers = new HashMap<>();
     
-    public StatModificationSystem(SkyblockPlugin plugin, CorePlatform corePlatform) {
-        this.plugin = plugin;
+    public StatModificationSystem(SkyblockPlugin SkyblockPlugin, CorePlatform corePlatform) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.corePlatform = corePlatform;
         initializeStatTypes();
         initializeStatModifiers();

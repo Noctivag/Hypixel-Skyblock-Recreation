@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.commands;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.gui.MissingItemsGUI;
 import de.noctivag.skyblock.items.MissingItemsSystem;
 import de.noctivag.skyblock.items.MissingItemsSystem.ItemCategory;
@@ -22,9 +25,9 @@ public class MissingItemsCommand implements CommandExecutor, TabCompleter {
     private final MissingItemsSystem missingItemsSystem;
     private final MissingItemsGUI missingItemsGUI;
     
-    public MissingItemsCommand(SkyblockPlugin plugin) {
-        this.missingItemsSystem = new MissingItemsSystem(plugin);
-        this.missingItemsGUI = new MissingItemsGUI(plugin);
+    public MissingItemsCommand(SkyblockPlugin SkyblockPlugin) {
+        this.missingItemsSystem = new MissingItemsSystem(SkyblockPlugin);
+        this.missingItemsGUI = new MissingItemsGUI(SkyblockPlugin);
     }
     
     @Override

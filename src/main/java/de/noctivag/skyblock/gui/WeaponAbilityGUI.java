@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.weapons.WeaponAbilitySystem;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -14,13 +17,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class WeaponAbilityGUI extends CustomGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Player player;
     private final WeaponAbilitySystem weaponAbilitySystem;
 
-    public WeaponAbilityGUI(SkyblockPlugin plugin, Player player) {
+    public WeaponAbilityGUI(SkyblockPlugin SkyblockPlugin, Player player) {
         super(54, Component.text("§c§l⚔️ Weapon Ability System ⚔️").color(NamedTextColor.RED).decorate(TextDecoration.BOLD));
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.player = player;
         this.weaponAbilitySystem = null; // WeaponAbilitySystem not implemented yet
         setupItems();
@@ -372,7 +375,7 @@ public class WeaponAbilityGUI extends CustomGUI {
         if (meta != null) {
             meta.displayName(Component.text(name));
             if (lore.length > 0) {
-                meta.lore(Arrays.stream(lore).map(Component::text).toList());
+                meta.lore(java.util.Arrays.stream(lore).map(Component::text).collect(java.util.stream.Collectors.toList()));
             }
             item.setItemMeta(meta);
         }

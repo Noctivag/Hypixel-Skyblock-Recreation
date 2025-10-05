@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.runes;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -17,11 +20,11 @@ import java.util.*;
  * Runes Command System - Hypixel Skyblock Style
  */
 public class RunesCommand implements CommandExecutor, TabCompleter {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final RunesSystem runesSystem;
 
-    public RunesCommand(SkyblockPlugin plugin, RunesSystem runesSystem) {
-        this.plugin = plugin;
+    public RunesCommand(SkyblockPlugin SkyblockPlugin, RunesSystem runesSystem) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.runesSystem = runesSystem;
     }
 
@@ -68,13 +71,13 @@ public class RunesCommand implements CommandExecutor, TabCompleter {
 
     private void handleApplyRune(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage("§cVerwendung: /runes apply <rune-type>");
+            player.sendMessage(Component.text("§cVerwendung: /runes apply <rune-type>"));
             return;
         }
 
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item == null || item.getType() == Material.AIR) {
-            player.sendMessage("§cDu musst ein Item in der Hand halten!");
+            player.sendMessage(Component.text("§cDu musst ein Item in der Hand halten!"));
             return;
         }
 
@@ -84,7 +87,7 @@ public class RunesCommand implements CommandExecutor, TabCompleter {
             if (runesSystem.applyRune(player, item, type)) {
                 player.sendMessage("§aRune " + type.getDisplayName() + " erfolgreich angewendet!");
             } else {
-                player.sendMessage("§cRune konnte nicht angewendet werden!");
+                player.sendMessage(Component.text("§cRune konnte nicht angewendet werden!"));
             }
         } catch (IllegalArgumentException e) {
             player.sendMessage("§cUngültiger Rune-Typ: " + runeType);
@@ -94,20 +97,20 @@ public class RunesCommand implements CommandExecutor, TabCompleter {
     private void handleRemoveRune(Player player, String[] args) {
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item == null || item.getType() == Material.AIR) {
-            player.sendMessage("§cDu musst ein Item in der Hand halten!");
+            player.sendMessage(Component.text("§cDu musst ein Item in der Hand halten!"));
             return;
         }
 
         if (runesSystem.removeRune(player, item)) {
-            player.sendMessage("§aRune erfolgreich entfernt!");
+            player.sendMessage(Component.text("§aRune erfolgreich entfernt!"));
         } else {
-            player.sendMessage("§cKeine Rune auf diesem Item gefunden!");
+            player.sendMessage(Component.text("§cKeine Rune auf diesem Item gefunden!"));
         }
     }
 
     private void handleCombineRunes(Player player, String[] args) {
         if (args.length < 3) {
-            player.sendMessage("§cVerwendung: /runes combine <rune1> <rune2>");
+            player.sendMessage(Component.text("§cVerwendung: /runes combine <rune1> <rune2>"));
             return;
         }
 
@@ -119,19 +122,19 @@ public class RunesCommand implements CommandExecutor, TabCompleter {
             RunesSystem.RuneType type2 = RunesSystem.RuneType.valueOf(rune2Type);
 
             if (runesSystem.combineRunes(player, type1, type2)) {
-                player.sendMessage("§aRunes erfolgreich kombiniert!");
+                player.sendMessage(Component.text("§aRunes erfolgreich kombiniert!"));
             } else {
-                player.sendMessage("§cRunes konnten nicht kombiniert werden!");
+                player.sendMessage(Component.text("§cRunes konnten nicht kombiniert werden!"));
             }
         } catch (IllegalArgumentException e) {
-            player.sendMessage("§cUngültige Rune-Typen!");
+            player.sendMessage(Component.text("§cUngültige Rune-Typen!"));
         }
     }
 
     private void handleRuneStats(Player player, String[] args) {
         Map<RunesSystem.RuneType, Integer> runeStats = runesSystem.getPlayerRuneStats(player);
         
-        player.sendMessage("§6§l=== RUNE STATISTIKEN ===");
+        player.sendMessage(Component.text("§6§l=== RUNE STATISTIKEN ==="));
         for (Map.Entry<RunesSystem.RuneType, Integer> entry : runeStats.entrySet()) {
             player.sendMessage("§7" + entry.getKey().getDisplayName() + ": §a" + entry.getValue());
         }
@@ -142,20 +145,20 @@ public class RunesCommand implements CommandExecutor, TabCompleter {
     }
 
     private void handleListRunes(Player player, String[] args) {
-        player.sendMessage("§6§l=== VERFÜGBARE RUNES ===");
+        player.sendMessage(Component.text("§6§l=== VERFÜGBARE RUNES ==="));
         for (RunesSystem.RuneType type : RunesSystem.RuneType.values()) {
             player.sendMessage("§7- " + type.getDisplayName() + " §8- " + type.getDescription());
         }
     }
 
     private void showHelp(Player player) {
-        player.sendMessage("§6§l=== RUNES BEFEHLE ===");
-        player.sendMessage("§e/runes apply <type> §7- Wendet eine Rune auf das Item in der Hand an");
-        player.sendMessage("§e/runes remove §7- Entfernt eine Rune vom Item in der Hand");
-        player.sendMessage("§e/runes combine <rune1> <rune2> §7- Kombiniert zwei Runes");
-        player.sendMessage("§e/runes stats §7- Zeigt deine Rune-Statistiken");
-        player.sendMessage("§e/runes gui §7- Öffnet das Rune-GUI");
-        player.sendMessage("§e/runes list §7- Listet alle verfügbaren Runes auf");
+        player.sendMessage(Component.text("§6§l=== RUNES BEFEHLE ==="));
+        player.sendMessage(Component.text("§e/runes apply <type> §7- Wendet eine Rune auf das Item in der Hand an"));
+        player.sendMessage(Component.text("§e/runes remove §7- Entfernt eine Rune vom Item in der Hand"));
+        player.sendMessage(Component.text("§e/runes combine <rune1> <rune2> §7- Kombiniert zwei Runes"));
+        player.sendMessage(Component.text("§e/runes stats §7- Zeigt deine Rune-Statistiken"));
+        player.sendMessage(Component.text("§e/runes gui §7- Öffnet das Rune-GUI"));
+        player.sendMessage(Component.text("§e/runes list §7- Listet alle verfügbaren Runes auf"));
     }
 
     @Override

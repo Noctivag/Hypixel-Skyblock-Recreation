@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.taming;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -16,6 +20,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Advanced Taming System - Hypixel Skyblock Style
@@ -23,20 +28,20 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AdvancedTamingSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerTamingData> playerTamingData = new ConcurrentHashMap<>();
     private final Map<PetType, PetConfig> petConfigs = new HashMap<>();
     private final Map<TamingLocation, TamingConfig> tamingConfigs = new HashMap<>();
     
-    public AdvancedTamingSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedTamingSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
         initializePetConfigs();
         initializeTamingConfigs();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializePetConfigs() {
@@ -353,7 +358,7 @@ public class AdvancedTamingSystem implements Listener {
         addGUIItem(gui, 53, Material.SQUID_SPAWN_EGG, "§b§lSquid Pet", "§7A fishing pet that increases fishing speed");
         
         player.openInventory(gui);
-        player.sendMessage("§aTaming GUI opened!");
+        player.sendMessage(Component.text("§aTaming GUI opened!"));
     }
     
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String description) {

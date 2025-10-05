@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.engine.rte.orderbook;
+import java.util.UUID;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -307,7 +308,7 @@ public class RedisOrderBook {
     public CompletableFuture<Double> getBestBuyPrice() {
         return CompletableFuture.supplyAsync(() -> {
             try (Jedis jedis = jedisPool.getResource()) {
-                Set<String> bestBuyOrders = jedis.zrevrange(buyOrdersKey, 0, 0);
+                java.util.List<String> bestBuyOrders = jedis.zrevrange(buyOrdersKey, 0, 0);
                 if (!bestBuyOrders.isEmpty()) {
                     String orderId = bestBuyOrders.iterator().next();
                     OrderData order = getOrderData(jedis, orderId);
@@ -327,7 +328,7 @@ public class RedisOrderBook {
     public CompletableFuture<Double> getBestSellPrice() {
         return CompletableFuture.supplyAsync(() -> {
             try (Jedis jedis = jedisPool.getResource()) {
-                Set<String> bestSellOrders = jedis.zrange(sellOrdersKey, 0, 0);
+                java.util.List<String> bestSellOrders = jedis.zrange(sellOrdersKey, 0, 0);
                 if (!bestSellOrders.isEmpty()) {
                     String orderId = bestSellOrders.iterator().next();
                     OrderData order = getOrderData(jedis, orderId);
@@ -400,7 +401,7 @@ public class RedisOrderBook {
      * Refresh local cache
      */
     private void refreshCache() {
-        long now = System.currentTimeMillis();
+        long now = java.lang.System.currentTimeMillis();
         if (now - lastCacheUpdate < CACHE_UPDATE_INTERVAL) {
             return; // Cache is still fresh
         }
@@ -551,7 +552,7 @@ public class RedisOrderBook {
             this.amount = amount;
             this.price = price;
             this.type = type;
-            this.timestamp = System.currentTimeMillis();
+            this.timestamp = java.lang.System.currentTimeMillis();
         }
         
         // Getters and setters
@@ -598,7 +599,7 @@ public class RedisOrderBook {
             this.sellOrder = sellOrder;
             this.amount = amount;
             this.price = price;
-            this.timestamp = System.currentTimeMillis();
+            this.timestamp = java.lang.System.currentTimeMillis();
         }
         
         // Getters

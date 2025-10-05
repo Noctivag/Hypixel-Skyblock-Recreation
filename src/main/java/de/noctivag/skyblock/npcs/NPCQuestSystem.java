@@ -1,24 +1,29 @@
 package de.noctivag.skyblock.npcs;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.skills.SkillsSystem;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.entity.Player;
 
 import java.util.*;
+import net.kyori.adventure.text.Component;
 
 /**
  * NPC Quest System - Hypixel Style Quests
  */
 public class NPCQuestSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, List<Quest>> playerQuests = new HashMap<>();
     private final Map<String, Quest> availableQuests = new HashMap<>();
 
-    public NPCQuestSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public NPCQuestSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         initializeQuests();
     }
 
@@ -89,14 +94,14 @@ public class NPCQuestSystem {
 
         // Check if player already has this quest
         if (playerQuestList.stream().anyMatch(q -> q.getId().equals(questId))) {
-            player.sendMessage("§cYou already have this quest!");
+            player.sendMessage(Component.text("§cYou already have this quest!"));
             return;
         }
 
         // Give quest to player
         Quest playerQuest = new Quest(quest);
         playerQuest.setStatus(QuestStatus.ACTIVE);
-        playerQuest.setStartTime(System.currentTimeMillis());
+        playerQuest.setStartTime(java.lang.System.currentTimeMillis());
         playerQuestList.add(playerQuest);
 
         player.sendMessage("§aQuest accepted: §e" + quest.getTitle());
@@ -127,10 +132,10 @@ public class NPCQuestSystem {
 
     private void completeQuest(Player player, Quest quest) {
         quest.setStatus(QuestStatus.COMPLETED);
-        quest.setCompletionTime(System.currentTimeMillis());
+        quest.setCompletionTime(java.lang.System.currentTimeMillis());
 
         player.sendMessage("§a§lQuest Completed: §e" + quest.getTitle());
-        player.sendMessage("§7Rewards:");
+        player.sendMessage(Component.text("§7Rewards:"));
         for (String reward : quest.getRewards()) {
             player.sendMessage("§7  " + reward);
         }
@@ -145,8 +150,8 @@ public class NPCQuestSystem {
                 // Give money
                 String amount = reward.replaceAll("[^0-9]", "");
                 // Give money through economy system
-                if (plugin.getEconomyManager() != null) {
-                    plugin.getEconomyManager().giveMoney(player, Double.parseDouble(amount));
+                if (SkyblockPlugin.getEconomyManager() != null) {
+                    SkyblockPlugin.getEconomyManager().giveMoney(player, Double.parseDouble(amount));
                     player.sendMessage("§aDu hast " + amount + " Coins erhalten!");
                 }
                 player.sendMessage("§aReceived: §e$" + amount);
@@ -154,7 +159,7 @@ public class NPCQuestSystem {
                 // Give XP
                 String amount = reward.replaceAll("[^0-9]", "");
                 // Give XP through skill system
-                SkillsSystem skillsSystem = plugin.getSkillsSystem();
+                SkillsSystem skillsSystem = SkyblockPlugin.getSkillsSystem();
                 if (skillsSystem != null) {
                     // Placeholder for skills system integration
                     skillsSystem.addXP(player, "Combat", Integer.parseInt(amount));
@@ -173,7 +178,7 @@ public class NPCQuestSystem {
                     dragonEgg.setItemMeta(meta);
                 }
                 player.getInventory().addItem(dragonEgg);
-                player.sendMessage("§aReceived: §eDragon Egg");
+                player.sendMessage(Component.text("§aReceived: §eDragon Egg"));
             }
         }
     }

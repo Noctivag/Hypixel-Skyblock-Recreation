@@ -20,7 +20,7 @@ public class BrewingStation {
         this.player = player;
         this.brewingSystem = brewingSystem;
         this.isActive = true;
-        this.lastUpdate = System.currentTimeMillis();
+        this.lastUpdate = java.lang.System.currentTimeMillis();
         startBrewingTask();
     }
     
@@ -47,7 +47,7 @@ public class BrewingStation {
     public void update() {
         if (!isActive) return;
         
-        lastUpdate = System.currentTimeMillis();
+        lastUpdate = java.lang.System.currentTimeMillis();
         
         // Check if player is still online
         if (!player.isOnline()) {

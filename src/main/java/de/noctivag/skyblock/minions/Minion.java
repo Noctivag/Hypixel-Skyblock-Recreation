@@ -1,4 +1,6 @@
 package de.noctivag.skyblock.minions;
+import org.bukkit.plugin.java.JavaPlugin;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import org.bukkit.Location;
@@ -8,6 +10,7 @@ import net.kyori.adventure.text.Component;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.stream.Collectors;
 
 /**
  * Minion - Einzelner Minion mit Produktionslogik
@@ -36,7 +39,7 @@ public class Minion {
         this.type = type;
         this.level = level;
         this.isActive = false;
-        this.lastProductionTime = System.currentTimeMillis();
+        this.lastProductionTime = java.lang.System.currentTimeMillis();
         this.totalProduced = 0;
 
         initializeUpgrades();
@@ -54,7 +57,7 @@ public class Minion {
     public void produceResource() {
         if (!isActive || location == null) return;
 
-        long currentTime = System.currentTimeMillis();
+        long currentTime = java.lang.System.currentTimeMillis();
         long productionInterval = getProductionInterval();
 
         if (currentTime - lastProductionTime >= productionInterval) {
@@ -123,12 +126,12 @@ public class Minion {
     private void storeSoldResources(Map<String, Integer> resources, double totalValue) {
         // This will be integrated with the economy system
         // For now, just log the transaction
-        // Replace System.out with the plugin logger to avoid direct stdout usage
+        // Replace System.out with the SkyblockPlugin logger to avoid direct stdout usage
         try {
-            org.bukkit.plugin.java.JavaPlugin.getPlugin(de.noctivag.plugin.SkyblockPlugin.class)
+            org.bukkit.plugin.java.JavaPlugin.getPlugin(de.noctivag.skyblock.SkyblockPlugin.class)
                     .getLogger().info("Minion " + type.getName() + " sold resources: " + resources + " for " + totalValue + " coins");
         } catch (Exception ex) {
-            // Fallback: if plugin instance isn't available for some reason, log to standard java logger
+            // Fallback: if SkyblockPlugin instance isn't available for some reason, log to standard java logger
             java.util.logging.Logger.getLogger(Minion.class.getName()).info("Minion " + type.getName() + " sold resources: " + resources + " for " + totalValue + " coins");
         }
     }

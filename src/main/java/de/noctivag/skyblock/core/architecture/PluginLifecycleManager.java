@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.core.architecture;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -9,7 +12,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Plugin Lifecycle Manager - Manages plugin initialization and shutdown
+ * SkyblockPlugin Lifecycle Manager - Manages SkyblockPlugin initialization and shutdown
  * 
  * Features:
  * - Async initialization
@@ -19,15 +22,15 @@ import java.util.concurrent.TimeUnit;
  */
 public class PluginLifecycleManager {
     
-    private final JavaSkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final EventBus eventBus;
     private final ExecutorService executorService;
     
     private boolean initialized = false;
     private boolean shutdown = false;
     
-    public PluginLifecycleManager(JavaSkyblockPlugin plugin, EventBus eventBus) {
-        this.plugin = plugin;
+    public PluginLifecycleManager(SkyblockPlugin SkyblockPlugin, EventBus eventBus) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.eventBus = eventBus;
         this.executorService = Executors.newCachedThreadPool(r -> {
             Thread thread = new Thread(r, "PluginLifecycle-" + java.lang.System.currentTimeMillis());
@@ -37,14 +40,14 @@ public class PluginLifecycleManager {
     }
     
     /**
-     * Initialize the plugin lifecycle
+     * Initialize the SkyblockPlugin lifecycle
      */
     public CompletableFuture<Void> initialize() {
         if (initialized || shutdown) {
             return CompletableFuture.completedFuture(null);
         }
         
-        plugin.getLogger().info("Starting plugin lifecycle initialization...");
+        SkyblockPlugin.getLogger().info("Starting SkyblockPlugin lifecycle initialization...");
         
         return CompletableFuture.runAsync(() -> {
             try {
@@ -58,25 +61,25 @@ public class PluginLifecycleManager {
                 initializeServices();
                 
                 initialized = true;
-                plugin.getLogger().info("Plugin lifecycle initialization completed successfully!");
+                SkyblockPlugin.getLogger().info("SkyblockPlugin lifecycle initialization completed successfully!");
                 
             } catch (Exception e) {
-                plugin.getLogger().severe("Failed to initialize plugin lifecycle: " + e.getMessage());
+                SkyblockPlugin.getLogger().severe("Failed to initialize SkyblockPlugin lifecycle: " + e.getMessage());
                 e.printStackTrace();
-                throw new RuntimeException("Plugin initialization failed", e);
+                throw new RuntimeException("SkyblockPlugin initialization failed", e);
             }
         }, executorService);
     }
     
     /**
-     * Shutdown the plugin lifecycle
+     * Shutdown the SkyblockPlugin lifecycle
      */
     public CompletableFuture<Void> shutdown() {
         if (shutdown) {
             return CompletableFuture.completedFuture(null);
         }
         
-        plugin.getLogger().info("Starting plugin lifecycle shutdown...");
+        SkyblockPlugin.getLogger().info("Starting SkyblockPlugin lifecycle shutdown...");
         shutdown = true;
         
         return CompletableFuture.runAsync(() -> {
@@ -101,10 +104,10 @@ public class PluginLifecycleManager {
                     Thread.currentThread().interrupt();
                 }
                 
-                plugin.getLogger().info("Plugin lifecycle shutdown completed successfully!");
+                SkyblockPlugin.getLogger().info("SkyblockPlugin lifecycle shutdown completed successfully!");
                 
             } catch (Exception e) {
-                plugin.getLogger().severe("Error during plugin lifecycle shutdown: " + e.getMessage());
+                SkyblockPlugin.getLogger().severe("Error during SkyblockPlugin lifecycle shutdown: " + e.getMessage());
                 e.printStackTrace();
             }
         });
@@ -114,7 +117,7 @@ public class PluginLifecycleManager {
      * Initialize core systems
      */
     private void initializeCore() {
-        plugin.getLogger().info("Initializing core systems...");
+        SkyblockPlugin.getLogger().info("Initializing core systems...");
         // Core initialization logic here
     }
     
@@ -122,7 +125,7 @@ public class PluginLifecycleManager {
      * Initialize event system
      */
     private void initializeEvents() {
-        plugin.getLogger().info("Initializing event system...");
+        SkyblockPlugin.getLogger().info("Initializing event system...");
         // Event system initialization logic here
     }
     
@@ -130,7 +133,7 @@ public class PluginLifecycleManager {
      * Initialize services
      */
     private void initializeServices() {
-        plugin.getLogger().info("Initializing services...");
+        SkyblockPlugin.getLogger().info("Initializing services...");
         // Service initialization logic here
     }
     
@@ -138,7 +141,7 @@ public class PluginLifecycleManager {
      * Shutdown services
      */
     private void shutdownServices() {
-        plugin.getLogger().info("Shutting down services...");
+        SkyblockPlugin.getLogger().info("Shutting down services...");
         // Service shutdown logic here
     }
     
@@ -146,7 +149,7 @@ public class PluginLifecycleManager {
      * Shutdown events
      */
     private void shutdownEvents() {
-        plugin.getLogger().info("Shutting down event system...");
+        SkyblockPlugin.getLogger().info("Shutting down event system...");
         // Event system shutdown logic here
     }
     
@@ -154,7 +157,7 @@ public class PluginLifecycleManager {
      * Shutdown core
      */
     private void shutdownCore() {
-        plugin.getLogger().info("Shutting down core systems...");
+        SkyblockPlugin.getLogger().info("Shutting down core systems...");
         // Core shutdown logic here
     }
     

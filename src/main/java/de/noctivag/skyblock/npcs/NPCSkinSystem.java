@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.npcs;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 // import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
@@ -15,11 +20,11 @@ import java.util.Map;
  * NPC Skin System - Custom skins for NPCs
  */
 public class NPCSkinSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<String, String> npcSkins = new HashMap<>();
     
-    public NPCSkinSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public NPCSkinSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         initializeDefaultSkins();
     }
     
@@ -41,7 +46,7 @@ public class NPCSkinSystem {
         String skinName = npcSkins.get(npcType);
         if (skinName != null) {
             // Apply custom skin logic here
-            // This would require a custom entity or skin plugin
+            // This would require a custom entity or skin SkyblockPlugin
         }
     }
     
@@ -50,7 +55,7 @@ public class NPCSkinSystem {
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
         
         if (meta != null) {
-            meta.setDisplayName(displayName);
+            meta.displayName(Component.text(displayName));
             // Set skin texture
             // meta.setOwner(skinName);
             skull.setItemMeta(meta);

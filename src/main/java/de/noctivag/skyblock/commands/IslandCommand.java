@@ -1,4 +1,9 @@
 package de.noctivag.skyblock.commands;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.World;
@@ -15,10 +20,10 @@ import java.util.UUID;
  */
 public class IslandCommand implements CommandExecutor {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     
-    public IslandCommand(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public IslandCommand(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
     
     @Override
@@ -62,58 +67,58 @@ public class IslandCommand implements CommandExecutor {
     private void teleportToIsland(Player player, UUID playerUUID) {
         try {
             // Lade die private Insel on-demand
-            World island = plugin.getWorldManager().loadPrivateIsland(playerUUID);
+            World island = SkyblockPlugin.getWorldManager().loadPrivateIsland(playerUUID);
             
             if (island == null) {
-                player.sendMessage("§cFehler beim Laden deiner Insel. Bitte versuche es erneut.");
+                player.sendMessage(Component.text("§cFehler beim Laden deiner Insel. Bitte versuche es erneut."));
                 return;
             }
             
             // Teleportiere zur Insel
             player.teleport(island.getSpawnLocation());
-            player.sendMessage("§aWillkommen auf deiner privaten Insel!");
+            player.sendMessage(Component.text("§aWillkommen auf deiner privaten Insel!"));
             
         } catch (Exception e) {
             player.sendMessage("§cFehler beim Teleportieren zur Insel: " + e.getMessage());
-            plugin.getLogger().severe("Fehler beim Laden der Insel für " + player.getName() + ": " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Fehler beim Laden der Insel für " + player.getName() + ": " + e.getMessage());
         }
     }
     
     private void unloadIsland(Player player, UUID playerUUID) {
         try {
-            plugin.getWorldManager().unloadPrivateIsland(playerUUID);
-            player.sendMessage("§eDeine Insel wurde entladen und gespeichert.");
+            SkyblockPlugin.getWorldManager().unloadPrivateIsland(playerUUID);
+            player.sendMessage(Component.text("§eDeine Insel wurde entladen und gespeichert."));
         } catch (Exception e) {
             player.sendMessage("§cFehler beim Entladen der Insel: " + e.getMessage());
-            plugin.getLogger().severe("Fehler beim Entladen der Insel für " + player.getName() + ": " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Fehler beim Entladen der Insel für " + player.getName() + ": " + e.getMessage());
         }
     }
     
     private void reloadIsland(Player player, UUID playerUUID) {
         try {
             // Entlade die Insel zuerst
-            plugin.getWorldManager().unloadPrivateIsland(playerUUID);
+            SkyblockPlugin.getWorldManager().unloadPrivateIsland(playerUUID);
             
             // Lade sie neu
-            World island = plugin.getWorldManager().loadPrivateIsland(playerUUID);
+            World island = SkyblockPlugin.getWorldManager().loadPrivateIsland(playerUUID);
             
             if (island != null) {
                 player.teleport(island.getSpawnLocation());
-                player.sendMessage("§aDeine Insel wurde neu geladen!");
+                player.sendMessage(Component.text("§aDeine Insel wurde neu geladen!"));
             } else {
-                player.sendMessage("§cFehler beim Neuladen der Insel.");
+                player.sendMessage(Component.text("§cFehler beim Neuladen der Insel."));
             }
         } catch (Exception e) {
             player.sendMessage("§cFehler beim Neuladen der Insel: " + e.getMessage());
-            plugin.getLogger().severe("Fehler beim Neuladen der Insel für " + player.getName() + ": " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Fehler beim Neuladen der Insel für " + player.getName() + ": " + e.getMessage());
         }
     }
     
     private void showHelp(Player player) {
-        player.sendMessage("§6=== Insel Commands ===");
-        player.sendMessage("§e/island §f- Teleportiere zu deiner Insel");
-        player.sendMessage("§e/island home §f- Teleportiere zu deiner Insel");
-        player.sendMessage("§e/island unload §f- Entlade deine Insel");
-        player.sendMessage("§e/island reload §f- Lade deine Insel neu");
+        player.sendMessage(Component.text("§6=== Insel Commands ==="));
+        player.sendMessage(Component.text("§e/island §f- Teleportiere zu deiner Insel"));
+        player.sendMessage(Component.text("§e/island home §f- Teleportiere zu deiner Insel"));
+        player.sendMessage(Component.text("§e/island unload §f- Entlade deine Insel"));
+        player.sendMessage(Component.text("§e/island reload §f- Lade deine Insel neu"));
     }
 }

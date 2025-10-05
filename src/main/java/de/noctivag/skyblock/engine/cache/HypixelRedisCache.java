@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.engine.cache;
+import java.util.UUID;
 
 import de.noctivag.skyblock.core.api.Service;
 import de.noctivag.skyblock.core.api.SystemStatus;
@@ -82,7 +83,7 @@ public class HypixelRedisCache implements Service {
                 Map<String, String> data = new HashMap<>();
                 data.put("level", String.valueOf(level));
                 data.put("experience", String.valueOf(experience));
-                data.put("timestamp", String.valueOf(System.currentTimeMillis()));
+                data.put("timestamp", String.valueOf(java.lang.System.currentTimeMillis()));
                 
                 jedis.hset(key, data);
                 jedis.expire(key, CACHE_TTL);
@@ -118,7 +119,7 @@ public class HypixelRedisCache implements Service {
                 
                 Map<String, String> data = new HashMap<>();
                 data.put("progress", String.valueOf(progress));
-                data.put("timestamp", String.valueOf(System.currentTimeMillis()));
+                data.put("timestamp", String.valueOf(java.lang.System.currentTimeMillis()));
                 
                 jedis.hset(key, data);
                 jedis.expire(key, CACHE_TTL);
@@ -156,7 +157,7 @@ public class HypixelRedisCache implements Service {
                 for (Map.Entry<String, Object> entry : progressData.entrySet()) {
                     data.put(entry.getKey(), String.valueOf(entry.getValue()));
                 }
-                data.put("timestamp", String.valueOf(System.currentTimeMillis()));
+                data.put("timestamp", String.valueOf(java.lang.System.currentTimeMillis()));
                 
                 jedis.hset(key, data);
                 jedis.expire(key, CACHE_TTL);

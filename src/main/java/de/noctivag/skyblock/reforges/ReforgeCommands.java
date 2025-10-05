@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.reforges;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -26,12 +30,12 @@ import java.util.List;
  */
 public class ReforgeCommands implements CommandExecutor, TabCompleter {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final ReforgeSystem reforgeSystem;
     private final ReforgeGUI reforgeGUI;
     
-    public ReforgeCommands(SkyblockPlugin plugin, ReforgeSystem reforgeSystem, ReforgeGUI reforgeGUI) {
-        this.plugin = plugin;
+    public ReforgeCommands(SkyblockPlugin SkyblockPlugin, ReforgeSystem reforgeSystem, ReforgeGUI reforgeGUI) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.reforgeSystem = reforgeSystem;
         this.reforgeGUI = reforgeGUI;
     }
@@ -65,23 +69,23 @@ public class ReforgeCommands implements CommandExecutor, TabCompleter {
     
     private void openReforgeTable(Player player) {
         reforgeGUI.openReforgeTable(player);
-        player.sendMessage("§aOpened reforge table!");
+        player.sendMessage(Component.text("§aOpened reforge table!"));
     }
     
     private void listReforges(Player player) {
-        player.sendMessage("§6=== Available Reforges ===");
+        player.sendMessage(Component.text("§6=== Available Reforges ==="));
         
         for (ReforgeSystem.Reforge reforge : reforgeSystem.getAllReforges()) {
             player.sendMessage("§d" + reforge.getName() + " §7- " + reforge.getDescription() + 
                              " §8(" + reforge.getRarity().getDisplayName() + "§8)");
         }
         
-        player.sendMessage("§7Use §e/reforge info <name> §7for detailed information!");
+        player.sendMessage(Component.text("§7Use §e/reforge info <name> §7for detailed information!"));
     }
     
     private void showReforgeInfo(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage("§cUsage: /reforge info <reforge>");
+            player.sendMessage(Component.text("§cUsage: /reforge info <reforge>"));
             return;
         }
         
@@ -97,7 +101,7 @@ public class ReforgeCommands implements CommandExecutor, TabCompleter {
         player.sendMessage("§7Description: §f" + reforge.getDescription());
         player.sendMessage("§7Rarity: " + reforge.getRarity().getDisplayName());
         player.sendMessage("§7Base Cost: §6" + String.format("%.0f", reforge.getBaseCost()) + " coins");
-        player.sendMessage("§7Compatible Items:");
+        player.sendMessage(Component.text("§7Compatible Items:"));
         
         for (String materialName : reforge.getCompatibleMaterials().stream()
                 .map(m -> m.name()).limit(10).toList()) {
@@ -109,7 +113,7 @@ public class ReforgeCommands implements CommandExecutor, TabCompleter {
         }
         
         player.sendMessage("");
-        player.sendMessage("§7Stats:");
+        player.sendMessage(Component.text("§7Stats:"));
         for (ReforgeSystem.ReforgeStat stat : reforge.getStats()) {
             player.sendMessage("§7- " + stat.getName() + ": §a+" + 
                              String.format("%.1f", stat.getBaseValue()) + " §7(base), §a+" + 
@@ -119,13 +123,13 @@ public class ReforgeCommands implements CommandExecutor, TabCompleter {
     
     private void applyReforge(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage("§cUsage: /reforge apply <reforge>");
+            player.sendMessage(Component.text("§cUsage: /reforge apply <reforge>"));
             return;
         }
         
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item == null || item.getType().isAir()) {
-            player.sendMessage("§cYou must hold an item to reforge!");
+            player.sendMessage(Component.text("§cYou must hold an item to reforge!"));
             return;
         }
         
@@ -138,7 +142,7 @@ public class ReforgeCommands implements CommandExecutor, TabCompleter {
         }
         
         if (!reforgeSystem.canReforge(item, reforge)) {
-            player.sendMessage("§cThis reforge cannot be applied to this item type!");
+            player.sendMessage(Component.text("§cThis reforge cannot be applied to this item type!"));
             return;
         }
         
@@ -170,13 +174,13 @@ public class ReforgeCommands implements CommandExecutor, TabCompleter {
     private void removeReforge(Player player) {
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item == null || item.getType().isAir()) {
-            player.sendMessage("§cYou must hold an item to remove reforge!");
+            player.sendMessage(Component.text("§cYou must hold an item to remove reforge!"));
             return;
         }
         
         ReforgeSystem.Reforge currentReforge = reforgeSystem.getItemReforge(item);
         if (currentReforge == null) {
-            player.sendMessage("§cThis item doesn't have a reforge to remove!");
+            player.sendMessage(Component.text("§cThis item doesn't have a reforge to remove!"));
             return;
         }
         
@@ -186,13 +190,13 @@ public class ReforgeCommands implements CommandExecutor, TabCompleter {
     
     private void previewReforge(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage("§cUsage: /reforge preview <reforge>");
+            player.sendMessage(Component.text("§cUsage: /reforge preview <reforge>"));
             return;
         }
         
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item == null || item.getType().isAir()) {
-            player.sendMessage("§cYou must hold an item to preview reforge!");
+            player.sendMessage(Component.text("§cYou must hold an item to preview reforge!"));
             return;
         }
         
@@ -205,7 +209,7 @@ public class ReforgeCommands implements CommandExecutor, TabCompleter {
         }
         
         if (!reforgeSystem.canReforge(item, reforge)) {
-            player.sendMessage("§cThis reforge cannot be applied to this item type!");
+            player.sendMessage(Component.text("§cThis reforge cannot be applied to this item type!"));
             return;
         }
         
@@ -218,7 +222,7 @@ public class ReforgeCommands implements CommandExecutor, TabCompleter {
     }
     
     private void showReforgeStats(Player player, ReforgeSystem.Reforge reforge, ItemStack item) {
-        player.sendMessage("§7Stats added:");
+        player.sendMessage(Component.text("§7Stats added:"));
         
         java.util.Map<String, Double> stats = reforgeSystem.calculateReforgeStats(reforge, item);
         for (java.util.Map.Entry<String, Double> stat : stats.entrySet()) {
@@ -227,13 +231,13 @@ public class ReforgeCommands implements CommandExecutor, TabCompleter {
     }
     
     private void sendHelpMessage(Player player) {
-        player.sendMessage("§6=== Reforge Commands ===");
-        player.sendMessage("§e/reforge table §7- Open reforge table GUI");
-        player.sendMessage("§e/reforge list §7- List all available reforges");
-        player.sendMessage("§e/reforge info <name> §7- Get reforge information");
-        player.sendMessage("§e/reforge apply <name> §7- Apply reforge to held item");
-        player.sendMessage("§e/reforge remove §7- Remove reforge from held item");
-        player.sendMessage("§e/reforge preview <name> §7- Preview reforge stats");
+        player.sendMessage(Component.text("§6=== Reforge Commands ==="));
+        player.sendMessage(Component.text("§e/reforge table §7- Open reforge table GUI"));
+        player.sendMessage(Component.text("§e/reforge list §7- List all available reforges"));
+        player.sendMessage(Component.text("§e/reforge info <name> §7- Get reforge information"));
+        player.sendMessage(Component.text("§e/reforge apply <name> §7- Apply reforge to held item"));
+        player.sendMessage(Component.text("§e/reforge remove §7- Remove reforge from held item"));
+        player.sendMessage(Component.text("§e/reforge preview <name> §7- Preview reforge stats"));
     }
     
     @Override

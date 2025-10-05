@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.enchantments;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -25,13 +29,13 @@ import java.util.List;
  */
 public class EnchantmentCommands implements CommandExecutor, TabCompleter {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CustomEnchantmentSystem enchantmentSystem;
     private final EnchantmentGUI enchantmentGUI;
     
-    public EnchantmentCommands(SkyblockPlugin plugin, CustomEnchantmentSystem enchantmentSystem, 
+    public EnchantmentCommands(SkyblockPlugin SkyblockPlugin, CustomEnchantmentSystem enchantmentSystem, 
                               EnchantmentGUI enchantmentGUI) {
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.enchantmentSystem = enchantmentSystem;
         this.enchantmentGUI = enchantmentGUI;
     }
@@ -65,23 +69,23 @@ public class EnchantmentCommands implements CommandExecutor, TabCompleter {
     
     private void openEnchantmentTable(Player player) {
         enchantmentGUI.openEnchantmentTable(player);
-        player.sendMessage("§aOpened enchantment table!");
+        player.sendMessage(Component.text("§aOpened enchantment table!"));
     }
     
     private void listEnchantments(Player player) {
-        player.sendMessage("§6=== Available Enchantments ===");
+        player.sendMessage(Component.text("§6=== Available Enchantments ==="));
         
         for (CustomEnchantmentSystem.CustomEnchantment enchantment : enchantmentSystem.getAllEnchantments()) {
             player.sendMessage("§d" + enchantment.getName() + " §7- " + enchantment.getDescription() + 
                              " §8(" + enchantment.getRarity().getDisplayName() + "§8)");
         }
         
-        player.sendMessage("§7Use §e/enchant info <name> §7for detailed information!");
+        player.sendMessage(Component.text("§7Use §e/enchant info <name> §7for detailed information!"));
     }
     
     private void showEnchantmentInfo(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage("§cUsage: /enchant info <enchantment>");
+            player.sendMessage(Component.text("§cUsage: /enchant info <enchantment>"));
             return;
         }
         
@@ -103,13 +107,13 @@ public class EnchantmentCommands implements CommandExecutor, TabCompleter {
     
     private void applyEnchantment(Player player, String[] args) {
         if (args.length < 3) {
-            player.sendMessage("§cUsage: /enchant apply <enchantment> <level>");
+            player.sendMessage(Component.text("§cUsage: /enchant apply <enchantment> <level>"));
             return;
         }
         
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item == null || item.getType().isAir()) {
-            player.sendMessage("§cYou must hold an item to enchant!");
+            player.sendMessage(Component.text("§cYou must hold an item to enchant!"));
             return;
         }
         
@@ -126,7 +130,7 @@ public class EnchantmentCommands implements CommandExecutor, TabCompleter {
         try {
             level = Integer.parseInt(args[2]);
         } catch (NumberFormatException e) {
-            player.sendMessage("§cInvalid level! Please enter a number.");
+            player.sendMessage(Component.text("§cInvalid level! Please enter a number."));
             return;
         }
         
@@ -136,7 +140,7 @@ public class EnchantmentCommands implements CommandExecutor, TabCompleter {
         }
         
         if (!enchantmentSystem.canEnchant(item, enchantment)) {
-            player.sendMessage("§cThis enchantment cannot be applied to this item type!");
+            player.sendMessage(Component.text("§cThis enchantment cannot be applied to this item type!"));
             return;
         }
         
@@ -146,13 +150,13 @@ public class EnchantmentCommands implements CommandExecutor, TabCompleter {
     
     private void removeEnchantment(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage("§cUsage: /enchant remove <enchantment>");
+            player.sendMessage(Component.text("§cUsage: /enchant remove <enchantment>"));
             return;
         }
         
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item == null || item.getType().isAir()) {
-            player.sendMessage("§cYou must hold an item to disenchant!");
+            player.sendMessage(Component.text("§cYou must hold an item to disenchant!"));
             return;
         }
         
@@ -178,7 +182,7 @@ public class EnchantmentCommands implements CommandExecutor, TabCompleter {
     private void clearAllEnchantments(Player player) {
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item == null || item.getType().isAir()) {
-            player.sendMessage("§cYou must hold an item to clear enchantments!");
+            player.sendMessage(Component.text("§cYou must hold an item to clear enchantments!"));
             return;
         }
         
@@ -193,18 +197,18 @@ public class EnchantmentCommands implements CommandExecutor, TabCompleter {
         if (removedCount > 0) {
             player.sendMessage("§aRemoved " + removedCount + " enchantments from your item!");
         } else {
-            player.sendMessage("§cThis item has no enchantments to remove!");
+            player.sendMessage(Component.text("§cThis item has no enchantments to remove!"));
         }
     }
     
     private void sendHelpMessage(Player player) {
-        player.sendMessage("§6=== Enchantment Commands ===");
-        player.sendMessage("§e/enchant table §7- Open enchantment table GUI");
-        player.sendMessage("§e/enchant list §7- List all available enchantments");
-        player.sendMessage("§e/enchant info <name> §7- Get enchantment information");
-        player.sendMessage("§e/enchant apply <name> <level> §7- Apply enchantment to held item");
-        player.sendMessage("§e/enchant remove <name> §7- Remove enchantment from held item");
-        player.sendMessage("§e/enchant clear §7- Remove all enchantments from held item");
+        player.sendMessage(Component.text("§6=== Enchantment Commands ==="));
+        player.sendMessage(Component.text("§e/enchant table §7- Open enchantment table GUI"));
+        player.sendMessage(Component.text("§e/enchant list §7- List all available enchantments"));
+        player.sendMessage(Component.text("§e/enchant info <name> §7- Get enchantment information"));
+        player.sendMessage(Component.text("§e/enchant apply <name> <level> §7- Apply enchantment to held item"));
+        player.sendMessage(Component.text("§e/enchant remove <name> §7- Remove enchantment from held item"));
+        player.sendMessage(Component.text("§e/enchant clear §7- Remove all enchantments from held item"));
     }
     
     @Override

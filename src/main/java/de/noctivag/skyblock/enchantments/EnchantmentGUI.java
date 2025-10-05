@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.enchantments;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -26,16 +29,16 @@ import java.util.*;
  */
 public class EnchantmentGUI {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CustomEnchantmentSystem enchantmentSystem;
     
-    public EnchantmentGUI(SkyblockPlugin plugin, CustomEnchantmentSystem enchantmentSystem) {
-        this.plugin = plugin;
+    public EnchantmentGUI(SkyblockPlugin SkyblockPlugin, CustomEnchantmentSystem enchantmentSystem) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.enchantmentSystem = enchantmentSystem;
     }
     
     public void openEnchantmentTable(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6⚔ Enchantment Table");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6⚔ Enchantment Table"));
         
         // Enchantment categories
         gui.setItem(10, createCategoryItem(Material.DIAMOND_SWORD, "§cCombat Enchantments", 
@@ -121,7 +124,7 @@ public class EnchantmentGUI {
             LegacyComponentSerializer.legacySection().deserialize("§eClick to view!")
         ));
         
-        NamespacedKey key = new NamespacedKey(plugin, "category");
+        NamespacedKey key = new NamespacedKey(SkyblockPlugin, "category");
         meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, category);
         
         item.setItemMeta(meta);
@@ -147,7 +150,7 @@ public class EnchantmentGUI {
                 LegacyComponentSerializer.legacySection().deserialize("§eClick to purchase!")
             ));
             
-            NamespacedKey key = new NamespacedKey(plugin, "enchantment_book");
+            NamespacedKey key = new NamespacedKey(SkyblockPlugin, "enchantment_book");
             meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, 
                 enchantmentName + ":" + level + ":" + cost);
         }
@@ -170,7 +173,7 @@ public class EnchantmentGUI {
             LegacyComponentSerializer.legacySection().deserialize("§eClick to view levels!")
         ));
         
-        NamespacedKey key = new NamespacedKey(plugin, "enchantment_item");
+        NamespacedKey key = new NamespacedKey(SkyblockPlugin, "enchantment_item");
         meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, enchantment.getName());
         
         item.setItemMeta(meta);
@@ -188,7 +191,7 @@ public class EnchantmentGUI {
             LegacyComponentSerializer.legacySection().deserialize("§eClick to " + action + "!")
         ));
         
-        NamespacedKey key = new NamespacedKey(plugin, "button_action");
+        NamespacedKey key = new NamespacedKey(SkyblockPlugin, "button_action");
         meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, action);
         
         item.setItemMeta(meta);

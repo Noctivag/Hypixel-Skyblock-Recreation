@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.player;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Sound;
@@ -16,21 +20,21 @@ import java.util.Map;
 import java.util.UUID;
 
 public class PlayerDataManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, PlayerData> playerData;
     private final File dataFile;
     private FileConfiguration dataConfig;
 
-    public PlayerDataManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public PlayerDataManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.playerData = new HashMap<>();
-        this.dataFile = new File(plugin.getDataFolder(), "playerdata.yml");
+        this.dataFile = new File(SkyblockPlugin.getDataFolder(), "playerdata.yml");
         loadData();
     }
 
     private void loadData() {
         if (!dataFile.exists()) {
-            plugin.saveResource("playerdata.yml", false);
+            SkyblockPlugin.saveResource("playerdata.yml", false);
         }
         dataConfig = YamlConfiguration.loadConfiguration(dataFile);
 
@@ -54,7 +58,7 @@ public class PlayerDataManager {
         try {
             dataConfig.save(dataFile);
         } catch (IOException e) {
-            plugin.getLogger().severe("Fehler beim Speichern der Spielerdaten: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Fehler beim Speichern der Spielerdaten: " + e.getMessage());
         }
     }
 
@@ -78,13 +82,13 @@ public class PlayerDataManager {
 
             // Belohnungen für Level-Up
             double coins = data.getLevel() * 100; // 100 Coins pro Level
-            plugin.getEconomyManager().depositMoney(player, coins);
-            player.sendMessage("§aLevel-Up Belohnung: §e" + plugin.getEconomyManager().formatMoney(coins));
+            SkyblockPlugin.getEconomyManager().depositMoney(player, coins);
+            player.sendMessage("§aLevel-Up Belohnung: §e" + SkyblockPlugin.getEconomyManager().formatMoney(coins));
         }
 
         // Aktualisiere Scoreboard
         // TODO: Implement proper ScoreboardManager interface
-        // ((ScoreboardManager) plugin.getScoreboardManager()).updateScoreboard(player);
+        // ((ScoreboardManager) SkyblockPlugin.getScoreboardManager()).updateScoreboard(player);
     }
 
     public int getLevel(Player player) {

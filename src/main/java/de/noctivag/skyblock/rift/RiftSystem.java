@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.rift;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -34,7 +39,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class RiftSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerRiftData> playerRiftData = new ConcurrentHashMap<>();
     private final Map<UUID, RiftSession> activeSessions = new ConcurrentHashMap<>();
@@ -42,15 +47,15 @@ public class RiftSystem implements Listener {
     private final Map<RiftMob, RiftMobConfig> mobConfigs = new HashMap<>();
     private final Map<RiftItem, RiftItemConfig> itemConfigs = new HashMap<>();
     
-    public RiftSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public RiftSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeLocationConfigs();
         initializeMobConfigs();
         initializeItemConfigs();
         startRiftUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeLocationConfigs() {
@@ -221,7 +226,7 @@ public class RiftSystem implements Listener {
     }
     
     private void startRiftUpdateTask() {
-        Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+        Bukkit.getScheduler().runTaskTimer(SkyblockPlugin, () -> {
             for (RiftSession session : activeSessions.values()) {
                 updateRiftSession(session);
             }
@@ -261,15 +266,15 @@ public class RiftSystem implements Listener {
         
         switch (eventType) {
             case 0:
-                player.sendMessage("§5Time Rift: The Rift's time has shifted!");
+                player.sendMessage(Component.text("§5Time Rift: The Rift's time has shifted!"));
                 // Apply time effects
                 break;
             case 1:
-                player.sendMessage("§5Time Rift: A temporal anomaly has appeared!");
+                player.sendMessage(Component.text("§5Time Rift: A temporal anomaly has appeared!"));
                 // Spawn special mobs
                 break;
             case 2:
-                player.sendMessage("§5Time Rift: The Rift's energy has increased!");
+                player.sendMessage(Component.text("§5Time Rift: The Rift's energy has increased!"));
                 // Boost player abilities
                 break;
         }
@@ -277,7 +282,7 @@ public class RiftSystem implements Listener {
     
     public void enterRift(Player player) {
         if (activeSessions.containsKey(player.getUniqueId())) {
-            player.sendMessage("§cYou are already in the Rift!");
+            player.sendMessage(Component.text("§cYou are already in the Rift!"));
             return;
         }
         
@@ -285,7 +290,7 @@ public class RiftSystem implements Listener {
         RiftSession session = new RiftSession(
             player.getUniqueId(),
             data.getRiftLevel(),
-            System.currentTimeMillis()
+            java.lang.System.currentTimeMillis()
         );
         
         activeSessions.put(player.getUniqueId(), session);
@@ -293,7 +298,7 @@ public class RiftSystem implements Listener {
         // Teleport to Rift
         teleportToRift(player, session);
         
-        player.sendMessage("§aEntered the Rift!");
+        player.sendMessage(Component.text("§aEntered the Rift!"));
         player.sendMessage("§7Rift Level: " + data.getRiftLevel());
         player.sendMessage("§7Motes: " + data.getMotes());
     }
@@ -301,7 +306,7 @@ public class RiftSystem implements Listener {
     public void exitRift(Player player) {
         RiftSession session = activeSessions.remove(player.getUniqueId());
         if (session == null) {
-            player.sendMessage("§cYou are not in the Rift!");
+            player.sendMessage(Component.text("§cYou are not in the Rift!"));
             return;
         }
         
@@ -310,7 +315,7 @@ public class RiftSystem implements Listener {
         // Teleport back to hub
         teleportToHub(player);
         
-        player.sendMessage("§aExited the Rift!");
+        player.sendMessage(Component.text("§aExited the Rift!"));
         player.sendMessage("§7Time in Rift: " + session.getTimeElapsed() + " seconds");
     }
     
@@ -321,7 +326,7 @@ public class RiftSystem implements Listener {
         );
         
         player.teleport(riftLocation);
-        player.sendMessage("§aTeleported to the Rift!");
+        player.sendMessage(Component.text("§aTeleported to the Rift!"));
     }
     
     private void teleportToHub(Player player) {
@@ -331,13 +336,13 @@ public class RiftSystem implements Listener {
         );
         
         player.teleport(hubLocation);
-        player.sendMessage("§aTeleported to the Hub!");
+        player.sendMessage(Component.text("§aTeleported to the Hub!"));
     }
     
     public void teleportToRiftLocation(Player player, RiftLocation location) {
         RiftSession session = activeSessions.get(player.getUniqueId());
         if (session == null || !session.isActive()) {
-            player.sendMessage("§cYou must be in the Rift to teleport to locations!");
+            player.sendMessage(Component.text("§cYou must be in the Rift to teleport to locations!"));
             return;
         }
         
@@ -427,7 +432,7 @@ public class RiftSystem implements Listener {
         PlayerRiftData data = getPlayerRiftData(player);
         
         if (data.getMotes() < amount) {
-            player.sendMessage("§cNot enough Motes!");
+            player.sendMessage(Component.text("§cNot enough Motes!"));
             return;
         }
         

@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.gui;
+
+import org.bukkit.event.inventory.ClickType;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -25,10 +29,10 @@ import java.util.Arrays;
  * - Einheitliche Menü-Struktur
  * - Konfigurierbare Menü-Modi
  * - Hypixel-Style Design
- * - Alle Plugin-Features integriert
+ * - Alle SkyblockPlugin-Features integriert
  */
 public class UnifiedMainMenuSystem extends CustomGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Player player;
     private final HypixelMenuStyleSystem styleSystem;
     private final MenuMode menuMode;
@@ -40,12 +44,12 @@ public class UnifiedMainMenuSystem extends CustomGUI {
         INTEGRATED   // Integriertes System-Menü
     }
 
-    public UnifiedMainMenuSystem(SkyblockPlugin plugin, Player player, MenuMode mode) {
+    public UnifiedMainMenuSystem(SkyblockPlugin SkyblockPlugin, Player player, MenuMode mode) {
         super(54, Component.text(getMenuTitle(mode)).color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD));
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.player = player;
         this.menuMode = mode;
-        this.styleSystem = new HypixelMenuStyleSystem(plugin);
+        this.styleSystem = new HypixelMenuStyleSystem(SkyblockPlugin);
         setupItems();
         playOpenSound();
     }
@@ -166,8 +170,8 @@ public class UnifiedMainMenuSystem extends CustomGUI {
     private void setupSimpleMenu() {
         // Player summary (center top)
         setItem(4, createPlayerHead(player, "§e" + player.getName(),
-            "§7Level: §a" + plugin.getPlayerDataManager().getLevel(player),
-            "§7Coins: §6" + plugin.getEconomyManager().formatMoney(plugin.getEconomyManager().getBalance(player))));
+            "§7Level: §a" + SkyblockPlugin.getPlayerDataManager().getLevel(player),
+            "§7Coins: §6" + SkyblockPlugin.getEconomyManager().formatMoney(SkyblockPlugin.getEconomyManager().getBalance(player))));
 
         // Row 2: Primary navigation
         setItem(10, createGuiItem(Material.NETHER_STAR, "§d§lKosmetik",
@@ -215,7 +219,7 @@ public class UnifiedMainMenuSystem extends CustomGUI {
 
     private void setupIntegratedMenu() {
         // Header
-        styleSystem.setupHeaderSection(getInventory(), 4, "INTEGRATED MENU", "Access all plugin features from one central location");
+        styleSystem.setupHeaderSection(getInventory(), 4, "INTEGRATED MENU", "Access all SkyblockPlugin features from one central location");
 
         // Core systems row
         setupCoreSystems();
@@ -243,17 +247,17 @@ public class UnifiedMainMenuSystem extends CustomGUI {
             "• Achievements and rewards",
             "• Settings and preferences"));
 
-        boolean canClaim = plugin.getDailyRewardManager() != null && plugin.getDailyRewardManager().canClaimReward(player);
+        boolean canClaim = SkyblockPlugin.getDailyRewardManager() != null && SkyblockPlugin.getDailyRewardManager().canClaimReward(player);
         Material rewardIcon = canClaim ? Material.EMERALD : Material.GRAY_DYE;
         setItem(12, styleSystem.createFeatureItem(rewardIcon, "🎁 DAILY REWARDS",
             "Claim your daily rewards and build streaks", canClaim,
-            "• Current streak: " + (plugin.getDailyRewardManager() != null ? plugin.getDailyRewardManager().getCurrentStreak(player) : 0) + " days",
+            "• Current streak: " + (SkyblockPlugin.getDailyRewardManager() != null ? SkyblockPlugin.getDailyRewardManager().getCurrentStreak(player) : 0) + " days",
             "• Bonus rewards for longer streaks",
             "• Special weekend bonuses"));
 
         setItem(13, styleSystem.createFeatureItem(Material.GOLD_INGOT, "🏆 ACHIEVEMENTS",
             "View and track your achievement progress", true,
-            "• Completed: " + (plugin.getAchievementManager() != null ? plugin.getAchievementManager().getCompletedAchievements(player) : 0) + "/" + (plugin.getAchievementManager() != null ? plugin.getAchievementManager().getTotalAchievements() : 100),
+            "• Completed: " + (SkyblockPlugin.getAchievementManager() != null ? SkyblockPlugin.getAchievementManager().getCompletedAchievements(player) : 0) + "/" + (SkyblockPlugin.getAchievementManager() != null ? SkyblockPlugin.getAchievementManager().getTotalAchievements() : 100),
             "• Progress tracking and rewards",
             "• Special achievement categories"));
 
@@ -409,7 +413,7 @@ public class UnifiedMainMenuSystem extends CustomGUI {
         setItem(39, styleSystem.createCategoryHeader("UTILITY & ADMIN", "Tools and administrative functions"));
 
         setItem(40, styleSystem.createFeatureItem(Material.REDSTONE, "⚙️ SETTINGS",
-            "Configure plugin settings and preferences", true,
+            "Configure SkyblockPlugin settings and preferences", true,
             "• Feature toggles and options",
             "• Notification preferences",
             "• Personal customization settings"));
@@ -418,7 +422,7 @@ public class UnifiedMainMenuSystem extends CustomGUI {
             "Access administrative tools and controls", player.hasPermission("basics.admin"),
             "• Player management tools",
             "• Server administration",
-            "• Plugin configuration"));
+            "• SkyblockPlugin configuration"));
     }
 
     private void setupNewSystems() {
@@ -476,7 +480,7 @@ public class UnifiedMainMenuSystem extends CustomGUI {
 
         setItem(48, styleSystem.createFeatureItem(Material.BEACON, "🖥️ SERVER INFO",
             "View server information and statistics", true,
-            "• Online players: " + plugin.getServer().getOnlinePlayers().size(),
+            "• Online players: " + SkyblockPlugin.getServer().getOnlinePlayers().size(),
             "• Server TPS and performance",
             "• Uptime and status"));
 
@@ -547,13 +551,13 @@ public class UnifiedMainMenuSystem extends CustomGUI {
         setItem(37, styleSystem.createCategoryHeader("UTILITY", "Settings and help systems"));
 
         setItem(38, styleSystem.createFeatureItem(Material.REDSTONE, "⚙️ SETTINGS",
-            "Configure plugin settings and preferences", true,
+            "Configure SkyblockPlugin settings and preferences", true,
             "• Feature toggles and options",
             "• Personal preference settings",
             "• System configuration"));
 
         setItem(39, styleSystem.createFeatureItem(Material.BOOK, "❓ HELP",
-            "Get help with plugin features", true,
+            "Get help with SkyblockPlugin features", true,
             "• Tutorials and guides",
             "• Feature documentation",
             "• Support and assistance"));
@@ -577,7 +581,7 @@ public class UnifiedMainMenuSystem extends CustomGUI {
         if (meta != null) {
             meta.displayName(Component.text(name));
             if (lore.length > 0) {
-                meta.lore(Arrays.stream(lore).map(Component::text).toList());
+                meta.lore(java.util.Arrays.stream(lore).map(Component::text).collect(java.util.stream.Collectors.toList()));
             }
             item.setItemMeta(meta);
         }
@@ -586,19 +590,316 @@ public class UnifiedMainMenuSystem extends CustomGUI {
     }
 
     // Factory-Methoden für verschiedene Menü-Modi
-    public static UnifiedMainMenuSystem createUltimateMenu(SkyblockPlugin plugin, Player player) {
-        return new UnifiedMainMenuSystem(plugin, player, MenuMode.ULTIMATE);
+    public static UnifiedMainMenuSystem createUltimateMenu(SkyblockPlugin SkyblockPlugin, Player player) {
+        return new UnifiedMainMenuSystem(SkyblockPlugin, player, MenuMode.ULTIMATE);
     }
 
-    public static UnifiedMainMenuSystem createEnhancedMenu(SkyblockPlugin plugin, Player player) {
-        return new UnifiedMainMenuSystem(plugin, player, MenuMode.ENHANCED);
+    public static UnifiedMainMenuSystem createEnhancedMenu(SkyblockPlugin SkyblockPlugin, Player player) {
+        return new UnifiedMainMenuSystem(SkyblockPlugin, player, MenuMode.ENHANCED);
     }
 
-    public static UnifiedMainMenuSystem createSimpleMenu(SkyblockPlugin plugin, Player player) {
-        return new UnifiedMainMenuSystem(plugin, player, MenuMode.SIMPLE);
+    public static UnifiedMainMenuSystem createSimpleMenu(SkyblockPlugin SkyblockPlugin, Player player) {
+        return new UnifiedMainMenuSystem(SkyblockPlugin, player, MenuMode.SIMPLE);
     }
 
-    public static UnifiedMainMenuSystem createIntegratedMenu(SkyblockPlugin plugin, Player player) {
-        return new UnifiedMainMenuSystem(plugin, player, MenuMode.INTEGRATED);
+    public static UnifiedMainMenuSystem createIntegratedMenu(SkyblockPlugin SkyblockPlugin, Player player) {
+        return new UnifiedMainMenuSystem(SkyblockPlugin, player, MenuMode.INTEGRATED);
+    }
+
+    public void onClick(Player player, int slot, ItemStack item, ClickType clickType) {
+        if (item == null || item.getType() == Material.AIR) return;
+
+        String itemName = item.getItemMeta() != null && item.getItemMeta().displayName() != null 
+            ? item.getItemMeta().displayName().toString() : "";
+
+        // Handle different menu modes
+        switch (menuMode) {
+            case ULTIMATE -> handleUltimateMenuClick(player, slot, itemName);
+            case ENHANCED -> handleEnhancedMenuClick(player, slot, itemName);
+            case SIMPLE -> handleSimpleMenuClick(player, slot, itemName);
+            case INTEGRATED -> handleIntegratedMenuClick(player, slot, itemName);
+        }
+    }
+
+    private void handleUltimateMenuClick(Player player, int slot, String itemName) {
+        switch (slot) {
+            case 11 -> openProfileGUI(player);
+            case 12 -> openDailyRewardsGUI(player);
+            case 13 -> openAchievementsGUI(player);
+            case 14 -> openCosmeticsGUI(player);
+            case 15 -> openKitsGUI(player);
+            case 16 -> openWarpsGUI(player);
+            case 17 -> openTeleportationGUI(player);
+            case 18 -> openMessagesGUI(player);
+            case 20 -> openEventsGUI(player);
+            case 21 -> openPvPGUI(player);
+            case 22 -> openTournamentGUI(player);
+            case 23 -> openDuelGUI(player);
+            case 24 -> openPartyGUI(player);
+            case 25 -> openFriendsGUI(player);
+            case 26 -> openEconomyGUI(player);
+            case 27 -> openBasicCommandsGUI(player);
+            case 28 -> openJoinMessageGUI(player);
+            case 29 -> openSettingsGUI(player);
+            case 30 -> openAdminGUI(player);
+            case 32 -> openPetGUI(player);
+            case 33 -> openAccessoryGUI(player);
+            case 34 -> openMinionsGUI(player);
+            case 35 -> openSlayersGUI(player);
+            case 36 -> openSkillsGUI(player);
+            case 37 -> openCollectionsGUI(player);
+            case 38 -> openMiningGUI(player);
+            case 39 -> openDungeonsGUI(player);
+            case 40 -> openBazaarGUI(player);
+            case 41 -> openAuctionHouseGUI(player);
+            case 42 -> openBankGUI(player);
+            case 43 -> openShopGUI(player);
+            case 44 -> openEnchantingGUI(player);
+            case 45 -> openReforgeGUI(player);
+            case 46 -> openRecombobulatorGUI(player);
+            case 47 -> openPotatoBookGUI(player);
+            case 49 -> player.closeInventory();
+        }
+    }
+
+    private void handleEnhancedMenuClick(Player player, int slot, String itemName) {
+        switch (slot) {
+            case 10 -> openProfileGUI(player);
+            case 11 -> openEventsGUI(player);
+            case 12 -> openCosmeticsGUI(player);
+            case 13 -> openAchievementsGUI(player);
+            case 14 -> openDailyRewardsGUI(player);
+            case 15 -> openPartyGUI(player);
+            case 16 -> openFriendsGUI(player);
+            case 17 -> openTeleportationGUI(player);
+            case 18 -> openWarpsGUI(player);
+            case 19 -> openKitsGUI(player);
+            case 20 -> openBasicCommandsGUI(player);
+            case 21 -> openJoinMessageGUI(player);
+            case 22 -> openSettingsGUI(player);
+            case 23 -> openAdminGUI(player);
+            case 24 -> openEconomyGUI(player);
+            case 25 -> openFeatureBookGUI(player);
+            case 26 -> openEventScheduleGUI(player);
+            case 27 -> player.closeInventory();
+        }
+    }
+
+    private void handleSimpleMenuClick(Player player, int slot, String itemName) {
+        switch (slot) {
+            case 10 -> openCosmeticsGUI(player);
+            case 12 -> openWarpsGUI(player);
+            case 14 -> openDailyRewardsGUI(player);
+            case 16 -> openAchievementsGUI(player);
+            case 19 -> openProfileGUI(player);
+            case 21 -> openBasicCommandsGUI(player);
+            case 23 -> openJoinMessageGUI(player);
+            case 25 -> openFeatureBookGUI(player);
+            case 49 -> player.closeInventory();
+        }
+    }
+
+    private void handleIntegratedMenuClick(Player player, int slot, String itemName) {
+        switch (slot) {
+            case 11 -> openProfileGUI(player);
+            case 12 -> openProfileGUI(player);
+            case 20 -> openReforgeGUI(player);
+            case 21 -> openReforgeGUI(player);
+            case 22 -> openEnchantingGUI(player);
+            case 29 -> openPetGUI(player);
+            case 30 -> openAccessoryGUI(player);
+            case 38 -> openSettingsGUI(player);
+            case 39 -> openHelpGUI(player);
+            case 49 -> player.closeInventory();
+        }
+    }
+
+    // GUI Opening Methods
+    private void openProfileGUI(Player player) {
+        if (SkyblockPlugin.getPlayerDataManager() != null) {
+            new ProfileGUI(SkyblockPlugin, player).open(player);
+        } else {
+            player.sendMessage(Component.text("§cProfil-System ist nicht verfügbar!"));
+        }
+    }
+
+    private void openDailyRewardsGUI(Player player) {
+        if (SkyblockPlugin.getDailyRewardManager() != null) {
+            new DailyRewardGUI(SkyblockPlugin).open(player);
+        } else {
+            player.sendMessage(Component.text("§cDaily Rewards sind nicht verfügbar!"));
+        }
+    }
+
+    private void openAchievementsGUI(Player player) {
+        if (SkyblockPlugin.getAchievementManager() != null) {
+            new AchievementsGUI(SkyblockPlugin).open(player);
+        } else {
+            player.sendMessage(Component.text("§cAchievement-System ist nicht verfügbar!"));
+        }
+    }
+
+    private void openCosmeticsGUI(Player player) {
+        if (SkyblockPlugin.getCosmeticsManager() != null) {
+            new CosmeticsGUI(SkyblockPlugin).open(player);
+        } else {
+            player.sendMessage(Component.text("§cCosmetics-System ist nicht verfügbar!"));
+        }
+    }
+
+    private void openKitsGUI(Player player) {
+        if (SkyblockPlugin.getKitManager() != null) {
+            new KitShopGUI(SkyblockPlugin, player).open(player);
+        } else {
+            player.sendMessage(Component.text("§cKit-System ist nicht verfügbar!"));
+        }
+    }
+
+    private void openWarpsGUI(Player player) {
+        if (SkyblockPlugin.getLocationManager() != null) {
+            new WarpGUI(SkyblockPlugin, player).open(player);
+        } else {
+            player.sendMessage(Component.text("§cWarp-System ist nicht verfügbar!"));
+        }
+    }
+
+    private void openTeleportationGUI(Player player) {
+        new TeleportationGUI(SkyblockPlugin, player).open(player);
+    }
+
+    private void openMessagesGUI(Player player) {
+        new MessagesGUI(SkyblockPlugin, player).open(player);
+    }
+
+    private void openEventsGUI(Player player) {
+        new EventMenu(SkyblockPlugin).open(player);
+    }
+
+    private void openPvPGUI(Player player) {
+        new PvPArenaGUI(SkyblockPlugin, player).open(player);
+    }
+
+    private void openTournamentGUI(Player player) {
+        new TournamentGUI(SkyblockPlugin, player).open(player);
+    }
+
+    private void openDuelGUI(Player player) {
+        new DuelSystemGUI(SkyblockPlugin, player).open(player);
+    }
+
+    private void openPartyGUI(Player player) {
+        if (SkyblockPlugin.getPartyManager() != null) {
+            new PartyGUI(SkyblockPlugin, player).open(player);
+        } else {
+            player.sendMessage(Component.text("§cParty-System ist nicht verfügbar!"));
+        }
+    }
+
+    private void openFriendsGUI(Player player) {
+        new FriendsGUI(SkyblockPlugin, player).open(player);
+    }
+
+    private void openEconomyGUI(Player player) {
+        if (SkyblockPlugin.getEconomyManager() != null) {
+            new EconomyGUI(SkyblockPlugin, player).open(player);
+        } else {
+            player.sendMessage(Component.text("§cEconomy-System ist nicht verfügbar!"));
+        }
+    }
+
+    private void openBasicCommandsGUI(Player player) {
+        new BasicCommandsGUI(SkyblockPlugin).open(player);
+    }
+
+    private void openJoinMessageGUI(Player player) {
+        new JoinMessageGUI(SkyblockPlugin, player).open(player);
+    }
+
+    private void openSettingsGUI(Player player) {
+        new SettingsGUI(SkyblockPlugin).open(player);
+    }
+
+    private void openAdminGUI(Player player) {
+        if (player.hasPermission("skyblock.admin")) {
+            new AdminGUI(SkyblockPlugin).open(player);
+        } else {
+            player.sendMessage(Component.text("§cDu hast keine Berechtigung für das Admin-Menü!"));
+        }
+    }
+
+    private void openFeatureBookGUI(Player player) {
+        new FeatureBookGUI(SkyblockPlugin).open(player);
+    }
+
+    private void openEventScheduleGUI(Player player) {
+        new EventScheduleGUI(SkyblockPlugin, player).open(player);
+    }
+
+    private void openPetGUI(Player player) {
+        new PetGUI(SkyblockPlugin).open(player);
+    }
+
+    private void openAccessoryGUI(Player player) {
+        new AccessoryGUI(SkyblockPlugin, player, null).open(player);
+    }
+
+    private void openMinionsGUI(Player player) {
+        new MinionsGUI(SkyblockPlugin).open(player);
+    }
+
+    private void openSlayersGUI(Player player) {
+        new SlayersGUI(SkyblockPlugin).open(player);
+    }
+
+    private void openSkillsGUI(Player player) {
+        new SkillsGUI(SkyblockPlugin).open(player);
+    }
+
+    private void openCollectionsGUI(Player player) {
+        new CollectionsGUI(SkyblockPlugin).open(player);
+    }
+
+    private void openMiningGUI(Player player) {
+        new MiningGUI(SkyblockPlugin, player).open(player);
+    }
+
+    private void openDungeonsGUI(Player player) {
+        new DungeonStarGUI(SkyblockPlugin, player).open(player);
+    }
+
+    private void openBazaarGUI(Player player) {
+        new BazaarGUI(SkyblockPlugin).open(player);
+    }
+
+    private void openAuctionHouseGUI(Player player) {
+        new AuctionHouseGUI(SkyblockPlugin).open(player);
+    }
+
+    private void openBankGUI(Player player) {
+        new BankGUI(SkyblockPlugin).open(player);
+    }
+
+    private void openShopGUI(Player player) {
+        new ShopGUI(SkyblockPlugin, player).open(player);
+    }
+
+    private void openEnchantingGUI(Player player) {
+        new EnchantingGUI(SkyblockPlugin, player, null).open(player);
+    }
+
+    private void openReforgeGUI(Player player) {
+        new ReforgeGUI(SkyblockPlugin, player, null, null, null).open(player);
+    }
+
+    private void openRecombobulatorGUI(Player player) {
+        new RecombobulatorGUI(SkyblockPlugin, player).open(player);
+    }
+
+    private void openPotatoBookGUI(Player player) {
+        new PotatoBookGUI(SkyblockPlugin, player).open(player);
+    }
+
+    private void openHelpGUI(Player player) {
+        new HelpGUI(SkyblockPlugin).open(player);
     }
 }

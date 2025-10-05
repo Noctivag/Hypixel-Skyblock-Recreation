@@ -8,12 +8,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * Configuration service interface for managing plugin configuration.
+ * Configuration service interface for managing SkyblockPlugin configuration.
  */
 public interface ConfigService extends Service {
     
     /**
-     * Get the main plugin configuration
+     * Get the main SkyblockPlugin configuration
      * @return main configuration
      */
     Configuration getMainConfig();

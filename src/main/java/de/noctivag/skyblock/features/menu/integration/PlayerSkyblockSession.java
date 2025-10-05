@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.menu.integration;
+import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.features.menu.SkyblockMenuSystem;
@@ -90,67 +91,67 @@ public class PlayerSkyblockSession {
     // Menu opening methods
     public void openWeaponsMenu() {
         menuSystem.openWeaponsMenu(player);
-        player.sendMessage("§6§lVault §7→ §6Waffen-Menü geöffnet!");
+        player.sendMessage(Component.text("§6§lVault §7→ §6Waffen-Menü geöffnet!"));
     }
     
     public void openArmorMenu() {
         // Placeholder - menu method not implemented
-        player.sendMessage("§6§lVault §7→ §6Rüstungen-Menü geöffnet!");
+        player.sendMessage(Component.text("§6§lVault §7→ §6Rüstungen-Menü geöffnet!"));
     }
     
     public void openToolsMenu() {
         // Placeholder - menu method not implemented
-        player.sendMessage("§6§lVault §7→ §6Werkzeuge-Menü geöffnet!");
+        player.sendMessage(Component.text("§6§lVault §7→ §6Werkzeuge-Menü geöffnet!"));
     }
     
     public void openAccessoriesMenu() {
         // Placeholder - menu method not implemented
-        player.sendMessage("§6§lVault §7→ §6Accessories-Menü geöffnet!");
+        player.sendMessage(Component.text("§6§lVault §7→ §6Accessories-Menü geöffnet!"));
     }
     
     public void openPetsMenu() {
         // Placeholder - menu method not implemented
-        player.sendMessage("§6§lVault §7→ §6Pets-Menü geöffnet!");
+        player.sendMessage(Component.text("§6§lVault §7→ §6Pets-Menü geöffnet!"));
     }
     
     public void openMinionsMenu() {
         // Placeholder - menu method not implemented
-        player.sendMessage("§6§lVault §7→ §6Minions-Menü geöffnet!");
+        player.sendMessage(Component.text("§6§lVault §7→ §6Minions-Menü geöffnet!"));
     }
     
     public void openCollectionsMenu() {
         // Placeholder - menu method not implemented
-        player.sendMessage("§6§lVault §7→ §6Collections-Menü geöffnet!");
+        player.sendMessage(Component.text("§6§lVault §7→ §6Collections-Menü geöffnet!"));
     }
     
     public void openSkillsMenu() {
         // Placeholder - menu method not implemented
-        player.sendMessage("§6§lVault §7→ §6Skills-Menü geöffnet!");
+        player.sendMessage(Component.text("§6§lVault §7→ §6Skills-Menü geöffnet!"));
     }
     
     public void openDungeonsMenu() {
         // Placeholder - menu method not implemented
-        player.sendMessage("§6§lVault §7→ §6Dungeons-Menü geöffnet!");
+        player.sendMessage(Component.text("§6§lVault §7→ §6Dungeons-Menü geöffnet!"));
     }
     
     public void openEconomyMenu() {
         // Placeholder - menu method not implemented
-        player.sendMessage("§6§lVault §7→ §6Economy-Menü geöffnet!");
+        player.sendMessage(Component.text("§6§lVault §7→ §6Economy-Menü geöffnet!"));
     }
     
     public void openEventsMenu() {
         // Placeholder - menu method not implemented
-        player.sendMessage("§6§lVault §7→ §6Events-Menü geöffnet!");
+        player.sendMessage(Component.text("§6§lVault §7→ §6Events-Menü geöffnet!"));
     }
     
     public void openStatsMenu() {
         // Placeholder - menu method not implemented
-        player.sendMessage("§6§lVault §7→ §6Stats-Menü geöffnet!");
+        player.sendMessage(Component.text("§6§lVault §7→ §6Stats-Menü geöffnet!"));
     }
     
     public void openEnchantmentsMenu() {
         // Placeholder - menu method not implemented
-        player.sendMessage("§6§lVault §7→ §6Enchantments-Menü geöffnet!");
+        player.sendMessage(Component.text("§6§lVault §7→ §6Enchantments-Menü geöffnet!"));
     }
     
     // Item giving methods
@@ -223,42 +224,42 @@ public class PlayerSkyblockSession {
     // System interaction methods
     public void openDungeonMenu() {
         // Integrate with dungeon system
-        player.sendMessage("§6Dungeon-System geöffnet!");
+        player.sendMessage(Component.text("§6Dungeon-System geöffnet!"));
     }
     
     public void openMinionManagement() {
         // Integrate with minion system
-        player.sendMessage("§6Minion-Management geöffnet!");
+        player.sendMessage(Component.text("§6Minion-Management geöffnet!"));
     }
     
     public void openCollectionProgress() {
         // Integrate with collections system
-        player.sendMessage("§6Collection-Fortschritt geöffnet!");
+        player.sendMessage(Component.text("§6Collection-Fortschritt geöffnet!"));
     }
     
     public void openSkillProgress() {
         // Integrate with skills system
-        player.sendMessage("§6Skill-Fortschritt geöffnet!");
+        player.sendMessage(Component.text("§6Skill-Fortschritt geöffnet!"));
     }
     
     public void openEconomyInterface() {
         // Integrate with economy system
-        player.sendMessage("§6Economy-Interface geöffnet!");
+        player.sendMessage(Component.text("§6Economy-Interface geöffnet!"));
     }
     
     public void openEventInterface() {
         // Integrate with events system
-        player.sendMessage("§6Event-Interface geöffnet!");
+        player.sendMessage(Component.text("§6Event-Interface geöffnet!"));
     }
     
     public void openCosmeticsInterface() {
         // Integrate with cosmetics system
-        player.sendMessage("§6Cosmetics-Interface geöffnet!");
+        player.sendMessage(Component.text("§6Cosmetics-Interface geöffnet!"));
     }
     
     public void openStatsInterface() {
         // Integrate with stats system
-        player.sendMessage("§6Stats-Interface geöffnet!");
+        player.sendMessage(Component.text("§6Stats-Interface geöffnet!"));
     }
     
     // Save all player data
@@ -267,7 +268,7 @@ public class PlayerSkyblockSession {
             try {
                 // Save all system data for this player
                 // This would integrate with all systems to save player progress
-                player.sendMessage("§aAlle Daten gespeichert!");
+                player.sendMessage(Component.text("§aAlle Daten gespeichert!"));
                 
             } catch (Exception e) {
                 player.sendMessage("§cFehler beim Speichern: " + e.getMessage());

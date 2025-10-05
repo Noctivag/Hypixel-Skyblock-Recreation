@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.network;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -26,7 +30,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class DataSynchronization {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final NetworkCommunication networkCommunication;
     private final JedisPool jedisPool;
@@ -38,10 +42,10 @@ public class DataSynchronization {
     private final long syncInterval;
     private final long conflictResolutionTimeout;
     
-    public DataSynchronization(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager,
+    public DataSynchronization(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager,
                               NetworkCommunication networkCommunication, JedisPool jedisPool,
                               long syncInterval, long conflictResolutionTimeout) {
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         this.networkCommunication = networkCommunication;
         this.jedisPool = jedisPool;
@@ -58,7 +62,7 @@ public class DataSynchronization {
             public void run() {
                 synchronizeAllData();
             }
-        }.runTaskTimerAsynchronously(plugin, 0L, syncInterval / 50); // Convert to ticks
+        }.runTaskTimerAsynchronously(SkyblockPlugin, 0L, syncInterval / 50); // Convert to ticks
     }
     
     private void registerMessageHandlers() {
@@ -108,7 +112,7 @@ public class DataSynchronization {
             processPendingUpdates();
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to synchronize data: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to synchronize data: " + e.getMessage());
         }
     }
     
@@ -133,7 +137,7 @@ public class DataSynchronization {
             }
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to synchronize player data: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to synchronize player data: " + e.getMessage());
         }
     }
     
@@ -158,7 +162,7 @@ public class DataSynchronization {
             }
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to synchronize island data: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to synchronize island data: " + e.getMessage());
         }
     }
     
@@ -183,7 +187,7 @@ public class DataSynchronization {
             }
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to synchronize collection data: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to synchronize collection data: " + e.getMessage());
         }
     }
     
@@ -208,7 +212,7 @@ public class DataSynchronization {
             }
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to synchronize minion data: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to synchronize minion data: " + e.getMessage());
         }
     }
     
@@ -216,10 +220,10 @@ public class DataSynchronization {
         try {
             // Update local player data
             // This would integrate with your existing player data system
-            plugin.getLogger().info("Updating local player data for: " + playerId);
+            SkyblockPlugin.getLogger().info("Updating local player data for: " + playerId);
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to update local player data: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to update local player data: " + e.getMessage());
         }
     }
     
@@ -227,10 +231,10 @@ public class DataSynchronization {
         try {
             // Update local island data
             // This would integrate with your existing island system
-            plugin.getLogger().info("Updating local island data for: " + islandId);
+            SkyblockPlugin.getLogger().info("Updating local island data for: " + islandId);
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to update local island data: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to update local island data: " + e.getMessage());
         }
     }
     
@@ -238,10 +242,10 @@ public class DataSynchronization {
         try {
             // Update local collection data
             // This would integrate with your existing collection system
-            plugin.getLogger().info("Updating local collection data for: " + collectionId);
+            SkyblockPlugin.getLogger().info("Updating local collection data for: " + collectionId);
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to update local collection data: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to update local collection data: " + e.getMessage());
         }
     }
     
@@ -249,15 +253,15 @@ public class DataSynchronization {
         try {
             // Update local minion data
             // This would integrate with your existing minion system
-            plugin.getLogger().info("Updating local minion data for: " + minionId);
+            SkyblockPlugin.getLogger().info("Updating local minion data for: " + minionId);
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to update local minion data: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to update local minion data: " + e.getMessage());
         }
     }
     
     private void processPendingUpdates() {
-        long currentTime = System.currentTimeMillis();
+        long currentTime = java.lang.System.currentTimeMillis();
         
         pendingUpdates.entrySet().removeIf(entry -> {
             PendingUpdate update = entry.getValue();
@@ -279,14 +283,14 @@ public class DataSynchronization {
             if (remoteVersion.getTimestamp() > localVersion.getTimestamp()) {
                 // Use remote version
                 dataVersions.put(update.getDataId(), remoteVersion);
-                plugin.getLogger().info("Resolved conflict for " + update.getDataId() + " using remote version");
+                SkyblockPlugin.getLogger().info("Resolved conflict for " + update.getDataId() + " using remote version");
             } else {
                 // Use local version
-                plugin.getLogger().info("Resolved conflict for " + update.getDataId() + " using local version");
+                SkyblockPlugin.getLogger().info("Resolved conflict for " + update.getDataId() + " using local version");
             }
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to resolve conflict: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to resolve conflict: " + e.getMessage());
         }
     }
     
@@ -313,13 +317,13 @@ public class DataSynchronization {
                 // Same timestamp, check for conflicts
                 if (!remoteVersion.getServerId().equals(localVersion.getServerId())) {
                     // Conflict detected
-                    PendingUpdate pendingUpdate = new PendingUpdate(dataId, dataType, remoteVersion, System.currentTimeMillis());
+                    PendingUpdate pendingUpdate = new PendingUpdate(dataId, dataType, remoteVersion, java.lang.System.currentTimeMillis());
                     pendingUpdates.put(dataId, pendingUpdate);
                 }
             }
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to handle data sync message: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to handle data sync message: " + e.getMessage());
         }
     }
     
@@ -332,7 +336,7 @@ public class DataSynchronization {
             return getLocalData(dataId, dataType);
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to handle data sync request: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to handle data sync request: " + e.getMessage());
             return "ERROR:Internal error";
         }
     }
@@ -356,7 +360,7 @@ public class DataSynchronization {
             networkCommunication.broadcastEvent("data_sync", syncData);
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to handle player data sync: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to handle player data sync: " + e.getMessage());
         }
     }
     
@@ -379,7 +383,7 @@ public class DataSynchronization {
             networkCommunication.broadcastEvent("data_sync", syncData);
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to handle island data sync: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to handle island data sync: " + e.getMessage());
         }
     }
     
@@ -402,7 +406,7 @@ public class DataSynchronization {
             networkCommunication.broadcastEvent("data_sync", syncData);
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to handle collection data sync: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to handle collection data sync: " + e.getMessage());
         }
     }
     
@@ -425,7 +429,7 @@ public class DataSynchronization {
             networkCommunication.broadcastEvent("data_sync", syncData);
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to handle minion data sync: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to handle minion data sync: " + e.getMessage());
         }
     }
     
@@ -438,7 +442,7 @@ public class DataSynchronization {
             }
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to send local data: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to send local data: " + e.getMessage());
         }
     }
     
@@ -459,7 +463,7 @@ public class DataSynchronization {
             }
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to get local data: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to get local data: " + e.getMessage());
             return "ERROR:Internal error";
         }
     }
@@ -481,7 +485,7 @@ public class DataSynchronization {
             }
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to get local data as map: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to get local data as map: " + e.getMessage());
             return null;
         }
     }
@@ -511,7 +515,7 @@ public class DataSynchronization {
         Map<String, String> data = new HashMap<>();
         data.put("dataId", playerId);
         data.put("dataType", "player");
-        data.put("timestamp", String.valueOf(System.currentTimeMillis()));
+        data.put("timestamp", String.valueOf(java.lang.System.currentTimeMillis()));
         data.put("serverId", networkCommunication.getServerId());
         return data;
     }
@@ -521,7 +525,7 @@ public class DataSynchronization {
         Map<String, String> data = new HashMap<>();
         data.put("dataId", islandId);
         data.put("dataType", "island");
-        data.put("timestamp", String.valueOf(System.currentTimeMillis()));
+        data.put("timestamp", String.valueOf(java.lang.System.currentTimeMillis()));
         data.put("serverId", networkCommunication.getServerId());
         return data;
     }
@@ -531,7 +535,7 @@ public class DataSynchronization {
         Map<String, String> data = new HashMap<>();
         data.put("dataId", collectionId);
         data.put("dataType", "collection");
-        data.put("timestamp", String.valueOf(System.currentTimeMillis()));
+        data.put("timestamp", String.valueOf(java.lang.System.currentTimeMillis()));
         data.put("serverId", networkCommunication.getServerId());
         return data;
     }
@@ -541,7 +545,7 @@ public class DataSynchronization {
         Map<String, String> data = new HashMap<>();
         data.put("dataId", minionId);
         data.put("dataType", "minion");
-        data.put("timestamp", String.valueOf(System.currentTimeMillis()));
+        data.put("timestamp", String.valueOf(java.lang.System.currentTimeMillis()));
         data.put("serverId", networkCommunication.getServerId());
         return data;
     }
@@ -551,12 +555,12 @@ public class DataSynchronization {
             Map<String, String> syncData = new HashMap<>();
             syncData.put("playerId", playerId.toString());
             syncData.put("serverId", networkCommunication.getServerId());
-            syncData.put("timestamp", String.valueOf(System.currentTimeMillis()));
+            syncData.put("timestamp", String.valueOf(java.lang.System.currentTimeMillis()));
             
             networkCommunication.broadcastEvent("player_data_sync", syncData);
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to sync player data: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to sync player data: " + e.getMessage());
         }
     }
     
@@ -565,12 +569,12 @@ public class DataSynchronization {
             Map<String, String> syncData = new HashMap<>();
             syncData.put("islandId", islandId);
             syncData.put("serverId", networkCommunication.getServerId());
-            syncData.put("timestamp", String.valueOf(System.currentTimeMillis()));
+            syncData.put("timestamp", String.valueOf(java.lang.System.currentTimeMillis()));
             
             networkCommunication.broadcastEvent("island_data_sync", syncData);
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to sync island data: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to sync island data: " + e.getMessage());
         }
     }
     
@@ -579,12 +583,12 @@ public class DataSynchronization {
             Map<String, String> syncData = new HashMap<>();
             syncData.put("collectionId", collectionId);
             syncData.put("serverId", networkCommunication.getServerId());
-            syncData.put("timestamp", String.valueOf(System.currentTimeMillis()));
+            syncData.put("timestamp", String.valueOf(java.lang.System.currentTimeMillis()));
             
             networkCommunication.broadcastEvent("collection_data_sync", syncData);
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to sync collection data: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to sync collection data: " + e.getMessage());
         }
     }
     
@@ -593,12 +597,12 @@ public class DataSynchronization {
             Map<String, String> syncData = new HashMap<>();
             syncData.put("minionId", minionId);
             syncData.put("serverId", networkCommunication.getServerId());
-            syncData.put("timestamp", String.valueOf(System.currentTimeMillis()));
+            syncData.put("timestamp", String.valueOf(java.lang.System.currentTimeMillis()));
             
             networkCommunication.broadcastEvent("minion_data_sync", syncData);
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to sync minion data: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to sync minion data: " + e.getMessage());
         }
     }
     

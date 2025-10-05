@@ -1,4 +1,8 @@
 package de.noctivag.skyblock.skyblock;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
@@ -11,7 +15,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -23,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class PetSystem implements Listener {
 
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     @SuppressWarnings("unused")
     private final MultiServerDatabaseManager databaseManager;
     private final HealthManaSystem healthManaSystem;
@@ -31,9 +35,9 @@ public class PetSystem implements Listener {
     private final Map<UUID, PlayerPetData> playerPets = new ConcurrentHashMap<>();
     private final Map<UUID, Pet> activePets = new ConcurrentHashMap<>();
 
-    public PetSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager,
+    public PetSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager,
                     HealthManaSystem healthManaSystem, AdvancedSkillsSystem skillsSystem) {
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         this.healthManaSystem = healthManaSystem;
         this.skillsSystem = skillsSystem;
@@ -43,7 +47,7 @@ public class PetSystem implements Listener {
      * Initialize the pet system after construction
      */
     public void initialize() {
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
         startPetUpdateTask();
     }
 
@@ -91,7 +95,7 @@ public class PetSystem implements Listener {
 
     private void startPetUpdateTask() {
         Thread.ofVirtual().start(() -> {
-            while (plugin.isEnabled()) {
+            while (SkyblockPlugin.isEnabled()) {
                 try {
                     for (Player player : Bukkit.getOnlinePlayers()) {
                         updateActivePet(player);
@@ -304,9 +308,9 @@ public class PetSystem implements Listener {
 
         // Try file-based storage as a fallback for persistence
         try {
-            File dir = new File(plugin.getDataFolder(), "pets");
+            File dir = new File(SkyblockPlugin.getDataFolder(), "pets");
             if (!dir.exists()) {
-                if (!dir.mkdirs()) plugin.getLogger().warning("Failed to create pets data directory: " + dir.getAbsolutePath());
+                if (!dir.mkdirs()) SkyblockPlugin.getLogger().warning("Failed to create pets data directory: " + dir.getAbsolutePath());
             }
             File f = new File(dir, playerId.toString() + ".yml");
             if (f.exists()) {
@@ -357,7 +361,7 @@ public class PetSystem implements Listener {
                 }
             }
         } catch (Exception ex) {
-            plugin.getLogger().warning("Failed to load pet data for " + playerId + ": " + ex.getMessage());
+            SkyblockPlugin.getLogger().warning("Failed to load pet data for " + playerId + ": " + ex.getMessage());
         }
 
         return data;
@@ -368,9 +372,9 @@ public class PetSystem implements Listener {
         if (data == null) return;
 
         try {
-            File dir = new File(plugin.getDataFolder(), "pets");
+            File dir = new File(SkyblockPlugin.getDataFolder(), "pets");
             if (!dir.exists()) {
-                if (!dir.mkdirs()) plugin.getLogger().warning("Failed to create pets data directory: " + dir.getAbsolutePath());
+                if (!dir.mkdirs()) SkyblockPlugin.getLogger().warning("Failed to create pets data directory: " + dir.getAbsolutePath());
             }
             File f = new File(dir, playerId.toString() + ".yml");
             YamlConfiguration cfg = new YamlConfiguration();
@@ -389,7 +393,7 @@ public class PetSystem implements Listener {
             cfg.set("active", data.getActivePet() != null ? data.getActivePet().getId() : "");
             cfg.save(f);
         } catch (Exception ex) {
-            plugin.getLogger().warning("Failed to save pet data for " + playerId + ": " + ex.getMessage());
+            SkyblockPlugin.getLogger().warning("Failed to save pet data for " + playerId + ": " + ex.getMessage());
         }
     }
 

@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.features.bosses.mechanics;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -33,15 +37,15 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class BossMechanicsSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     
     // Aktive Boss-Mechaniken
     private final Map<UUID, BossMechanic> activeMechanics = new ConcurrentHashMap<>();
     private final Map<UUID, List<BossPhase>> bossPhases = new ConcurrentHashMap<>();
     
-    public BossMechanicsSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public BossMechanicsSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeBossMechanics();
     }
@@ -117,7 +121,7 @@ public class BossMechanicsSystem implements Listener {
                     attackCooldown--;
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L);
     }
     
     /**
@@ -220,7 +224,7 @@ public class BossMechanicsSystem implements Listener {
                         cancel();
                     }
                 }
-            }.runTaskTimer(plugin, 0L, 5L);
+            }.runTaskTimer(SkyblockPlugin, 0L, 5L);
         }
     }
     
@@ -304,7 +308,7 @@ public class BossMechanicsSystem implements Listener {
                     healCooldown--;
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L);
     }
     
     /**
@@ -458,7 +462,7 @@ public class BossMechanicsSystem implements Listener {
                     cloneCooldown--;
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L);
     }
     
     /**
@@ -523,7 +527,7 @@ public class BossMechanicsSystem implements Listener {
                     attackCooldown--;
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L);
     }
     
     /**
@@ -721,7 +725,7 @@ public class BossMechanicsSystem implements Listener {
                         cancel();
                     }
                 }
-            }.runTaskTimer(plugin, 0L, 5L);
+            }.runTaskTimer(SkyblockPlugin, 0L, 5L);
         }
     }
     

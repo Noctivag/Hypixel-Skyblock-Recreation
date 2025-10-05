@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.gui;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -19,6 +23,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Advanced GUI System - Hypixel Skyblock Style
@@ -36,19 +41,19 @@ import java.util.concurrent.ConcurrentHashMap;
  * - GUI Templates
  */
 public class AdvancedGUISystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerGUI> playerGUIs = new ConcurrentHashMap<>();
     private final Map<GUIType, GUIConfig> guiConfigs = new HashMap<>();
     private final Map<UUID, BukkitTask> guiTasks = new ConcurrentHashMap<>();
     
-    public AdvancedGUISystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedGUISystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeGUIConfigs();
         startGUIUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeGUIConfigs() {
@@ -132,7 +137,7 @@ public class AdvancedGUISystem implements Listener {
                     gui.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L);
     }
     
     @EventHandler
@@ -159,7 +164,7 @@ public class AdvancedGUISystem implements Listener {
     
     private void openMainGUI(Player player) {
         PlayerGUI playerGUI = getPlayerGUI(player.getUniqueId());
-        Inventory gui = Bukkit.createInventory(null, 54, "§a§lMain Menu");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§a§lMain Menu"));
         
         // Add GUI items
         addGUIItem(gui, 10, Material.EXPERIENCE_BOTTLE, "§a§lSkills", "§7View and manage your skills.");
@@ -208,14 +213,14 @@ public class AdvancedGUISystem implements Listener {
         playerGUI.setGUIOpen(true);
         playerGUI.setCurrentGUI(GUIType.MAIN);
         
-        player.sendMessage("§aMain GUI geöffnet!");
+        player.sendMessage(Component.text("§aMain GUI geöffnet!"));
     }
     
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String lore) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(name);
-        meta.setLore(Arrays.asList(lore));
+        meta.displayName(Component.text(name));
+        meta.lore(Arrays.asList(lore).stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
         item.setItemMeta(meta);
         gui.setItem(slot, item);
     }
@@ -335,105 +340,105 @@ public class AdvancedGUISystem implements Listener {
     }
     
     private void openSkillsGUI(Player player) {
-        player.sendMessage("§aSkills GUI geöffnet!");
+        player.sendMessage(Component.text("§aSkills GUI geöffnet!"));
     }
     
     private void openCollectionsGUI(Player player) {
-        player.sendMessage("§aCollections GUI geöffnet!");
+        player.sendMessage(Component.text("§aCollections GUI geöffnet!"));
     }
     
     private void openMinionsGUI(Player player) {
-        player.sendMessage("§aMinions GUI geöffnet!");
+        player.sendMessage(Component.text("§aMinions GUI geöffnet!"));
     }
     
     private void openPetsGUI(Player player) {
-        player.sendMessage("§aPets GUI geöffnet!");
+        player.sendMessage(Component.text("§aPets GUI geöffnet!"));
     }
     
     private void openDungeonsGUI(Player player) {
-        player.sendMessage("§aDungeons GUI geöffnet!");
+        player.sendMessage(Component.text("§aDungeons GUI geöffnet!"));
     }
     
     private void openSlayersGUI(Player player) {
-        player.sendMessage("§aSlayers GUI geöffnet!");
+        player.sendMessage(Component.text("§aSlayers GUI geöffnet!"));
     }
     
     private void openGuildsGUI(Player player) {
-        player.sendMessage("§aGuilds GUI geöffnet!");
+        player.sendMessage(Component.text("§aGuilds GUI geöffnet!"));
     }
     
     private void openAuctionGUI(Player player) {
-        player.sendMessage("§aAuction GUI geöffnet!");
+        player.sendMessage(Component.text("§aAuction GUI geöffnet!"));
     }
     
     private void openBazaarGUI(Player player) {
-        player.sendMessage("§aBazaar GUI geöffnet!");
+        player.sendMessage(Component.text("§aBazaar GUI geöffnet!"));
     }
     
     private void openIslandsGUI(Player player) {
-        player.sendMessage("§aIslands GUI geöffnet!");
+        player.sendMessage(Component.text("§aIslands GUI geöffnet!"));
         // Integrate with LocationNavigationGUI
-        if (plugin.getLocationManager() != null) {
-            plugin.getLocationManager().openLocationNavigationGUI(player);
+        if (SkyblockPlugin.getLocationManager() != null) {
+            SkyblockPlugin.getLocationManager().openLocationNavigationGUI(player);
         } else {
-            player.sendMessage("§cLocation-System ist nicht verfügbar!");
+            player.sendMessage(Component.text("§cLocation-System ist nicht verfügbar!"));
         }
     }
     
     private void openEnchantingGUI(Player player) {
-        player.sendMessage("§aEnchanting GUI geöffnet!");
+        player.sendMessage(Component.text("§aEnchanting GUI geöffnet!"));
     }
     
     private void openAlchemyGUI(Player player) {
-        player.sendMessage("§aAlchemy GUI geöffnet!");
+        player.sendMessage(Component.text("§aAlchemy GUI geöffnet!"));
     }
     
     private void openCarpentryGUI(Player player) {
-        player.sendMessage("§aCarpentry GUI geöffnet!");
+        player.sendMessage(Component.text("§aCarpentry GUI geöffnet!"));
     }
     
     private void openRunecraftingGUI(Player player) {
-        player.sendMessage("§aRunecrafting GUI geöffnet!");
+        player.sendMessage(Component.text("§aRunecrafting GUI geöffnet!"));
     }
     
     private void openBankingGUI(Player player) {
-        player.sendMessage("§aBanking GUI geöffnet!");
+        player.sendMessage(Component.text("§aBanking GUI geöffnet!"));
     }
     
     private void openQuestsGUI(Player player) {
-        player.sendMessage("§aQuests GUI geöffnet!");
+        player.sendMessage(Component.text("§aQuests GUI geöffnet!"));
     }
     
     private void openEventsGUI(Player player) {
-        player.sendMessage("§aEvents GUI geöffnet!");
+        player.sendMessage(Component.text("§aEvents GUI geöffnet!"));
     }
     
     private void openCosmeticsGUI(Player player) {
-        player.sendMessage("§aCosmetics GUI geöffnet!");
+        player.sendMessage(Component.text("§aCosmetics GUI geöffnet!"));
     }
     
     private void openAchievementsGUI(Player player) {
-        player.sendMessage("§aAchievements GUI geöffnet!");
+        player.sendMessage(Component.text("§aAchievements GUI geöffnet!"));
     }
     
     private void openLeaderboardsGUI(Player player) {
-        player.sendMessage("§aLeaderboards GUI geöffnet!");
+        player.sendMessage(Component.text("§aLeaderboards GUI geöffnet!"));
     }
     
     private void openAPIGUI(Player player) {
-        player.sendMessage("§aAPI GUI geöffnet!");
+        player.sendMessage(Component.text("§aAPI GUI geöffnet!"));
     }
     
     private void openWebInterfaceGUI(Player player) {
-        player.sendMessage("§aWeb Interface GUI geöffnet!");
+        player.sendMessage(Component.text("§aWeb Interface GUI geöffnet!"));
     }
     
     private void openSocialGUI(Player player) {
-        player.sendMessage("§aSocial GUI geöffnet!");
+        player.sendMessage(Component.text("§aSocial GUI geöffnet!"));
     }
     
     private void openItemsGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§a§lItems Menu");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§a§lItems Menu"));
         
         // Add item categories
         addGUIItem(gui, 10, Material.DIAMOND_SWORD, "§c§lSwords", "§7View and manage swords.");
@@ -451,11 +456,11 @@ public class AdvancedGUISystem implements Listener {
         addGUIItem(gui, 53, Material.ARROW, "§7§lNext Page", "§7Go to next page.");
         
         player.openInventory(gui);
-        player.sendMessage("§aItems GUI geöffnet!");
+        player.sendMessage(Component.text("§aItems GUI geöffnet!"));
     }
     
     private void openArmorGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lArmor Menu");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lArmor Menu"));
         
         // Add armor categories
         addGUIItem(gui, 10, Material.DRAGON_HEAD, "§6§lDragon Armor", "§7View and manage dragon armor.");
@@ -473,11 +478,11 @@ public class AdvancedGUISystem implements Listener {
         addGUIItem(gui, 53, Material.ARROW, "§7§lNext Page", "§7Go to next page.");
         
         player.openInventory(gui);
-        player.sendMessage("§aArmor GUI geöffnet!");
+        player.sendMessage(Component.text("§aArmor GUI geöffnet!"));
     }
     
     private void openWeaponsGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§a§lWeapons Menu");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§a§lWeapons Menu"));
         
         // Add weapon categories
         addGUIItem(gui, 10, Material.DIAMOND_SWORD, "§c§lSwords", "§7View and manage swords.");
@@ -495,11 +500,11 @@ public class AdvancedGUISystem implements Listener {
         addGUIItem(gui, 53, Material.ARROW, "§7§lNext Page", "§7Go to next page.");
         
         player.openInventory(gui);
-        player.sendMessage("§aWeapons GUI geöffnet!");
+        player.sendMessage(Component.text("§aWeapons GUI geöffnet!"));
     }
     
     private void openCreativeGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§d§lCreative Menu");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§d§lCreative Menu"));
         
         // Add creative categories
         addGUIItem(gui, 10, Material.DIAMOND_SWORD, "§c§lSwords", "§7Get all swords.");
@@ -518,31 +523,31 @@ public class AdvancedGUISystem implements Listener {
         addGUIItem(gui, 53, Material.ARROW, "§7§lNext Page", "§7Go to next page.");
         
         player.openInventory(gui);
-        player.sendMessage("§aCreative GUI geöffnet!");
+        player.sendMessage(Component.text("§aCreative GUI geöffnet!"));
     }
     
     private void openHuntingGUI(Player player) {
         // Placeholder - method not implemented
-        player.sendMessage("§cHunting GUI not implemented yet!");
+        player.sendMessage(Component.text("§cHunting GUI not implemented yet!"));
     }
     
     private void openBossGUI(Player player) {
         // Placeholder - method not implemented
-        player.sendMessage("§cBoss GUI not implemented yet!");
+        player.sendMessage(Component.text("§cBoss GUI not implemented yet!"));
     }
     
     private void openAttributeGUI(Player player) {
         // Placeholder - method not implemented
-        player.sendMessage("§cAttribute GUI not implemented yet!");
+        player.sendMessage(Component.text("§cAttribute GUI not implemented yet!"));
     }
     
     private void openSackGUI(Player player) {
         // Placeholder - method not implemented
-        player.sendMessage("§cSack GUI not implemented yet!");
+        player.sendMessage(Component.text("§cSack GUI not implemented yet!"));
     }
     
     private void openMobGUI(Player player) {
-        plugin.getAdvancedMobSystem().openMobGUI(player);
+        SkyblockPlugin.getAdvancedMobSystem().openMobGUI(player);
     }
     
     
@@ -633,11 +638,11 @@ public class AdvancedGUISystem implements Listener {
         
         public PlayerGUI(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long timeDiff = currentTime - lastUpdate;
             
             if (timeDiff >= 60000) {

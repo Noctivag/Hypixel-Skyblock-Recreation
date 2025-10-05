@@ -1,11 +1,14 @@
 package de.noctivag.skyblock.infrastructure.config.impl;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.infrastructure.config.ConfigService;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,16 +25,16 @@ import java.util.logging.Logger;
  */
 public class ConfigServiceImpl implements ConfigService {
     
-    private final JavaSkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Logger logger;
     private final ExecutorService executor;
     private final ConcurrentHashMap<String, FileConfiguration> configs;
     private FileConfiguration mainConfig;
     private boolean initialized = false;
     
-    public ConfigServiceImpl(JavaSkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.logger = plugin.getLogger();
+    public ConfigServiceImpl(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.logger = SkyblockPlugin.getLogger();
         this.executor = Executors.newSingleThreadExecutor(r -> {
             Thread thread = new Thread(r, "ConfigService-Thread");
             thread.setDaemon(true);
@@ -45,8 +48,8 @@ public class ConfigServiceImpl implements ConfigService {
         return CompletableFuture.runAsync(() -> {
             try {
                 // Initialize main config
-                plugin.saveDefaultConfig();
-                mainConfig = plugin.getConfig();
+                SkyblockPlugin.saveDefaultConfig();
+                mainConfig = SkyblockPlugin.getConfig();
                 
                 // Load other configuration files
                 loadConfigFiles();
@@ -109,7 +112,7 @@ public class ConfigServiceImpl implements ConfigService {
             try {
                 FileConfiguration config = configs.get(fileName);
                 if (config != null) {
-                    File configFile = new File(plugin.getDataFolder(), fileName);
+                    File configFile = new File(SkyblockPlugin.getDataFolder(), fileName);
                     config.save(configFile);
                     logger.fine("Saved configuration: " + fileName);
                 }
@@ -159,17 +162,17 @@ public class ConfigServiceImpl implements ConfigService {
     
     @Override
     public String getConfigPath(String fileName) {
-        return new File(plugin.getDataFolder(), fileName).getAbsolutePath();
+        return new File(SkyblockPlugin.getDataFolder(), fileName).getAbsolutePath();
     }
     
     @Override
     public CompletableFuture<Void> createDefaultConfig(String fileName) {
         return CompletableFuture.runAsync(() -> {
             try {
-                File configFile = new File(plugin.getDataFolder(), fileName);
+                File configFile = new File(SkyblockPlugin.getDataFolder(), fileName);
                 if (!configFile.exists()) {
                     // Try to copy from resources
-                    InputStream resourceStream = plugin.getResource(fileName);
+                    InputStream resourceStream = SkyblockPlugin.getResource(fileName);
                     if (resourceStream != null) {
                         Files.copy(resourceStream, configFile.toPath());
                         logger.info("Created default configuration: " + fileName);
@@ -209,7 +212,7 @@ public class ConfigServiceImpl implements ConfigService {
     
     private FileConfiguration loadConfigFile(String fileName) {
         try {
-            File configFile = new File(plugin.getDataFolder(), fileName);
+            File configFile = new File(SkyblockPlugin.getDataFolder(), fileName);
             if (configFile.exists()) {
                 return YamlConfiguration.loadConfiguration(configFile);
             } else {

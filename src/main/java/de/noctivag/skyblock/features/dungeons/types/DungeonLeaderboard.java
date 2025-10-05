@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.dungeons.types;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class DungeonLeaderboard {
         this.dungeonType = dungeonType;
         this.floor = floor;
         this.rankings = new java.util.ArrayList<>();
-        this.lastUpdated = System.currentTimeMillis();
+        this.lastUpdated = java.lang.System.currentTimeMillis();
     }
 
     public String getDungeonType() {

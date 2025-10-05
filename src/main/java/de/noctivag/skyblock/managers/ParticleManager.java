@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.managers;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -13,12 +17,12 @@ import java.util.UUID;
 
 @SuppressWarnings("unused")
 public class ParticleManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, BukkitTask> activeTasks;
     private final Map<UUID, ParticleEffectType> activeEffects;
 
-    public ParticleManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public ParticleManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.activeTasks = new HashMap<>();
         this.activeEffects = new HashMap<>();
     }
@@ -45,7 +49,7 @@ public class ParticleManager {
 
                 effect.spawn(player);
             }
-        }.runTaskTimer(plugin, 0L, effect.getInterval());
+        }.runTaskTimer(SkyblockPlugin, 0L, effect.getInterval());
 
         activeTasks.put(playerId, task);
     }

@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.items.MissingItemsSystem;
 import de.noctivag.skyblock.items.MissingItemsSystem.ItemCategory;
 import de.noctivag.skyblock.items.MissingItemsSystem.MissingItem;
@@ -27,8 +30,8 @@ public class MissingItemsGUI {
     private final MissingItemsSystem missingItemsSystem;
     private final Map<ItemCategory, List<MissingItem>> categorizedItems;
     
-    public MissingItemsGUI(SkyblockPlugin plugin) {
-        this.missingItemsSystem = new MissingItemsSystem(plugin);
+    public MissingItemsGUI(SkyblockPlugin SkyblockPlugin) {
+        this.missingItemsSystem = new MissingItemsSystem(SkyblockPlugin);
         this.categorizedItems = missingItemsSystem.getMissingItemsByCategory();
     }
     
@@ -85,7 +88,7 @@ public class MissingItemsGUI {
     public void openCategoryGUI(Player player, ItemCategory category) {
         List<MissingItem> items = categorizedItems.get(category);
         if (items == null || items.isEmpty()) {
-            player.sendMessage("§cKeine Items in dieser Kategorie gefunden!");
+            player.sendMessage(Component.text("§cKeine Items in dieser Kategorie gefunden!"));
             return;
         }
         

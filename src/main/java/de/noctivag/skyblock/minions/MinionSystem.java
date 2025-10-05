@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.minions;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.CorePlatform;
 import de.noctivag.skyblock.core.PlayerProfile;
 import org.bukkit.Location;
@@ -25,14 +30,14 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Minion-Platzierung
  */
 public class MinionSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CorePlatform corePlatform;
     private final Map<UUID, List<Minion>> playerMinions = new ConcurrentHashMap<>();
     private final Map<Location, Minion> placedMinions = new ConcurrentHashMap<>();
     private final Map<String, BukkitTask> minionTasks = new ConcurrentHashMap<>();
     
-    public MinionSystem(SkyblockPlugin plugin, CorePlatform corePlatform) {
-        this.plugin = plugin;
+    public MinionSystem(SkyblockPlugin SkyblockPlugin, CorePlatform corePlatform) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.corePlatform = corePlatform;
         startMinionProduction();
     }
@@ -48,7 +53,7 @@ public class MinionSystem {
                     }
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Every second
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Every second
     }
     
     public void createMinion(Player player, MinionType minionType, int level) {
@@ -73,7 +78,7 @@ public class MinionSystem {
         // Give minion item to player
         player.getInventory().addItem(minion.createMinionItem());
         
-        player.sendMessage("§a§lMINION CREATED!");
+        player.sendMessage(Component.text("§a§lMINION CREATED!"));
         player.sendMessage("§7Type: §e" + minionType.getName());
         player.sendMessage("§7Level: §e" + level);
         player.sendMessage("§7Cost: §6" + cost + " coins");
@@ -82,13 +87,13 @@ public class MinionSystem {
     public void placeMinion(Player player, Location location, Minion minion) {
         // Check if location is valid
         if (!isValidMinionLocation(location)) {
-            player.sendMessage("§cInvalid location for minion placement!");
+            player.sendMessage(Component.text("§cInvalid location for minion placement!"));
             return;
         }
         
         // Check if player has permission to place minions here
         if (!canPlaceMinion(player, location)) {
-            player.sendMessage("§cYou don't have permission to place minions here!");
+            player.sendMessage(Component.text("§cYou don't have permission to place minions here!"));
             return;
         }
         
@@ -99,7 +104,7 @@ public class MinionSystem {
         // Start minion production
         startMinionProduction(minion);
         
-        player.sendMessage("§a§lMINION PLACED!");
+        player.sendMessage(Component.text("§a§lMINION PLACED!"));
         player.sendMessage("§7Type: §e" + minion.getType().getName());
         player.sendMessage("§7Level: §e" + minion.getLevel());
         player.sendMessage("§7Location: §e" + location.getBlockX() + ", " + location.getBlockY() + ", " + location.getBlockZ());
@@ -108,13 +113,13 @@ public class MinionSystem {
     public void removeMinion(Player player, Location location) {
         Minion minion = placedMinions.get(location);
         if (minion == null) {
-            player.sendMessage("§cNo minion found at this location!");
+            player.sendMessage(Component.text("§cNo minion found at this location!"));
             return;
         }
         
         // Check if player owns this minion
         if (!minion.getOwnerId().equals(player.getUniqueId())) {
-            player.sendMessage("§cThis minion doesn't belong to you!");
+            player.sendMessage(Component.text("§cThis minion doesn't belong to you!"));
             return;
         }
         
@@ -127,7 +132,7 @@ public class MinionSystem {
         // Give minion item back to player
         player.getInventory().addItem(minion.createMinionItem());
         
-        player.sendMessage("§a§lMINION REMOVED!");
+        player.sendMessage(Component.text("§a§lMINION REMOVED!"));
         player.sendMessage("§7Type: §e" + minion.getType().getName());
         player.sendMessage("§7Level: §e" + minion.getLevel());
     }
@@ -146,7 +151,7 @@ public class MinionSystem {
         // Upgrade minion
         minion.upgrade();
         
-        player.sendMessage("§a§lMINION UPGRADED!");
+        player.sendMessage(Component.text("§a§lMINION UPGRADED!"));
         player.sendMessage("§7Type: §e" + minion.getType().getName());
         player.sendMessage("§7New Level: §e" + minion.getLevel());
         player.sendMessage("§7Cost: §6" + cost + " coins");
@@ -155,7 +160,7 @@ public class MinionSystem {
     public void collectMinionResources(Player player, Minion minion) {
         // Check if player owns this minion
         if (!minion.getOwnerId().equals(player.getUniqueId())) {
-            player.sendMessage("§cThis minion doesn't belong to you!");
+            player.sendMessage(Component.text("§cThis minion doesn't belong to you!"));
             return;
         }
         
@@ -167,7 +172,7 @@ public class MinionSystem {
             player.getInventory().addItem(resource);
         }
         
-        player.sendMessage("§a§lRESOURCES COLLECTED!");
+        player.sendMessage(Component.text("§a§lRESOURCES COLLECTED!"));
         player.sendMessage("§7Type: §e" + minion.getType().getName());
         player.sendMessage("§7Resources: §e" + resources.size() + " items");
     }
@@ -203,7 +208,7 @@ public class MinionSystem {
                     cancel();
                 }
             }
-        }.runTaskTimer(plugin, 0L, minion.getProductionInterval());
+        }.runTaskTimer(SkyblockPlugin, 0L, minion.getProductionInterval());
         
         minionTasks.put(taskId, task);
     }

@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.collections;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.collections.CollectionsSystem.CollectionType;
@@ -33,7 +34,7 @@ public class PlayerCollections {
             collectionAmounts.put(collectionType, 0);
             unlockedRewards.put(collectionType, new HashSet<>());
             unlockedRecipes.put(collectionType, new HashSet<>());
-            lastCollection.put(collectionType, System.currentTimeMillis());
+            lastCollection.put(collectionType, java.lang.System.currentTimeMillis());
         }
     }
     
@@ -41,7 +42,7 @@ public class PlayerCollections {
         int currentAmount = collectionAmounts.get(collectionType);
         int newAmount = currentAmount + amount;
         collectionAmounts.put(collectionType, newAmount);
-        lastCollection.put(collectionType, System.currentTimeMillis());
+        lastCollection.put(collectionType, java.lang.System.currentTimeMillis());
         return newAmount;
     }
     
@@ -141,7 +142,7 @@ public class PlayerCollections {
         collectionAmounts.put(collectionType, 0);
         unlockedRewards.get(collectionType).clear();
         unlockedRecipes.get(collectionType).clear();
-        lastCollection.put(collectionType, System.currentTimeMillis());
+        lastCollection.put(collectionType, java.lang.System.currentTimeMillis());
     }
     
     public void resetAllCollections() {

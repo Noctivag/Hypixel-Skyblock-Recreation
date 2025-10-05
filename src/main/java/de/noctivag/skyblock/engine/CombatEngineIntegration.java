@@ -1,5 +1,9 @@
 package de.noctivag.skyblock.engine;
 
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+
 import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 // import de.noctivag.skyblock.player.PlayerProfile;
@@ -29,7 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CombatEngineIntegration {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     
     // Core systems
@@ -45,14 +49,14 @@ public class CombatEngineIntegration {
     private static final long CACHE_DURATION_MS = 1000; // 1 second
     private static final int UPDATE_INTERVAL_TICKS = 5; // 5 ticks = 0.25 seconds
     
-    public CombatEngineIntegration(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public CombatEngineIntegration(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
         // Initialize core systems
-        this.combatEngine = new FunctionalCombatEngine(plugin, databaseManager);
-        this.magicalPowerSystem = new MagicalPowerSystem(plugin, databaseManager);
-        this.enchantmentEngine = new CustomEnchantmentEngine(plugin, databaseManager);
+        this.combatEngine = new FunctionalCombatEngine(SkyblockPlugin, databaseManager);
+        this.magicalPowerSystem = new MagicalPowerSystem(SkyblockPlugin, databaseManager);
+        this.enchantmentEngine = new CustomEnchantmentEngine(SkyblockPlugin, databaseManager);
         
         startIntegrationUpdateTask();
     }
@@ -100,7 +104,7 @@ public class CombatEngineIntegration {
                 
                 // Cache the result
                 playerStatsCache.put(playerId, integratedStats);
-                lastUpdateTime.put(playerId, System.currentTimeMillis());
+                lastUpdateTime.put(playerId, java.lang.System.currentTimeMillis());
                 
                 return CompletableFuture.completedFuture(integratedStats);
             });
@@ -298,7 +302,7 @@ public class CombatEngineIntegration {
      */
     public void updatePlayerProfile(Player player) {
         getIntegratedPlayerStats(player).thenAccept(integratedStats -> {
-            // PlayerProfile profile = plugin.getPlayerProfile(player.getUniqueId());
+            // PlayerProfile profile = SkyblockPlugin.getPlayerProfile(player.getUniqueId());
             // if (profile != null) {
             //     profile.updateStats(integratedStats.getFinalStats());
             // }
@@ -316,7 +320,7 @@ public class CombatEngineIntegration {
                     updatePlayerProfile(player);
                 }
             }
-        }.runTaskTimer(plugin, 0, UPDATE_INTERVAL_TICKS);
+        }.runTaskTimer(SkyblockPlugin, 0, UPDATE_INTERVAL_TICKS);
     }
     
     /**

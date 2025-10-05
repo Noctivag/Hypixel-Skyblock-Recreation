@@ -53,7 +53,7 @@ public class CollectionStatistics {
         double progressEfficiency = Math.min(progress / 100000.0, 1.0); // Cap at 100K progress
         
         // Activity efficiency (recent activity = higher efficiency)
-        long timeSinceActivity = System.currentTimeMillis() - lastActivity;
+        long timeSinceActivity = java.lang.System.currentTimeMillis() - lastActivity;
         double activityEfficiency = Math.max(0.1, 1.0 - (timeSinceActivity / 86400000.0)); // Decay over 24 hours
         
         // Difficulty factor

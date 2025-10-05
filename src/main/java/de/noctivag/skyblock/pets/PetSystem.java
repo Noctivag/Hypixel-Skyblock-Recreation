@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.pets;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.CorePlatform;
 import de.noctivag.skyblock.core.PlayerProfile;
 import org.bukkit.Material;
@@ -22,14 +27,14 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Pet-Following
  */
 public class PetSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CorePlatform corePlatform;
     private final Map<UUID, List<Pet>> playerPets = new ConcurrentHashMap<>();
     private final Map<UUID, Pet> activePets = new ConcurrentHashMap<>();
     private final Map<String, PetType> petTypes = new HashMap<>();
     
-    public PetSystem(SkyblockPlugin plugin, CorePlatform corePlatform) {
-        this.plugin = plugin;
+    public PetSystem(SkyblockPlugin SkyblockPlugin, CorePlatform corePlatform) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.corePlatform = corePlatform;
         initializePetTypes();
     }
@@ -255,7 +260,7 @@ public class PetSystem {
         // Give pet item to player
         player.getInventory().addItem(pet.createPetItem());
         
-        player.sendMessage("§a§lPET CREATED!");
+        player.sendMessage(Component.text("§a§lPET CREATED!"));
         player.sendMessage("§7Type: §e" + petType.getName());
         player.sendMessage("§7Level: §e" + level);
         player.sendMessage("§7Cost: §6" + cost + " coins");
@@ -266,7 +271,7 @@ public class PetSystem {
         
         // Check if player owns this pet
         if (!pet.getOwnerId().equals(playerId)) {
-            player.sendMessage("§cThis pet doesn't belong to you!");
+            player.sendMessage(Component.text("§cThis pet doesn't belong to you!"));
             return;
         }
         
@@ -283,7 +288,7 @@ public class PetSystem {
         // Apply pet effects
         applyPetEffects(player, pet);
         
-        player.sendMessage("§a§lPET ACTIVATED!");
+        player.sendMessage(Component.text("§a§lPET ACTIVATED!"));
         player.sendMessage("§7Pet: §e" + pet.getType().getName());
         player.sendMessage("§7Level: §e" + pet.getLevel());
     }
@@ -298,7 +303,7 @@ public class PetSystem {
         pet.setActive(false);
         activePets.remove(playerId);
         
-        player.sendMessage("§c§lPET DEACTIVATED!");
+        player.sendMessage(Component.text("§c§lPET DEACTIVATED!"));
         player.sendMessage("§7Pet: §e" + pet.getType().getName());
     }
     
@@ -322,7 +327,7 @@ public class PetSystem {
             applyPetEffects(player, pet);
         }
         
-        player.sendMessage("§a§lPET LEVELED UP!");
+        player.sendMessage(Component.text("§a§lPET LEVELED UP!"));
         player.sendMessage("§7Pet: §e" + pet.getType().getName());
         player.sendMessage("§7New Level: §e" + pet.getLevel());
         player.sendMessage("§7Cost: §6" + cost + " coins");
@@ -334,7 +339,7 @@ public class PetSystem {
         int newLevel = pet.getLevel();
         
         if (newLevel > oldLevel) {
-            player.sendMessage("§a§lPET LEVEL UP!");
+            player.sendMessage(Component.text("§a§lPET LEVEL UP!"));
             player.sendMessage("§7Pet: §e" + pet.getType().getName());
             player.sendMessage("§7Level: §e" + oldLevel + " §7→ §a" + newLevel);
             
@@ -351,7 +356,7 @@ public class PetSystem {
         // This would need to be implemented with a custom effect system
         // For now, we'll just send a message
         
-        player.sendMessage("§a§lPET EFFECTS APPLIED!");
+        player.sendMessage(Component.text("§a§lPET EFFECTS APPLIED!"));
         player.sendMessage("§7Pet: §e" + pet.getType().getName());
         player.sendMessage("§7Level: §e" + pet.getLevel());
     }
@@ -361,7 +366,7 @@ public class PetSystem {
         // This would need to be implemented with a custom effect system
         // For now, we'll just send a message
         
-        player.sendMessage("§c§lPET EFFECTS REMOVED!");
+        player.sendMessage(Component.text("§c§lPET EFFECTS REMOVED!"));
         player.sendMessage("§7Pet: §e" + pet.getType().getName());
     }
     

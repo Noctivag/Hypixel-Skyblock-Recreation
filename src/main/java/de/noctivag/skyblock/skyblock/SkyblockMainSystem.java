@@ -1,4 +1,8 @@
 package de.noctivag.skyblock.skyblock;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
@@ -10,7 +14,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.java.JavaPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import net.kyori.adventure.text.Component;
 
 import java.util.*;
@@ -27,7 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SkyblockMainSystem implements Listener {
 
-    private final JavaSkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
 
     // Core systems
@@ -41,55 +45,55 @@ public class SkyblockMainSystem implements Listener {
     // Player data management
     private final Map<UUID, PlayerSkyblockData> playerData = new ConcurrentHashMap<>();
 
-    public SkyblockMainSystem(JavaSkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public SkyblockMainSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
 
         // Defer initialization to avoid 'this' escaping during construction.
-        // Call init() once the plugin is fully enabled.
+        // Call init() once the SkyblockPlugin is fully enabled.
     }
 
     /**
-     * Initialize systems and register events. Call after construction when plugin is ready.
+     * Initialize systems and register events. Call after construction when SkyblockPlugin is ready.
      */
     public void init() {
         // Initialize all systems
         initializeSystems();
 
         // Register this listener once initialization is complete
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
 
     private void initializeSystems() {
         // Initialize core systems in dependency order
-        healthManaSystem = new HealthManaSystem(plugin, databaseManager);
-        skillsSystem = new AdvancedSkillsSystem(plugin, databaseManager, healthManaSystem);
-        // collectionsSystem = new CollectionsSystem(plugin, databaseManager, skillsSystem);
-        // Initialize CollectionsSystem with the skyblock-specific implementation that only requires the Plugin
-        de.noctivag.plugin.SkyblockPlugin  (de.noctivag.plugin.Plugin) plugin;
+        healthManaSystem = new HealthManaSystem(SkyblockPlugin, databaseManager);
+        skillsSystem = new AdvancedSkillsSystem(SkyblockPlugin, databaseManager, healthManaSystem);
+        // collectionsSystem = new CollectionsSystem(SkyblockPlugin, databaseManager, skillsSystem);
+        // Initialize CollectionsSystem with the skyblock-specific implementation that only requires the SkyblockPlugin
+        de.noctivag.skyblock.SkyblockPlugin mainPlugin = (de.noctivag.skyblock.SkyblockPlugin) SkyblockPlugin;
         collectionsSystem = new CollectionsSystem(mainPlugin);
-        combatSystem = new AdvancedCombatSystem(plugin, databaseManager, healthManaSystem, skillsSystem);
-        petSystem = new PetSystem(plugin, databaseManager, healthManaSystem, skillsSystem);
-        menuSystem = new SkyblockMenuSystem(plugin, healthManaSystem);
+        combatSystem = new AdvancedCombatSystem(SkyblockPlugin, databaseManager, healthManaSystem, skillsSystem);
+        petSystem = new PetSystem(SkyblockPlugin, databaseManager, healthManaSystem, skillsSystem);
+        menuSystem = new SkyblockMenuSystem(SkyblockPlugin, healthManaSystem);
 
         // Register commands
         registerCommands();
 
-        plugin.getLogger().info("Skyblock systems initialized successfully!");
+        SkyblockPlugin.getLogger().info("Skyblock systems initialized successfully!");
     }
 
     private void registerCommands() {
-        // Register Skyblock commands (defensive: check for null to avoid NPEs when commands missing in plugin.yml)
-        var skyblockCmd = plugin.getCommand("skyblock");
-        if (skyblockCmd != null) skyblockCmd.setExecutor(new SkyblockCommand(this)); else plugin.getLogger().warning("Command 'skyblock' not defined in plugin.yml");
-        var skillsCmd = plugin.getCommand("skills");
-        if (skillsCmd != null) skillsCmd.setExecutor(new SkillsCommand(this)); else plugin.getLogger().warning("Command 'skills' not defined in plugin.yml");
-        var collectionsCmd = plugin.getCommand("collections");
-        if (collectionsCmd != null) collectionsCmd.setExecutor(new CollectionsCommand(this)); else plugin.getLogger().warning("Command 'collections' not defined in plugin.yml");
-        var petsCmd = plugin.getCommand("pets");
-        if (petsCmd != null) petsCmd.setExecutor(new PetsCommand(this)); else plugin.getLogger().warning("Command 'pets' not defined in plugin.yml");
-        var combatCmd = plugin.getCommand("combat");
-        if (combatCmd != null) combatCmd.setExecutor(new CombatCommand(this)); else plugin.getLogger().warning("Command 'combat' not defined in plugin.yml");
+        // Register Skyblock commands (defensive: check for null to avoid NPEs when commands missing in SkyblockPlugin.yml)
+        var skyblockCmd = SkyblockPlugin.getCommand("skyblock");
+        if (skyblockCmd != null) skyblockCmd.setExecutor(new SkyblockCommand(this)); else SkyblockPlugin.getLogger().warning("Command 'skyblock' not defined in SkyblockPlugin.yml");
+        var skillsCmd = SkyblockPlugin.getCommand("skills");
+        if (skillsCmd != null) skillsCmd.setExecutor(new SkillsCommand(this)); else SkyblockPlugin.getLogger().warning("Command 'skills' not defined in SkyblockPlugin.yml");
+        var collectionsCmd = SkyblockPlugin.getCommand("collections");
+        if (collectionsCmd != null) collectionsCmd.setExecutor(new CollectionsCommand(this)); else SkyblockPlugin.getLogger().warning("Command 'collections' not defined in SkyblockPlugin.yml");
+        var petsCmd = SkyblockPlugin.getCommand("pets");
+        if (petsCmd != null) petsCmd.setExecutor(new PetsCommand(this)); else SkyblockPlugin.getLogger().warning("Command 'pets' not defined in SkyblockPlugin.yml");
+        var combatCmd = SkyblockPlugin.getCommand("combat");
+        if (combatCmd != null) combatCmd.setExecutor(new CombatCommand(this)); else SkyblockPlugin.getLogger().warning("Command 'combat' not defined in SkyblockPlugin.yml");
     }
 
     @EventHandler
@@ -105,8 +109,8 @@ public class SkyblockMainSystem implements Listener {
         initializePlayerInSystems(player);
 
         // Send welcome message
-        player.sendMessage("§6§lWelcome to Skyblock!");
-        player.sendMessage("§7Use §e/skyblock §7to open the main menu!");
+        player.sendMessage(Component.text("§6§lWelcome to Skyblock!"));
+        player.sendMessage(Component.text("§7Use §e/skyblock §7to open the main menu!"));
     }
 
     @EventHandler
@@ -162,7 +166,7 @@ public class SkyblockMainSystem implements Listener {
         if (databaseManager != null) {
             // Use a simple synchronous approach for now
             // databaseManager.savePlayerData(playerId, data).thenRun(() -> {
-            //     plugin.getLogger().info("Player data saved for " + playerId);
+            //     SkyblockPlugin.getLogger().info("Player data saved for " + playerId);
             // });
         }
         // if (databaseManager != null && databaseManager.isConnected()) {
@@ -176,7 +180,7 @@ public class SkyblockMainSystem implements Listener {
     public void shutdown() {
         // Clear player data and log shutdown
         playerData.clear();
-        plugin.getLogger().info("SkyblockMainSystem has been shut down.");
+        SkyblockPlugin.getLogger().info("SkyblockMainSystem has been shut down.");
     }
 
     // Public API methods
@@ -234,7 +238,7 @@ public class SkyblockMainSystem implements Listener {
 
         public PlayerSkyblockData(UUID playerId) {
             this.playerId = playerId;
-            this.joinTime = System.currentTimeMillis();
+            this.joinTime = java.lang.System.currentTimeMillis();
             this.totalPlayTime = 0;
             this.skyblockLevel = 1;
             this.skyblockXP = 0.0;
@@ -293,7 +297,7 @@ class SkyblockCommand implements org.bukkit.command.CommandExecutor {
                 system.openFastTravelMenu(player);
                 break;
             default:
-                player.sendMessage("§cUnknown subcommand! Use /skyblock for the main menu.");
+                player.sendMessage(Component.text("§cUnknown subcommand! Use /skyblock for the main menu."));
                 break;
         }
 
@@ -359,14 +363,14 @@ class PetsCommand implements org.bukkit.command.CommandExecutor {
 
         if (args.length == 0) {
             // Open pets menu
-            player.sendMessage("§eOpening pets menu...");
+            player.sendMessage(Component.text("§eOpening pets menu..."));
             return true;
         }
 
         switch (args[0].toLowerCase()) {
             case "list":
                 List<PetSystem.Pet> pets = system.getPetSystem().getPlayerPets(player);
-                player.sendMessage("§6§lYour Pets:");
+                player.sendMessage(Component.text("§6§lYour Pets:"));
                 for (PetSystem.Pet pet : pets) {
                     player.sendMessage("§7- §e" + pet.getName() + " §7(Level " + pet.getLevel() + ")");
                 }
@@ -376,11 +380,11 @@ class PetsCommand implements org.bukkit.command.CommandExecutor {
                 if (activePet != null) {
                     player.sendMessage("§aActive Pet: §e" + activePet.getName() + " §7(Level " + activePet.getLevel() + ")");
                 } else {
-                    player.sendMessage("§cNo active pet!");
+                    player.sendMessage(Component.text("§cNo active pet!"));
                 }
                 break;
             default:
-                player.sendMessage("§cUnknown subcommand! Use /pets list or /pets active");
+                player.sendMessage(Component.text("§cUnknown subcommand! Use /pets list or /pets active"));
                 break;
         }
 
@@ -407,7 +411,7 @@ class CombatCommand implements org.bukkit.command.CommandExecutor {
         if (args.length == 0) {
             // Show combat stats
             AdvancedCombatSystem.PlayerCombatData combatData = system.getCombatSystem().getPlayerCombatData(player.getUniqueId());
-            player.sendMessage("§c§lCombat Statistics:");
+            player.sendMessage(Component.text("§c§lCombat Statistics:"));
             player.sendMessage("§7Damage Dealt: §e" + String.format("%.1f", combatData.getDamageDealt()));
             player.sendMessage("§7Hits: §e" + combatData.getHits());
             player.sendMessage("§7Kills: §e" + combatData.getKills());
@@ -418,14 +422,14 @@ class CombatCommand implements org.bukkit.command.CommandExecutor {
         switch (args[0].toLowerCase()) {
             case "stats":
                 AdvancedCombatSystem.PlayerCombatData combatData = system.getCombatSystem().getPlayerCombatData(player.getUniqueId());
-                player.sendMessage("§c§lCombat Statistics:");
+                player.sendMessage(Component.text("§c§lCombat Statistics:"));
                 player.sendMessage("§7Damage Dealt: §e" + String.format("%.1f", combatData.getDamageDealt()));
                 player.sendMessage("§7Hits: §e" + combatData.getHits());
                 player.sendMessage("§7Kills: §e" + combatData.getKills());
                 player.sendMessage("§7Deaths: §e" + combatData.getDeaths());
                 break;
             default:
-                player.sendMessage("§cUnknown subcommand! Use /combat stats");
+                player.sendMessage(Component.text("§cUnknown subcommand! Use /combat stats"));
                 break;
         }
 
@@ -450,7 +454,7 @@ class CombatCommand implements org.bukkit.command.CommandExecutor {
     
     public void teleportToIsland(Player player) {
         // Placeholder implementation
-        player.sendMessage("§aTeleporting to your island...");
+        player.sendMessage(Component.text("§aTeleporting to your island..."));
         // TODO: Implement actual island teleportation
     }
     
@@ -465,7 +469,7 @@ class CombatCommand implements org.bukkit.command.CommandExecutor {
     
     public void teleportToHub(Player player) {
         // Placeholder implementation
-        player.sendMessage("§aTeleporting to hub...");
+        player.sendMessage(Component.text("§aTeleporting to hub..."));
         // TODO: Implement actual hub teleportation
     }
     
@@ -481,7 +485,7 @@ class CombatCommand implements org.bukkit.command.CommandExecutor {
         // }
     }
     
-    public void addSkillXP(Player player, de.noctivag.plugin.skyblock.SkyblockManager.SkyblockSkill skill, double xp) {
+    public void addSkillXP(Player player, de.noctivag.skyblock.skyblock.SkyblockManager.SkyblockSkill skill, double xp) {
         // Placeholder implementation
         // if (skillsSystem != null) {
         //     // TODO: Implement actual skill XP addition

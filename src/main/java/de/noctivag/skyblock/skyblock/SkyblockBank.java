@@ -13,7 +13,7 @@ public class SkyblockBank {
     public SkyblockBank() {
         this.balance = 0.0;
         this.interestRate = 0.02; // 2% interest rate
-        this.lastInterestTime = System.currentTimeMillis();
+        this.lastInterestTime = java.lang.System.currentTimeMillis();
     }
     
     public void deposit(double amount) {
@@ -31,7 +31,7 @@ public class SkyblockBank {
     }
     
     public void addInterest() {
-        long currentTime = System.currentTimeMillis();
+        long currentTime = java.lang.System.currentTimeMillis();
         long timeDiff = currentTime - lastInterestTime;
         
         // Add interest every hour (3600000 ms)
@@ -44,7 +44,7 @@ public class SkyblockBank {
     }
     
     private void addTransaction(String type, double amount) {
-        String timestamp = String.valueOf(System.currentTimeMillis());
+        String timestamp = String.valueOf(java.lang.System.currentTimeMillis());
         transactionHistory.put(timestamp, amount);
         
         // Keep only last 100 transactions

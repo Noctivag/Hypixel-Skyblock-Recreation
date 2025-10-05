@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.compatibility;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -10,22 +13,22 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * PerformanceOptimizer - Optimiert Plugin-Performance für bessere Kompatibilität
+ * PerformanceOptimizer - Optimiert SkyblockPlugin-Performance für bessere Kompatibilität
  */
 public class PerformanceOptimizer {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final ConcurrentHashMap<String, AtomicLong> performanceMetrics;
     private final AtomicInteger activeTasks;
     private final AtomicLong memoryUsage;
     private final AtomicLong lastGarbageCollection;
     
-    public PerformanceOptimizer(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public PerformanceOptimizer(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.performanceMetrics = new ConcurrentHashMap<>();
         this.activeTasks = new AtomicInteger(0);
         this.memoryUsage = new AtomicLong(0);
-        this.lastGarbageCollection = new AtomicLong(System.currentTimeMillis());
+        this.lastGarbageCollection = new AtomicLong(java.lang.System.currentTimeMillis());
         
         initializePerformanceMonitoring();
     }
@@ -39,7 +42,7 @@ public class PerformanceOptimizer {
                 optimizeMemoryUsage();
                 checkTaskOverload();
             }
-        }.runTaskTimer(plugin, 0L, 600L); // 30 Sekunden = 600 Ticks
+        }.runTaskTimer(SkyblockPlugin, 0L, 600L); // 30 Sekunden = 600 Ticks
     }
     
     private void updatePerformanceMetrics() {
@@ -63,14 +66,14 @@ public class PerformanceOptimizer {
     private void optimizeMemoryUsage() {
         long currentMemory = memoryUsage.get();
         long lastGC = lastGarbageCollection.get();
-        long timeSinceLastGC = System.currentTimeMillis() - lastGC;
+        long timeSinceLastGC = java.lang.System.currentTimeMillis() - lastGC;
         
         // Garbage Collection nach 5 Minuten oder bei hohem Speicherverbrauch
         if (timeSinceLastGC > 300000 || currentMemory > 1000000000) { // 1GB
             System.gc();
-            lastGarbageCollection.set(System.currentTimeMillis());
+            lastGarbageCollection.set(java.lang.System.currentTimeMillis());
             
-            plugin.getLogger().info("Performance: Garbage Collection ausgeführt");
+            SkyblockPlugin.getLogger().info("Performance: Garbage Collection ausgeführt");
         }
     }
     
@@ -79,30 +82,30 @@ public class PerformanceOptimizer {
         int bukkitTasks = Bukkit.getScheduler().getPendingTasks().size();
         
         if (tasks > 100 || bukkitTasks > 200) {
-            plugin.getLogger().warning("Performance: Hohe Task-Last erkannt! Tasks: " + tasks + ", Bukkit Tasks: " + bukkitTasks);
+            SkyblockPlugin.getLogger().warning("Performance: Hohe Task-Last erkannt! Tasks: " + tasks + ", Bukkit Tasks: " + bukkitTasks);
             
             // Task-Limits setzen
             if (tasks > 150) {
-                plugin.getLogger().warning("Performance: Task-Limit erreicht, neue Tasks werden verzögert");
+                SkyblockPlugin.getLogger().warning("Performance: Task-Limit erreicht, neue Tasks werden verzögert");
             }
         }
     }
     
     public void startTask(String taskName) {
         activeTasks.incrementAndGet();
-        performanceMetrics.put("task_" + taskName + "_start", new AtomicLong(System.currentTimeMillis()));
+        performanceMetrics.put("task_" + taskName + "_start", new AtomicLong(java.lang.System.currentTimeMillis()));
     }
     
     public void endTask(String taskName) {
         activeTasks.decrementAndGet();
         long startTime = performanceMetrics.getOrDefault("task_" + taskName + "_start", new AtomicLong(0)).get();
-        long duration = System.currentTimeMillis() - startTime;
+        long duration = java.lang.System.currentTimeMillis() - startTime;
         
         performanceMetrics.put("task_" + taskName + "_duration", new AtomicLong(duration));
         
         // Warnung bei langen Tasks
         if (duration > 1000) { // 1 Sekunde
-            plugin.getLogger().warning("Performance: Langsamer Task erkannt: " + taskName + " (" + duration + "ms)");
+            SkyblockPlugin.getLogger().warning("Performance: Langsamer Task erkannt: " + taskName + " (" + duration + "ms)");
         }
     }
     

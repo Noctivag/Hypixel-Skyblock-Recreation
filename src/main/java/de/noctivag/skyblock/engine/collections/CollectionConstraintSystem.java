@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.engine.collections;
+import java.util.UUID;
 
 import de.noctivag.skyblock.core.api.Service;
 import de.noctivag.skyblock.core.api.SystemStatus;
@@ -132,7 +133,7 @@ public class CollectionConstraintSystem implements Service {
                 
                 // Item is eligible - add to collection progress
                 CollectionItemProgress progress = new CollectionItemProgress(
-                    item, itemStack.getAmount(), provenance, System.currentTimeMillis()
+                    item, itemStack.getAmount(), provenance, java.lang.System.currentTimeMillis()
                 );
                 eligibleItems.add(progress);
                 totalEligibleAmount += itemStack.getAmount();
@@ -263,7 +264,7 @@ public class CollectionConstraintSystem implements Service {
         
         playerCollectionProgress.computeIfAbsent(playerId, k -> new ConcurrentHashMap<>())
             .computeIfAbsent(collectionType, k -> new ConcurrentHashMap<>())
-            .computeIfAbsent(item, k -> new CollectionItemProgress(item, 0, null, System.currentTimeMillis()))
+            .computeIfAbsent(item, k -> new CollectionItemProgress(item, 0, null, java.lang.System.currentTimeMillis()))
             .addProgress(progressItems);
     }
     

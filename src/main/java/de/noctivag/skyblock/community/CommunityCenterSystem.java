@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.community;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -10,15 +15,16 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class CommunityCenterSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerCommunityData> playerCommunityData = new ConcurrentHashMap<>();
     private final Map<String, CommunityProject> communityProjects = new HashMap<>();
     
-    public CommunityCenterSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public CommunityCenterSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeCommunityProjects();
     }
@@ -31,7 +37,7 @@ public class CommunityCenterSystem {
     }
     
     public void openCommunityCenterGUI(Player player) {
-        Inventory gui = plugin.getServer().createInventory(null, 54, "§6§lCommunity Center");
+        Inventory gui = SkyblockPlugin.getServer().createInventory(null, 54, "§6§lCommunity Center");
         
         addGUIItem(gui, 10, Material.WHEAT, "§a§lFarming Projects", "§7Community farming projects");
         addGUIItem(gui, 11, Material.DIAMOND_PICKAXE, "§7§lMining Projects", "§7Community mining projects");
@@ -48,9 +54,9 @@ public class CommunityCenterSystem {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(name);
+            meta.displayName(Component.text(name));
             if (lore.length > 0) {
-                meta.setLore(Arrays.asList(lore));
+                meta.lore(Arrays.asList(lore).stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             }
             item.setItemMeta(meta);
         }

@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.elections;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -16,24 +20,26 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 
 /**
  * Mayor Elections System - Hypixel Skyblock Style
  */
 public class MayorElectionsSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerElectionData> playerElectionData = new ConcurrentHashMap<>();
     private final Map<MayorType, MayorConfig> mayorConfigs = new HashMap<>();
     private final Map<UUID, BukkitTask> electionTasks = new ConcurrentHashMap<>();
     
-    public MayorElectionsSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public MayorElectionsSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeMayorConfigs();
         startElectionUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeMayorConfigs() {
@@ -95,7 +101,7 @@ public class MayorElectionsSystem implements Listener {
                     electionData.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L * 60L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L * 60L);
     }
     
     @EventHandler
@@ -116,7 +122,7 @@ public class MayorElectionsSystem implements Listener {
     }
     
     public void openElectionGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lMayor Elections");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lMayor Elections"));
         
         addGUIItem(gui, 10, Material.GOLD_INGOT, "§6§lDiaz", "§7The economic mayor.");
         addGUIItem(gui, 11, Material.FISHING_ROD, "§b§lFinn", "§7The fishing mayor.");
@@ -126,7 +132,7 @@ public class MayorElectionsSystem implements Listener {
         addGUIItem(gui, 15, Material.WHEAT, "§a§lDerry", "§7The farming mayor.");
         
         player.openInventory(gui);
-        player.sendMessage("§aMayor Elections GUI geöffnet!");
+        player.sendMessage(Component.text("§aMayor Elections GUI geöffnet!"));
     }
     
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String description) {
@@ -144,7 +150,7 @@ public class MayorElectionsSystem implements Listener {
         PlayerElectionData electionData = getPlayerElectionData(player.getUniqueId());
         
         if (electionData.hasVoted()) {
-            player.sendMessage("§cYou have already voted in this election!");
+            player.sendMessage(Component.text("§cYou have already voted in this election!"));
             return;
         }
         
@@ -249,11 +255,11 @@ public class MayorElectionsSystem implements Listener {
         public PlayerElectionData(UUID playerId) {
             this.playerId = playerId;
             this.hasVoted = false;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void setVotedMayor(MayorType mayorType) {

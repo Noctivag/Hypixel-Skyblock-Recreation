@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -16,15 +19,15 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AnimatedGUI extends CustomGUI {
-    protected final SkyblockPlugin plugin;
+    protected final SkyblockPlugin SkyblockPlugin;
     protected final Player player;
     protected final Map<Integer, ItemStack> originalItems = new ConcurrentHashMap<>();
     protected final Map<Integer, BukkitTask> animations = new ConcurrentHashMap<>();
     protected final Map<Integer, AnimationType> animationTypes = new ConcurrentHashMap<>();
     
-    public AnimatedGUI(SkyblockPlugin plugin, Player player, int size, String title) {
+    public AnimatedGUI(SkyblockPlugin SkyblockPlugin, Player player, int size, String title) {
         super(size, Component.text(title).color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD));
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.player = player;
     }
     
@@ -97,7 +100,7 @@ public abstract class AnimatedGUI extends CustomGUI {
                 getInventory().setItem(slot, animated);
                 tick++;
             }
-        }.runTaskTimer(plugin, 0L, 1L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 1L);
     }
     
     private BukkitTask startRotateAnimation(int slot) {
@@ -134,7 +137,7 @@ public abstract class AnimatedGUI extends CustomGUI {
                 getInventory().setItem(slot, animated);
                 tick++;
             }
-        }.runTaskTimer(plugin, 0L, 3L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 3L);
     }
     
     private BukkitTask startGlowAnimation(int slot) {
@@ -166,7 +169,7 @@ public abstract class AnimatedGUI extends CustomGUI {
                 getInventory().setItem(slot, animated);
                 tick++;
             }
-        }.runTaskTimer(plugin, 0L, 2L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 2L);
     }
     
     private BukkitTask startSparkleAnimation(int slot) {
@@ -198,7 +201,7 @@ public abstract class AnimatedGUI extends CustomGUI {
                 getInventory().setItem(slot, animated);
                 tick++;
             }
-        }.runTaskTimer(plugin, 0L, 5L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 5L);
     }
     
     private BukkitTask startBounceAnimation(int slot) {
@@ -230,7 +233,7 @@ public abstract class AnimatedGUI extends CustomGUI {
                 getInventory().setItem(slot, animated);
                 tick++;
             }
-        }.runTaskTimer(plugin, 0L, 4L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 4L);
     }
     
     private BukkitTask startFadeAnimation(int slot) {
@@ -263,7 +266,7 @@ public abstract class AnimatedGUI extends CustomGUI {
                 getInventory().setItem(slot, animated);
                 tick++;
             }
-        }.runTaskTimer(plugin, 0L, 2L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 2L);
     }
     
     private BukkitTask startRainbowAnimation(int slot) {
@@ -300,7 +303,7 @@ public abstract class AnimatedGUI extends CustomGUI {
                 getInventory().setItem(slot, animated);
                 tick++;
             }
-        }.runTaskTimer(plugin, 0L, 2L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 2L);
     }
     
     private BukkitTask startFireAnimation(int slot) {
@@ -332,7 +335,7 @@ public abstract class AnimatedGUI extends CustomGUI {
                 getInventory().setItem(slot, animated);
                 tick++;
             }
-        }.runTaskTimer(plugin, 0L, 3L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 3L);
     }
     
     protected void setAnimatedItem(int slot, Material material, String name, AnimationType animationType, String... lore) {
@@ -342,7 +345,7 @@ public abstract class AnimatedGUI extends CustomGUI {
         if (meta != null) {
             meta.displayName(Component.text(name));
             if (lore.length > 0) {
-                meta.lore(Arrays.stream(lore).map(Component::text).toList());
+                meta.lore(java.util.Arrays.stream(lore).map(Component::text).collect(java.util.stream.Collectors.toList()));
             }
             item.setItemMeta(meta);
         }
@@ -358,7 +361,7 @@ public abstract class AnimatedGUI extends CustomGUI {
         if (meta != null) {
             meta.displayName(Component.text(name));
             if (lore.length > 0) {
-                meta.lore(Arrays.stream(lore).map(Component::text).toList());
+                meta.lore(java.util.Arrays.stream(lore).map(Component::text).collect(java.util.stream.Collectors.toList()));
             }
             item.setItemMeta(meta);
         }

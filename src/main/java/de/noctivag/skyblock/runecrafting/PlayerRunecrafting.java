@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.runecrafting;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -38,7 +39,7 @@ public class PlayerRunecrafting {
         this.runecraftingLevel = 1;
         this.runecraftingXP = 0.0;
         this.totalXP = 0.0;
-        this.lastActivity = System.currentTimeMillis();
+        this.lastActivity = java.lang.System.currentTimeMillis();
         
         // Initialize statistics
         this.runesCrafted = 0;
@@ -55,7 +56,7 @@ public class PlayerRunecrafting {
     public void addXP(double xpAmount) {
         this.runecraftingXP += xpAmount;
         this.totalXP += xpAmount;
-        this.lastActivity = System.currentTimeMillis();
+        this.lastActivity = java.lang.System.currentTimeMillis();
         
         // Check for level up
         int newLevel = calculateLevel(runecraftingXP);
@@ -210,7 +211,7 @@ public class PlayerRunecrafting {
         this.runecraftingLevel = 1;
         this.runecraftingXP = 0.0;
         this.totalXP = 0.0;
-        this.lastActivity = System.currentTimeMillis();
+        this.lastActivity = java.lang.System.currentTimeMillis();
         
         this.runesCrafted = 0;
         this.successfulCrafts = 0;

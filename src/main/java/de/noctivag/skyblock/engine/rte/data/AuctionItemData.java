@@ -26,7 +26,7 @@ public class AuctionItemData {
         this.totalAuctions = 0;
         this.activeAuctions = 0;
         this.totalVolume = 0.0;
-        this.lastUpdate = System.currentTimeMillis();
+        this.lastUpdate = java.lang.System.currentTimeMillis();
     }
     
     public void addAuction(double price, int volume) {
@@ -53,12 +53,12 @@ public class AuctionItemData {
             this.averagePrice = sum / priceHistory.size();
         }
         
-        this.lastUpdate = System.currentTimeMillis();
+        this.lastUpdate = java.lang.System.currentTimeMillis();
     }
     
     public void completeAuction() {
         this.activeAuctions = Math.max(0, this.activeAuctions - 1);
-        this.lastUpdate = System.currentTimeMillis();
+        this.lastUpdate = java.lang.System.currentTimeMillis();
     }
     
     public String toJson() {

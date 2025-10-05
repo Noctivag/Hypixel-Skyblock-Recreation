@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.multiserver;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
@@ -23,13 +26,13 @@ import java.util.logging.Level;
  */
 public class ServerTemplateSystem {
 
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<String, ServerTemplate> templates = new ConcurrentHashMap<>();
     private final File templatesDirectory;
 
-    public ServerTemplateSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.templatesDirectory = new File(plugin.getDataFolder(), "templates");
+    public ServerTemplateSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.templatesDirectory = new File(SkyblockPlugin.getDataFolder(), "templates");
     }
 
     public void init() {
@@ -43,7 +46,7 @@ public class ServerTemplateSystem {
     private void initializeTemplatesDirectory() {
         if (!templatesDirectory.exists()) {
             templatesDirectory.mkdirs();
-            plugin.getLogger().info("Created templates directory: " + templatesDirectory.getAbsolutePath());
+            SkyblockPlugin.getLogger().info("Created templates directory: " + templatesDirectory.getAbsolutePath());
         }
     }
 
@@ -62,15 +65,15 @@ public class ServerTemplateSystem {
                     ServerTemplate template = loadTemplateFromFile(templateFile);
                     if (template != null) {
                         templates.put(template.getName(), template);
-                        plugin.getLogger().info("Loaded template: " + template.getName());
+                        SkyblockPlugin.getLogger().info("Loaded template: " + template.getName());
                     }
                 } catch (Exception e) {
-                    plugin.getLogger().log(Level.WARNING, "Failed to load template: " + templateFile.getName(), e);
+                    SkyblockPlugin.getLogger().log(Level.WARNING, "Failed to load template: " + templateFile.getName(), e);
                 }
             }
         }
 
-        plugin.getLogger().info("Loaded " + templates.size() + " server templates");
+        SkyblockPlugin.getLogger().info("Loaded " + templates.size() + " server templates");
     }
 
     /**
@@ -128,7 +131,7 @@ public class ServerTemplateSystem {
         ServerTemplate template = new ServerTemplate(name, displayName, description, worldType, persistent, gameServer);
         templates.put(name, template);
         saveTemplateToFile(template);
-        plugin.getLogger().info("Created template: " + name);
+        SkyblockPlugin.getLogger().info("Created template: " + name);
     }
 
     /**
@@ -141,7 +144,7 @@ public class ServerTemplateSystem {
             String name = file.getName().replace(".yml", "");
             return new ServerTemplate(name, name + " Template", "Template loaded from file", WorldType.NORMAL, false, true);
         } catch (Exception e) {
-            plugin.getLogger().log(Level.WARNING, "Failed to load template from file: " + file.getName(), e);
+            SkyblockPlugin.getLogger().log(Level.WARNING, "Failed to load template from file: " + file.getName(), e);
             return null;
         }
     }
@@ -158,7 +161,7 @@ public class ServerTemplateSystem {
                 templateFile.createNewFile();
             }
         } catch (Exception e) {
-            plugin.getLogger().log(Level.WARNING, "Failed to save template to file: " + template.getName(), e);
+            SkyblockPlugin.getLogger().log(Level.WARNING, "Failed to save template to file: " + template.getName(), e);
         }
     }
 
@@ -170,14 +173,14 @@ public class ServerTemplateSystem {
             try {
                 ServerTemplate template = templates.get(templateName);
                 if (template == null) {
-                    plugin.getLogger().warning("Template not found: " + templateName);
+                    SkyblockPlugin.getLogger().warning("Template not found: " + templateName);
                     return null;
                 }
 
                 // Prüfe ob Welt bereits existiert
                 World existingWorld = Bukkit.getWorld(worldName);
                 if (existingWorld != null) {
-                    plugin.getLogger().info("World " + worldName + " already exists, using existing world");
+                    SkyblockPlugin.getLogger().info("World " + worldName + " already exists, using existing world");
                     return existingWorld;
                 }
 
@@ -188,11 +191,11 @@ public class ServerTemplateSystem {
 
                 // Setze Template-spezifische Einstellungen
                 if (template.isGameServer()) {
-                    creator.generator(new de.noctivag.plugin.multiserver.generators.GameWorldGenerator());
+                    creator.generator(new de.noctivag.skyblock.multiserver.generators.GameWorldGenerator());
                 } else if (template.isPersistent()) {
-                    creator.generator(new de.noctivag.plugin.multiserver.generators.HubWorldGenerator());
+                    creator.generator(new de.noctivag.skyblock.multiserver.generators.HubWorldGenerator());
                 } else {
-                    creator.generator(new de.noctivag.plugin.multiserver.generators.IslandWorldGenerator());
+                    creator.generator(new de.noctivag.skyblock.multiserver.generators.IslandWorldGenerator());
                 }
 
                 // Erstelle die Welt
@@ -200,13 +203,13 @@ public class ServerTemplateSystem {
                 if (world != null) {
                     // Setze Template-spezifische GameRules
                     applyTemplateSettings(world, template);
-                    plugin.getLogger().info("Created world " + worldName + " from template " + templateName);
+                    SkyblockPlugin.getLogger().info("Created world " + worldName + " from template " + templateName);
                 }
 
                 return world;
 
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Error creating world from template", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Error creating world from template", e);
                 return null;
             }
         });
@@ -246,7 +249,7 @@ public class ServerTemplateSystem {
             try {
                 World templateWorld = Bukkit.getWorld(templateWorldName);
                 if (templateWorld == null) {
-                    plugin.getLogger().warning("Template world not found: " + templateWorldName);
+                    SkyblockPlugin.getLogger().warning("Template world not found: " + templateWorldName);
                     return false;
                 }
 
@@ -257,14 +260,14 @@ public class ServerTemplateSystem {
 
                 World newWorld = creator.createWorld();
                 if (newWorld != null) {
-                    plugin.getLogger().info("Copied template world " + templateWorldName + " to " + newWorldName);
+                    SkyblockPlugin.getLogger().info("Copied template world " + templateWorldName + " to " + newWorldName);
                     return true;
                 }
 
                 return false;
 
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Error copying template world", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Error copying template world", e);
                 return false;
             }
         });
@@ -294,7 +297,7 @@ public class ServerTemplateSystem {
             if (templateFile.exists()) {
                 templateFile.delete();
             }
-            plugin.getLogger().info("Deleted template: " + name);
+            SkyblockPlugin.getLogger().info("Deleted template: " + name);
             return true;
         }
         return false;
@@ -306,6 +309,6 @@ public class ServerTemplateSystem {
     public void updateTemplate(ServerTemplate template) {
         templates.put(template.getName(), template);
         saveTemplateToFile(template);
-        plugin.getLogger().info("Updated template: " + template.getName());
+        SkyblockPlugin.getLogger().info("Updated template: " + template.getName());
     }
 }

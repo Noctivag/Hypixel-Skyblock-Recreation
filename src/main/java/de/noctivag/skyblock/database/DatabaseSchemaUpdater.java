@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.database;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -13,11 +17,11 @@ import java.util.concurrent.ExecutionException;
  * DatabaseSchemaUpdater - Updates database schema for new features
  */
 public class DatabaseSchemaUpdater {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     
-    public DatabaseSchemaUpdater(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public DatabaseSchemaUpdater(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
     }
     
@@ -34,11 +38,11 @@ public class DatabaseSchemaUpdater {
             createAuctionTables(connection);
             createBazaarTables(connection);
             
-            plugin.getLogger().info("Database schema updated successfully!");
+            SkyblockPlugin.getLogger().info("Database schema updated successfully!");
         } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to update database schema", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to update database schema", e);
         } catch (InterruptedException | ExecutionException e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to get database connection", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to get database connection", e);
         }
     }
     
@@ -62,7 +66,7 @@ public class DatabaseSchemaUpdater {
         
         try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(sql);
-            plugin.getLogger().info("Created player_cookie_data table");
+            SkyblockPlugin.getLogger().info("Created player_cookie_data table");
         }
     }
     
@@ -87,7 +91,7 @@ public class DatabaseSchemaUpdater {
         
         try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(sql);
-            plugin.getLogger().info("Created player_recipe_data table");
+            SkyblockPlugin.getLogger().info("Created player_recipe_data table");
         }
     }
     
@@ -116,7 +120,7 @@ public class DatabaseSchemaUpdater {
         
         try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(sql);
-            plugin.getLogger().info("Created calendar_events table");
+            SkyblockPlugin.getLogger().info("Created calendar_events table");
         }
     }
     
@@ -144,7 +148,7 @@ public class DatabaseSchemaUpdater {
         
         try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(sql);
-            plugin.getLogger().info("Created player_event_participation table");
+            SkyblockPlugin.getLogger().info("Created player_event_participation table");
         }
     }
     
@@ -194,7 +198,7 @@ public class DatabaseSchemaUpdater {
         try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(guildsSql);
             stmt.executeUpdate(guildMembersSql);
-            plugin.getLogger().info("Created guild tables");
+            SkyblockPlugin.getLogger().info("Created guild tables");
         }
     }
     
@@ -243,7 +247,7 @@ public class DatabaseSchemaUpdater {
         try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(auctionsSql);
             stmt.executeUpdate(auctionBidsSql);
-            plugin.getLogger().info("Created auction tables");
+            SkyblockPlugin.getLogger().info("Created auction tables");
         }
     }
     
@@ -288,7 +292,7 @@ public class DatabaseSchemaUpdater {
         try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(bazaarOrdersSql);
             stmt.executeUpdate(bazaarHistorySql);
-            plugin.getLogger().info("Created bazaar tables");
+            SkyblockPlugin.getLogger().info("Created bazaar tables");
         }
     }
 }

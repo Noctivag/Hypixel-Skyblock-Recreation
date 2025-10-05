@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.multiserver;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -25,7 +29,7 @@ import java.util.logging.Level;
  */
 public class HypixelStyleProxySystem {
 
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final ServerTemplateSystem templateSystem;
     private final ServerSwitcher serverSwitcher;
@@ -46,13 +50,13 @@ public class HypixelStyleProxySystem {
     private BukkitTask instanceCleanupTask;
     private BukkitTask serverSwitcherCleanupTask;
 
-    public HypixelStyleProxySystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public HypixelStyleProxySystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
-        this.templateSystem = new ServerTemplateSystem(plugin);
-        this.serverSwitcher = new ServerSwitcher(plugin, this);
-        this.serverPortal = new ServerPortal(plugin, serverSwitcher);
-        this.serverSelectionGUI = new ServerSelectionGUI(plugin, serverSwitcher);
+        this.templateSystem = new ServerTemplateSystem(SkyblockPlugin);
+        this.serverSwitcher = new ServerSwitcher(SkyblockPlugin, this);
+        this.serverPortal = new ServerPortal(SkyblockPlugin, serverSwitcher);
+        this.serverSelectionGUI = new ServerSelectionGUI(SkyblockPlugin, serverSwitcher);
     }
 
     public void init() {
@@ -120,19 +124,19 @@ public class HypixelStyleProxySystem {
         serverTypes.put("master_mode_floor_6", new ServerType("master_mode_floor_6", "Master Mode Floor 6", 5, false, true, false, 0));
         serverTypes.put("master_mode_floor_7", new ServerType("master_mode_floor_7", "Master Mode Floor 7", 5, false, true, false, 0));
 
-        plugin.getLogger().info("Initialized " + serverTypes.size() + " Hypixel SkyBlock server types with proper lifecycle management");
+        SkyblockPlugin.getLogger().info("Initialized " + serverTypes.size() + " Hypixel SkyBlock server types with proper lifecycle management");
     }
 
     /**
      * Startet Load Balancing
      */
     private void startLoadBalancing() {
-        loadBalancingTask = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
+        loadBalancingTask = Bukkit.getScheduler().runTaskTimerAsynchronously(SkyblockPlugin, () -> {
             try {
                 balanceServerLoads();
                 cleanupEmptyInstances();
             } catch (Exception e) {
-                plugin.getLogger().log(Level.WARNING, "Error in load balancing", e);
+                SkyblockPlugin.getLogger().log(Level.WARNING, "Error in load balancing", e);
             }
         }, 20L, 20L * 5); // Every 5 seconds
     }
@@ -141,11 +145,11 @@ public class HypixelStyleProxySystem {
      * Startet Instance Cleanup
      */
     private void startInstanceCleanup() {
-        instanceCleanupTask = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
+        instanceCleanupTask = Bukkit.getScheduler().runTaskTimerAsynchronously(SkyblockPlugin, () -> {
             try {
                 cleanupEmptyInstances();
             } catch (Exception e) {
-                plugin.getLogger().log(Level.WARNING, "Error in instance cleanup", e);
+                SkyblockPlugin.getLogger().log(Level.WARNING, "Error in instance cleanup", e);
             }
         }, 20L * 60, 20L * 60); // Every minute
     }
@@ -154,7 +158,7 @@ public class HypixelStyleProxySystem {
      * Startet die ServerSwitcher-Bereinigung
      */
     private void startServerSwitcherCleanup() {
-        serverSwitcherCleanupTask = Bukkit.getScheduler().runTaskTimer(plugin, serverSwitcher::cleanupExpiredSwitches, 20L * 30, 20L * 30); // Alle 30 Sekunden
+        serverSwitcherCleanupTask = Bukkit.getScheduler().runTaskTimer(SkyblockPlugin, serverSwitcher::cleanupExpiredSwitches, 20L * 30, 20L * 30); // Alle 30 Sekunden
     }
 
     /**
@@ -165,7 +169,7 @@ public class HypixelStyleProxySystem {
             try {
                 ServerType type = serverTypes.get(serverType);
                 if (type == null) {
-                    plugin.getLogger().warning("Unknown server type: " + serverType);
+                    SkyblockPlugin.getLogger().warning("Unknown server type: " + serverType);
                     return false;
                 }
 
@@ -175,7 +179,7 @@ public class HypixelStyleProxySystem {
                     // Erstelle neue Instanz falls nötig
                     instance = createNewInstance(serverType);
                     if (instance == null) {
-                        plugin.getLogger().warning("Failed to create instance for type: " + serverType);
+                        SkyblockPlugin.getLogger().warning("Failed to create instance for type: " + serverType);
                         return false;
                     }
                 }
@@ -184,7 +188,7 @@ public class HypixelStyleProxySystem {
                 return connectPlayerToInstance(player, instance);
 
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Error connecting player to server", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Error connecting player to server", e);
                 return false;
             }
         });
@@ -227,18 +231,18 @@ public class HypixelStyleProxySystem {
                 if (world != null) {
                     instance.setStatus(ServerStatus.ONLINE);
                     instance.setMetadata("world", world);
-                    plugin.getLogger().info("Server instance " + instanceId + " is now online with world: " + world.getName());
+                    SkyblockPlugin.getLogger().info("Server instance " + instanceId + " is now online with world: " + world.getName());
                 } else {
                     instance.setStatus(ServerStatus.OFFLINE);
-                    plugin.getLogger().warning("Failed to create world for instance: " + instanceId);
+                    SkyblockPlugin.getLogger().warning("Failed to create world for instance: " + instanceId);
                 }
             });
 
-            plugin.getLogger().info("Creating new server instance: " + instanceId + " for type: " + serverType + " using template");
+            SkyblockPlugin.getLogger().info("Creating new server instance: " + instanceId + " for type: " + serverType + " using template");
             return instance;
 
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Error creating server instance", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Error creating server instance", e);
             return null;
         }
     }
@@ -261,12 +265,12 @@ public class HypixelStyleProxySystem {
             serverLoads.put(instance.getInstanceId(), instance.getPlayerCount());
 
             // Simuliere Teleportation (in echter Implementierung würde hier BungeeCord/Velocity verwendet)
-            plugin.getLogger().info("Player " + player.getName() + " connected to instance " + instance.getInstanceId());
+            SkyblockPlugin.getLogger().info("Player " + player.getName() + " connected to instance " + instance.getInstanceId());
 
             return true;
 
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Error connecting player to instance", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Error connecting player to instance", e);
             return false;
         }
     }
@@ -275,7 +279,7 @@ public class HypixelStyleProxySystem {
      * Generiert eine eindeutige Instanz-ID
      */
     private String generateInstanceId(String serverType) {
-        return serverType + "_" + System.currentTimeMillis() + "_" + (int)(Math.random() * 1000);
+        return serverType + "_" + java.lang.System.currentTimeMillis() + "_" + (int)(Math.random() * 1000);
     }
 
     /**
@@ -346,13 +350,13 @@ public class HypixelStyleProxySystem {
         try {
             ServerInstance instance = activeInstances.get(instanceId);
             if (instance != null) {
-                plugin.getLogger().info("Restarting instance: " + instanceId + " (4h cycle)");
+                SkyblockPlugin.getLogger().info("Restarting instance: " + instanceId + " (4h cycle)");
 
                 // Speichere Welt-Daten vor Neustart
                 saveInstanceData(instance);
 
                 // Setze Neustart-Zeit
-                instance.setLastRestart(System.currentTimeMillis());
+                instance.setLastRestart(java.lang.System.currentTimeMillis());
                 instance.scheduleNextRestart();
 
                 // Simuliere Neustart (in echter Implementierung würde hier die Welt neu geladen)
@@ -363,14 +367,14 @@ public class HypixelStyleProxySystem {
                     try {
                         Thread.sleep(20L * 5 * 50); // 5 seconds = 5,000 ms
                         instance.setStatus(ServerStatus.ONLINE);
-                        plugin.getLogger().info("Instance " + instanceId + " restarted successfully");
+                        SkyblockPlugin.getLogger().info("Instance " + instanceId + " restarted successfully");
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }
                 });
             }
         } catch (Exception e) {
-            plugin.getLogger().log(Level.WARNING, "Error restarting instance", e);
+            SkyblockPlugin.getLogger().log(Level.WARNING, "Error restarting instance", e);
         }
     }
 
@@ -379,7 +383,7 @@ public class HypixelStyleProxySystem {
      */
     private void shutdownPlayerPersistentInstance(ServerInstance instance) {
         try {
-            plugin.getLogger().info("Shutting down player persistent instance: " + instance.getInstanceId() + " (saving data)");
+            SkyblockPlugin.getLogger().info("Shutting down player persistent instance: " + instance.getInstanceId() + " (saving data)");
 
             // Speichere Spieler-Daten
             savePlayerInstanceData(instance);
@@ -390,9 +394,9 @@ public class HypixelStyleProxySystem {
             // Entferne aus aktiven Instanzen, aber behalte in persistenter Liste
             activeInstances.remove(instance.getInstanceId());
 
-            plugin.getLogger().info("Player persistent instance " + instance.getInstanceId() + " shut down and saved");
+            SkyblockPlugin.getLogger().info("Player persistent instance " + instance.getInstanceId() + " shut down and saved");
         } catch (Exception e) {
-            plugin.getLogger().log(Level.WARNING, "Error shutting down player persistent instance", e);
+            SkyblockPlugin.getLogger().log(Level.WARNING, "Error shutting down player persistent instance", e);
         }
     }
 
@@ -402,9 +406,9 @@ public class HypixelStyleProxySystem {
     private void saveInstanceData(ServerInstance instance) {
         try {
             // Hier würde normalerweise die Welt-Daten gespeichert werden
-            plugin.getLogger().info("Saving instance data for: " + instance.getInstanceId());
+            SkyblockPlugin.getLogger().info("Saving instance data for: " + instance.getInstanceId());
         } catch (Exception e) {
-            plugin.getLogger().log(Level.WARNING, "Error saving instance data", e);
+            SkyblockPlugin.getLogger().log(Level.WARNING, "Error saving instance data", e);
         }
     }
 
@@ -415,10 +419,10 @@ public class HypixelStyleProxySystem {
         try {
             if (instance.getOwnerPlayerId() != null) {
                 // Hier würde normalerweise die Spieler-spezifischen Daten gespeichert werden
-                plugin.getLogger().info("Saving player instance data for player: " + instance.getOwnerPlayerId());
+                SkyblockPlugin.getLogger().info("Saving player instance data for player: " + instance.getOwnerPlayerId());
             }
         } catch (Exception e) {
-            plugin.getLogger().log(Level.WARNING, "Error saving player instance data", e);
+            SkyblockPlugin.getLogger().log(Level.WARNING, "Error saving player instance data", e);
         }
     }
 
@@ -440,10 +444,10 @@ public class HypixelStyleProxySystem {
                 }
 
                 serverLoads.remove(instanceId);
-                plugin.getLogger().info("Removed temporary server instance: " + instanceId);
+                SkyblockPlugin.getLogger().info("Removed temporary server instance: " + instanceId);
             }
         } catch (Exception e) {
-            plugin.getLogger().log(Level.WARNING, "Error removing instance", e);
+            SkyblockPlugin.getLogger().log(Level.WARNING, "Error removing instance", e);
         }
     }
 
@@ -560,7 +564,7 @@ public class HypixelStyleProxySystem {
             removeInstance(instanceId);
         }
 
-        plugin.getLogger().info("HypixelStyleProxySystem shutdown complete");
+        SkyblockPlugin.getLogger().info("HypixelStyleProxySystem shutdown complete");
     }
 
     // Missing method for MultiServerCommands

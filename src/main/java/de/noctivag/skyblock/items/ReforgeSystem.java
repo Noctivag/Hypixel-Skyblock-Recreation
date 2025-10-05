@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.items;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -19,6 +23,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Reforge System - Hypixel Skyblock Style
@@ -43,19 +48,19 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Reforge Cutscenes
  */
 public class ReforgeSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerReforge> playerReforge = new ConcurrentHashMap<>();
     private final Map<ReforgeType, ReforgeConfig> reforgeConfigs = new HashMap<>();
 
-    public ReforgeSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public ReforgeSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeReforgeConfigs();
         startReforgeUpdateTask();
 
         // Register events
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
 
     private void initializeReforgeConfigs() {
@@ -185,7 +190,7 @@ public class ReforgeSystem implements Listener {
                     reforge.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Every second
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Every second
     }
 
     @EventHandler
@@ -201,13 +206,13 @@ public class ReforgeSystem implements Listener {
 
     private void openReforgeGUI(Player player) {
         // This would open a custom GUI for reforging
-        player.sendMessage("§aReforge GUI geöffnet!");
+        player.sendMessage(Component.text("§aReforge GUI geöffnet!"));
     }
 
     public boolean reforgeItem(Player player, ItemStack item, ReforgeType reforgeType) {
         ReforgeConfig config = reforgeConfigs.get(reforgeType);
         if (config == null) {
-            player.sendMessage("§cReforge nicht gefunden!");
+            player.sendMessage(Component.text("§cReforge nicht gefunden!"));
             return false;
         }
 
@@ -225,7 +230,7 @@ public class ReforgeSystem implements Listener {
 
         // Check success rate
         if (Math.random() > config.getSuccessRate()) {
-            player.sendMessage("§cReforge fehlgeschlagen! Materialien wurden verbraucht.");
+            player.sendMessage(Component.text("§cReforge fehlgeschlagen! Materialien wurden verbraucht."));
             consumeReforgeMaterials(player, config);
             return false;
         }
@@ -502,11 +507,11 @@ public class ReforgeSystem implements Listener {
 
         public PlayerReforge(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
 
         public void update() {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long timeDiff = currentTime - lastUpdate;
 
             // Update statistics every minute
@@ -524,7 +529,7 @@ public class ReforgeSystem implements Listener {
 
         public void addReforge(ReforgeType reforgeType) {
             reforgeCounts.put(reforgeType, reforgeCounts.getOrDefault(reforgeType, 0) + 1);
-            lastReforge.put(reforgeType, System.currentTimeMillis());
+            lastReforge.put(reforgeType, java.lang.System.currentTimeMillis());
             totalReforges++;
             successfulReforges++;
         }

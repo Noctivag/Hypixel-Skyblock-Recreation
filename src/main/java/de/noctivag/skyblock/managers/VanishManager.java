@@ -1,20 +1,25 @@
 package de.noctivag.skyblock.managers;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import net.kyori.adventure.text.Component;
 
 public class VanishManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Set<UUID> vanished = ConcurrentHashMap.newKeySet();
 
-    public VanishManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public VanishManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     public boolean isVanished(Player player) {
@@ -25,16 +30,16 @@ public class VanishManager {
         if (vanish) {
             if (vanished.add(player.getUniqueId())) {
                 for (Player p : Bukkit.getOnlinePlayers()) {
-                    p.hidePlayer(plugin, player);
+                    p.hidePlayer(SkyblockPlugin, player);
                 }
-                player.sendMessage("§7Du bist nun im Vanish-Modus.");
+                player.sendMessage(Component.text("§7Du bist nun im Vanish-Modus."));
             }
         } else {
             if (vanished.remove(player.getUniqueId())) {
                 for (Player p : Bukkit.getOnlinePlayers()) {
-                    p.showPlayer(plugin, player);
+                    p.showPlayer(SkyblockPlugin, player);
                 }
-                player.sendMessage("§7Du hast den Vanish-Modus verlassen.");
+                player.sendMessage(Component.text("§7Du hast den Vanish-Modus verlassen."));
             }
         }
     }

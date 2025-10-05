@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.economy.auction.types;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
@@ -21,7 +22,7 @@ public class AuctionResult {
         this.winnerId = winnerId;
         this.winnerName = winnerName;
         this.finalPrice = finalPrice;
-        this.endTime = System.currentTimeMillis();
+        this.endTime = java.lang.System.currentTimeMillis();
         this.reason = sold ? "Sold" : "Expired";
     }
 

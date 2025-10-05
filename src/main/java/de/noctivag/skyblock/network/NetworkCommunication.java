@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.network;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import net.kyori.adventure.text.Component;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -24,7 +28,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class NetworkCommunication {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final JedisPool jedisPool;
     private final String serverId;
     
@@ -35,8 +39,8 @@ public class NetworkCommunication {
     private boolean isListening = false;
     private JedisPubSub pubSub;
     
-    public NetworkCommunication(SkyblockPlugin plugin, JedisPool jedisPool, String serverId) {
-        this.plugin = plugin;
+    public NetworkCommunication(SkyblockPlugin SkyblockPlugin, JedisPool jedisPool, String serverId) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.jedisPool = jedisPool;
         this.serverId = serverId;
         
@@ -56,7 +60,7 @@ public class NetworkCommunication {
                 jedis.subscribe(pubSub, "global", "events", "requests");
                 
             } catch (Exception e) {
-                plugin.getLogger().severe("Failed to start network communication: " + e.getMessage());
+                SkyblockPlugin.getLogger().severe("Failed to start network communication: " + e.getMessage());
                 isListening = false;
             }
         }).start();
@@ -80,7 +84,7 @@ public class NetworkCommunication {
             jedis.hset(messageKey, "from", serverId);
             jedis.hset(messageKey, "to", targetServerId);
             jedis.hset(messageKey, "type", messageType);
-            jedis.hset(messageKey, "timestamp", String.valueOf(System.currentTimeMillis()));
+            jedis.hset(messageKey, "timestamp", String.valueOf(java.lang.System.currentTimeMillis()));
             
             // Add custom data
             for (Map.Entry<String, String> entry : data.entrySet()) {
@@ -96,7 +100,7 @@ public class NetworkCommunication {
             return true;
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to send message: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to send message: " + e.getMessage());
             return false;
         }
     }
@@ -113,7 +117,7 @@ public class NetworkCommunication {
             jedis.hset(requestKey, "from", serverId);
             jedis.hset(requestKey, "to", targetServerId);
             jedis.hset(requestKey, "type", requestType);
-            jedis.hset(requestKey, "timestamp", String.valueOf(System.currentTimeMillis()));
+            jedis.hset(requestKey, "timestamp", String.valueOf(java.lang.System.currentTimeMillis()));
             
             // Add custom data
             for (Map.Entry<String, String> entry : data.entrySet()) {
@@ -142,7 +146,7 @@ public class NetworkCommunication {
             return future;
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to send request: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to send request: " + e.getMessage());
             return CompletableFuture.failedFuture(e);
         }
     }
@@ -155,7 +159,7 @@ public class NetworkCommunication {
             jedis.hset(responseKey, "requestId", requestId);
             jedis.hset(responseKey, "from", serverId);
             jedis.hset(responseKey, "data", responseData);
-            jedis.hset(responseKey, "timestamp", String.valueOf(System.currentTimeMillis()));
+            jedis.hset(responseKey, "timestamp", String.valueOf(java.lang.System.currentTimeMillis()));
             
             jedis.expire(responseKey, 300); // 5 minutes
             
@@ -165,7 +169,7 @@ public class NetworkCommunication {
             return true;
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to send response: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to send response: " + e.getMessage());
             return false;
         }
     }
@@ -180,7 +184,7 @@ public class NetworkCommunication {
             jedis.hset(eventKey, "id", eventId);
             jedis.hset(eventKey, "from", serverId);
             jedis.hset(eventKey, "type", eventType);
-            jedis.hset(eventKey, "timestamp", String.valueOf(System.currentTimeMillis()));
+            jedis.hset(eventKey, "timestamp", String.valueOf(java.lang.System.currentTimeMillis()));
             
             // Add custom data
             for (Map.Entry<String, String> entry : data.entrySet()) {
@@ -195,7 +199,7 @@ public class NetworkCommunication {
             return true;
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to broadcast event: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to broadcast event: " + e.getMessage());
             return false;
         }
     }
@@ -211,7 +215,7 @@ public class NetworkCommunication {
     }
     
     private String generateMessageId() {
-        return "msg_" + System.currentTimeMillis() + "_" + (int)(Math.random() * 10000);
+        return "msg_" + java.lang.System.currentTimeMillis() + "_" + (int)(Math.random() * 10000);
     }
     
     // Network Message Subscriber
@@ -229,7 +233,7 @@ public class NetworkCommunication {
                     handleEvent(message);
                 }
             } catch (Exception e) {
-                plugin.getLogger().severe("Failed to handle message: " + e.getMessage());
+                SkyblockPlugin.getLogger().severe("Failed to handle message: " + e.getMessage());
             }
         }
         
@@ -248,7 +252,7 @@ public class NetworkCommunication {
                 }
                 
             } catch (Exception e) {
-                plugin.getLogger().severe("Failed to handle server message: " + e.getMessage());
+                SkyblockPlugin.getLogger().severe("Failed to handle server message: " + e.getMessage());
             }
         }
         
@@ -271,7 +275,7 @@ public class NetworkCommunication {
                 }
                 
             } catch (Exception e) {
-                plugin.getLogger().severe("Failed to handle request: " + e.getMessage());
+                SkyblockPlugin.getLogger().severe("Failed to handle request: " + e.getMessage());
             }
         }
         
@@ -289,7 +293,7 @@ public class NetworkCommunication {
                 }
                 
             } catch (Exception e) {
-                plugin.getLogger().severe("Failed to handle response: " + e.getMessage());
+                SkyblockPlugin.getLogger().severe("Failed to handle response: " + e.getMessage());
             }
         }
         
@@ -306,13 +310,13 @@ public class NetworkCommunication {
                         try {
                             listener.onEvent(eventType, eventData);
                         } catch (Exception e) {
-                            plugin.getLogger().severe("Event listener error: " + e.getMessage());
+                            SkyblockPlugin.getLogger().severe("Event listener error: " + e.getMessage());
                         }
                     }
                 }
                 
             } catch (Exception e) {
-                plugin.getLogger().severe("Failed to handle event: " + e.getMessage());
+                SkyblockPlugin.getLogger().severe("Failed to handle event: " + e.getMessage());
             }
         }
     }

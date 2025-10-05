@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.locations.commands;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.locations.Warp;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -9,10 +13,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class WarpCommand implements CommandExecutor {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public WarpCommand(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public WarpCommand(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     @Override
@@ -26,13 +30,13 @@ public class WarpCommand implements CommandExecutor {
 
         if (args.length == 0) {
             // Liste alle verfügbaren Warps auf
-            java.util.List<String> warps = plugin.getLocationManager().getWarpNames();
+            java.util.List<String> warps = SkyblockPlugin.getLocationManager().getWarpNames();
             if (warps.isEmpty()) {
-                player.sendMessage("§cEs sind keine Warps verfügbar!");
+                player.sendMessage(Component.text("§cEs sind keine Warps verfügbar!"));
             } else {
                 StringBuilder message = new StringBuilder("§7Verfügbare Warps:\n");
                 for (String warpName : warps) {
-                    de.noctivag.plugin.locations.Warp warp = plugin.getLocationManager().getWarp(warpName);
+                    de.noctivag.skyblock.locations.Warp warp = SkyblockPlugin.getLocationManager().getWarp(warpName);
                     if (warp.getPermission().isEmpty() || player.hasPermission(warp.getPermission())) {
                         message.append("§e").append(warpName);
                         if (!warp.getDescription().isEmpty()) {
@@ -47,7 +51,7 @@ public class WarpCommand implements CommandExecutor {
         }
 
         String warpName = args[0];
-        de.noctivag.plugin.locations.Warp warp = plugin.getLocationManager().getWarp(warpName);
+        de.noctivag.skyblock.locations.Warp warp = SkyblockPlugin.getLocationManager().getWarp(warpName);
 
         if (warp == null) {
             player.sendMessage("§cDer Warp §e" + warpName + " §cexistiert nicht!");
@@ -55,7 +59,7 @@ public class WarpCommand implements CommandExecutor {
         }
 
         if (!warp.getPermission().isEmpty() && !player.hasPermission(warp.getPermission())) {
-            player.sendMessage("§cDu hast keine Berechtigung, diesen Warp zu benutzen!");
+            player.sendMessage(Component.text("§cDu hast keine Berechtigung, diesen Warp zu benutzen!"));
             return true;
         }
 

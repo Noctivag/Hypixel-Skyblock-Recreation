@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.collections;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.CorePlatform;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -14,19 +18,21 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 
 /**
  * Collections System - Hypixel Skyblock Style
  */
 public class CollectionsSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CorePlatform corePlatform;
     private final Map<UUID, PlayerCollections> playerCollections = new ConcurrentHashMap<>();
     
-    public CollectionsSystem(SkyblockPlugin plugin, CorePlatform corePlatform, de.noctivag.plugin.database.MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public CollectionsSystem(SkyblockPlugin SkyblockPlugin, CorePlatform corePlatform, de.noctivag.skyblock.database.MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.corePlatform = corePlatform;
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     @EventHandler
@@ -72,7 +78,7 @@ public class CollectionsSystem implements Listener {
                 collections.addReward(type, reward);
                 giveReward(player, reward);
                 
-                player.sendMessage("§a§lCOLLECTION MILESTONE!");
+                player.sendMessage(Component.text("§a§lCOLLECTION MILESTONE!"));
                 player.sendMessage("§7" + type.getDisplayName() + " §7→ §e" + reward.getRequiredAmount() + " " + type.getName());
                 player.sendMessage("§aReward: " + reward.getDescription());
             }
@@ -84,7 +90,7 @@ public class CollectionsSystem implements Listener {
                 collections.addRecipe(type, recipe);
                 unlockRecipe(player, recipe);
                 
-                player.sendMessage("§a§lRECIPE UNLOCKED!");
+                player.sendMessage(Component.text("§a§lRECIPE UNLOCKED!"));
                 player.sendMessage("§7" + recipe.getName() + " §7→ §e" + recipe.getDescription());
             }
         }
@@ -96,7 +102,7 @@ public class CollectionsSystem implements Listener {
             case COINS:
                 // Use economy system to give coins
                 try {
-                    plugin.getEconomyManager().depositMoney(player, reward.getAmount());
+                    SkyblockPlugin.getEconomyManager().depositMoney(player, reward.getAmount());
                     player.sendMessage("§a+§6" + reward.getAmount() + " coins");
                 } catch (Exception e) {
                     player.sendMessage("§a+§6" + reward.getAmount() + " coins");
@@ -452,6 +458,6 @@ public class CollectionsSystem implements Listener {
     // Missing methods for GUI integration
     public void openCollectionCategoryGUI(Player player, String category) {
         // Delegate to CollectionsGUI
-        new de.noctivag.plugin.collections.CollectionsGUI(plugin, this).openCategoryGUI(player, category);
+        new de.noctivag.skyblock.collections.CollectionsGUI(SkyblockPlugin, this).openCategoryGUI(player, category);
     }
 }

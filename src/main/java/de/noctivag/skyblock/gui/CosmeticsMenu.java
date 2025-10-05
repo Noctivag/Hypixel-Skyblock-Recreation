@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.cosmetics.CosmeticsManager;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
@@ -17,12 +20,12 @@ import java.util.Map;
 public class CosmeticsMenu extends CustomGUI {
     private final Map<Integer, Particle> particleSlots;
     private final Map<Integer, Sound> soundSlots;
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CosmeticsManager cosmeticsManager;
 
-    public CosmeticsMenu(SkyblockPlugin plugin, CosmeticsManager cosmeticsManager) {
+    public CosmeticsMenu(SkyblockPlugin SkyblockPlugin, CosmeticsManager cosmeticsManager) {
         super(54, Component.text("§d✦ Kosmetik-Menü ✦"));
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.cosmeticsManager = cosmeticsManager;
         this.particleSlots = new HashMap<>();
         this.soundSlots = new HashMap<>();
@@ -93,19 +96,19 @@ public class CosmeticsMenu extends CustomGUI {
 
         // Wing button
         boolean wingsActive = cosmeticsManager.isWingActive(player);
-        int wingsCost = plugin.getConfigManager().getConfig().getInt("cosmetics.wings.cost", 2000);
+        int wingsCost = SkyblockPlugin.getConfigManager().getConfig().getInt("cosmetics.wings.cost", 2000);
         setItem(21, createGuiItem(wingsActive ? Material.ELYTRA : Material.FEATHER,
             (wingsActive ? "§aFlügel §a§l✓" : "§eFlügel"),
             wingsActive ? "§7Flügel sind aktiv" : "§7Klicke, um Flügel zu aktivieren",
             "§7Kosten: §6" + wingsCost + " Coins"));
 
         // Halo toggle
-        boolean haloActive = plugin.getCosmeticsManager().isWingActive(player) && false; // placeholder, handled by manager
+        boolean haloActive = SkyblockPlugin.getCosmeticsManager().isWingActive(player) && false; // placeholder, handled by manager
         setItem(23, createGuiItem(Material.END_ROD, "§eHalo",
             "§7Aktiviere einen Halo-Effekt"));
 
         // Trail toggle
-        int trailCost = plugin.getConfigManager().getConfig().getInt("cosmetics.trail.cost", 1200);
+        int trailCost = SkyblockPlugin.getConfigManager().getConfig().getInt("cosmetics.trail.cost", 1200);
         setItem(24, createGuiItem(Material.SOUL_SAND, "§eTrail",
             "§7Aktiviere eine Spur hinter dir", "§7Kosten: §6" + trailCost + " Coins"));
 
@@ -137,7 +140,7 @@ public class CosmeticsMenu extends CustomGUI {
         Material material = getParticleMaterial(particle);
         String name = formatParticleName(particle);
         String permission = "cosmetics.particles." + particle.name().toLowerCase();
-        int cost = plugin.getConfigManager().getConfig().getInt(
+        int cost = SkyblockPlugin.getConfigManager().getConfig().getInt(
             "particle-effects.effects." + particle.name() + ".cost", 1000);
 
         List<String> lore = new ArrayList<>();
@@ -160,7 +163,7 @@ public class CosmeticsMenu extends CustomGUI {
         Material material = getSoundMaterial(sound);
         String name = formatSoundName(sound);
         String permission = "cosmetics.sounds." + sound.name().toLowerCase();
-        int cost = plugin.getConfigManager().getConfig().getInt(
+        int cost = SkyblockPlugin.getConfigManager().getConfig().getInt(
             "sound-effects.effects." + sound.name() + ".cost", 800);
 
         List<String> lore = new ArrayList<>();

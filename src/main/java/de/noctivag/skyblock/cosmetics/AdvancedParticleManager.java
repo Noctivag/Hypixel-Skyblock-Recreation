@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.cosmetics;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
@@ -13,12 +18,12 @@ import java.util.Map;
 import java.util.UUID;
 
 public class AdvancedParticleManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, ParticleEffect> activeEffects = new HashMap<>();
     private final Map<UUID, BukkitTask> effectTasks = new HashMap<>();
 
-    public AdvancedParticleManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public AdvancedParticleManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     public void spawnParticleShape(Player player, ParticleShape shape) {
@@ -59,7 +64,7 @@ public class AdvancedParticleManager {
                 
                 time += 0.1;
             }
-        }.runTaskTimer(plugin, 0L, 2L); // Run every 2 ticks (0.1 seconds)
+        }.runTaskTimer(SkyblockPlugin, 0L, 2L); // Run every 2 ticks (0.1 seconds)
         
         effectTasks.put(playerId, task);
         player.sendMessage("§aPartikel-Effekt aktiviert: §e" + shape.getDisplayName());
@@ -76,7 +81,7 @@ public class AdvancedParticleManager {
         
         // Remove effect
         activeEffects.remove(playerId);
-        player.sendMessage("§cPartikel-Effekt deaktiviert");
+        player.sendMessage(Component.text("§cPartikel-Effekt deaktiviert"));
     }
 
     public boolean hasActiveEffect(Player player) {

@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.reforges;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -20,19 +23,20 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.HashMap;
 import java.util.Map;
+import net.kyori.adventure.text.Component;
 
 /**
  * Reforge Listener - Handles reforge GUI interactions and effects
  */
 public class ReforgeListener implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final ReforgeSystem reforgeSystem;
     private final ReforgeGUI reforgeGUI;
     private final Map<Player, ItemStack> reforgeHistory;
     
-    public ReforgeListener(SkyblockPlugin plugin, ReforgeSystem reforgeSystem, ReforgeGUI reforgeGUI) {
-        this.plugin = plugin;
+    public ReforgeListener(SkyblockPlugin SkyblockPlugin, ReforgeSystem reforgeSystem, ReforgeGUI reforgeGUI) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.reforgeSystem = reforgeSystem;
         this.reforgeGUI = reforgeGUI;
         this.reforgeHistory = new HashMap<>();
@@ -72,7 +76,7 @@ public class ReforgeListener implements Listener {
         if (meta == null) return;
         
         // Check for category buttons
-        NamespacedKey categoryKey = new NamespacedKey(plugin, "reforge_category");
+        NamespacedKey categoryKey = new NamespacedKey(SkyblockPlugin, "reforge_category");
         if (meta.getPersistentDataContainer().has(categoryKey, PersistentDataType.STRING)) {
             String category = meta.getPersistentDataContainer().get(categoryKey, PersistentDataType.STRING);
             ItemStack itemInSlot = event.getInventory().getItem(13);
@@ -81,7 +85,7 @@ public class ReforgeListener implements Listener {
         }
         
         // Check for reforge selection
-        NamespacedKey reforgeKey = new NamespacedKey(plugin, "reforge_select");
+        NamespacedKey reforgeKey = new NamespacedKey(SkyblockPlugin, "reforge_select");
         if (meta.getPersistentDataContainer().has(reforgeKey, PersistentDataType.STRING)) {
             String reforgeName = meta.getPersistentDataContainer().get(reforgeKey, PersistentDataType.STRING);
             ReforgeSystem.Reforge reforge = reforgeSystem.getReforge(reforgeName);
@@ -91,14 +95,14 @@ public class ReforgeListener implements Listener {
                 if (itemInSlot != null && !itemInSlot.getType().isAir()) {
                     applyReforgeToItem(player, itemInSlot, reforge);
                 } else {
-                    player.sendMessage("§cPlease place an item in the reforge slot first!");
+                    player.sendMessage(Component.text("§cPlease place an item in the reforge slot first!"));
                 }
             }
             return;
         }
         
         // Check for action buttons
-        NamespacedKey actionKey = new NamespacedKey(plugin, "reforge_action");
+        NamespacedKey actionKey = new NamespacedKey(SkyblockPlugin, "reforge_action");
         if (meta.getPersistentDataContainer().has(actionKey, PersistentDataType.STRING)) {
             String action = meta.getPersistentDataContainer().get(actionKey, PersistentDataType.STRING);
             handleReforgeAction(player, action, event);
@@ -113,7 +117,7 @@ public class ReforgeListener implements Listener {
     
     private void applyReforgeToItem(Player player, ItemStack item, ReforgeSystem.Reforge reforge) {
         if (!reforgeSystem.canReforge(item, reforge)) {
-            player.sendMessage("§cThis reforge cannot be applied to this item type!");
+            player.sendMessage(Component.text("§cThis reforge cannot be applied to this item type!"));
             return;
         }
         
@@ -160,7 +164,7 @@ public class ReforgeListener implements Listener {
                 if (item != null && !item.getType().isAir()) {
                     removeReforgeFromItem(player, item);
                 } else {
-                    player.sendMessage("§cNo item in reforge slot!");
+                    player.sendMessage(Component.text("§cNo item in reforge slot!"));
                 }
             }
             case "undo" -> {
@@ -171,17 +175,17 @@ public class ReforgeListener implements Listener {
                         // Restore previous state
                         event.getInventory().setItem(13, previousItem.clone());
                         reforgeHistory.remove(player);
-                        player.sendMessage("§aUndone last reforge!");
+                        player.sendMessage(Component.text("§aUndone last reforge!"));
                         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
                     } else {
-                        player.sendMessage("§cNo item to undo reforge on!");
+                        player.sendMessage(Component.text("§cNo item to undo reforge on!"));
                     }
                 } else {
-                    player.sendMessage("§cNo reforge history to undo!");
+                    player.sendMessage(Component.text("§cNo reforge history to undo!"));
                 }
             }
             case "apply" -> {
-                player.sendMessage("§eSelect a reforge from the categories above!");
+                player.sendMessage(Component.text("§eSelect a reforge from the categories above!"));
             }
         }
     }
@@ -199,10 +203,10 @@ public class ReforgeListener implements Listener {
             }
             
             if (compatible) {
-                player.sendMessage("§aItem placed! Select a reforge category to view available reforges.");
+                player.sendMessage(Component.text("§aItem placed! Select a reforge category to view available reforges."));
                 player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1.0f, 1.0f);
             } else {
-                player.sendMessage("§cThis item cannot be reforged!");
+                player.sendMessage(Component.text("§cThis item cannot be reforged!"));
                 event.setCancelled(true);
             }
         }
@@ -211,7 +215,7 @@ public class ReforgeListener implements Listener {
     private void removeReforgeFromItem(Player player, ItemStack item) {
         ReforgeSystem.Reforge currentReforge = reforgeSystem.getItemReforge(item);
         if (currentReforge == null) {
-            player.sendMessage("§cThis item doesn't have a reforge to remove!");
+            player.sendMessage(Component.text("§cThis item doesn't have a reforge to remove!"));
             return;
         }
         
@@ -231,11 +235,11 @@ public class ReforgeListener implements Listener {
                 player.closeInventory();
                 reforgeGUI.openReforgeTable(player);
             }
-        }.runTaskLater(plugin, 1L);
+        }.runTaskLater(SkyblockPlugin, 1L);
     }
     
     private void showReforgeStats(Player player, ReforgeSystem.Reforge reforge, ItemStack item) {
-        player.sendMessage("§7Stats added:");
+        player.sendMessage(Component.text("§7Stats added:"));
         
         java.util.Map<String, Double> stats = reforgeSystem.calculateReforgeStats(reforge, item);
         for (java.util.Map.Entry<String, Double> stat : stats.entrySet()) {

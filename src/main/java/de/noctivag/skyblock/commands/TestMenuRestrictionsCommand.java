@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.commands;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,10 +17,10 @@ import net.kyori.adventure.text.Component;
  * Test command to verify menu restrictions work properly
  */
 public class TestMenuRestrictionsCommand implements CommandExecutor {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public TestMenuRestrictionsCommand(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public TestMenuRestrictionsCommand(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     @Override
@@ -28,12 +31,12 @@ public class TestMenuRestrictionsCommand implements CommandExecutor {
         }
 
         if (!player.hasPermission("basics.admin")) {
-            player.sendMessage("§cDu hast keine Berechtigung für diesen Befehl!");
+            player.sendMessage(Component.text("§cDu hast keine Berechtigung für diesen Befehl!"));
             return true;
         }
 
         if (args.length == 0) {
-            player.sendMessage("§e/testmenurestrictions <menu|island>");
+            player.sendMessage(Component.text("§e/testmenurestrictions <menu|island>"));
             return true;
         }
 
@@ -47,7 +50,7 @@ public class TestMenuRestrictionsCommand implements CommandExecutor {
                 giveIslandItem(player);
                 break;
             default:
-                player.sendMessage("§cUngültiger Typ! Verwende: menu oder island");
+                player.sendMessage(Component.text("§cUngültiger Typ! Verwende: menu oder island"));
                 break;
         }
 
@@ -68,8 +71,8 @@ public class TestMenuRestrictionsCommand implements CommandExecutor {
 
         // Give item in last slot (slot 8)
         player.getInventory().setItem(8, menuItem);
-        player.sendMessage("§aMenü-Item wurde in den letzten Slot (Slot 8) gelegt!");
-        player.sendMessage("§eVersuche es zu droppen - es sollte blockiert werden!");
+        player.sendMessage(Component.text("§aMenü-Item wurde in den letzten Slot (Slot 8) gelegt!"));
+        player.sendMessage(Component.text("§eVersuche es zu droppen - es sollte blockiert werden!"));
     }
 
     private void giveIslandItem(Player player) {
@@ -86,7 +89,7 @@ public class TestMenuRestrictionsCommand implements CommandExecutor {
 
         // Give item in last slot (slot 8)
         player.getInventory().setItem(8, islandItem);
-        player.sendMessage("§aInsel-Menü-Item wurde in den letzten Slot (Slot 8) gelegt!");
-        player.sendMessage("§eVersuche es zu droppen - es sollte blockiert werden!");
+        player.sendMessage(Component.text("§aInsel-Menü-Item wurde in den letzten Slot (Slot 8) gelegt!"));
+        player.sendMessage(Component.text("§eVersuche es zu droppen - es sollte blockiert werden!"));
     }
 }

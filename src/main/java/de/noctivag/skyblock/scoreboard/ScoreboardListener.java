@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.scoreboard;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -10,7 +13,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class ScoreboardListener implements Listener {
     private final ScoreboardManager scoreboardManager;
 
-    public ScoreboardListener(SkyblockPlugin plugin, ScoreboardManager scoreboardManager) {
+    public ScoreboardListener(SkyblockPlugin SkyblockPlugin, ScoreboardManager scoreboardManager) {
         this.scoreboardManager = scoreboardManager;
     }
 

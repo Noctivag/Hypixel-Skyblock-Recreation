@@ -1,4 +1,8 @@
 package de.noctivag.skyblock.islands;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
@@ -13,33 +17,35 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 // import org.bukkit.potion.PotionEffect; // Unused
 // import org.bukkit.potion.PotionEffectType; // Unused
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 
 public class AdvancedIslandSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerIslandData> playerIslandData = new ConcurrentHashMap<>();
     private final Map<IslandType, List<Island>> islands = new HashMap<>();
     // private final Map<Location, Island> spawnedIslands = new HashMap<>(); // Unused
     
-    public AdvancedIslandSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedIslandSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
         initializeIslands();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
         
         // Use fields to avoid warnings
-        plugin.getLogger().info("AdvancedIslandSystem initialized");
+        SkyblockPlugin.getLogger().info("AdvancedIslandSystem initialized");
         if (databaseManager != null) {
-            plugin.getLogger().info("Database manager connected: " + databaseManager.isConnected());
+            SkyblockPlugin.getLogger().info("Database manager connected: " + databaseManager.isConnected());
         }
     }
     
@@ -380,7 +386,7 @@ public class AdvancedIslandSystem implements Listener {
         addGUIItem(gui, 53, Material.ARROW, "§7§lNext Page", "§7Go to next page.");
         
         player.openInventory(gui);
-        player.sendMessage("§aIsland GUI geöffnet!");
+        player.sendMessage(Component.text("§aIsland GUI geöffnet!"));
     }
     
     public void openCategoryGUI(Player player, IslandType category) {
@@ -471,7 +477,7 @@ public class AdvancedIslandSystem implements Listener {
         
         // Check if player can create this island
         if (!canCreateIsland(player, island)) {
-            player.sendMessage("§cDu kannst diese Insel nicht erstellen!");
+            player.sendMessage(Component.text("§cDu kannst diese Insel nicht erstellen!"));
             return;
         }
         
@@ -490,7 +496,7 @@ public class AdvancedIslandSystem implements Listener {
         createIslandStorage(world, playerId);
         
         player.sendMessage("§aInsel " + island.getDisplayName() + " wurde erfolgreich erstellt!");
-        player.sendMessage("§7Verwende /island teleport um zu deiner Insel zu gelangen.");
+        player.sendMessage(Component.text("§7Verwende /island teleport um zu deiner Insel zu gelangen."));
     }
     
     private boolean canCreateIsland(Player player, Island island) {
@@ -503,7 +509,7 @@ public class AdvancedIslandSystem implements Listener {
         // Check if player already has an island of this type
         PlayerIslandData data = getPlayerIslandData(player.getUniqueId());
         if (data.isIslandUnlocked(island.getName())) {
-            player.sendMessage("§cDu besitzt bereits diese Insel!");
+            player.sendMessage(Component.text("§cDu besitzt bereits diese Insel!"));
             return false;
         }
         
@@ -771,7 +777,7 @@ public class AdvancedIslandSystem implements Listener {
         
         public PlayerIslandData(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public UUID getPlayerId() {
@@ -779,7 +785,7 @@ public class AdvancedIslandSystem implements Listener {
         }
         
         public void update() {
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void unlockIsland(String islandName) {

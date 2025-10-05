@@ -1,4 +1,9 @@
 package de.noctivag.skyblock.banking;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
@@ -10,25 +15,26 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class AdvancedBankingSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerBankData> playerBankData = new ConcurrentHashMap<>();
     private final Map<BankType, List<Bank>> banks = new HashMap<>();
     
-    public AdvancedBankingSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedBankingSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
         initializeBanks();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeBanks() {
@@ -165,7 +171,7 @@ public class AdvancedBankingSystem implements Listener {
     }
     
     public void openBankingMainGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lBanking - Main Menu");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lBanking - Main Menu"));
         
         PlayerBankData bankData = getPlayerBankData(player.getUniqueId());
         
@@ -304,7 +310,7 @@ public class AdvancedBankingSystem implements Listener {
     }
     
     public void openUpgradesGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lBanking Upgrades");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lBanking Upgrades"));
         
         PlayerBankData bankData = getPlayerBankData(player.getUniqueId());
         
@@ -354,8 +360,8 @@ public class AdvancedBankingSystem implements Listener {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(name);
-            meta.setLore(Arrays.asList(description));
+            meta.displayName(Component.text(name));
+            meta.lore(Arrays.asList(Component.text(description)));
             item.setItemMeta(meta);
         }
         gui.setItem(slot, item);
@@ -365,8 +371,8 @@ public class AdvancedBankingSystem implements Listener {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(name);
-            meta.setLore(Arrays.asList(descriptions));
+            meta.displayName(Component.text(name));
+            meta.lore(java.util.Arrays.stream(descriptions).map(Component::text).collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         gui.setItem(slot, item);
@@ -383,7 +389,7 @@ public class AdvancedBankingSystem implements Listener {
         if (data.withdrawCoins(amount)) {
             player.sendMessage("§a" + amount + " coins abgehoben!");
         } else {
-            player.sendMessage("§cNicht genügend coins in der Bank!");
+            player.sendMessage(Component.text("§cNicht genügend coins in der Bank!"));
         }
     }
     
@@ -392,7 +398,7 @@ public class AdvancedBankingSystem implements Listener {
         if (data.investCoins(amount)) {
             player.sendMessage("§a" + amount + " coins investiert!");
         } else {
-            player.sendMessage("§cNicht genügend coins zum Investieren!");
+            player.sendMessage(Component.text("§cNicht genügend coins zum Investieren!"));
         }
     }
     
@@ -401,7 +407,7 @@ public class AdvancedBankingSystem implements Listener {
         if (data.takeLoan(amount)) {
             player.sendMessage("§a" + amount + " coins als Kredit erhalten!");
         } else {
-            player.sendMessage("§cKreditlimit erreicht!");
+            player.sendMessage(Component.text("§cKreditlimit erreicht!"));
         }
     }
     
@@ -410,7 +416,7 @@ public class AdvancedBankingSystem implements Listener {
         if (data.payLoan(amount)) {
             player.sendMessage("§a" + amount + " coins Kredit zurückgezahlt!");
         } else {
-            player.sendMessage("§cNicht genügend coins zum Zurückzahlen!");
+            player.sendMessage(Component.text("§cNicht genügend coins zum Zurückzahlen!"));
         }
     }
     
@@ -542,7 +548,7 @@ public class AdvancedBankingSystem implements Listener {
             this.gems = 0;
             this.investedCoins = 0;
             this.loanAmount = 0;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
             
             this.bankingLevel = 1;
             this.bankingXP = 0;
@@ -556,12 +562,12 @@ public class AdvancedBankingSystem implements Listener {
             
             this.twoFactorEnabled = false;
             this.securityPin = null;
-            this.lastLoginTime = System.currentTimeMillis();
+            this.lastLoginTime = java.lang.System.currentTimeMillis();
             this.failedLoginAttempts = 0;
         }
         
         public void update() {
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         // Coin Operations
@@ -808,7 +814,7 @@ public class AdvancedBankingSystem implements Listener {
         public void recordLoginAttempt(boolean success) {
             if (success) {
                 this.failedLoginAttempts = 0;
-                this.lastLoginTime = System.currentTimeMillis();
+                this.lastLoginTime = java.lang.System.currentTimeMillis();
             } else {
                 this.failedLoginAttempts++;
             }
@@ -914,7 +920,7 @@ public class AdvancedBankingSystem implements Listener {
             this.type = type;
             this.currency = currency;
             this.amount = amount;
-            this.timestamp = System.currentTimeMillis();
+            this.timestamp = java.lang.System.currentTimeMillis();
         }
         
         public TransactionType getType() { return type; }

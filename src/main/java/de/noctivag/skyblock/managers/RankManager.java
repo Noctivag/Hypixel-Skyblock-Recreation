@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.managers;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -11,17 +14,17 @@ import java.io.IOException;
 import java.util.*;
 
 public class RankManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final File ranksFile;
     private FileConfiguration ranksConfig;
 
-    public RankManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.ranksFile = new File(plugin.getDataFolder(), "ranks.yml");
+    public RankManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.ranksFile = new File(SkyblockPlugin.getDataFolder(), "ranks.yml");
         // load() moved to init() to avoid "this" escape during construction
     }
 
-    // Call once after construction (e.g. from Plugin.onEnable)
+    // Call once after construction (e.g. from SkyblockPlugin.onEnable)
     public void init() {
         load();
     }
@@ -33,7 +36,7 @@ public class RankManager {
                 ranksFile.getParentFile().mkdirs();
                 ranksFile.createNewFile();
             } catch (IOException e) {
-                plugin.getLogger().severe("Could not create ranks.yml: " + e.getMessage());
+                SkyblockPlugin.getLogger().severe("Could not create ranks.yml: " + e.getMessage());
             }
         }
         ranksConfig = YamlConfiguration.loadConfiguration(ranksFile);
@@ -52,7 +55,7 @@ public class RankManager {
         try {
             ranksConfig.save(ranksFile);
         } catch (IOException e) {
-            plugin.getLogger().severe("Could not save ranks.yml: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Could not save ranks.yml: " + e.getMessage());
         }
     }
 
@@ -97,8 +100,8 @@ public class RankManager {
         ranksConfig.set("players." + player.getUniqueId() + ".rank", rankKey);
         // Also mirror into main config for ScoreboardManager compatibility
         // TODO: Implement proper ConfigManager interface
-        // ((ConfigManager) plugin.getConfigManager()).getConfig().set("players." + player.getUniqueId() + ".rank", getDisplayName(rankKey));
-        // ((ConfigManager) plugin.getConfigManager()).saveConfig("config");
+        // ((ConfigManager) SkyblockPlugin.getConfigManager()).getConfig().set("players." + player.getUniqueId() + ".rank", getDisplayName(rankKey));
+        // ((ConfigManager) SkyblockPlugin.getConfigManager()).saveConfig("config");
         save();
     }
 }

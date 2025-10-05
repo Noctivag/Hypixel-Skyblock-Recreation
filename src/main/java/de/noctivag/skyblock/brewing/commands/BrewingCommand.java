@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.brewing.commands;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.brewing.AdvancedBrewingSystem;
 import de.noctivag.skyblock.brewing.gui.BrewingGUI;
 import org.bukkit.command.Command;
@@ -19,11 +23,11 @@ import java.util.List;
  */
 public class BrewingCommand implements CommandExecutor, TabCompleter {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final AdvancedBrewingSystem brewingSystem;
     
-    public BrewingCommand(SkyblockPlugin plugin, AdvancedBrewingSystem brewingSystem) {
-        this.plugin = plugin;
+    public BrewingCommand(SkyblockPlugin SkyblockPlugin, AdvancedBrewingSystem brewingSystem) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.brewingSystem = brewingSystem;
     }
     
@@ -36,7 +40,7 @@ public class BrewingCommand implements CommandExecutor, TabCompleter {
         
         if (args.length == 0) {
             // Open brewing GUI
-            BrewingGUI gui = new BrewingGUI(plugin, brewingSystem);
+            BrewingGUI gui = new BrewingGUI(SkyblockPlugin, brewingSystem);
             gui.openBrewingGUI(player);
             return true;
         }
@@ -45,20 +49,20 @@ public class BrewingCommand implements CommandExecutor, TabCompleter {
         
         switch (subCommand) {
             case "gui", "menu" -> {
-                BrewingGUI gui = new BrewingGUI(plugin, brewingSystem);
+                BrewingGUI gui = new BrewingGUI(SkyblockPlugin, brewingSystem);
                 gui.openBrewingGUI(player);
             }
             case "station" -> {
-                BrewingGUI gui = new BrewingGUI(plugin, brewingSystem);
+                BrewingGUI gui = new BrewingGUI(SkyblockPlugin, brewingSystem);
                 gui.openBrewingStationGUI(player);
             }
             case "stats", "statistics" -> {
-                BrewingGUI gui = new BrewingGUI(plugin, brewingSystem);
+                BrewingGUI gui = new BrewingGUI(SkyblockPlugin, brewingSystem);
                 gui.openBrewingStatisticsGUI(player);
             }
             case "brew" -> {
                 if (args.length < 2) {
-                    player.sendMessage("§cUsage: /brewing brew <recipe>");
+                    player.sendMessage(Component.text("§cUsage: /brewing brew <recipe>"));
                     return true;
                 }
                 brewPotion(player, args[1]);
@@ -70,7 +74,7 @@ public class BrewingCommand implements CommandExecutor, TabCompleter {
                 showBrewingHelp(player);
             }
             default -> {
-                player.sendMessage("§cUnknown subcommand! Use /brewing help for help.");
+                player.sendMessage(Component.text("§cUnknown subcommand! Use /brewing help for help."));
             }
         }
         
@@ -90,7 +94,7 @@ public class BrewingCommand implements CommandExecutor, TabCompleter {
     private void showBrewingInfo(Player player) {
         var data = brewingSystem.getPlayerBrewingData(player.getUniqueId());
         
-        player.sendMessage("§6§l=== Brewing Information ===");
+        player.sendMessage(Component.text("§6§l=== Brewing Information ==="));
         player.sendMessage("§7Level: §a" + data.getLevel());
         player.sendMessage("§7Experience: §a" + data.getExperience());
         player.sendMessage("§7Coins: §a" + data.getCoins());
@@ -99,14 +103,14 @@ public class BrewingCommand implements CommandExecutor, TabCompleter {
     }
     
     private void showBrewingHelp(Player player) {
-        player.sendMessage("§6§l=== Brewing Commands ===");
-        player.sendMessage("§7/brewing - Open brewing GUI");
-        player.sendMessage("§7/brewing gui - Open brewing GUI");
-        player.sendMessage("§7/brewing station - Open brewing station");
-        player.sendMessage("§7/brewing stats - View brewing statistics");
-        player.sendMessage("§7/brewing brew <recipe> - Brew a potion");
-        player.sendMessage("§7/brewing info - Show brewing information");
-        player.sendMessage("§7/brewing help - Show this help");
+        player.sendMessage(Component.text("§6§l=== Brewing Commands ==="));
+        player.sendMessage(Component.text("§7/brewing - Open brewing GUI"));
+        player.sendMessage(Component.text("§7/brewing gui - Open brewing GUI"));
+        player.sendMessage(Component.text("§7/brewing station - Open brewing station"));
+        player.sendMessage(Component.text("§7/brewing stats - View brewing statistics"));
+        player.sendMessage(Component.text("§7/brewing brew <recipe> - Brew a potion"));
+        player.sendMessage(Component.text("§7/brewing info - Show brewing information"));
+        player.sendMessage(Component.text("§7/brewing help - Show this help"));
     }
     
     @Override

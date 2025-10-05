@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.skyblock.enchanting;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.Material;
@@ -15,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class EnchantingSystem {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, Integer> playerEnchantingLevels = new ConcurrentHashMap<>();
     private final Map<UUID, Integer> playerEnchantingXP = new ConcurrentHashMap<>();
     
@@ -88,8 +93,8 @@ public class EnchantingSystem {
     // Enchantment Registry
     private final Map<String, SkyBlockEnchantment> enchantments = new HashMap<>();
     
-    public EnchantingSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public EnchantingSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         initializeEnchantments();
     }
     
@@ -233,17 +238,17 @@ public class EnchantingSystem {
     public boolean enchantItem(Player player, ItemStack item, String enchantmentId, int level) {
         SkyBlockEnchantment enchantment = enchantments.get(enchantmentId);
         if (enchantment == null) {
-            player.sendMessage("§cVerzauberung nicht gefunden!");
+            player.sendMessage(Component.text("§cVerzauberung nicht gefunden!"));
             return false;
         }
         
         if (level < 1 || level > enchantment.getMaxLevel()) {
-            player.sendMessage("§cUngültiges Level!");
+            player.sendMessage(Component.text("§cUngültiges Level!"));
             return false;
         }
         
         if (!enchantment.getApplicableItems().contains(item.getType())) {
-            player.sendMessage("§cDiese Verzauberung kann nicht auf dieses Item angewendet werden!");
+            player.sendMessage(Component.text("§cDiese Verzauberung kann nicht auf dieses Item angewendet werden!"));
             return false;
         }
         
@@ -267,7 +272,7 @@ public class EnchantingSystem {
             item.setItemMeta(meta);
         }
         
-        player.sendMessage("§aItem erfolgreich verzaubert!");
+        player.sendMessage(Component.text("§aItem erfolgreich verzaubert!"));
         player.sendMessage("§e" + enchantment.getName() + " " + level);
         player.sendMessage("§7" + enchantment.getDescriptionForLevel(level));
         
@@ -337,11 +342,11 @@ public class EnchantingSystem {
      * Wird aufgerufen wenn ein Spieler ein Enchanting Level aufsteigt
      */
     private void onEnchantingLevelUp(UUID playerId, int newLevel) {
-        Player player = plugin.getServer().getPlayer(playerId);
+        Player player = SkyblockPlugin.getServer().getPlayer(playerId);
         if (player != null) {
-            player.sendMessage("§6§lENCHANTING LEVEL UP!");
+            player.sendMessage(Component.text("§6§lENCHANTING LEVEL UP!"));
             player.sendMessage("§e✨ Enchanting Level " + newLevel);
-            player.sendMessage("§7Du kannst jetzt höhere Verzauberungen anwenden!");
+            player.sendMessage(Component.text("§7Du kannst jetzt höhere Verzauberungen anwenden!"));
             
             // Spiele Sound und Effekte
             player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);

@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.magic;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -19,15 +24,15 @@ import java.util.concurrent.CompletableFuture;
  */
 public class AdvancedMagicSystem {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerMagicData> playerMagicData = new ConcurrentHashMap<>();
     private final Map<String, SpellType> spellTypes = new HashMap<>();
     private final Map<UUID, List<ActiveSpell>> activeSpells = new ConcurrentHashMap<>();
     private final Map<UUID, Integer> playerMana = new ConcurrentHashMap<>();
     
-    public AdvancedMagicSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedMagicSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeSpellTypes();
         startMagicTask();
@@ -293,7 +298,7 @@ public class AdvancedMagicSystem {
                 updateActiveSpells();
                 updateManaRegeneration();
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Every second
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Every second
     }
     
     /**
@@ -504,7 +509,7 @@ public class AdvancedMagicSystem {
         ItemMeta meta = item.getItemMeta();
         
         if (meta != null) {
-            meta.setDisplayName("§6" + spell.getName() + " Spell");
+            meta.displayName(Component.text("§6" + spell.getName() + " Spell"));
             List<String> lore = new ArrayList<>(spell.getDescription());
             lore.add("");
             lore.add("§7Category: " + spell.getCategory().getDisplayName());
@@ -516,7 +521,7 @@ public class AdvancedMagicSystem {
             lore.add("§7and unleash magical power!");
             lore.add("");
             lore.add("§8A magical spell");
-            meta.setLore(lore);
+            meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             
             item.setItemMeta(meta);
         }
@@ -601,7 +606,7 @@ public class AdvancedMagicSystem {
                 playerMagicData.put(playerId, data);
             }
         } catch (Exception e) {
-            plugin.getLogger().warning("Failed to load magic data for player " + playerId + ": " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Failed to load magic data for player " + playerId + ": " + e.getMessage());
         }
     }
     

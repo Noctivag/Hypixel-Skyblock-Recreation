@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.pets;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.CorePlatform;
 import de.noctivag.skyblock.core.PlayerProfile;
 import org.bukkit.Material;
@@ -25,28 +29,28 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Pet Inventory Management
  */
 public class PetManagementSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CorePlatform corePlatform;
     private final PetSystem petSystem;
     private final Map<UUID, Pet> activePets = new ConcurrentHashMap<>();
     private final Map<UUID, List<Pet>> playerPets = new ConcurrentHashMap<>();
     private final Map<UUID, BukkitTask> petTasks = new ConcurrentHashMap<>();
     
-    public PetManagementSystem(SkyblockPlugin plugin, CorePlatform corePlatform, PetSystem petSystem) {
-        this.plugin = plugin;
+    public PetManagementSystem(SkyblockPlugin SkyblockPlugin, CorePlatform corePlatform, PetSystem petSystem) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.corePlatform = corePlatform;
         this.petSystem = petSystem;
         startPetUpdateTask();
     }
     
     private void startPetUpdateTask() {
-        plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
+        SkyblockPlugin.getServer().getScheduler().runTaskTimer(SkyblockPlugin, () -> {
             for (Map.Entry<UUID, Pet> entry : activePets.entrySet()) {
                 Pet pet = entry.getValue();
                 pet.updateStats();
                 
                 // Apply pet effects to player
-                Player player = plugin.getServer().getPlayer(entry.getKey());
+                Player player = SkyblockPlugin.getServer().getPlayer(entry.getKey());
                 if (player != null) {
                     applyPetEffects(player, pet);
                 }
@@ -59,7 +63,7 @@ public class PetManagementSystem {
         
         // Check if player owns this pet
         if (!pet.getOwnerId().equals(playerId)) {
-            player.sendMessage("§cThis pet doesn't belong to you!");
+            player.sendMessage(Component.text("§cThis pet doesn't belong to you!"));
             return false;
         }
         
@@ -76,7 +80,7 @@ public class PetManagementSystem {
         // Apply pet effects
         applyPetEffects(player, pet);
         
-        player.sendMessage("§a§lPET ACTIVATED!");
+        player.sendMessage(Component.text("§a§lPET ACTIVATED!"));
         player.sendMessage("§7Pet: §e" + pet.getType().getName());
         player.sendMessage("§7Level: §e" + pet.getLevel());
         
@@ -93,7 +97,7 @@ public class PetManagementSystem {
         pet.setActive(false);
         activePets.remove(playerId);
         
-        player.sendMessage("§c§lPET DEACTIVATED!");
+        player.sendMessage(Component.text("§c§lPET DEACTIVATED!"));
         player.sendMessage("§7Pet: §e" + pet.getType().getName());
         
         return true;
@@ -121,7 +125,7 @@ public class PetManagementSystem {
             applyPetEffects(player, pet);
         }
         
-        player.sendMessage("§a§lPET LEVELED UP!");
+        player.sendMessage(Component.text("§a§lPET LEVELED UP!"));
         player.sendMessage("§7Pet: §e" + pet.getType().getName());
         player.sendMessage("§7Level: §e" + oldLevel + " §7→ §a" + newLevel);
         player.sendMessage("§7Cost: §6" + cost + " coins");
@@ -133,7 +137,7 @@ public class PetManagementSystem {
         int newLevel = pet.getLevel();
         
         if (newLevel > oldLevel) {
-            player.sendMessage("§a§lPET LEVEL UP!");
+            player.sendMessage(Component.text("§a§lPET LEVEL UP!"));
             player.sendMessage("§7Pet: §e" + pet.getType().getName());
             player.sendMessage("§7Level: §e" + oldLevel + " §7→ §a" + newLevel);
             
@@ -151,7 +155,7 @@ public class PetManagementSystem {
         // Check if item is valid food
         int foodValue = getFoodValue(food.getType());
         if (foodValue <= 0) {
-            player.sendMessage("§cThis item cannot be used as pet food!");
+            player.sendMessage(Component.text("§cThis item cannot be used as pet food!"));
             return;
         }
         
@@ -165,7 +169,7 @@ public class PetManagementSystem {
             player.getInventory().remove(food);
         }
         
-        player.sendMessage("§a§lPET FED!");
+        player.sendMessage(Component.text("§a§lPET FED!"));
         player.sendMessage("§7Pet: §e" + pet.getType().getName());
         player.sendMessage("§7Hunger: §e" + pet.getHunger() + "/100");
         player.sendMessage("§7Happiness: §e" + pet.getHappiness() + "/100");
@@ -193,7 +197,7 @@ public class PetManagementSystem {
             applyPetEffects(player, pet);
         }
         
-        player.sendMessage("§a§lPET UPGRADED!");
+        player.sendMessage(Component.text("§a§lPET UPGRADED!"));
         player.sendMessage("§7Pet: §e" + pet.getType().getName());
         player.sendMessage("§7Upgrade: §e" + upgradeType);
         player.sendMessage("§7Level: §e" + oldLevel + " §7→ §a" + newLevel);
@@ -217,7 +221,7 @@ public class PetManagementSystem {
             }
         }
         
-        player.sendMessage("§a§lPET EFFECTS APPLIED!");
+        player.sendMessage(Component.text("§a§lPET EFFECTS APPLIED!"));
         player.sendMessage("§7Pet: §e" + pet.getType().getName());
         player.sendMessage("§7Level: §e" + pet.getLevel());
     }
@@ -226,7 +230,7 @@ public class PetManagementSystem {
         // Remove pet effects from player
         // This would integrate with the StatModificationSystem
         
-        player.sendMessage("§c§lPET EFFECTS REMOVED!");
+        player.sendMessage(Component.text("§c§lPET EFFECTS REMOVED!"));
         player.sendMessage("§7Pet: §e" + pet.getType().getName());
     }
     
@@ -237,7 +241,7 @@ public class PetManagementSystem {
         
         // This would integrate with the StatModificationSystem
         // For now, we'll just send a message
-        player.sendMessage("§a§lPET ABILITY ACTIVATED!");
+        player.sendMessage(Component.text("§a§lPET ABILITY ACTIVATED!"));
         player.sendMessage("§7Ability: §e" + ability.getName());
         player.sendMessage("§7Effect: §e" + ability.getDescription());
     }

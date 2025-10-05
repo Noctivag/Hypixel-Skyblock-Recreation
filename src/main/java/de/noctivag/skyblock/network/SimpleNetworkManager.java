@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.network;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import de.noctivag.skyblock.worlds.WorldManager;
 import org.bukkit.Bukkit;
@@ -28,7 +32,7 @@ import java.util.logging.Level;
  */
 public class SimpleNetworkManager implements Listener {
 
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final WorldManager worldManager;
     private final NetworkArchitecture.ServerType serverType;
@@ -40,37 +44,37 @@ public class SimpleNetworkManager implements Listener {
     private final String serverId;
     private boolean isInitialized = false;
 
-    public SimpleNetworkManager(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager,
+    public SimpleNetworkManager(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager,
                                NetworkArchitecture.ServerType serverType) {
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
-        this.worldManager = (de.noctivag.plugin.worlds.WorldManager) plugin.getSimpleWorldManager();
+        this.worldManager = (de.noctivag.skyblock.worlds.WorldManager) SkyblockPlugin.getSimpleWorldManager();
         this.serverType = serverType;
         this.serverId = generateServerId();
 
         // Register events
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
 
     public void initialize() {
         try {
-            plugin.getLogger().info("Initializing Simple Network Manager...");
+            SkyblockPlugin.getLogger().info("Initializing Simple Network Manager...");
 
             // Initialize server
             initializeServer();
 
             isInitialized = true;
-            plugin.getLogger().info("Simple Network Manager initialized successfully!");
+            SkyblockPlugin.getLogger().info("Simple Network Manager initialized successfully!");
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to initialize Simple Network Manager: " + e.getMessage());
-            plugin.getLogger().log(Level.SEVERE, "Exception during SimpleNetworkManager.initialize", e);
+            SkyblockPlugin.getLogger().severe("Failed to initialize Simple Network Manager: " + e.getMessage());
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Exception during SimpleNetworkManager.initialize", e);
         }
     }
 
     public void shutdown() {
         try {
-            plugin.getLogger().info("Shutting down Simple Network Manager...");
+            SkyblockPlugin.getLogger().info("Shutting down Simple Network Manager...");
 
             if (isInitialized) {
                 // Cleanup
@@ -80,20 +84,20 @@ public class SimpleNetworkManager implements Listener {
             }
 
             isInitialized = false;
-            plugin.getLogger().info("Simple Network Manager shutdown complete!");
+            SkyblockPlugin.getLogger().info("Simple Network Manager shutdown complete!");
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to shutdown Simple Network Manager: " + e.getMessage());
-            plugin.getLogger().log(Level.SEVERE, "Exception during SimpleNetworkManager.shutdown", e);
+            SkyblockPlugin.getLogger().severe("Failed to shutdown Simple Network Manager: " + e.getMessage());
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Exception during SimpleNetworkManager.shutdown", e);
         }
     }
 
     private void initializeServer() {
-        plugin.getLogger().info("Server initialized as " + serverId + " (" + serverType.getName() + ")");
+        SkyblockPlugin.getLogger().info("Server initialized as " + serverId + " (" + serverType.getName() + ")");
     }
 
     private String generateServerId() {
-        return serverType.getName().toLowerCase() + "_" + System.currentTimeMillis() + "_" +
+        return serverType.getName().toLowerCase() + "_" + java.lang.System.currentTimeMillis() + "_" +
                (int)(Math.random() * 1000);
     }
 
@@ -103,7 +107,7 @@ public class SimpleNetworkManager implements Listener {
         if (isInitialized) {
             Player player = event.getPlayer();
             playerServerMap.put(player.getUniqueId(), serverId);
-            plugin.getLogger().info("Player " + player.getName() + " joined server " + serverId);
+            SkyblockPlugin.getLogger().info("Player " + player.getName() + " joined server " + serverId);
         }
     }
 
@@ -112,7 +116,7 @@ public class SimpleNetworkManager implements Listener {
         if (isInitialized) {
             Player player = event.getPlayer();
             playerServerMap.remove(player.getUniqueId());
-            plugin.getLogger().info("Player " + player.getName() + " left server " + serverId);
+            SkyblockPlugin.getLogger().info("Player " + player.getName() + " left server " + serverId);
         }
     }
 
@@ -159,12 +163,12 @@ public class SimpleNetworkManager implements Listener {
         String worldName = getWorldNameForIslandType(islandType);
         org.bukkit.World world = worldManager.getWorld(worldName);
         if (world == null) {
-            plugin.getLogger().warning("World " + worldName + " not available, using fallback");
+            SkyblockPlugin.getLogger().warning("World " + worldName + " not available, using fallback");
             world = Bukkit.getWorlds().isEmpty() ? null : Bukkit.getWorlds().get(0);
         }
 
         if (world == null) {
-            plugin.getLogger().severe("No worlds available for island creation!");
+            SkyblockPlugin.getLogger().severe("No worlds available for island creation!");
             return false;
         }
 
@@ -176,7 +180,7 @@ public class SimpleNetworkManager implements Listener {
             serverId,
             worldManager.getSafeSpawnLocation(worldName),
             100,
-            System.currentTimeMillis(),
+            java.lang.System.currentTimeMillis(),
             new ArrayList<>(),
             new HashMap<>(),
             true
@@ -261,25 +265,25 @@ public class SimpleNetworkManager implements Listener {
 
     public void syncPlayerData(UUID playerId) {
         if (isInitialized) {
-            plugin.getLogger().info("Syncing player data for: " + playerId);
+            SkyblockPlugin.getLogger().info("Syncing player data for: " + playerId);
         }
     }
 
     public void syncIslandData(String islandId) {
         if (isInitialized) {
-            plugin.getLogger().info("Syncing island data for: " + islandId);
+            SkyblockPlugin.getLogger().info("Syncing island data for: " + islandId);
         }
     }
 
     public void syncCollectionData(String collectionId) {
         if (isInitialized) {
-            plugin.getLogger().info("Syncing collection data for: " + collectionId);
+            SkyblockPlugin.getLogger().info("Syncing collection data for: " + collectionId);
         }
     }
 
     public void syncMinionData(String minionId) {
         if (isInitialized) {
-            plugin.getLogger().info("Syncing minion data for: " + minionId);
+            SkyblockPlugin.getLogger().info("Syncing minion data for: " + minionId);
         }
     }
 
@@ -318,19 +322,19 @@ public class SimpleNetworkManager implements Listener {
     }
 
     public void logInfo(String message) {
-        plugin.getLogger().info(message);
+        SkyblockPlugin.getLogger().info(message);
     }
 
     public void logWarning(String message) {
-        plugin.getLogger().warning(message);
+        SkyblockPlugin.getLogger().warning(message);
     }
 
     public void logError(String message) {
-        plugin.getLogger().severe(message);
+        SkyblockPlugin.getLogger().severe(message);
     }
 
     private String generateIslandId() {
-        return "island_" + System.currentTimeMillis() + "_" + (int)(Math.random() * 10000);
+        return "island_" + java.lang.System.currentTimeMillis() + "_" + (int)(Math.random() * 10000);
     }
 
     /**

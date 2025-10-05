@@ -1,8 +1,13 @@
 package de.noctivag.skyblock.brewing;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -23,23 +28,23 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AdvancedBrewingSystem {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerBrewingData> playerBrewingData = new ConcurrentHashMap<>();
     private final Map<String, BrewingRecipe> brewingRecipes = new HashMap<>();
     private final Map<String, PotionEffect> potionEffects = new HashMap<>();
     private final Map<UUID, BrewingStation> activeBrewingStations = new ConcurrentHashMap<>();
     
-    public AdvancedBrewingSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedBrewingSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeBrewingRecipes();
         initializePotionEffects();
         startBrewingTask();
     }
     
-    public Plugin getPlugin() {
-        return plugin;
+    public SkyblockPlugin getPlugin() {
+        return SkyblockPlugin;
     }
     
     /**
@@ -331,7 +336,7 @@ public class AdvancedBrewingSystem {
             public void run() {
                 updateBrewingStations();
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Every second
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Every second
     }
     
     /**
@@ -456,8 +461,8 @@ public class AdvancedBrewingSystem {
         PotionMeta meta = (PotionMeta) potion.getItemMeta();
         
         if (meta != null) {
-            meta.setDisplayName("§6" + recipe.getName());
-            meta.setLore(Arrays.asList(
+            meta.displayName(Component.text("§6" + recipe.getName()));
+            meta.lore(Arrays.asList(
                 "§7A powerful potion that grants",
                 "§7" + recipe.getName() + " effect",
                 "",
@@ -465,7 +470,7 @@ public class AdvancedBrewingSystem {
                 "§7Level: §a" + recipe.getLevel(),
                 "",
                 "§8Brewed with advanced alchemy"
-            ));
+            ).stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             
             // Set potion type based on recipe
             PotionData potionData = new PotionData(recipe.getPotionType(), false, false);

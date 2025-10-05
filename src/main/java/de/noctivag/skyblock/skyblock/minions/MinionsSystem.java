@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.skyblock.minions;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -20,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class MinionsSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, List<Minion>> playerMinions = new ConcurrentHashMap<>();
     private final Map<UUID, Minion> activeMinions = new ConcurrentHashMap<>();
     
@@ -84,7 +89,7 @@ public class MinionsSystem implements Listener {
         }
         
         public boolean canPerformAction() {
-            return System.currentTimeMillis() - lastAction >= getActionInterval();
+            return java.lang.System.currentTimeMillis() - lastAction >= getActionInterval();
         }
         
         public void performAction() {
@@ -183,9 +188,9 @@ public class MinionsSystem implements Listener {
         public Material getOutputItem() { return outputItem; }
     }
     
-    public MinionsSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    public MinionsSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        SkyblockPlugin.getServer().getPluginManager().registerEvents(this, SkyblockPlugin);
         startMinionTick();
     }
     
@@ -193,7 +198,7 @@ public class MinionsSystem implements Listener {
      * Startet den Minion-Tick
      */
     private void startMinionTick() {
-        plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
+        SkyblockPlugin.getServer().getScheduler().runTaskTimer(SkyblockPlugin, () -> {
             for (Minion minion : activeMinions.values()) {
                 if (minion.canPerformAction()) {
                     minion.performAction();
@@ -212,21 +217,21 @@ public class MinionsSystem implements Listener {
         List<Minion> minions = playerMinions.getOrDefault(playerId, new ArrayList<>());
         int maxMinions = getMaxMinionsForPlayer(playerId);
         if (minions.size() >= maxMinions) {
-            player.sendMessage("§cDu hast bereits die maximale Anzahl an Minions!");
+            player.sendMessage(Component.text("§cDu hast bereits die maximale Anzahl an Minions!"));
             return false;
         }
         
         // Erstelle Minion
         String minionId = UUID.randomUUID().toString();
         Minion minion = new Minion(minionId, type.getName(), type, 1, 0, location, playerId, 
-                                 System.currentTimeMillis(), 0, true, new ArrayList<>(), 15);
+                                 java.lang.System.currentTimeMillis(), 0, true, new ArrayList<>(), 15);
         
         // Füge zu Spieler-Minions hinzu
         minions.add(minion);
         playerMinions.put(playerId, minions);
         activeMinions.put(UUID.fromString(minionId), minion);
         
-        player.sendMessage("§aMinion erstellt!");
+        player.sendMessage(Component.text("§aMinion erstellt!"));
         player.sendMessage("§e" + type.getIcon() + " " + type.getName());
         player.sendMessage("§7" + type.getDescription());
         
@@ -241,7 +246,7 @@ public class MinionsSystem implements Listener {
         List<Minion> minions = playerMinions.get(playerId);
         
         if (minions == null) {
-            player.sendMessage("§cDu hast keine Minions!");
+            player.sendMessage(Component.text("§cDu hast keine Minions!"));
             return false;
         }
         
@@ -251,7 +256,7 @@ public class MinionsSystem implements Listener {
             .orElse(null);
         
         if (minion == null) {
-            player.sendMessage("§cMinion nicht gefunden!");
+            player.sendMessage(Component.text("§cMinion nicht gefunden!"));
             return false;
         }
         
@@ -259,7 +264,7 @@ public class MinionsSystem implements Listener {
         minions.remove(minion);
         activeMinions.remove(UUID.fromString(minionId));
         
-        player.sendMessage("§aMinion entfernt!");
+        player.sendMessage(Component.text("§aMinion entfernt!"));
         
         return true;
     }
@@ -272,7 +277,7 @@ public class MinionsSystem implements Listener {
         List<Minion> minions = playerMinions.get(playerId);
         
         if (minions == null) {
-            player.sendMessage("§cDu hast keine Minions!");
+            player.sendMessage(Component.text("§cDu hast keine Minions!"));
             return false;
         }
         
@@ -282,12 +287,12 @@ public class MinionsSystem implements Listener {
             .orElse(null);
         
         if (minion == null) {
-            player.sendMessage("§cMinion nicht gefunden!");
+            player.sendMessage(Component.text("§cMinion nicht gefunden!"));
             return false;
         }
         
         if (minion.getInventory().isEmpty()) {
-            player.sendMessage("§cMinion hat keine Items!");
+            player.sendMessage(Component.text("§cMinion hat keine Items!"));
             return false;
         }
         
@@ -299,7 +304,7 @@ public class MinionsSystem implements Listener {
         // Leere Minion-Inventar
         minion.getInventory().clear();
         
-        player.sendMessage("§aItems gesammelt!");
+        player.sendMessage(Component.text("§aItems gesammelt!"));
         player.sendMessage("§7" + minion.getInventory().size() + " Items erhalten");
         
         return true;

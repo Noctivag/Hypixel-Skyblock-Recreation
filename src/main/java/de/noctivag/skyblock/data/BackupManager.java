@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.data;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.*;
@@ -23,7 +26,7 @@ import java.util.zip.ZipOutputStream;
  * - Backup Scheduling
  */
 public class BackupManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final File backupDirectory;
     private final DatabaseManager databaseManager;
     
@@ -42,10 +45,10 @@ public class BackupManager {
     private int failedBackups = 0;
     private LocalDateTime lastBackupTime = null;
     
-    public BackupManager(SkyblockPlugin plugin, DatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public BackupManager(SkyblockPlugin SkyblockPlugin, DatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
-        this.backupDirectory = new File(plugin.getDataFolder(), "backups");
+        this.backupDirectory = new File(SkyblockPlugin.getDataFolder(), "backups");
         
         if (!backupDirectory.exists()) {
             backupDirectory.mkdirs();
@@ -62,7 +65,7 @@ public class BackupManager {
             public void run() {
                 createBackup();
             }
-        }.runTaskTimerAsynchronously(plugin, 0L, BACKUP_INTERVAL / 50L); // Convert to ticks
+        }.runTaskTimerAsynchronously(SkyblockPlugin, 0L, BACKUP_INTERVAL / 50L); // Convert to ticks
     }
     
     public CompletableFuture<Boolean> createBackup() {
@@ -86,12 +89,12 @@ public class BackupManager {
                 lastBackupTime = LocalDateTime.now();
                 successfulBackups++;
                 
-                plugin.getLogger().info("Backup created successfully: " + backupName);
+                SkyblockPlugin.getLogger().info("Backup created successfully: " + backupName);
                 return true;
                 
             } catch (Exception e) {
                 failedBackups++;
-                plugin.getLogger().log(java.util.logging.Level.SEVERE, "Failed to create backup", e);
+                SkyblockPlugin.getLogger().log(java.util.logging.Level.SEVERE, "Failed to create backup", e);
                 return false;
             }
         });
@@ -168,8 +171,8 @@ public class BackupManager {
         // In a real implementation, you would use proper database dump tools
         StringBuilder dump = new StringBuilder();
         dump.append("-- Database Dump created at ").append(LocalDateTime.now()).append("\n");
-        dump.append("-- Plugin: ").append(plugin.getName()).append("\n");
-        dump.append("-- Version: ").append(plugin.getDescription().getVersion()).append("\n\n");
+        dump.append("-- SkyblockPlugin: ").append(SkyblockPlugin.getName()).append("\n");
+        dump.append("-- Version: ").append(SkyblockPlugin.getDescription().getVersion()).append("\n\n");
         
         // Add table creation statements and data
         // This would be implemented based on the actual database structure
@@ -178,14 +181,14 @@ public class BackupManager {
     }
     
     private void backupConfigFiles(ZipOutputStream zos) throws IOException {
-        File configDir = plugin.getDataFolder();
+        File configDir = SkyblockPlugin.getDataFolder();
         if (configDir.exists()) {
             addDirectoryToZip(zos, configDir, "config/");
         }
     }
     
     private void backupConfigFilesUncompressed(File backupFile) throws IOException {
-        File configDir = plugin.getDataFolder();
+        File configDir = SkyblockPlugin.getDataFolder();
         if (configDir.exists()) {
             File targetConfigDir = new File(backupFile, "config");
             copyDirectory(configDir, targetConfigDir);
@@ -194,14 +197,14 @@ public class BackupManager {
     
     private void backupPlayerData(ZipOutputStream zos) throws IOException {
         // Backup player data files
-        File playerDataDir = new File(plugin.getDataFolder(), "playerdata");
+        File playerDataDir = new File(SkyblockPlugin.getDataFolder(), "playerdata");
         if (playerDataDir.exists()) {
             addDirectoryToZip(zos, playerDataDir, "playerdata/");
         }
     }
     
     private void backupPlayerDataUncompressed(File backupFile) throws IOException {
-        File playerDataDir = new File(plugin.getDataFolder(), "playerdata");
+        File playerDataDir = new File(SkyblockPlugin.getDataFolder(), "playerdata");
         if (playerDataDir.exists()) {
             File targetPlayerDataDir = new File(backupFile, "playerdata");
             copyDirectory(playerDataDir, targetPlayerDataDir);
@@ -269,9 +272,9 @@ public class BackupManager {
             for (int i = 0; i < filesToDelete; i++) {
                 File fileToDelete = backupFiles[i];
                 if (deleteDirectory(fileToDelete)) {
-                    plugin.getLogger().info("Deleted old backup: " + fileToDelete.getName());
+                    SkyblockPlugin.getLogger().info("Deleted old backup: " + fileToDelete.getName());
                 } else {
-                    plugin.getLogger().warning("Failed to delete old backup: " + fileToDelete.getName());
+                    SkyblockPlugin.getLogger().warning("Failed to delete old backup: " + fileToDelete.getName());
                 }
             }
         }
@@ -294,7 +297,7 @@ public class BackupManager {
             try {
                 File backupFile = new File(backupDirectory, backupName);
                 if (!backupFile.exists()) {
-                    plugin.getLogger().warning("Backup not found: " + backupName);
+                    SkyblockPlugin.getLogger().warning("Backup not found: " + backupName);
                     return false;
                 }
                 
@@ -304,11 +307,11 @@ public class BackupManager {
                     restoreUncompressedBackup(backupFile);
                 }
                 
-                plugin.getLogger().info("Backup restored successfully: " + backupName);
+                SkyblockPlugin.getLogger().info("Backup restored successfully: " + backupName);
                 return true;
                 
             } catch (Exception e) {
-                plugin.getLogger().log(java.util.logging.Level.SEVERE, "Failed to restore backup", e);
+                SkyblockPlugin.getLogger().log(java.util.logging.Level.SEVERE, "Failed to restore backup", e);
                 return false;
             }
         });
@@ -317,13 +320,13 @@ public class BackupManager {
     private void restoreCompressedBackup(File backupFile) throws IOException {
         // Implementation for restoring compressed backups
         // This would involve extracting the ZIP file and restoring the data
-        plugin.getLogger().info("Restoring compressed backup: " + backupFile.getName());
+        SkyblockPlugin.getLogger().info("Restoring compressed backup: " + backupFile.getName());
     }
     
     private void restoreUncompressedBackup(File backupFile) throws IOException {
         // Implementation for restoring uncompressed backups
         // This would involve copying files back to their original locations
-        plugin.getLogger().info("Restoring uncompressed backup: " + backupFile.getName());
+        SkyblockPlugin.getLogger().info("Restoring uncompressed backup: " + backupFile.getName());
     }
     
     public List<String> getAvailableBackups() {

@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -70,10 +73,10 @@ public class HypixelMenuStyleSystem {
     public static final String WARNING_ICON = "⚠️";
     public static final String INFO_ICON = "ℹ️";
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     
-    public HypixelMenuStyleSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public HypixelMenuStyleSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
     
     /**
@@ -348,8 +351,8 @@ public class HypixelMenuStyleSystem {
      * Get player money (placeholder implementation)
      */
     private double getPlayerMoney(Player player) {
-        if (plugin.getEconomyManager() != null) {
-            return plugin.getEconomyManager().getBalance(player);
+        if (SkyblockPlugin.getEconomyManager() != null) {
+            return SkyblockPlugin.getEconomyManager().getBalance(player);
         }
         return 0;
     }

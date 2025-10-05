@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.magic;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import org.bukkit.entity.Player;
@@ -18,7 +19,7 @@ public class ActiveSpell {
     public ActiveSpell(String spellType, UUID playerId, int durationSeconds) {
         this.spellType = spellType;
         this.playerId = playerId;
-        this.startTime = System.currentTimeMillis();
+        this.startTime = java.lang.System.currentTimeMillis();
         this.durationSeconds = durationSeconds;
     }
     
@@ -39,18 +40,18 @@ public class ActiveSpell {
     }
     
     public boolean isExpired() {
-        long elapsed = System.currentTimeMillis() - startTime;
+        long elapsed = java.lang.System.currentTimeMillis() - startTime;
         return elapsed >= (durationSeconds * 1000L);
     }
     
     public long getRemainingTime() {
-        long elapsed = System.currentTimeMillis() - startTime;
+        long elapsed = java.lang.System.currentTimeMillis() - startTime;
         long total = durationSeconds * 1000L;
         return Math.max(0, total - elapsed);
     }
     
     public double getProgress() {
-        long elapsed = System.currentTimeMillis() - startTime;
+        long elapsed = java.lang.System.currentTimeMillis() - startTime;
         long total = durationSeconds * 1000L;
         return Math.min(1.0, (double) elapsed / total);
     }

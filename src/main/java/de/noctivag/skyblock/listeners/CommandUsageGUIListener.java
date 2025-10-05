@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.listeners;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.gui.CommandUsageGUI;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.Player;
@@ -9,12 +12,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.meta.ItemMeta;
+import net.kyori.adventure.text.Component;
 
 public class CommandUsageGUIListener implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public CommandUsageGUIListener(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public CommandUsageGUIListener(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     @EventHandler
@@ -30,7 +34,7 @@ public class CommandUsageGUIListener implements Listener {
         if (display == null) return;
 
         if (display.contains("Zurück")) {
-            new de.noctivag.plugin.gui.AdminMenu(plugin).open(admin);
+            new de.noctivag.skyblock.gui.AdminMenu(SkyblockPlugin).open(admin);
             return;
         }
 
@@ -44,13 +48,13 @@ public class CommandUsageGUIListener implements Listener {
                 admin.sendMessage("§eCommand-Einstellungen für §7/" + command + " §e(noch nicht implementiert)");
             } else {
                 // Toggle enabled/disabled
-                boolean currentlyEnabled = plugin.getCommandManager().isCommandEnabled(command);
-                plugin.getCommandManager().setEnabled(command, !currentlyEnabled);
+                boolean currentlyEnabled = SkyblockPlugin.getCommandManager().isCommandEnabled(command);
+                SkyblockPlugin.getCommandManager().setEnabled(command, !currentlyEnabled);
                 admin.sendMessage("§aCommand §e/" + command + " §a" + 
                     (!currentlyEnabled ? "aktiviert" : "deaktiviert"));
                 
                 // Refresh GUI
-                new CommandUsageGUI(plugin).open(admin);
+                new CommandUsageGUI(SkyblockPlugin).open(admin);
             }
         }
     }

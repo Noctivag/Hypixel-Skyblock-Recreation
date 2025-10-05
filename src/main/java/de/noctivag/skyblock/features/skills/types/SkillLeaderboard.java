@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.skills.types;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.core.api.Service;
@@ -19,7 +20,7 @@ public class SkillLeaderboard implements Service {
     public SkillLeaderboard(SkillType skillType) {
         this.skillType = skillType;
         this.rankings = new java.util.ArrayList<>();
-        this.lastUpdated = System.currentTimeMillis();
+        this.lastUpdated = java.lang.System.currentTimeMillis();
     }
 
     @Override

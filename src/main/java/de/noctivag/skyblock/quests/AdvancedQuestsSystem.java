@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.quests;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -19,19 +24,19 @@ import java.util.concurrent.ConcurrentHashMap;
  * Advanced Quests System - Hypixel Skyblock Style
  */
 public class AdvancedQuestsSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerQuests> playerQuests = new ConcurrentHashMap<>();
     private final Map<QuestType, QuestConfig> questConfigs = new HashMap<>();
     private final Map<UUID, BukkitTask> questTasks = new ConcurrentHashMap<>();
     
-    public AdvancedQuestsSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedQuestsSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeQuestConfigs();
         startQuestUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeQuestConfigs() {
@@ -59,7 +64,7 @@ public class AdvancedQuestsSystem implements Listener {
                     quests.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L);
     }
     
     @EventHandler
@@ -72,7 +77,7 @@ public class AdvancedQuestsSystem implements Listener {
     }
     
     private void openQuestGUI(Player player) {
-        player.sendMessage("§aQuest GUI geöffnet!");
+        player.sendMessage(Component.text("§aQuest GUI geöffnet!"));
     }
     
     public PlayerQuests getPlayerQuests(UUID playerId) {
@@ -151,11 +156,11 @@ public class AdvancedQuestsSystem implements Listener {
         
         public PlayerQuests(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long timeDiff = currentTime - lastUpdate;
             
             if (timeDiff >= 60000) {

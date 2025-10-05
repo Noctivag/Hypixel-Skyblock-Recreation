@@ -14,16 +14,16 @@ public class HypixelMobDefinitions {
         // === HUB AREA MOBS ===
         
         // Graveyard Zombies
-        mobConfigs.put(de.noctivag.plugin.mobs.AdvancedMobSystem.MobType.GRAVEYARD_ZOMBIE, new AdvancedMobSystem.MobConfig(
+        mobConfigs.put(de.noctivag.skyblock.mobs.AdvancedMobSystem.MobType.GRAVEYARD_ZOMBIE, new AdvancedMobSystem.MobConfig(
             "Graveyard Zombie", "§2Graveyard Zombie", EntityType.ZOMBIE,
             "§7A zombie found in the graveyard area.",
-            de.noctivag.plugin.mobs.AdvancedMobSystem.MobCategory.HUB, de.noctivag.plugin.mobs.AdvancedMobSystem.MobRarity.COMMON, 25, 5, 0.2,
+            de.noctivag.skyblock.mobs.AdvancedMobSystem.MobCategory.HUB, de.noctivag.skyblock.mobs.AdvancedMobSystem.MobRarity.COMMON, 25, 5, 0.2,
             Arrays.asList("§7- Basic Attack", "§7- Undead", "§7- Graveyard Spawn"),
             Arrays.asList("§7- 1x Rotten Flesh", "§7- 2x XP", "§7- 5% Rotten Flesh"),
             Arrays.asList("§7- Graveyard Area", "§7- Hub World")
         ));
         
-        mobConfigs.put(de.noctivag.plugin.mobs.AdvancedMobSystem.MobType.ZOMBIE_VILLAGER, new AdvancedMobSystem.MobConfig(
+        mobConfigs.put(de.noctivag.skyblock.mobs.AdvancedMobSystem.MobType.ZOMBIE_VILLAGER, new AdvancedMobSystem.MobConfig(
             "Zombie Villager", "§2Zombie Villager", EntityType.ZOMBIE_VILLAGER,
             "§7A zombified villager from the graveyard.",
             AdvancedMobSystem.MobCategory.HUB, AdvancedMobSystem.MobRarity.UNCOMMON, 30, 6, 0.18,

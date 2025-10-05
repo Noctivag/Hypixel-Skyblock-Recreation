@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.talismans;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -11,16 +15,17 @@ import net.kyori.adventure.text.Component;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class AdvancedTalismanSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerTalismanData> playerTalismanData = new ConcurrentHashMap<>();
     private final Map<String, Talisman> talismans = new HashMap<>();
     private final Map<String, TalismanCategory> talismanCategories = new HashMap<>();
     
-    public AdvancedTalismanSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedTalismanSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeTalismans();
     }
@@ -134,7 +139,7 @@ public class AdvancedTalismanSystem {
     }
     
     public void openTalismanGUI(Player player) {
-        Inventory gui = plugin.getServer().createInventory(null, 54, Component.text("§d§lTalismans"));
+        Inventory gui = SkyblockPlugin.getServer().createInventory(null, 54, Component.text("§d§lTalismans"));
         
         // Add category items
         addGUIItem(gui, 10, Material.DIAMOND_SWORD, "§c§lCombat Talismans", "§7Combat-related talismans");
@@ -150,7 +155,7 @@ public class AdvancedTalismanSystem {
         addGUIItem(gui, 53, Material.ARROW, "§7§lNext Page", "§7Go to next page");
         
         player.openInventory(gui);
-        player.sendMessage("§aTalisman GUI opened!");
+        player.sendMessage(Component.text("§aTalisman GUI opened!"));
     }
     
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String... lore) {

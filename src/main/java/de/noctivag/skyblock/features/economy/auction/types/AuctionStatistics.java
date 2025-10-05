@@ -22,7 +22,7 @@ public class AuctionStatistics {
         this.totalVolume = 0.0;
         this.averagePrice = 0.0;
         this.categoryStats = new java.util.HashMap<>();
-        this.lastUpdated = System.currentTimeMillis();
+        this.lastUpdated = java.lang.System.currentTimeMillis();
     }
 
     public long getTotalAuctions() {

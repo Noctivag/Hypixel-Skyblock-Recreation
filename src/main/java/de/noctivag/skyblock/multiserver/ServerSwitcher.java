@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.multiserver;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -18,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ServerSwitcher {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final HypixelStyleProxySystem proxySystem;
     private final Map<UUID, ServerSwitchRequest> pendingSwitches = new ConcurrentHashMap<>();
     private final Map<UUID, Long> lastSwitchTime = new ConcurrentHashMap<>();
@@ -26,8 +30,8 @@ public class ServerSwitcher {
     // Cooldown für Server-Wechsel (in Millisekunden)
     private static final long SWITCH_COOLDOWN = 3000; // 3 Sekunden
     
-    public ServerSwitcher(SkyblockPlugin plugin, HypixelStyleProxySystem proxySystem) {
-        this.plugin = plugin;
+    public ServerSwitcher(SkyblockPlugin SkyblockPlugin, HypixelStyleProxySystem proxySystem) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.proxySystem = proxySystem;
     }
     
@@ -51,7 +55,7 @@ public class ServerSwitcher {
         }
         
         // Erstelle Switch-Request
-        ServerSwitchRequest request = new ServerSwitchRequest(playerId, serverType, System.currentTimeMillis());
+        ServerSwitchRequest request = new ServerSwitchRequest(playerId, serverType, java.lang.System.currentTimeMillis());
         pendingSwitches.put(playerId, request);
         
         // Starte den Wechsel-Prozess
@@ -84,7 +88,7 @@ public class ServerSwitcher {
             teleportPlayerToServer(player, targetInstance, future);
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Error during server switch: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Error during server switch: " + e.getMessage());
             pendingSwitches.remove(player.getUniqueId());
             future.complete(false);
         }
@@ -99,9 +103,9 @@ public class ServerSwitcher {
         try {
             // Hier würde normalerweise die Spieler-Daten gespeichert werden
             // z.B. Inventar, Position, Statistiken, etc.
-            plugin.getLogger().info("Saving player data for: " + player.getName());
+            SkyblockPlugin.getLogger().info("Saving player data for: " + player.getName());
         } catch (Exception e) {
-            plugin.getLogger().warning("Error saving player data: " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Error saving player data: " + e.getMessage());
         }
     }
     
@@ -139,7 +143,7 @@ public class ServerSwitcher {
                 player.sendActionBar(Component.text(bar.toString() + " §e" + (progress * 5) + "%"));
                 progress++;
             }
-        }.runTaskTimer(plugin, 0L, 2L); // Alle 2 Ticks (0.1 Sekunden)
+        }.runTaskTimer(SkyblockPlugin, 0L, 2L); // Alle 2 Ticks (0.1 Sekunden)
     }
     
     /**
@@ -177,7 +181,7 @@ public class ServerSwitcher {
                     player.sendMessage(Component.text("§eWillkommen auf: §f" + instance.getType().getDisplayName()));
                     
                     // Aktualisiere Cooldown
-                    lastSwitchTime.put(player.getUniqueId(), System.currentTimeMillis());
+                    lastSwitchTime.put(player.getUniqueId(), java.lang.System.currentTimeMillis());
                     
                     // Entferne aus pending switches
                     pendingSwitches.remove(player.getUniqueId());
@@ -185,13 +189,13 @@ public class ServerSwitcher {
                     future.complete(true);
                     
                 } catch (Exception e) {
-                    plugin.getLogger().severe("Error during teleportation: " + e.getMessage());
+                    SkyblockPlugin.getLogger().severe("Error during teleportation: " + e.getMessage());
                     player.sendMessage(Component.text("§cFehler beim Server-Wechsel!"));
                     pendingSwitches.remove(player.getUniqueId());
                     future.complete(false);
                 }
             }
-        }.runTaskLater(plugin, 20L); // 1 Sekunde Verzögerung
+        }.runTaskLater(SkyblockPlugin, 20L); // 1 Sekunde Verzögerung
     }
     
     /**
@@ -227,7 +231,7 @@ public class ServerSwitcher {
             ).get();
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Error getting/creating world: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Error getting/creating world: " + e.getMessage());
             return null;
         }
     }
@@ -239,15 +243,15 @@ public class ServerSwitcher {
         try {
             // Verwende WorldManager für sichere Spawn-Location
             // TODO: Implement proper WorldManager interface
-            // if (plugin.getWorldManager() != null) {
-            //     return ((WorldManager) plugin.getWorldManager()).getSafeSpawnLocation(world.getName());
+            // if (SkyblockPlugin.getWorldManager() != null) {
+            //     return ((WorldManager) SkyblockPlugin.getWorldManager()).getSafeSpawnLocation(world.getName());
             // }
             
             // Fallback zu Welt-Spawn
             return world.getSpawnLocation();
             
         } catch (Exception e) {
-            plugin.getLogger().warning("Error finding safe spawn location: " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Error finding safe spawn location: " + e.getMessage());
             return world.getSpawnLocation();
         }
     }
@@ -258,9 +262,9 @@ public class ServerSwitcher {
     private void loadPlayerData(Player player, ServerInstance instance) {
         try {
             // Hier würde normalerweise die Spieler-Daten für den neuen Server geladen werden
-            plugin.getLogger().info("Loading player data for: " + player.getName() + " on server: " + instance.getInstanceId());
+            SkyblockPlugin.getLogger().info("Loading player data for: " + player.getName() + " on server: " + instance.getInstanceId());
         } catch (Exception e) {
-            plugin.getLogger().warning("Error loading player data: " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Error loading player data: " + e.getMessage());
         }
     }
     
@@ -281,7 +285,7 @@ public class ServerSwitcher {
             return false;
         }
         
-        return (System.currentTimeMillis() - lastSwitch) < SWITCH_COOLDOWN;
+        return (java.lang.System.currentTimeMillis() - lastSwitch) < SWITCH_COOLDOWN;
     }
     
     /**
@@ -293,7 +297,7 @@ public class ServerSwitcher {
             return 0;
         }
         
-        long elapsed = System.currentTimeMillis() - lastSwitch;
+        long elapsed = java.lang.System.currentTimeMillis() - lastSwitch;
         return Math.max(0, SWITCH_COOLDOWN - elapsed);
     }
     
@@ -323,7 +327,7 @@ public class ServerSwitcher {
      * Bereinigt abgelaufene Switch-Requests
      */
     public void cleanupExpiredSwitches() {
-        long currentTime = System.currentTimeMillis();
+        long currentTime = java.lang.System.currentTimeMillis();
         long timeout = 30000; // 30 Sekunden Timeout
         
         pendingSwitches.entrySet().removeIf(entry -> {

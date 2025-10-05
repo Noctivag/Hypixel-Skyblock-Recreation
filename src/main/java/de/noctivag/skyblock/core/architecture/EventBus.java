@@ -1,11 +1,14 @@
 package de.noctivag.skyblock.core.architecture;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,15 +25,15 @@ import java.util.function.Consumer;
  */
 public class EventBus {
     
-    private final JavaSkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<Class<?>, EventHandler<?>> handlers = new ConcurrentHashMap<>();
     
     public EventBus() {
-        this.plugin = null; // Will be set by PluginLifecycleManager
+        this.SkyblockPlugin = null; // Will be set by PluginLifecycleManager
     }
     
-    public EventBus(JavaSkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public EventBus(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
     
     /**
@@ -47,8 +50,8 @@ public class EventBus {
         EventHandler<T> eventHandler = new EventHandler<>(handler, priority);
         handlers.put(eventType, eventHandler);
         
-        // Register with Bukkit if plugin is available
-        if (plugin != null) {
+        // Register with Bukkit if SkyblockPlugin is available
+        if (SkyblockPlugin != null) {
             Bukkit.getPluginManager().registerEvent(
                 eventType,
                 new Listener() {},
@@ -58,7 +61,7 @@ public class EventBus {
                         handler.accept(eventType.cast(event));
                     }
                 },
-                plugin
+                SkyblockPlugin
             );
         }
     }
@@ -74,7 +77,7 @@ public class EventBus {
      * Publish an event
      */
     public void publish(Event event) {
-        if (plugin != null) {
+        if (SkyblockPlugin != null) {
             Bukkit.getPluginManager().callEvent(event);
         }
     }
@@ -83,8 +86,8 @@ public class EventBus {
      * Publish an event asynchronously
      */
     public void publishAsync(Event event) {
-        if (plugin != null) {
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+        if (SkyblockPlugin != null) {
+            Bukkit.getScheduler().runTaskAsynchronously(SkyblockPlugin, () -> {
                 Bukkit.getPluginManager().callEvent(event);
             });
         }

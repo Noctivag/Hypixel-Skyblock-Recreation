@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.multiserver;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -20,14 +24,14 @@ import java.util.concurrent.CompletableFuture;
  */
 public class ServerSelectionGUI implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final ServerSwitcher serverSwitcher;
     private final Map<UUID, Inventory> openGUIs = new HashMap<>();
     
-    public ServerSelectionGUI(SkyblockPlugin plugin, ServerSwitcher serverSwitcher) {
-        this.plugin = plugin;
+    public ServerSelectionGUI(SkyblockPlugin SkyblockPlugin, ServerSwitcher serverSwitcher) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.serverSwitcher = serverSwitcher;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        SkyblockPlugin.getServer().getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     /**
@@ -46,7 +50,7 @@ public class ServerSelectionGUI implements Listener {
         Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lServer-Auswahl"));
         
         // TODO: Implement proper HypixelProxySystem interface
-        // Map<String, ServerType> serverTypes = ((HypixelProxySystem) plugin.getHypixelProxySystem()).getServerTypes();
+        // Map<String, ServerType> serverTypes = ((HypixelProxySystem) SkyblockPlugin.getHypixelProxySystem()).getServerTypes();
         Map<String, Object> serverTypes = new HashMap<>(); // Placeholder
         
         int slot = 0;
@@ -107,7 +111,7 @@ public class ServerSelectionGUI implements Listener {
             if (slot >= startSlot + 9) break; // Nicht über Kategorie-Grenze hinaus
             
             // TODO: Implement proper HypixelProxySystem interface
-            // ServerType type = ((HypixelProxySystem) plugin.getHypixelProxySystem()).getServerTypes().get(serverType);
+            // ServerType type = ((HypixelProxySystem) SkyblockPlugin.getHypixelProxySystem()).getServerTypes().get(serverType);
             Object type = null; // Placeholder
             if (type != null) {
                 // TODO: Implement proper ServerType interface
@@ -243,7 +247,7 @@ public class ServerSelectionGUI implements Listener {
         String displayName = meta.displayName().toString();
         
         // TODO: Implement proper HypixelProxySystem interface
-        // Map<String, ServerType> serverTypes = ((HypixelProxySystem) plugin.getHypixelProxySystem()).getServerTypes();
+        // Map<String, ServerType> serverTypes = ((HypixelProxySystem) SkyblockPlugin.getHypixelProxySystem()).getServerTypes();
         // for (Map.Entry<String, ServerType> entry : serverTypes.entrySet()) {
         //     if (displayName.contains(entry.getValue().getDisplayName())) {
         //         return entry.getKey();

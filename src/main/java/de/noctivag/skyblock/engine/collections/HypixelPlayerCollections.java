@@ -1,8 +1,10 @@
 package de.noctivag.skyblock.engine.collections;
+import java.util.UUID;
 
 import de.noctivag.skyblock.engine.collections.types.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -34,7 +36,7 @@ public class HypixelPlayerCollections {
         for (CollectionType collectionType : CollectionType.values()) {
             collectionProgress.put(collectionType, new ConcurrentHashMap<>());
             unlockedMilestones.put(collectionType, ConcurrentHashMap.newKeySet());
-            lastActivity.put(collectionType, System.currentTimeMillis());
+            lastActivity.put(collectionType, java.lang.System.currentTimeMillis());
         }
     }
     
@@ -60,7 +62,7 @@ public class HypixelPlayerCollections {
         }
         
         progress.put(item, newAmount);
-        lastActivity.put(collectionType, System.currentTimeMillis());
+        lastActivity.put(collectionType, java.lang.System.currentTimeMillis());
         
         // Check for milestone unlocks
         checkMilestoneUnlocks(collectionType);
@@ -214,7 +216,7 @@ public class HypixelPlayerCollections {
      * Get collection statistics
      */
     public CollectionStatistics getCollectionStatistics() {
-        return new CollectionStatistics(this);
+        return new CollectionStatistics(playerId);
     }
     
     /**
@@ -232,7 +234,7 @@ public class HypixelPlayerCollections {
             .map(entry -> new AbstractMap.SimpleEntry<>(entry.getKey(), 
                 entry.getValue().values().stream().mapToInt(Integer::intValue).sum()))
             .sorted(Map.Entry.<CollectionType, Integer>comparingByValue().reversed())
-            .toList();
+            .collect(Collectors.toList());
     }
     
     /**
@@ -298,7 +300,7 @@ public class HypixelPlayerCollections {
         long lastActivity = getLastActivity(collectionType);
         if (lastActivity == 0) return 0.0;
         
-        long timeSinceActivity = System.currentTimeMillis() - lastActivity;
+        long timeSinceActivity = java.lang.System.currentTimeMillis() - lastActivity;
         int totalProgress = getTotalCollectionProgress(collectionType);
         
         // Calculate efficiency based on recent activity

@@ -1,6 +1,10 @@
 package de.noctivag.skyblock.items;
 
-import de.noctivag.skyblock.Plugin;
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.api.Service;
 import de.noctivag.skyblock.core.api.SystemStatus;
 import org.bukkit.entity.Player;
@@ -12,6 +16,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * PotatoBookSystem - Complete potato book system for Hypixel Skyblock
@@ -25,15 +30,15 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class PotatoBookSystem implements Service {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, PlayerPotatoBookData> playerData = new ConcurrentHashMap<>();
     private final Map<String, PotatoBook> potatoBooks = new HashMap<>();
     private final Map<PotatoBookType, List<PotatoBook>> potatoBooksByType = new HashMap<>();
     
     private SystemStatus status = SystemStatus.UNINITIALIZED;
     
-    public PotatoBookSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public PotatoBookSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
     
     @Override
@@ -45,7 +50,7 @@ public class PotatoBookSystem implements Service {
             initializePotatoBooks();
             
             status = SystemStatus.ENABLED;
-            plugin.getLogger().info("§a[PotatoBookSystem] Initialized " + potatoBooks.size() + " potato books");
+            SkyblockPlugin.getLogger().info("§a[PotatoBookSystem] Initialized " + potatoBooks.size() + " potato books");
         });
     }
     
@@ -303,24 +308,24 @@ public class PotatoBookSystem implements Service {
     public boolean applyPotatoBook(Player player, ItemStack item, String potatoBookId) {
         PotatoBook potatoBook = potatoBooks.get(potatoBookId);
         if (potatoBook == null) {
-            player.sendMessage("§cInvalid potato book!");
+            player.sendMessage(Component.text("§cInvalid potato book!"));
             return false;
         }
         
         if (item == null || item.getType().isAir()) {
-            player.sendMessage("§cYou must hold an item to apply a potato book!");
+            player.sendMessage(Component.text("§cYou must hold an item to apply a potato book!"));
             return false;
         }
         
         // Check if item already has this potato book
         if (hasPotatoBook(item, potatoBookId)) {
-            player.sendMessage("§cThis item already has this potato book!");
+            player.sendMessage(Component.text("§cThis item already has this potato book!"));
             return false;
         }
         
         // Check if item has max potato books
         if (getPotatoBookCount(item) >= 10) {
-            player.sendMessage("§cThis item already has the maximum number of potato books!");
+            player.sendMessage(Component.text("§cThis item already has the maximum number of potato books!"));
             return false;
         }
         

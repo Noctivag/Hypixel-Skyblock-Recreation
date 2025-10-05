@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.npcs.AdvancedNPCSystem;
 import de.noctivag.skyblock.npcs.NPCSkinManager;
 import org.bukkit.Location;
@@ -16,17 +19,17 @@ import java.util.Arrays;
 import java.util.List;
 
 public class PlayerNPCCreationGUI extends CustomGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Player player;
     private final Location location;
     private final NPCSkinManager skinManager;
 
-    public PlayerNPCCreationGUI(SkyblockPlugin plugin, Player player, Location location) {
+    public PlayerNPCCreationGUI(SkyblockPlugin SkyblockPlugin, Player player, Location location) {
         super(54, Component.text("§6§lPlayer NPC Creation").color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD));
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.player = player;
         this.location = location;
-        this.skinManager = new NPCSkinManager(plugin);
+        this.skinManager = new NPCSkinManager(SkyblockPlugin);
         setupItems();
     }
 
@@ -283,7 +286,7 @@ public class PlayerNPCCreationGUI extends CustomGUI {
         if (meta != null) {
             meta.displayName(Component.text(name));
             if (lore.length > 0) {
-                meta.lore(Arrays.stream(lore).map(Component::text).toList());
+                meta.lore(java.util.Arrays.stream(lore).map(Component::text).collect(java.util.stream.Collectors.toList()));
             }
             item.setItemMeta(meta);
         }

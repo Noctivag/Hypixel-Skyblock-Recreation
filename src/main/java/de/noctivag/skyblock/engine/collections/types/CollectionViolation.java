@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.engine.collections.types;
+import java.util.UUID;
 
 import java.util.UUID;
 
@@ -26,7 +27,7 @@ public class CollectionViolation {
         this.amount = amount;
         this.reason = reason;
         this.type = type;
-        this.timestamp = System.currentTimeMillis();
+        this.timestamp = java.lang.System.currentTimeMillis();
     }
     
     public UUID getPlayerId() {
@@ -61,7 +62,7 @@ public class CollectionViolation {
      * Get age of this violation in hours
      */
     public double getAgeInHours() {
-        return (System.currentTimeMillis() - timestamp) / (60.0 * 60 * 1000);
+        return (java.lang.System.currentTimeMillis() - timestamp) / (60.0 * 60 * 1000);
     }
     
     /**

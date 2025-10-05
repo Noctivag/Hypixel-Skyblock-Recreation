@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.runes;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.data.DatabaseManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,6 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.kyori.adventure.text.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Runes System - Hypixel Skyblock Style
@@ -21,12 +26,12 @@ import java.util.*;
  * - Rune GUI interface
  */
 public class RunesSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final DatabaseManager databaseManager;
     private final Map<UUID, Map<RuneType, Integer>> playerRuneStats = new HashMap<>();
 
-    public RunesSystem(SkyblockPlugin plugin, DatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public RunesSystem(SkyblockPlugin SkyblockPlugin, DatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
     }
 

@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.commands;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.events.EventManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,12 +18,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public class EventCommand implements CommandExecutor, TabCompleter {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final EventManager eventManager;
 
-    public EventCommand(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.eventManager = (de.noctivag.plugin.events.EventManager) plugin.getEventManager();
+    public EventCommand(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.eventManager = (de.noctivag.skyblock.events.EventManager) SkyblockPlugin.getEventManager();
     }
 
     @Override
@@ -31,18 +35,18 @@ public class EventCommand implements CommandExecutor, TabCompleter {
 
         if (args.length == 0) {
             // Open event menu
-            new de.noctivag.plugin.gui.EventMenu(plugin).open(player);
+            new de.noctivag.skyblock.gui.EventMenu(SkyblockPlugin).open(player);
             return true;
         }
 
         switch (args[0].toLowerCase()) {
             case "join" -> {
                 if (args.length < 2) {
-                    player.sendMessage("§cVerwendung: /event join <event-id>");
-                    player.sendMessage("§7Verfügbare Events:");
-                    player.sendMessage("§7- ender_dragon, wither, custom_boss");
-                    player.sendMessage("§7- elder_guardian, ravager, phantom_king");
-                    player.sendMessage("§7- blaze_king, enderman_lord");
+                    player.sendMessage(Component.text("§cVerwendung: /event join <event-id>"));
+                    player.sendMessage(Component.text("§7Verfügbare Events:"));
+                    player.sendMessage(Component.text("§7- ender_dragon, wither, custom_boss"));
+                    player.sendMessage(Component.text("§7- elder_guardian, ravager, phantom_king"));
+                    player.sendMessage(Component.text("§7- blaze_king, enderman_lord"));
                     return true;
                 }
                 
@@ -51,7 +55,7 @@ public class EventCommand implements CommandExecutor, TabCompleter {
             }
             case "leave" -> {
                 if (!eventManager.isPlayerInEvent(player)) {
-                    player.sendMessage("§cDu bist in keinem Event!");
+                    player.sendMessage(Component.text("§cDu bist in keinem Event!"));
                     return true;
                 }
                 
@@ -60,9 +64,9 @@ public class EventCommand implements CommandExecutor, TabCompleter {
             case "list" -> {
                 var events = eventManager.getAvailableEvents();
                 if (events.isEmpty()) {
-                    player.sendMessage("§7Keine aktiven Events verfügbar.");
+                    player.sendMessage(Component.text("§7Keine aktiven Events verfügbar."));
                 } else {
-                    player.sendMessage("§e§lVerfügbare Events:");
+                    player.sendMessage(Component.text("§e§lVerfügbare Events:"));
                     for (var event : events) {
                         player.sendMessage("§7- §f" + event.getName() + " §7(" + 
                             event.getPlayers().size() + "/" + event.getMaxPlayers() + " Spieler)");
@@ -74,19 +78,19 @@ public class EventCommand implements CommandExecutor, TabCompleter {
                     String currentEvent = eventManager.getPlayerEvent(player);
                     player.sendMessage("§aDu bist im Event: §e" + currentEvent);
                 } else {
-                    player.sendMessage("§7Du bist in keinem Event.");
+                    player.sendMessage(Component.text("§7Du bist in keinem Event."));
                 }
             }
             case "help" -> {
-                player.sendMessage("§e§lEvent Commands:");
-                player.sendMessage("§7/event §7- Öffnet das Event-Menü");
-                player.sendMessage("§7/event join <id> §7- Tritt einem Event bei");
-                player.sendMessage("§7/event leave §7- Verlässt das aktuelle Event");
-                player.sendMessage("§7/event list §7- Zeigt verfügbare Events");
-                player.sendMessage("§7/event status §7- Zeigt deinen Event-Status");
+                player.sendMessage(Component.text("§e§lEvent Commands:"));
+                player.sendMessage(Component.text("§7/event §7- Öffnet das Event-Menü"));
+                player.sendMessage(Component.text("§7/event join <id> §7- Tritt einem Event bei"));
+                player.sendMessage(Component.text("§7/event leave §7- Verlässt das aktuelle Event"));
+                player.sendMessage(Component.text("§7/event list §7- Zeigt verfügbare Events"));
+                player.sendMessage(Component.text("§7/event status §7- Zeigt deinen Event-Status"));
             }
             default -> {
-                player.sendMessage("§cUnbekannter Befehl! Nutze §e/event help §cfür Hilfe.");
+                player.sendMessage(Component.text("§cUnbekannter Befehl! Nutze §e/event help §cfür Hilfe."));
             }
         }
 

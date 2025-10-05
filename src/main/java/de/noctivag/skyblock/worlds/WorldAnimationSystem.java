@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.worlds;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -17,13 +21,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * Compatible with Multi-Server System
  */
 public class WorldAnimationSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<String, WorldAnimation> activeAnimations = new ConcurrentHashMap<>();
     private final Map<String, BukkitTask> animationTasks = new ConcurrentHashMap<>();
     private final Map<String, WorldEffect> worldEffects = new ConcurrentHashMap<>();
 
-    public WorldAnimationSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public WorldAnimationSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         // databaseManager parameter accepted for compatibility with multiserver wiring; not used currently
         initializeWorldEffects();
         startGlobalAnimationTask();
@@ -149,7 +153,7 @@ public class WorldAnimationSystem {
                     }
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Every second
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Every second
     }
 
     public void startWorldAnimation(String worldName, WorldAnimation animation) {
@@ -173,7 +177,7 @@ public class WorldAnimationSystem {
                     animation.play(player);
                 }
             }
-        }.runTaskTimer(plugin, 0L, animation.getInterval());
+        }.runTaskTimer(SkyblockPlugin, 0L, animation.getInterval());
 
         animationTasks.put(worldName, task);
     }
@@ -188,16 +192,16 @@ public class WorldAnimationSystem {
 
     public void playWorldEffects(Player player, WorldEffect effect) {
         for (ParticleAnimation particleAnim : effect.getParticleAnimations()) {
-            if (System.currentTimeMillis() - particleAnim.getLastPlayed() >= particleAnim.getInterval()) {
+            if (java.lang.System.currentTimeMillis() - particleAnim.getLastPlayed() >= particleAnim.getInterval()) {
                 particleAnim.play(player);
-                particleAnim.setLastPlayed(System.currentTimeMillis());
+                particleAnim.setLastPlayed(java.lang.System.currentTimeMillis());
             }
         }
 
         for (SoundAnimation soundAnim : effect.getSoundAnimations()) {
-            if (System.currentTimeMillis() - soundAnim.getLastPlayed() >= soundAnim.getInterval()) {
+            if (java.lang.System.currentTimeMillis() - soundAnim.getLastPlayed() >= soundAnim.getInterval()) {
                 soundAnim.play(player);
-                soundAnim.setLastPlayed(System.currentTimeMillis());
+                soundAnim.setLastPlayed(java.lang.System.currentTimeMillis());
             }
         }
     }
@@ -275,7 +279,7 @@ public class WorldAnimationSystem {
             public void run() {
                 stopWorldAnimation(animationId);
             }
-        }.runTaskLater(plugin, 200L);
+        }.runTaskLater(SkyblockPlugin, 200L);
     }
 
     public Map<String, WorldAnimation> getActiveAnimations() {

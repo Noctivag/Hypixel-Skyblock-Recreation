@@ -1,4 +1,8 @@
 package de.noctivag.skyblock.skyblock;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import org.bukkit.Bukkit;
@@ -48,13 +52,13 @@ public class SkyblockIsland {
     public void addTrusted(UUID player) {
         if (player == null) return;
         trustedMembers.add(player);
-        try { de.noctivag.plugin.data.SimpleIslandStorage.addTrusted(owner, player); } catch (Exception ignored) {}
+        try { de.noctivag.skyblock.data.SimpleIslandStorage.addTrusted(owner, player); } catch (Exception ignored) {}
     }
 
     public void removeTrusted(UUID player) {
         if (player == null) return;
         trustedMembers.remove(player);
-        try { de.noctivag.plugin.data.SimpleIslandStorage.removeTrusted(owner, player); } catch (Exception ignored) {}
+        try { de.noctivag.skyblock.data.SimpleIslandStorage.removeTrusted(owner, player); } catch (Exception ignored) {}
     }
 
     public boolean isTrusted(UUID player) {
@@ -83,15 +87,15 @@ public class SkyblockIsland {
             try {
                 Thread.sleep(100); // Small delay to ensure world is ready
                 
-                // Get plugin instance
-                org.bukkit.plugin.SkyblockSkyblockPlugin  org.bukkit.Bukkit.getPluginManager().getPlugin("BasicsPlugin");
-                if (plugin == null) {
+                // Get SkyblockPlugin instance
+                de.noctivag.skyblock.SkyblockPlugin SkyblockPlugin = (de.noctivag.skyblock.SkyblockPlugin) org.bukkit.Bukkit.getPluginManager().getPlugin("BasicsPlugin");
+                if (SkyblockPlugin == null) {
                     System.err.println("BasicsPlugin not found!");
                     return;
                 }
                 
                 // Execute on main thread using Bukkit scheduler (Folia-compatible)
-                org.bukkit.Bukkit.getScheduler().runTask(plugin, () -> {
+                org.bukkit.Bukkit.getScheduler().runTask(SkyblockPlugin, () -> {
                     try {
                         // Ensure chunk is loaded
                         world.getChunkAt(spawnLocation).load(true);
@@ -101,7 +105,7 @@ public class SkyblockIsland {
                         generateIslandBlocks(center);
                     } catch (Exception e) {
                         // Log error but don't crash
-                        plugin.getLogger().warning("Error generating starter island: " + e.getMessage());
+                        SkyblockPlugin.getLogger().warning("Error generating starter island: " + e.getMessage());
                     }
                 });
             } catch (InterruptedException e) {
@@ -141,7 +145,7 @@ public class SkyblockIsland {
             }
         }
 
-        // Add chest with starter items (chest only - inventory handling belongs to plugin logic elsewhere)
+        // Add chest with starter items (chest only - inventory handling belongs to SkyblockPlugin logic elsewhere)
         center.clone().add(1, 1, 0).getBlock().setType(Material.CHEST);
 
         // Add water and lava sources for cobblestone generator
@@ -344,7 +348,7 @@ public class SkyblockIsland {
     public void save() {
         // Save island data
         try {
-            de.noctivag.plugin.data.SimpleIslandStorage.saveIsland(this);
+            de.noctivag.skyblock.data.SimpleIslandStorage.saveIsland(this);
         } catch (Exception ignored) {}
     }
 }

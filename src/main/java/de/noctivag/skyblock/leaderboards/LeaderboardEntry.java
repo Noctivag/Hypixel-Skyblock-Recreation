@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.leaderboards;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 /**

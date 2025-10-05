@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.mobs;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.features.mobs.types.CompleteMobType;
@@ -40,7 +41,7 @@ public class PlayerMobs {
      */
     public void recordMobKill(CompleteMobType mobType) {
         mobKills.put(mobType, mobKills.getOrDefault(mobType, 0) + 1);
-        lastKillTime.put(mobType, System.currentTimeMillis());
+        lastKillTime.put(mobType, java.lang.System.currentTimeMillis());
         
         // Update category and rarity counts
         MobCategory category = mobType.getCategory();

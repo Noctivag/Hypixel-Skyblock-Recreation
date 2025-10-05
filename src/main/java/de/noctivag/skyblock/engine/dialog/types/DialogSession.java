@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.engine.dialog.types;
+import java.util.UUID;
 
 import java.util.UUID;
 
@@ -19,7 +20,7 @@ public class DialogSession {
         this.playerId = playerId;
         this.npcId = npcId;
         this.currentNode = startNode;
-        this.startTime = System.currentTimeMillis();
+        this.startTime = java.lang.System.currentTimeMillis();
     }
     
     public UUID getPlayerId() {
@@ -43,6 +44,6 @@ public class DialogSession {
     }
     
     public long getSessionDuration() {
-        return System.currentTimeMillis() - startTime;
+        return java.lang.System.currentTimeMillis() - startTime;
     }
 }

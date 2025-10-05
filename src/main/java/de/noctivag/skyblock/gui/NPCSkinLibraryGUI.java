@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.npcs.NPCSkinManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -14,15 +17,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public class NPCSkinLibraryGUI extends CustomGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Player player;
     private final NPCSkinManager skinManager;
 
-    public NPCSkinLibraryGUI(SkyblockPlugin plugin, Player player) {
+    public NPCSkinLibraryGUI(SkyblockPlugin SkyblockPlugin, Player player) {
         super(54, Component.text("§6§lNPC Skin Library").color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD));
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.player = player;
-        this.skinManager = new NPCSkinManager(plugin);
+        this.skinManager = new NPCSkinManager(SkyblockPlugin);
         setupItems();
     }
 
@@ -266,7 +269,7 @@ public class NPCSkinLibraryGUI extends CustomGUI {
         if (meta != null) {
             meta.displayName(Component.text(name));
             if (lore.length > 0) {
-                meta.lore(Arrays.stream(lore).map(Component::text).toList());
+                meta.lore(java.util.Arrays.stream(lore).map(Component::text).collect(java.util.stream.Collectors.toList()));
             }
             item.setItemMeta(meta);
         }

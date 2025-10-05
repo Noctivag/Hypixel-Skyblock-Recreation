@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.pets;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.CorePlatform;
 import de.noctivag.skyblock.core.PlayerProfile;
 import org.bukkit.Material;
@@ -21,12 +25,12 @@ import java.util.*;
  * - Evolution Effects
  */
 public class PetEvolutionSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CorePlatform corePlatform;
     private final Map<String, PetEvolution> petEvolutions = new HashMap<>();
     
-    public PetEvolutionSystem(SkyblockPlugin plugin, CorePlatform corePlatform) {
-        this.plugin = plugin;
+    public PetEvolutionSystem(SkyblockPlugin SkyblockPlugin, CorePlatform corePlatform) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.corePlatform = corePlatform;
         initializePetEvolutions();
     }
@@ -155,9 +159,9 @@ public class PetEvolutionSystem {
         evolvedPet.setLevel(Math.max(1, pet.getLevel() - 20)); // Lose some levels
         evolvedPet.setXP(pet.getXP() * 0.5); // Lose some XP
         
-        player.sendMessage("§a§lPET EVOLVED!");
+        player.sendMessage(Component.text("§a§lPET EVOLVED!"));
         player.sendMessage("§7" + pet.getType().getName() + " §7→ §e" + evolution.getEvolvedName());
-        player.sendMessage("§7New abilities unlocked!");
+        player.sendMessage(Component.text("§7New abilities unlocked!"));
         
         return true;
     }

@@ -1,4 +1,5 @@
 package de.noctivag.skyblock;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import de.noctivag.skyblock.achievements.AchievementManager;
 import de.noctivag.skyblock.achievements.AchievementSystem;
@@ -58,7 +59,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -123,8 +124,8 @@ public final class SkyblockPlugin extends JavaPlugin {
     private MultiServerDatabaseManager multiServerDatabaseManager;
 
     // Shop and Bank Systems
-    private de.noctivag.plugin.shop.ShopSystem shopSystem;
-    private de.noctivag.plugin.bank.BankSystem bankSystem;
+    private de.noctivag.skyblock.shop.ShopSystem shopSystem;
+    private de.noctivag.skyblock.bank.BankSystem bankSystem;
 
     // Multi-Server Systems
     private HypixelStyleProxySystem hypixelProxySystem;
@@ -133,7 +134,7 @@ public final class SkyblockPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         try {
-            getLogger().info("Initializing plugin systems...");
+            getLogger().info("Initializing SkyblockPlugin systems...");
 
             // Populate prefix/nick maps with a harmless default entry so static analysis
             // doesn't complain about them being never populated. Actual values are set at runtime.
@@ -195,7 +196,7 @@ public final class SkyblockPlugin extends JavaPlugin {
             // Initialize core gameplay systems
             skyblockSystem = new SkyblockMainSystem(this, multiServerDatabaseManager);
             advancedItemSystem = new AdvancedItemSystem(this, multiServerDatabaseManager);
-            // ReforgeSystem takes only the Plugin in this implementation
+            // ReforgeSystem takes only the SkyblockPlugin in this implementation
             reforgeSystem = new ReforgeSystem(this);
             advancedMinionSystem = new AdvancedMinionSystem(this, multiServerDatabaseManager);
             advancedSlayerSystem = new AdvancedSlayerSystem(this, multiServerDatabaseManager);
@@ -211,8 +212,8 @@ public final class SkyblockPlugin extends JavaPlugin {
             skillsSystem = new SkillsSystem(this, databaseManager);
 
             // Initialize Shop and Bank Systems
-            shopSystem = new de.noctivag.plugin.shop.ShopSystem(this, databaseManager);
-            bankSystem = new de.noctivag.plugin.bank.BankSystem(this, databaseManager);
+            shopSystem = new de.noctivag.skyblock.shop.ShopSystem(this, databaseManager);
+            bankSystem = new de.noctivag.skyblock.bank.BankSystem(this, databaseManager);
 
             // Initialize Unified Systems - Note: UnifiedMainMenuSystem is player-specific and should be created on demand
             unifiedSkyblockSystem = new UnifiedSkyblockSystem(this, multiServerDatabaseManager);
@@ -247,7 +248,7 @@ public final class SkyblockPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         try {
-            getLogger().info("Disabling plugin systems...");
+            getLogger().info("Disabling SkyblockPlugin systems...");
 
             // Save data
             if (featureManager != null) featureManager.saveData();
@@ -372,7 +373,7 @@ public final class SkyblockPlugin extends JavaPlugin {
     }
 
     @SuppressWarnings("unused")
-    public de.noctivag.plugin.combat.CompleteCombatSystem getCombatSystem() {
+    public de.noctivag.skyblock.combat.CompleteCombatSystem getCombatSystem() {
         return null; // TODO: Initialize CompleteCombatSystem
     }
 
@@ -412,12 +413,12 @@ public final class SkyblockPlugin extends JavaPlugin {
     }
 
     @SuppressWarnings("unused")
-    public de.noctivag.plugin.shop.ShopSystem getShopSystem() {
+    public de.noctivag.skyblock.shop.ShopSystem getShopSystem() {
         return shopSystem;
     }
 
     @SuppressWarnings("unused")
-    public de.noctivag.plugin.bank.BankSystem getBankSystem() {
+    public de.noctivag.skyblock.bank.BankSystem getBankSystem() {
         return bankSystem;
     }
 
@@ -590,7 +591,7 @@ public final class SkyblockPlugin extends JavaPlugin {
 
     // Additional missing method implementations for compilation fixes
     public void joinEvent(org.bukkit.entity.Player player, String eventName) {
-        player.sendMessage("§cEvent system not implemented yet!");
+        player.sendMessage(Component.text("§cEvent system not implemented yet!"));
     }
 
     public boolean isPlayerInEvent(org.bukkit.entity.Player player) {
@@ -611,11 +612,11 @@ public final class SkyblockPlugin extends JavaPlugin {
     }
 
     public void openRecipeBook(org.bukkit.entity.Player player) {
-        player.sendMessage("§cRecipe Book not implemented yet!");
+        player.sendMessage(Component.text("§cRecipe Book not implemented yet!"));
     }
 
     public void openCalendar(org.bukkit.entity.Player player) {
-        player.sendMessage("§cCalendar not implemented yet!");
+        player.sendMessage(Component.text("§cCalendar not implemented yet!"));
     }
 
     public void setLastLocation(org.bukkit.entity.Player player, org.bukkit.Location location) {
@@ -628,7 +629,7 @@ public final class SkyblockPlugin extends JavaPlugin {
     }
 
     public void purchaseCosmetic(org.bukkit.entity.Player player, String cosmeticId, double cost) {
-        player.sendMessage("§cCosmetic purchase not implemented yet!");
+        player.sendMessage(Component.text("§cCosmetic purchase not implemented yet!"));
     }
 
     // Additional missing method implementations for compilation fixes
@@ -675,11 +676,11 @@ public final class SkyblockPlugin extends JavaPlugin {
 
     // Additional missing method implementations for compilation fixes
     public void claimReward(org.bukkit.entity.Player player) {
-        player.sendMessage("§cReward claiming not implemented yet!");
+        player.sendMessage(Component.text("§cReward claiming not implemented yet!"));
     }
 
     public void deactivateAllCosmetics(org.bukkit.entity.Player player) {
-        player.sendMessage("§cCosmetic deactivation not implemented yet!");
+        player.sendMessage(Component.text("§cCosmetic deactivation not implemented yet!"));
     }
 
     public Object createHotPotatoBook() {
@@ -770,4 +771,13 @@ public final class SkyblockPlugin extends JavaPlugin {
 
     // Getter methods are provided by Lombok's @Getter annotation.
     // Explicit redundant getters were removed to avoid duplicate/warning messages.
+    
+    /**
+     * Get the core platform instance
+     */
+    public de.noctivag.skyblock.core.CorePlatform getCorePlatform() {
+        // Return a default CorePlatform instance
+        // This would need to be properly initialized in a real implementation
+        return new de.noctivag.skyblock.core.CorePlatform(this, null);
+    }
 }

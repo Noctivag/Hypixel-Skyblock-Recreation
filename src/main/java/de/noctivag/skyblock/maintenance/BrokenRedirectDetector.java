@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.maintenance;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
@@ -28,21 +32,21 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class BrokenRedirectDetector {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<String, List<String>> brokenRedirects = new ConcurrentHashMap<>();
     private final Map<String, List<String>> brokenGUILinks = new ConcurrentHashMap<>();
     private final Map<String, List<String>> brokenWarps = new ConcurrentHashMap<>();
     private final Map<String, List<String>> brokenPermissions = new ConcurrentHashMap<>();
     
-    public BrokenRedirectDetector(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public BrokenRedirectDetector(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
     
     /**
      * Führt eine vollständige Überprüfung aller Weiterleitungen durch
      */
     public void performFullCheck() {
-        plugin.getLogger().info("§e[Maintenance] Starting broken redirect detection...");
+        SkyblockPlugin.getLogger().info("§e[Maintenance] Starting broken redirect detection...");
         
         // Clear previous results
         brokenRedirects.clear();
@@ -65,7 +69,7 @@ public class BrokenRedirectDetector {
         // Generate report
         generateReport();
         
-        plugin.getLogger().info("§a[Maintenance] Broken redirect detection completed!");
+        SkyblockPlugin.getLogger().info("§a[Maintenance] Broken redirect detection completed!");
     }
     
     /**
@@ -84,10 +88,10 @@ public class BrokenRedirectDetector {
                 String alias = entry.getKey();
                 Command command = entry.getValue();
                 
-                // Check if command is from our plugin
+                // Check if command is from our SkyblockPlugin
                 if (command instanceof PluginCommand) {
                     PluginCommand pluginCommand = (PluginCommand) command;
-                    if (pluginCommand.getPlugin().equals(plugin)) {
+                    if (pluginCommand.getPlugin().equals(SkyblockPlugin)) {
                         // Check if command executor exists
                         if (pluginCommand.getExecutor() == null) {
                             addBrokenRedirect("command_executor", alias, "Command executor is null");
@@ -95,7 +99,7 @@ public class BrokenRedirectDetector {
                         
                         // Check if command has valid permission
                         if (pluginCommand.getPermission() != null && !pluginCommand.getPermission().isEmpty()) {
-                            if (!plugin.getServer().getPluginManager().getPermissions().contains(pluginCommand.getPermission())) {
+                            if (!SkyblockPlugin.getServer().getPluginManager().getPermissions().contains(pluginCommand.getPermission())) {
                                 addBrokenRedirect("command_permission", alias, "Permission '" + pluginCommand.getPermission() + "' not found");
                             }
                         }
@@ -103,7 +107,7 @@ public class BrokenRedirectDetector {
                 }
             }
         } catch (Exception e) {
-            plugin.getLogger().warning("Error checking command redirects: " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Error checking command redirects: " + e.getMessage());
         }
     }
     
@@ -111,8 +115,8 @@ public class BrokenRedirectDetector {
      * Überprüft alle GUI-Links auf Gültigkeit
      */
     private void checkGUILinks() {
-        // Check plugin.yml for command definitions
-        File pluginFile = new File(plugin.getDataFolder().getParentFile(), "plugin.yml");
+        // Check SkyblockPlugin.yml for command definitions
+        File pluginFile = new File(SkyblockPlugin.getDataFolder().getParentFile(), "SkyblockPlugin.yml");
         if (pluginFile.exists()) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(pluginFile);
             
@@ -151,10 +155,10 @@ public class BrokenRedirectDetector {
         
         // Check if GUI classes exist and are properly implemented
         String[] guiClasses = {
-            "de.noctivag.plugin.gui.AdvancedGUISystem",
-            "de.noctivag.plugin.gui.UltimateMainMenu",
-            "de.noctivag.plugin.gui.FeatureBookGUI",
-            "de.noctivag.plugin.gui.AdminMenu"
+            "de.noctivag.skyblock.gui.AdvancedGUISystem",
+            "de.noctivag.skyblock.gui.UltimateMainMenu",
+            "de.noctivag.skyblock.gui.FeatureBookGUI",
+            "de.noctivag.skyblock.gui.AdminMenu"
         };
         
         for (String className : guiClasses) {
@@ -171,7 +175,7 @@ public class BrokenRedirectDetector {
      */
     private void checkWarpDestinations() {
         // Check warp files
-        File warpsFile = new File(plugin.getDataFolder(), "warps.yml");
+        File warpsFile = new File(SkyblockPlugin.getDataFolder(), "warps.yml");
         if (warpsFile.exists()) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(warpsFile);
             
@@ -205,8 +209,8 @@ public class BrokenRedirectDetector {
      * Überprüft alle Permissions auf Gültigkeit
      */
     private void checkPermissions() {
-        // Check plugin.yml for permission definitions
-        File pluginFile = new File(plugin.getDataFolder().getParentFile(), "plugin.yml");
+        // Check SkyblockPlugin.yml for permission definitions
+        File pluginFile = new File(SkyblockPlugin.getDataFolder().getParentFile(), "SkyblockPlugin.yml");
         if (pluginFile.exists()) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(pluginFile);
             
@@ -260,48 +264,48 @@ public class BrokenRedirectDetector {
      * Generiert einen Bericht über alle gefundenen Probleme
      */
     private void generateReport() {
-        plugin.getLogger().info("§6=== BROKEN REDIRECT DETECTION REPORT ===");
+        SkyblockPlugin.getLogger().info("§6=== BROKEN REDIRECT DETECTION REPORT ===");
         
         // Command redirects
         if (!brokenRedirects.isEmpty()) {
-            plugin.getLogger().warning("§cBroken Command Redirects:");
+            SkyblockPlugin.getLogger().warning("§cBroken Command Redirects:");
             for (Map.Entry<String, List<String>> entry : brokenRedirects.entrySet()) {
-                plugin.getLogger().warning("  §e" + entry.getKey() + ":");
+                SkyblockPlugin.getLogger().warning("  §e" + entry.getKey() + ":");
                 for (String issue : entry.getValue()) {
-                    plugin.getLogger().warning("    §7- " + issue);
+                    SkyblockPlugin.getLogger().warning("    §7- " + issue);
                 }
             }
         }
         
         // GUI links
         if (!brokenGUILinks.isEmpty()) {
-            plugin.getLogger().warning("§cBroken GUI Links:");
+            SkyblockPlugin.getLogger().warning("§cBroken GUI Links:");
             for (Map.Entry<String, List<String>> entry : brokenGUILinks.entrySet()) {
-                plugin.getLogger().warning("  §e" + entry.getKey() + ":");
+                SkyblockPlugin.getLogger().warning("  §e" + entry.getKey() + ":");
                 for (String issue : entry.getValue()) {
-                    plugin.getLogger().warning("    §7- " + issue);
+                    SkyblockPlugin.getLogger().warning("    §7- " + issue);
                 }
             }
         }
         
         // Warps
         if (!brokenWarps.isEmpty()) {
-            plugin.getLogger().warning("§cBroken Warps:");
+            SkyblockPlugin.getLogger().warning("§cBroken Warps:");
             for (Map.Entry<String, List<String>> entry : brokenWarps.entrySet()) {
-                plugin.getLogger().warning("  §e" + entry.getKey() + ":");
+                SkyblockPlugin.getLogger().warning("  §e" + entry.getKey() + ":");
                 for (String issue : entry.getValue()) {
-                    plugin.getLogger().warning("    §7- " + issue);
+                    SkyblockPlugin.getLogger().warning("    §7- " + issue);
                 }
             }
         }
         
         // Permissions
         if (!brokenPermissions.isEmpty()) {
-            plugin.getLogger().warning("§cBroken Permissions:");
+            SkyblockPlugin.getLogger().warning("§cBroken Permissions:");
             for (Map.Entry<String, List<String>> entry : brokenPermissions.entrySet()) {
-                plugin.getLogger().warning("  §e" + entry.getKey() + ":");
+                SkyblockPlugin.getLogger().warning("  §e" + entry.getKey() + ":");
                 for (String issue : entry.getValue()) {
-                    plugin.getLogger().warning("    §7- " + issue);
+                    SkyblockPlugin.getLogger().warning("    §7- " + issue);
                 }
             }
         }
@@ -313,19 +317,19 @@ public class BrokenRedirectDetector {
                          brokenPermissions.values().stream().mapToInt(List::size).sum();
         
         if (totalIssues == 0) {
-            plugin.getLogger().info("§aNo broken redirects found! System is healthy.");
+            SkyblockPlugin.getLogger().info("§aNo broken redirects found! System is healthy.");
         } else {
-            plugin.getLogger().warning("§cTotal issues found: " + totalIssues);
+            SkyblockPlugin.getLogger().warning("§cTotal issues found: " + totalIssues);
         }
         
-        plugin.getLogger().info("§6==========================================");
+        SkyblockPlugin.getLogger().info("§6==========================================");
     }
     
     /**
      * Automatische Reparatur von einfachen Problemen
      */
     public void autoFix() {
-        plugin.getLogger().info("§e[Maintenance] Starting auto-fix for broken redirects...");
+        SkyblockPlugin.getLogger().info("§e[Maintenance] Starting auto-fix for broken redirects...");
         
         int fixedIssues = 0;
         
@@ -338,7 +342,7 @@ public class BrokenRedirectDetector {
         // Fix missing permissions
         fixedIssues += fixMissingPermissions();
         
-        plugin.getLogger().info("§a[Maintenance] Auto-fix completed! Fixed " + fixedIssues + " issues.");
+        SkyblockPlugin.getLogger().info("§a[Maintenance] Auto-fix completed! Fixed " + fixedIssues + " issues.");
     }
     
     /**
@@ -348,7 +352,7 @@ public class BrokenRedirectDetector {
         int fixed = 0;
         
         try {
-            File pluginFile = new File(plugin.getDataFolder().getParentFile(), "plugin.yml");
+            File pluginFile = new File(SkyblockPlugin.getDataFolder().getParentFile(), "SkyblockPlugin.yml");
             if (pluginFile.exists()) {
                 FileConfiguration config = YamlConfiguration.loadConfiguration(pluginFile);
                 
@@ -357,7 +361,7 @@ public class BrokenRedirectDetector {
                         String path = "commands." + commandName;
                         
                         if (!config.contains(path + ".description")) {
-                            config.set(path + ".description", "Plugin command: " + commandName);
+                            config.set(path + ".description", "SkyblockPlugin command: " + commandName);
                             fixed++;
                         }
                     }
@@ -368,7 +372,7 @@ public class BrokenRedirectDetector {
                 }
             }
         } catch (Exception e) {
-            plugin.getLogger().warning("Error fixing command descriptions: " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Error fixing command descriptions: " + e.getMessage());
         }
         
         return fixed;
@@ -381,7 +385,7 @@ public class BrokenRedirectDetector {
         int fixed = 0;
         
         try {
-            File warpsFile = new File(plugin.getDataFolder(), "warps.yml");
+            File warpsFile = new File(SkyblockPlugin.getDataFolder(), "warps.yml");
             if (warpsFile.exists()) {
                 FileConfiguration config = YamlConfiguration.loadConfiguration(warpsFile);
                 
@@ -401,7 +405,7 @@ public class BrokenRedirectDetector {
                 }
             }
         } catch (Exception e) {
-            plugin.getLogger().warning("Error fixing warp worlds: " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Error fixing warp worlds: " + e.getMessage());
         }
         
         return fixed;
@@ -414,7 +418,7 @@ public class BrokenRedirectDetector {
         int fixed = 0;
         
         try {
-            File pluginFile = new File(plugin.getDataFolder().getParentFile(), "plugin.yml");
+            File pluginFile = new File(SkyblockPlugin.getDataFolder().getParentFile(), "SkyblockPlugin.yml");
             if (pluginFile.exists()) {
                 FileConfiguration config = YamlConfiguration.loadConfiguration(pluginFile);
                 
@@ -423,7 +427,7 @@ public class BrokenRedirectDetector {
                         String path = "permissions." + permissionName;
                         
                         if (!config.contains(path + ".description")) {
-                            config.set(path + ".description", "Plugin permission: " + permissionName);
+                            config.set(path + ".description", "SkyblockPlugin permission: " + permissionName);
                             fixed++;
                         }
                         
@@ -439,7 +443,7 @@ public class BrokenRedirectDetector {
                 }
             }
         } catch (Exception e) {
-            plugin.getLogger().warning("Error fixing permissions: " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Error fixing permissions: " + e.getMessage());
         }
         
         return fixed;
@@ -473,7 +477,7 @@ public class BrokenRedirectDetector {
             Map<String, Integer> stats = getStatistics();
             int totalIssues = stats.get("total");
             
-            meta.setDisplayName("§c§lBroken Redirects Report");
+            meta.displayName(Component.text("§c§lBroken Redirects Report"));
             
             List<String> lore = new ArrayList<>();
             lore.add("§7Total Issues: §c" + totalIssues);
@@ -485,7 +489,7 @@ public class BrokenRedirectDetector {
             lore.add("§eClick to view detailed report");
             lore.add("§eRight-click to auto-fix");
             
-            meta.setLore(lore);
+            meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         

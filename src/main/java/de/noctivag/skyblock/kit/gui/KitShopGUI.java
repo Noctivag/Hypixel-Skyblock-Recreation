@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.kit.gui;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.kit.KitShop;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -14,11 +18,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public class KitShopGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private static final String GUI_TITLE = "§8» §6Kit-Shop §8«";
 
-    public KitShopGUI(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public KitShopGUI(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     public void openGUI(Player player) {
@@ -37,9 +41,9 @@ public class KitShopGUI {
 
         // Zeige alle verfügbaren Kits an
         int slot = 10;
-        // TODO: Implement getAvailableKits() and getKitInfo() methods in Plugin class
-        // for (String kitName : plugin.getAvailableKits()) {
-        //     KitShop.KitInfo kitInfo = plugin.getKitInfo(kitName);
+        // TODO: Implement getAvailableKits() and getKitInfo() methods in SkyblockPlugin class
+        // for (String kitName : SkyblockPlugin.getAvailableKits()) {
+        //     KitShop.KitInfo kitInfo = SkyblockPlugin.getKitInfo(kitName);
         //     if (kitInfo != null) {
         //         ItemStack kitItem = createKitDisplay(player, kitInfo);
         //         inv.setItem(slot, kitItem);
@@ -52,12 +56,12 @@ public class KitShopGUI {
         // }
 
         // Spieler-Info
-        double balance = plugin.getEconomyManager().getBalance(player);
+        double balance = SkyblockPlugin.getEconomyManager().getBalance(player);
         ItemStack infoItem = createGuiItem(
             Material.PLAYER_HEAD,
             "§6» §eKonto-Informationen",
             Arrays.asList(
-                "§7Kontostand: §e" + plugin.getEconomyManager().formatMoney(balance),
+                "§7Kontostand: §e" + SkyblockPlugin.getEconomyManager().formatMoney(balance),
                 "",
                 "§7Klicke auf ein Kit, um es zu",
                 "§7kaufen oder zu verwenden!"
@@ -86,14 +90,14 @@ public class KitShopGUI {
 
         // Preis und Cooldown
         if (kitInfo.getPrice() > 0) {
-            lore.add("§7Preis: §e" + plugin.getEconomyManager().formatMoney(kitInfo.getPrice()));
+            lore.add("§7Preis: §e" + SkyblockPlugin.getEconomyManager().formatMoney(kitInfo.getPrice()));
         } else if (kitInfo.getName().equalsIgnoreCase("vip")) {
             lore.add("§6Nur für VIP-Spieler");
         } else {
             lore.add("§aKostenlos");
         }
 
-        // long cooldown = plugin.getRemainingCooldown(player, kitInfo.getName());
+        // long cooldown = SkyblockPlugin.getRemainingCooldown(player, kitInfo.getName());
         // if (cooldown > 0) {
         //     lore.add("§cCooldown: " + formatTime(cooldown));
         // } else {
@@ -129,8 +133,8 @@ public class KitShopGUI {
     private ItemStack createGuiItem(Material material, String name, List<String> lore) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(name);
-        meta.setLore(lore);
+        meta.displayName(Component.text(name));
+        meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
         item.setItemMeta(meta);
         return item;
     }

@@ -15,7 +15,7 @@ public class FairySoulEffect {
     public FairySoulEffect(FairySoul fairySoul, int level, int durationSeconds) {
         this.fairySoul = fairySoul;
         this.level = level;
-        this.expirationTime = System.currentTimeMillis() + (durationSeconds * 1000L);
+        this.expirationTime = java.lang.System.currentTimeMillis() + (durationSeconds * 1000L);
     }
     
     public FairySoul getFairySoul() {
@@ -31,11 +31,11 @@ public class FairySoulEffect {
     }
     
     public boolean isExpired() {
-        return System.currentTimeMillis() >= expirationTime;
+        return java.lang.System.currentTimeMillis() >= expirationTime;
     }
     
     public int getRemainingTime() {
-        long remaining = expirationTime - System.currentTimeMillis();
+        long remaining = expirationTime - java.lang.System.currentTimeMillis();
         return (int) Math.max(0, remaining / 1000);
     }
     

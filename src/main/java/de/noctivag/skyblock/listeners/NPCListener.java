@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.listeners;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.gui.*;
 import de.noctivag.skyblock.npcs.AdvancedNPCSystem;
 import de.noctivag.skyblock.npcs.HypixelStyleNPC;
@@ -14,10 +17,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import net.kyori.adventure.text.Component;
 
 public class NPCListener implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public NPCListener(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public NPCListener(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     @EventHandler
@@ -55,7 +58,7 @@ public class NPCListener implements Listener {
 
             if (event.getAction().toString().contains("RIGHT_CLICK_BLOCK")) {
                 // Open NPC creation GUI
-                new NPCCreationGUI(plugin, player, event.getClickedBlock().getLocation().add(0, 1, 0)).open(player);
+                new NPCCreationGUI(SkyblockPlugin, player, event.getClickedBlock().getLocation().add(0, 1, 0)).open(player);
             }
         }
     }
@@ -66,7 +69,7 @@ public class NPCListener implements Listener {
             org.bukkit.entity.Villager villager = (org.bukkit.entity.Villager) event.getRightClicked();
 
             // Check if this is an NPC
-            AdvancedNPCSystem npcSystem = plugin.getAdvancedNPCSystem();
+            AdvancedNPCSystem npcSystem = SkyblockPlugin.getAdvancedNPCSystem();
             HypixelStyleNPC npc = null;
 
             for (HypixelStyleNPC gameNPC : npcSystem.getActiveNPCs().values()) {
@@ -85,7 +88,7 @@ public class NPCListener implements Listener {
                     item.getItemMeta().displayName() != null &&
                     net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection().serialize(item.getItemMeta().displayName()).contains("NPC Tool")) {
                     // Open NPC edit GUI (use Object-cast to select the fallback constructor)
-                    new NPCEditGUI(plugin, event.getPlayer(), (Object) npc).open(event.getPlayer());
+                    new NPCEditGUI(SkyblockPlugin, event.getPlayer(), (Object) npc).open(event.getPlayer());
                 } else {
                     // Normal NPC interaction
                     npc.onPlayerInteract(event.getPlayer());
@@ -98,12 +101,12 @@ public class NPCListener implements Listener {
         event.setCancelled(true);
         int slot = event.getSlot();
 
-        AdvancedNPCSystem npcSystem = plugin.getAdvancedNPCSystem();
+        AdvancedNPCSystem npcSystem = SkyblockPlugin.getAdvancedNPCSystem();
 
         switch (slot) {
             // Shop NPC
             case 10 -> {
-                String npcId = "shop_" + System.currentTimeMillis();
+                String npcId = "shop_" + java.lang.System.currentTimeMillis();
                 npcSystem.createHypixelNPC(npcId, AdvancedNPCSystem.NPCType.SHOP,
                     getLocationFromGUI(), "\u00A7aShop NPC", "{}");
                 player.sendMessage(Component.text("\u00A7aShop NPC created successfully!"));
@@ -111,7 +114,7 @@ public class NPCListener implements Listener {
             }
             // Quest NPC
             case 11 -> {
-                String npcId = "quest_" + System.currentTimeMillis();
+                String npcId = "quest_" + java.lang.System.currentTimeMillis();
                 npcSystem.createHypixelNPC(npcId, AdvancedNPCSystem.NPCType.QUEST,
                     getLocationFromGUI(), "\u00A7bQuest NPC", "{}");
                 player.sendMessage(Component.text("\u00A7aQuest NPC created successfully!"));
@@ -119,7 +122,7 @@ public class NPCListener implements Listener {
             }
             // Info NPC
             case 12 -> {
-                String npcId = "info_" + System.currentTimeMillis();
+                String npcId = "info_" + java.lang.System.currentTimeMillis();
                 npcSystem.createHypixelNPC(npcId, AdvancedNPCSystem.NPCType.INFO,
                     getLocationFromGUI(), "\u00A7eInfo NPC", "{}");
                 player.sendMessage(Component.text("\u00A7aInfo NPC created successfully!"));
@@ -127,7 +130,7 @@ public class NPCListener implements Listener {
             }
             // Warp NPC
             case 13 -> {
-                String npcId = "warp_" + System.currentTimeMillis();
+                String npcId = "warp_" + java.lang.System.currentTimeMillis();
                 npcSystem.createHypixelNPC(npcId, AdvancedNPCSystem.NPCType.WARP,
                     getLocationFromGUI(), "\u00A7dWarp NPC", "{}");
                 player.sendMessage(Component.text("\u00A7aWarp NPC created successfully!"));
@@ -135,7 +138,7 @@ public class NPCListener implements Listener {
             }
             // Bank NPC
             case 14 -> {
-                String npcId = "bank_" + System.currentTimeMillis();
+                String npcId = "bank_" + java.lang.System.currentTimeMillis();
                 npcSystem.createHypixelNPC(npcId, AdvancedNPCSystem.NPCType.BANK,
                     getLocationFromGUI(), "\u00A76Bank NPC", "{}");
                 player.sendMessage(Component.text("\u00A7aBank NPC created successfully!"));
@@ -143,7 +146,7 @@ public class NPCListener implements Listener {
             }
             // Auction NPC
             case 15 -> {
-                String npcId = "auction_" + System.currentTimeMillis();
+                String npcId = "auction_" + java.lang.System.currentTimeMillis();
                 npcSystem.createHypixelNPC(npcId, AdvancedNPCSystem.NPCType.AUCTION,
                     getLocationFromGUI(), "\u00A7cAuction NPC", "{}");
                 player.sendMessage(Component.text("\u00A7aAuction NPC created successfully!"));
@@ -151,7 +154,7 @@ public class NPCListener implements Listener {
             }
             // Guild NPC
             case 16 -> {
-                String npcId = "guild_" + System.currentTimeMillis();
+                String npcId = "guild_" + java.lang.System.currentTimeMillis();
                 npcSystem.createHypixelNPC(npcId, AdvancedNPCSystem.NPCType.GUILD,
                     getLocationFromGUI(), "\u00A75Guild NPC", "{}");
                 player.sendMessage(Component.text("\u00A7aGuild NPC created successfully!"));
@@ -159,7 +162,7 @@ public class NPCListener implements Listener {
             }
             // Pet NPC
             case 19 -> {
-                String npcId = "pet_" + System.currentTimeMillis();
+                String npcId = "pet_" + java.lang.System.currentTimeMillis();
                 npcSystem.createHypixelNPC(npcId, AdvancedNPCSystem.NPCType.PET,
                     getLocationFromGUI(), "\u00A7dPet NPC", "{}");
                 player.sendMessage(Component.text("\u00A7aPet NPC created successfully!"));
@@ -167,7 +170,7 @@ public class NPCListener implements Listener {
             }
             // Cosmetic NPC
             case 20 -> {
-                String npcId = "cosmetic_" + System.currentTimeMillis();
+                String npcId = "cosmetic_" + java.lang.System.currentTimeMillis();
                 npcSystem.createHypixelNPC(npcId, AdvancedNPCSystem.NPCType.COSMETIC,
                     getLocationFromGUI(), "\u00A7eCosmetic NPC", "{}");
                 player.sendMessage(Component.text("\u00A7aCosmetic NPC created successfully!"));
@@ -176,7 +179,7 @@ public class NPCListener implements Listener {
             // Admin NPC
             case 21 -> {
                 if (player.hasPermission("basicsplugin.admin")) {
-                    String npcId = "admin_" + System.currentTimeMillis();
+                    String npcId = "admin_" + java.lang.System.currentTimeMillis();
                     npcSystem.createHypixelNPC(npcId, AdvancedNPCSystem.NPCType.ADMIN,
                         getLocationFromGUI(), "\u00A74Admin NPC", "{}");
                     player.sendMessage(Component.text("\u00A7aAdmin NPC created successfully!"));
@@ -196,7 +199,7 @@ public class NPCListener implements Listener {
         event.setCancelled(true);
         int slot = event.getSlot();
 
-        AdvancedNPCSystem npcSystem = plugin.getAdvancedNPCSystem();
+        AdvancedNPCSystem npcSystem = SkyblockPlugin.getAdvancedNPCSystem();
 
         switch (slot) {
             // Create NPC Tool
@@ -235,9 +238,9 @@ public class NPCListener implements Listener {
             }
 
             // Navigation
-            case 45 -> new UltimateMainMenu(plugin, player).open(player);
+            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open(player);
             case 49 -> player.closeInventory();
-            case 51 -> new NPCManagementGUI(plugin, player).open(player); // Refresh
+            case 51 -> new NPCManagementGUI(SkyblockPlugin, player).open(player); // Refresh
         }
     }
 
@@ -249,7 +252,7 @@ public class NPCListener implements Listener {
         String title = net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection().serialize(event.getView().title());
         String npcId = title.substring(title.indexOf("Edit NPC: ") + 10);
 
-        AdvancedNPCSystem npcSystem = plugin.getAdvancedNPCSystem();
+        AdvancedNPCSystem npcSystem = SkyblockPlugin.getAdvancedNPCSystem();
         HypixelStyleNPC npc = npcSystem.getNPC(npcId);
 
         if (npc == null) {
@@ -262,25 +265,25 @@ public class NPCListener implements Listener {
             case 19 -> {
                 player.sendMessage(Component.text("§ePlease type the new name for the NPC in chat!"));
                 // Handle chat input for NPC interaction
-                if (plugin.getAdvancedNPCSystem() != null) {
+                if (SkyblockPlugin.getAdvancedNPCSystem() != null) {
                     // This is an inventory click event, not a chat event
-                    // plugin.getAdvancedNPCSystem().handleChatInput(player, event.getMessage());
+                    // SkyblockPlugin.getAdvancedNPCSystem().handleChatInput(player, event.getMessage());
                 }
             }
             // Change Type
             case 20 -> {
                 player.sendMessage(Component.text("§eOpening type selection..."));
                 // Open type selection GUI
-                if (plugin.getAdvancedNPCSystem() != null) {
-                    plugin.getAdvancedNPCSystem().openTypeSelectionGUI(player);
+                if (SkyblockPlugin.getAdvancedNPCSystem() != null) {
+                    SkyblockPlugin.getAdvancedNPCSystem().openTypeSelectionGUI(player);
                 }
             }
             // Edit Custom Data
             case 21 -> {
                 player.sendMessage(Component.text("§eOpening data editor..."));
                 // Open data editor GUI
-                if (plugin.getAdvancedNPCSystem() != null) {
-                    plugin.getAdvancedNPCSystem().openDataEditorGUI(player);
+                if (SkyblockPlugin.getAdvancedNPCSystem() != null) {
+                    SkyblockPlugin.getAdvancedNPCSystem().openDataEditorGUI(player);
                 }
             }
             // Move NPC
@@ -290,7 +293,7 @@ public class NPCListener implements Listener {
             }
             // Clone NPC
             case 23 -> {
-                String newNpcId = npc.getNpcId() + "_clone_" + System.currentTimeMillis();
+                String newNpcId = npc.getNpcId() + "_clone_" + java.lang.System.currentTimeMillis();
                 npcSystem.createHypixelNPC(newNpcId, npc.getType(),
                     npc.getLocation(), npc.getDisplayName() + " (Clone)", npc.getCustomData());
                 player.sendMessage(Component.text("§aNPC cloned successfully!"));
@@ -322,21 +325,21 @@ public class NPCListener implements Listener {
             case 32 -> {
                 player.sendMessage(Component.text("§eOpening permissions manager..."));
                 // Open permissions GUI
-                if (plugin.getAdvancedNPCSystem() != null) {
-                    plugin.getAdvancedNPCSystem().openPermissionsGUI(player);
+                if (SkyblockPlugin.getAdvancedNPCSystem() != null) {
+                    SkyblockPlugin.getAdvancedNPCSystem().openPermissionsGUI(player);
                 }
             }
 
             // Navigation
-            case 45 -> new NPCManagementGUI(plugin, player).open(player);
+            case 45 -> new NPCManagementGUI(SkyblockPlugin, player).open(player);
             case 49 -> player.closeInventory();
-            case 51 -> new NPCEditGUI(plugin, player, (Object) npc).open(player); // Refresh
+            case 51 -> new NPCEditGUI(SkyblockPlugin, player, (Object) npc).open(player); // Refresh
         }
     }
 
     private org.bukkit.Location getLocationFromGUI() {
         // This would need to be passed from the GUI creation
         // For now, return a default location
-        return plugin.getServer().getWorlds().get(0).getSpawnLocation();
+        return SkyblockPlugin.getServer().getWorlds().get(0).getSpawnLocation();
     }
 }

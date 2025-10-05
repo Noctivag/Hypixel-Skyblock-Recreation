@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.slayers;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.data.DatabaseManager;
 import org.bukkit.entity.Player;
 
@@ -9,15 +13,15 @@ import org.bukkit.entity.Player;
  * Slayer System - Basic implementation
  */
 public class SlayerSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final DatabaseManager databaseManager;
 
-    public SlayerSystem(SkyblockPlugin plugin, DatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public SlayerSystem(SkyblockPlugin SkyblockPlugin, DatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
     }
 
     public void openSlayerWeaponsGUI(Player player) {
-        player.sendMessage("§aSlayer Weapons GUI geöffnet!");
+        player.sendMessage(Component.text("§aSlayer Weapons GUI geöffnet!"));
     }
 }

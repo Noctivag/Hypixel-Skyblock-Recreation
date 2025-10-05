@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.skyblock.commands;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.skyblock.items.SkyBlockItems;
 import de.noctivag.skyblock.skyblock.skills.SkillsSystem;
 import de.noctivag.skyblock.skyblock.collections.CollectionsSystem;
@@ -23,7 +27,7 @@ import java.util.List;
 
 public class SkyBlockCommands implements CommandExecutor, TabCompleter {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final SkyBlockItems itemsSystem;
     private final SkillsSystem skillsSystem;
     private final CollectionsSystem collectionsSystem;
@@ -34,17 +38,17 @@ public class SkyBlockCommands implements CommandExecutor, TabCompleter {
     private final EnchantingSystem enchantingSystem;
     private final MinionsSystem minionsSystem;
     
-    public SkyBlockCommands(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public SkyBlockCommands(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.itemsSystem = new SkyBlockItems();
-        this.skillsSystem = new SkillsSystem(plugin, plugin.getSkyblockManager());
-        this.collectionsSystem = new CollectionsSystem(plugin);
-        this.auctionHouse = new AuctionHouse(plugin);
-        this.slayerSystem = new SlayerSystem(plugin);
-        this.dungeonsSystem = new DungeonsSystem(plugin);
-        this.petsSystem = new PetsSystem(plugin);
-        this.enchantingSystem = new EnchantingSystem(plugin);
-        this.minionsSystem = new MinionsSystem(plugin);
+        this.skillsSystem = new SkillsSystem(SkyblockPlugin, SkyblockPlugin.getSkyblockManager());
+        this.collectionsSystem = new CollectionsSystem(SkyblockPlugin);
+        this.auctionHouse = new AuctionHouse(SkyblockPlugin);
+        this.slayerSystem = new SlayerSystem(SkyblockPlugin);
+        this.dungeonsSystem = new DungeonsSystem(SkyblockPlugin);
+        this.petsSystem = new PetsSystem(SkyblockPlugin);
+        this.enchantingSystem = new EnchantingSystem(SkyblockPlugin);
+        this.minionsSystem = new MinionsSystem(SkyblockPlugin);
     }
     
     @Override
@@ -99,7 +103,7 @@ public class SkyBlockCommands implements CommandExecutor, TabCompleter {
     
     private void handleItemsCommand(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage("§e/skyblock items <item_name>");
+            player.sendMessage(Component.text("§e/skyblock items <item_name>"));
             return;
         }
         
@@ -110,7 +114,7 @@ public class SkyBlockCommands implements CommandExecutor, TabCompleter {
     
     private void handleSkillsCommand(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage("§e/skyblock skills <skill_name> [level]");
+            player.sendMessage(Component.text("§e/skyblock skills <skill_name> [level]"));
             return;
         }
         
@@ -126,25 +130,25 @@ public class SkyBlockCommands implements CommandExecutor, TabCompleter {
     }
     
     private void handleAuctionCommand(Player player, String[] args) {
-        // plugin.openAuctionHouse(player); // TODO: Implement method in Plugin class
+        // SkyblockPlugin.openAuctionHouse(player); // TODO: Implement method in SkyblockPlugin class
     }
     
     private void handleSlayerCommand(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage("§e/skyblock slayer <type> [tier]");
+            player.sendMessage(Component.text("§e/skyblock slayer <type> [tier]"));
             return;
         }
         
         String slayerType = args[1];
         int tier = args.length > 2 ? Integer.parseInt(args[2]) : 1;
         
-        // slayerSystem.startSlayerQuest(player, (de.noctivag.plugin.skyblock.slayer.SlayerSystem.SlayerType) slayerType, tier); // TODO: Fix type conversion
+        // slayerSystem.startSlayerQuest(player, (de.noctivag.skyblock.skyblock.slayer.SlayerSystem.SlayerType) slayerType, tier); // TODO: Fix type conversion
         player.sendMessage("§aStarted " + slayerType + " tier " + tier + " quest!");
     }
     
     private void handleDungeonsCommand(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage("§e/skyblock dungeons <floor>");
+            player.sendMessage(Component.text("§e/skyblock dungeons <floor>"));
             return;
         }
         
@@ -154,28 +158,28 @@ public class SkyBlockCommands implements CommandExecutor, TabCompleter {
     }
     
     private void handlePetsCommand(Player player, String[] args) {
-        // plugin.openPetsGUI(player); // TODO: Implement method in Plugin class
+        // SkyblockPlugin.openPetsGUI(player); // TODO: Implement method in SkyblockPlugin class
     }
     
     private void handleEnchantingCommand(Player player, String[] args) {
-        // plugin.openEnchantingGUI(player); // TODO: Implement method in Plugin class
+        // SkyblockPlugin.openEnchantingGUI(player); // TODO: Implement method in SkyblockPlugin class
     }
     
     private void handleMinionsCommand(Player player, String[] args) {
-        // plugin.openMinionsGUI(player); // TODO: Implement method in Plugin class
+        // SkyblockPlugin.openMinionsGUI(player); // TODO: Implement method in SkyblockPlugin class
     }
     
     private void showHelp(Player player) {
-        player.sendMessage("§6=== SkyBlock Commands ===");
-        player.sendMessage("§e/skyblock items <item_name> §7- Get a SkyBlock item");
-        player.sendMessage("§e/skyblock skills <skill> [level] §7- Set skill level");
-        player.sendMessage("§e/skyblock collections §7- Open collections GUI");
-        player.sendMessage("§e/skyblock auction §7- Open auction house");
-        player.sendMessage("§e/skyblock slayer <type> [tier] §7- Start slayer quest");
-        player.sendMessage("§e/skyblock dungeons <floor> §7- Start dungeon run");
-        player.sendMessage("§e/skyblock pets §7- Open pets GUI");
-        player.sendMessage("§e/skyblock enchanting §7- Open enchanting GUI");
-        player.sendMessage("§e/skyblock minions §7- Open minions GUI");
+        player.sendMessage(Component.text("§6=== SkyBlock Commands ==="));
+        player.sendMessage(Component.text("§e/skyblock items <item_name> §7- Get a SkyBlock item"));
+        player.sendMessage(Component.text("§e/skyblock skills <skill> [level] §7- Set skill level"));
+        player.sendMessage(Component.text("§e/skyblock collections §7- Open collections GUI"));
+        player.sendMessage(Component.text("§e/skyblock auction §7- Open auction house"));
+        player.sendMessage(Component.text("§e/skyblock slayer <type> [tier] §7- Start slayer quest"));
+        player.sendMessage(Component.text("§e/skyblock dungeons <floor> §7- Start dungeon run"));
+        player.sendMessage(Component.text("§e/skyblock pets §7- Open pets GUI"));
+        player.sendMessage(Component.text("§e/skyblock enchanting §7- Open enchanting GUI"));
+        player.sendMessage(Component.text("§e/skyblock minions §7- Open minions GUI"));
     }
     
     @Override

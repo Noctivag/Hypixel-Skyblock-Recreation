@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.features.bosses.commands;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.features.bosses.CompleteBossSystem;
 import de.noctivag.skyblock.features.bosses.mechanics.BossMechanicsSystem;
 import org.bukkit.Location;
@@ -27,12 +30,12 @@ import java.util.*;
  */
 public class BossCommandSystem implements CommandExecutor, TabCompleter {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CompleteBossSystem bossSystem;
     private final BossMechanicsSystem mechanicsSystem;
     
-    public BossCommandSystem(SkyblockPlugin plugin, CompleteBossSystem bossSystem, BossMechanicsSystem mechanicsSystem) {
-        this.plugin = plugin;
+    public BossCommandSystem(SkyblockPlugin SkyblockPlugin, CompleteBossSystem bossSystem, BossMechanicsSystem mechanicsSystem) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.bossSystem = bossSystem;
         this.mechanicsSystem = mechanicsSystem;
     }

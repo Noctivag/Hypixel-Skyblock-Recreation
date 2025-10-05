@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.worlds;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import de.noctivag.skyblock.islands.IslandAnimationSystem;
 import org.bukkit.Bukkit;
@@ -22,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Ensures compatibility with the Multi-Server System
  */
 public class MultiServerAnimationManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final WorldAnimationSystem worldAnimationSystem;
     private final IslandAnimationSystem islandAnimationSystem;
@@ -31,11 +35,11 @@ public class MultiServerAnimationManager {
     private final Map<UUID, PlayerAnimationData> playerAnimations = new ConcurrentHashMap<>();
     private final Map<String, BukkitTask> globalAnimationTasks = new ConcurrentHashMap<>();
     
-    public MultiServerAnimationManager(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public MultiServerAnimationManager(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
-        this.worldAnimationSystem = new WorldAnimationSystem(plugin, databaseManager);
-        this.islandAnimationSystem = new IslandAnimationSystem(plugin, databaseManager);
+        this.worldAnimationSystem = new WorldAnimationSystem(SkyblockPlugin, databaseManager);
+        this.islandAnimationSystem = new IslandAnimationSystem(SkyblockPlugin, databaseManager);
         
         initializeMultiServerAnimations();
         startGlobalAnimationSync();
@@ -43,13 +47,13 @@ public class MultiServerAnimationManager {
     
     private void initializeMultiServerAnimations() {
         // Initialize server-specific animation data
-        String serverId = plugin.getConfig().getString("server.id", "default");
+        String serverId = SkyblockPlugin.getConfig().getString("server.id", "default");
         
         ServerAnimationData serverData = new ServerAnimationData(
             serverId,
-            plugin.getServer().getName(),
+            SkyblockPlugin.getServer().getName(),
             Bukkit.getOnlinePlayers().size(),
-            System.currentTimeMillis()
+            java.lang.System.currentTimeMillis()
         );
         
         serverAnimations.put(serverId, serverData);
@@ -66,7 +70,7 @@ public class MultiServerAnimationManager {
                 syncAnimationsAcrossServers();
                 updateServerAnimationData();
             }
-        }.runTaskTimer(plugin, 0L, 100L); // Every 5 seconds
+        }.runTaskTimer(SkyblockPlugin, 0L, 100L); // Every 5 seconds
         
         globalAnimationTasks.put("sync", syncTask);
         
@@ -76,7 +80,7 @@ public class MultiServerAnimationManager {
             public void run() {
                 cleanupOldAnimations();
             }
-        }.runTaskTimer(plugin, 0L, 1200L); // Every minute
+        }.runTaskTimer(SkyblockPlugin, 0L, 1200L); // Every minute
         
         globalAnimationTasks.put("cleanup", cleanupTask);
     }
@@ -87,13 +91,13 @@ public class MultiServerAnimationManager {
             List<ServerAnimationData> otherServerData = databaseManager.getAnimationDataFromOtherServers().get();
             
             for (ServerAnimationData data : otherServerData) {
-                if (!data.getServerId().equals(plugin.getConfig().getString("server.id", "default"))) {
+                if (!data.getServerId().equals(SkyblockPlugin.getConfig().getString("server.id", "default"))) {
                     // Apply animations from other servers if needed
                     applyRemoteAnimations(data);
                 }
             }
         } catch (Exception e) {
-            plugin.getLogger().warning("Failed to sync animations across servers: " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Failed to sync animations across servers: " + e.getMessage());
         }
     }
     
@@ -156,13 +160,13 @@ public class MultiServerAnimationManager {
     }
     
     private void updateServerAnimationData() {
-        String serverId = plugin.getConfig().getString("server.id", "default");
+        String serverId = SkyblockPlugin.getConfig().getString("server.id", "default");
         ServerAnimationData currentData = serverAnimations.get(serverId);
         
         if (currentData != null) {
             // Update current server data
             currentData.setPlayerCount(Bukkit.getOnlinePlayers().size());
-            currentData.setLastUpdate(System.currentTimeMillis());
+            currentData.setLastUpdate(java.lang.System.currentTimeMillis());
             currentData.setActiveWorldAnimations(new ArrayList<>(worldAnimationSystem.getActiveAnimations().keySet()));
             currentData.setActiveIslandAnimations(new ArrayList<>(islandAnimationSystem.getActiveIslandAnimations().keySet()));
             
@@ -175,7 +179,7 @@ public class MultiServerAnimationManager {
         try {
             databaseManager.saveServerAnimationData(data);
         } catch (Exception e) {
-            plugin.getLogger().warning("Failed to save server animation data: " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Failed to save server animation data: " + e.getMessage());
         }
     }
     
@@ -187,12 +191,12 @@ public class MultiServerAnimationManager {
                 serverAnimations.put(data.getServerId(), data);
             }
         } catch (Exception e) {
-            plugin.getLogger().warning("Failed to load animation data from database: " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Failed to load animation data from database: " + e.getMessage());
         }
     }
     
     private void cleanupOldAnimations() {
-        long currentTime = System.currentTimeMillis();
+        long currentTime = java.lang.System.currentTimeMillis();
         long cleanupThreshold = 300000; // 5 minutes
         
         // Cleanup old server data
@@ -208,7 +212,7 @@ public class MultiServerAnimationManager {
     
     public void playGlobalAnimation(String animationType, Location location, Player player) {
         // Play animation on all servers
-        String serverId = plugin.getConfig().getString("server.id", "default");
+        String serverId = SkyblockPlugin.getConfig().getString("server.id", "default");
         
         // Create global animation data
         GlobalAnimationData globalData = new GlobalAnimationData(
@@ -217,14 +221,14 @@ public class MultiServerAnimationManager {
             location,
             player != null ? player.getUniqueId() : null,
             serverId,
-            System.currentTimeMillis()
+            java.lang.System.currentTimeMillis()
         );
         
         // Save to database for other servers to pick up
         try {
             databaseManager.saveGlobalAnimationData(globalData);
         } catch (Exception e) {
-            plugin.getLogger().warning("Failed to save global animation data: " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Failed to save global animation data: " + e.getMessage());
         }
         
         // Play animation locally
@@ -264,7 +268,7 @@ public class MultiServerAnimationManager {
     
     public void handleGlobalAnimationData(GlobalAnimationData data) {
         // Handle animation data from other servers
-        if (!data.getServerId().equals(plugin.getConfig().getString("server.id", "default"))) {
+        if (!data.getServerId().equals(SkyblockPlugin.getConfig().getString("server.id", "default"))) {
             // Play animation from remote server
             Player player = data.getPlayerId() != null ? Bukkit.getPlayer(data.getPlayerId()) : null;
             playLocalAnimation(data.getAnimationType(), data.getLocation(), player);
@@ -332,7 +336,7 @@ public class MultiServerAnimationManager {
             this.playerId = playerId;
             this.currentAnimation = currentAnimation;
             this.startTime = startTime;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         // Getters and setters

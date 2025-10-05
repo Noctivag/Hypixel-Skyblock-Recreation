@@ -1,18 +1,21 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 
 public class JoinMessagePresetsGUI extends CustomGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public JoinMessagePresetsGUI(SkyblockPlugin plugin) {
+    public JoinMessagePresetsGUI(SkyblockPlugin SkyblockPlugin) {
         super(54, Component.text("§d§lPreset Messages"));
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     public void open(Player player) {

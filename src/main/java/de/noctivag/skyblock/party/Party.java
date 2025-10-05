@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.party;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;

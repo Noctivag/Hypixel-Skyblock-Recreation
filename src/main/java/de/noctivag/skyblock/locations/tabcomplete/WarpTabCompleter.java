@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.locations.tabcomplete;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -11,10 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WarpTabCompleter implements TabCompleter {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public WarpTabCompleter(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public WarpTabCompleter(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     @Override
@@ -29,7 +32,7 @@ public class WarpTabCompleter implements TabCompleter {
 
         if (args.length == 1) {
             String partial = args[0].toLowerCase();
-            for (String warpName : plugin.getLocationManager().getWarpNames()) {
+            for (String warpName : SkyblockPlugin.getLocationManager().getWarpNames()) {
                 if (warpName.toLowerCase().startsWith(partial)) {
                     completions.add(warpName);
                 }

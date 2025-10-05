@@ -1,10 +1,14 @@
 package de.noctivag.skyblock.accessories;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import de.noctivag.skyblock.talismans.AdvancedTalismanSystem;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AccessoryIntegrationSystem {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final AccessoryBagSystem accessoryBagSystem;
     private final EnrichmentSystem enrichmentSystem;
@@ -28,10 +32,10 @@ public class AccessoryIntegrationSystem {
     
     private final Map<UUID, PlayerAccessoryStats> playerStats = new ConcurrentHashMap<>();
     
-    public AccessoryIntegrationSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager,
+    public AccessoryIntegrationSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager,
                                     AccessoryBagSystem accessoryBagSystem, EnrichmentSystem enrichmentSystem,
                                     AdvancedTalismanSystem talismanSystem) {
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         this.accessoryBagSystem = accessoryBagSystem;
         this.enrichmentSystem = enrichmentSystem;
@@ -176,7 +180,7 @@ public class AccessoryIntegrationSystem {
     private AccessoryBagSystem.AccessoryConfig getAccessoryConfig(String accessoryId) {
         // This would get the config from AccessoryBagSystem
         // Return accessory stats from player's equipped accessories
-        if (((de.noctivag.plugin.Plugin) plugin).getAccessorySystem() != null) {
+        if (((de.noctivag.skyblock.SkyblockPlugin) SkyblockPlugin).getAccessorySystem() != null) {
             // TODO: Get player from context or parameter
             return null; // Placeholder - needs player context
         }

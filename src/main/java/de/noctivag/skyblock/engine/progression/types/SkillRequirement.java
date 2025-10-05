@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.engine.progression.types;
+import java.util.UUID;
 
 import java.util.UUID;
 

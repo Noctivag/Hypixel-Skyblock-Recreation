@@ -135,7 +135,7 @@ public class JacobsEvent {
     public long getRemainingTimeSeconds() {
         if (!isActive()) return 0;
         
-        return endTime.toEpochSecond(java.time.ZoneOffset.UTC) - System.currentTimeMillis() / 1000;
+        return endTime.toEpochSecond(java.time.ZoneOffset.UTC) - java.lang.System.currentTimeMillis() / 1000;
     }
     
     /**
@@ -145,7 +145,7 @@ public class JacobsEvent {
         if (!isActive()) return 100.0;
         
         long totalDuration = 2 * 3600; // 2 hours in seconds
-        long elapsed = (System.currentTimeMillis() / 1000) - startTime.toEpochSecond(java.time.ZoneOffset.UTC);
+        long elapsed = (java.lang.System.currentTimeMillis() / 1000) - startTime.toEpochSecond(java.time.ZoneOffset.UTC);
         
         return Math.min(100.0, (double) elapsed / totalDuration * 100.0);
     }

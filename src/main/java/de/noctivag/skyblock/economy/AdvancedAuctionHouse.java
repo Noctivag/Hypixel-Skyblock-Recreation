@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.economy;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -19,17 +24,17 @@ import java.util.concurrent.ConcurrentHashMap;
  * Advanced Auction House - Hypixel Skyblock Style
  */
 public class AdvancedAuctionHouse implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, Auction> auctions = new ConcurrentHashMap<>();
     private final Map<UUID, BukkitTask> auctionTasks = new ConcurrentHashMap<>();
     
-    public AdvancedAuctionHouse(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedAuctionHouse(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         startAuctionUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void startAuctionUpdateTask() {
@@ -41,7 +46,7 @@ public class AdvancedAuctionHouse implements Listener {
                     auction.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L);
     }
     
     @EventHandler
@@ -54,7 +59,7 @@ public class AdvancedAuctionHouse implements Listener {
     }
     
     private void openAuctionGUI(Player player) {
-        player.sendMessage("§aAuction House GUI geöffnet!");
+        player.sendMessage(Component.text("§aAuction House GUI geöffnet!"));
     }
     
     public void createAuction(Player player, ItemStack item, double startingBid, double binPrice) {
@@ -62,35 +67,35 @@ public class AdvancedAuctionHouse implements Listener {
         Auction auction = new Auction(auctionId, player.getUniqueId(), item, startingBid, binPrice);
         auctions.put(auctionId, auction);
         
-        player.sendMessage("§aAuktion erstellt!");
+        player.sendMessage(Component.text("§aAuktion erstellt!"));
     }
     
     public void bidOnAuction(Player player, UUID auctionId, double bidAmount) {
         Auction auction = auctions.get(auctionId);
         if (auction == null) {
-            player.sendMessage("§cAuktion nicht gefunden!");
+            player.sendMessage(Component.text("§cAuktion nicht gefunden!"));
             return;
         }
         
         if (auction.bid(player.getUniqueId(), bidAmount)) {
-            player.sendMessage("§aGebot abgegeben!");
+            player.sendMessage(Component.text("§aGebot abgegeben!"));
         } else {
-            player.sendMessage("§cGebot zu niedrig!");
+            player.sendMessage(Component.text("§cGebot zu niedrig!"));
         }
     }
     
     public void buyNow(Player player, UUID auctionId) {
         Auction auction = auctions.get(auctionId);
         if (auction == null) {
-            player.sendMessage("§cAuktion nicht gefunden!");
+            player.sendMessage(Component.text("§cAuktion nicht gefunden!"));
             return;
         }
         
         if (auction.buyNow(player.getUniqueId())) {
-            player.sendMessage("§aItem gekauft!");
+            player.sendMessage(Component.text("§aItem gekauft!"));
             auctions.remove(auctionId);
         } else {
-            player.sendMessage("§cNicht genug Geld!");
+            player.sendMessage(Component.text("§cNicht genug Geld!"));
         }
     }
     
@@ -118,12 +123,12 @@ public class AdvancedAuctionHouse implements Listener {
             this.startingBid = startingBid;
             this.binPrice = binPrice;
             this.currentBid = startingBid;
-            this.endTime = System.currentTimeMillis() + (24 * 60 * 60 * 1000); // 24 hours
-            this.lastUpdate = System.currentTimeMillis();
+            this.endTime = java.lang.System.currentTimeMillis() + (24 * 60 * 60 * 1000); // 24 hours
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long timeDiff = currentTime - lastUpdate;
             
             if (timeDiff >= 60000) {

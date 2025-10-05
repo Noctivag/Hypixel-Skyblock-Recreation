@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.armor;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,6 +12,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 // import java.util.List;
 
 /**
@@ -22,19 +27,19 @@ import java.util.Arrays;
  * - Recipe requirements
  */
 public class CompleteArmorGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final ArmorAbilitySystem abilitySystem;
     
-    public CompleteArmorGUI(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.abilitySystem = new ArmorAbilitySystem(plugin, null);
+    public CompleteArmorGUI(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.abilitySystem = new ArmorAbilitySystem(SkyblockPlugin, null);
     }
     
     /**
      * Open main armor GUI
      */
     public void openArmorGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lHypixel SkyBlock Armor");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lHypixel SkyBlock Armor"));
         
         // Category buttons
         setItem(gui, 10, Material.DRAGON_EGG, "§6§lDragon Armor", 
@@ -127,7 +132,7 @@ public class CompleteArmorGUI {
      * Open dragon armor GUI
      */
     public void openDragonArmorGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lDragon Armor Sets");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lDragon Armor Sets"));
         
         // Dragon armor sets
         setItem(gui, 10, Material.DIAMOND_CHESTPLATE, "§a§lProtector Dragon Armor", 
@@ -232,7 +237,7 @@ public class CompleteArmorGUI {
      * Open mining armor GUI
      */
     public void openMiningArmorGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§e§lMining Armor Sets");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§e§lMining Armor Sets"));
         
         // Mining armor sets
         setItem(gui, 10, Material.IRON_PICKAXE, "§6§lMineral Armor", 

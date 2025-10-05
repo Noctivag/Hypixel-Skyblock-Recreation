@@ -20,7 +20,7 @@ public class SkillProgress {
         this.skillType = skillType;
         this.levelData = new SkillLevelData(skillType);
         this.totalExperience = totalExperience;
-        this.lastUpdateTime = System.currentTimeMillis();
+        this.lastUpdateTime = java.lang.System.currentTimeMillis();
         
         // Calculate initial level and progress
         updateLevelAndProgress();
@@ -33,7 +33,7 @@ public class SkillProgress {
         if (experience <= 0) return;
         
         this.totalExperience += experience;
-        this.lastUpdateTime = System.currentTimeMillis();
+        this.lastUpdateTime = java.lang.System.currentTimeMillis();
         
         // Update level and progress
         updateLevelAndProgress();

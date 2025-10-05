@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.bosses;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -20,6 +25,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Kuudra System - Complete Hypixel SkyBlock Kuudra Boss Implementation
@@ -34,7 +40,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class KuudraSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerKuudraData> playerKuudraData = new ConcurrentHashMap<>();
     private final Map<String, KuudraParty> activeParties = new ConcurrentHashMap<>();
@@ -42,14 +48,14 @@ public class KuudraSystem implements Listener {
     private final Map<KuudraTier, KuudraTierConfig> tierConfigs = new HashMap<>();
     private final Map<KuudraPhase, KuudraPhaseConfig> phaseConfigs = new HashMap<>();
     
-    public KuudraSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public KuudraSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeTierConfigs();
         initializePhaseConfigs();
         startKuudraUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeTierConfigs() {
@@ -125,7 +131,7 @@ public class KuudraSystem implements Listener {
     }
     
     private void startKuudraUpdateTask() {
-        Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+        Bukkit.getScheduler().runTaskTimer(SkyblockPlugin, () -> {
             for (KuudraInstance instance : activeKuudraFights.values()) {
                 updateKuudraInstance(instance);
             }
@@ -195,7 +201,7 @@ public class KuudraSystem implements Listener {
             UUID.randomUUID().toString(),
             party,
             tierConfig,
-            System.currentTimeMillis()
+            java.lang.System.currentTimeMillis()
         );
         
         activeKuudraFights.put(instance.getInstanceId(), instance);
@@ -241,7 +247,7 @@ public class KuudraSystem implements Listener {
         );
         
         player.teleport(fightLocation);
-        player.sendMessage("§aTeleported to Kuudra fight area!");
+        player.sendMessage(Component.text("§aTeleported to Kuudra fight area!"));
     }
     
     private void completeKuudraFight(KuudraInstance instance) {
@@ -260,7 +266,7 @@ public class KuudraSystem implements Listener {
         
         // Notify all players
         for (Player player : instance.getParty().getMembers()) {
-            player.sendMessage("§aKuudra fight completed!");
+            player.sendMessage(Component.text("§aKuudra fight completed!"));
             player.sendMessage("§7Time: " + instance.getTimeElapsed() + " seconds");
         }
     }
@@ -332,13 +338,13 @@ public class KuudraSystem implements Listener {
     private ItemStack createKuudraItem(String name, Material material, String displayName) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(displayName);
-        meta.setLore(Arrays.asList(
+        meta.displayName(Component.text(displayName));
+        meta.lore(Arrays.asList(
             "§7A powerful item from Kuudra",
             "§7Used for crafting Kuudra equipment",
             "",
             "§7Rarity: §6Rare"
-        ));
+        ).stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
         item.setItemMeta(meta);
         return item;
     }

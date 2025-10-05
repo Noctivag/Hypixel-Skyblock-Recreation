@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.enchanting;
+import java.util.UUID;
 
 import java.util.UUID;
 

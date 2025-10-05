@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.dungeons.types;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class DungeonInstance {
         this.floor = floor;
         this.players = players;
         this.playerClass = playerClass;
-        this.startTime = System.currentTimeMillis();
+        this.startTime = java.lang.System.currentTimeMillis();
         this.endTime = 0;
         this.score = 0;
         this.isCompleted = false;
@@ -90,7 +91,7 @@ public class DungeonInstance {
 
     public long getDuration() {
         if (endTime == 0) {
-            return System.currentTimeMillis() - startTime;
+            return java.lang.System.currentTimeMillis() - startTime;
         }
         return endTime - startTime;
     }

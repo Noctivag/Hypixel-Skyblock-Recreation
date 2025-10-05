@@ -1,4 +1,8 @@
 package de.noctivag.skyblock.skyblock.accessories;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
@@ -12,12 +16,13 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import net.kyori.adventure.text.Component;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Comprehensive Accessory System inspired by Hypixel Skyblock
@@ -32,17 +37,17 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AccessorySystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerAccessoryData> playerAccessoryData = new ConcurrentHashMap<>();
     private final Map<UUID, AccessoryBag> playerAccessoryBags = new ConcurrentHashMap<>();
     private final Map<Material, Accessory> availableAccessories = new HashMap<>();
     
-    public AccessorySystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AccessorySystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
         initializeAccessories();
     }
     
@@ -179,7 +184,7 @@ public class AccessorySystem implements Listener {
         AccessoryBag bag = playerAccessoryBags.get(playerId);
         
         if (bag == null) {
-            player.sendMessage("§cAccessory bag not found!");
+            player.sendMessage(Component.text("§cAccessory bag not found!"));
             return;
         }
         
@@ -230,18 +235,18 @@ public class AccessorySystem implements Listener {
         Accessory accessory = availableAccessories.get(accessoryMaterial);
         
         if (bag == null || accessory == null) {
-            player.sendMessage("§cAccessory not found!");
+            player.sendMessage(Component.text("§cAccessory not found!"));
             return;
         }
         
         if (bag.isFull()) {
-            player.sendMessage("§cYour accessory bag is full!");
+            player.sendMessage(Component.text("§cYour accessory bag is full!"));
             return;
         }
         
         // Check if player has the accessory item
         if (!player.getInventory().containsAtLeast(new ItemStack(accessoryMaterial), 1)) {
-            player.sendMessage("§cYou don't have this accessory!");
+            player.sendMessage(Component.text("§cYou don't have this accessory!"));
             return;
         }
         
@@ -262,12 +267,12 @@ public class AccessorySystem implements Listener {
         AccessoryBag bag = playerAccessoryBags.get(playerId);
         
         if (bag == null) {
-            player.sendMessage("§cAccessory bag not found!");
+            player.sendMessage(Component.text("§cAccessory bag not found!"));
             return;
         }
         
         if (slot >= bag.getAccessories().size()) {
-            player.sendMessage("§cNo accessory in this slot!");
+            player.sendMessage(Component.text("§cNo accessory in this slot!"));
             return;
         }
         
@@ -296,7 +301,7 @@ public class AccessorySystem implements Listener {
         AccessoryBag bag = playerAccessoryBags.get(playerId);
         
         if (bag == null) {
-            player.sendMessage("§cAccessory bag not found!");
+            player.sendMessage(Component.text("§cAccessory bag not found!"));
             return;
         }
         
@@ -318,24 +323,24 @@ public class AccessorySystem implements Listener {
         AccessoryBag bag = playerAccessoryBags.get(playerId);
         
         if (bag == null) {
-            player.sendMessage("§cAccessory bag not found!");
+            player.sendMessage(Component.text("§cAccessory bag not found!"));
             return;
         }
         
         if (slot >= bag.getAccessories().size()) {
-            player.sendMessage("§cNo accessory in this slot!");
+            player.sendMessage(Component.text("§cNo accessory in this slot!"));
             return;
         }
         
         Accessory accessory = bag.getAccessories().get(slot);
         if (accessory == null) {
-            player.sendMessage("§cNo accessory in this slot!");
+            player.sendMessage(Component.text("§cNo accessory in this slot!"));
             return;
         }
         
         // Check if accessory can be reforged
         if (accessory.getRarity() == AccessoryRarity.COMMON) {
-            player.sendMessage("§cCommon accessories cannot be reforged!");
+            player.sendMessage(Component.text("§cCommon accessories cannot be reforged!"));
             return;
         }
         
@@ -357,24 +362,24 @@ public class AccessorySystem implements Listener {
         AccessoryBag bag = playerAccessoryBags.get(playerId);
         
         if (bag == null) {
-            player.sendMessage("§cAccessory bag not found!");
+            player.sendMessage(Component.text("§cAccessory bag not found!"));
             return;
         }
         
         if (slot >= bag.getAccessories().size()) {
-            player.sendMessage("§cNo accessory in this slot!");
+            player.sendMessage(Component.text("§cNo accessory in this slot!"));
             return;
         }
         
         Accessory accessory = bag.getAccessories().get(slot);
         if (accessory == null) {
-            player.sendMessage("§cNo accessory in this slot!");
+            player.sendMessage(Component.text("§cNo accessory in this slot!"));
             return;
         }
         
         // Check if accessory can be enriched
         if (accessory.getEnrichment() != null) {
-            player.sendMessage("§cThis accessory is already enriched!");
+            player.sendMessage(Component.text("§cThis accessory is already enriched!"));
             return;
         }
         
@@ -506,12 +511,12 @@ public class AccessorySystem implements Listener {
     
     private void openReforgeMenu(Player player) {
         // Open reforge menu
-        player.sendMessage("§eOpening reforge menu...");
+        player.sendMessage(Component.text("§eOpening reforge menu..."));
     }
     
     private void openEnrichMenu(Player player) {
         // Open enrich menu
-        player.sendMessage("§eOpening enrich menu...");
+        player.sendMessage(Component.text("§eOpening enrich menu..."));
     }
     
     private void addAccessoryItem(Inventory gui, int slot, Accessory accessory) {
@@ -535,7 +540,7 @@ public class AccessorySystem implements Listener {
             lore.add("");
             lore.add("§eClick to add to bag!");
             
-            meta.lore(lore.stream().map(Component::text).toList());
+            meta.lore(lore.stream().toList());
             item.setItemMeta(meta);
         }
         gui.setItem(slot, item);
@@ -546,7 +551,7 @@ public class AccessorySystem implements Listener {
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
             meta.displayName(Component.text(name));
-            meta.lore(lore.stream().map(Component::text).toList());
+            meta.lore(lore.stream().toList());
             item.setItemMeta(meta);
         }
         gui.setItem(slot, item);

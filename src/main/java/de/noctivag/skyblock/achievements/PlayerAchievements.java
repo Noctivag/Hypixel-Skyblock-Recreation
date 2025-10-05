@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.achievements;
+import java.util.UUID;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

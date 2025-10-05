@@ -1,4 +1,8 @@
 package de.noctivag.skyblock.features.menu.integration;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.features.menu.SkyblockMenuSystem;
@@ -21,7 +25,7 @@ import de.noctivag.skyblock.features.tools.CompleteToolsSystem;
 import de.noctivag.skyblock.features.enchantments.CompleteEnchantmentsSystem;
 
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,7 +38,7 @@ import java.util.UUID;
  */
 public class HypixelSkyblockIntegration {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final SkyblockMenuSystem menuSystem;
     
     // All integrated systems
@@ -57,13 +61,13 @@ public class HypixelSkyblockIntegration {
     // Player session management
     private final Map<UUID, PlayerSkyblockSession> playerSessions = new ConcurrentHashMap<>();
     
-    public HypixelSkyblockIntegration(SkyblockPlugin plugin, SkyblockMenuSystem menuSystem) {
-        this.plugin = plugin;
+    public HypixelSkyblockIntegration(SkyblockPlugin SkyblockPlugin, SkyblockMenuSystem menuSystem) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.menuSystem = menuSystem;
         
         // Initialize all systems
         this.dungeonSystem = new DungeonSystem();
-        this.minionSystem = new AdvancedMinionSystem((de.noctivag.plugin.Plugin) plugin);
+        this.minionSystem = new AdvancedMinionSystem((de.noctivag.skyblock.SkyblockPlugin) SkyblockPlugin);
         this.collectionsSystem = new AdvancedCollectionsSystem();
         this.skillsSystem = new AdvancedSkillsSystem();
         this.dragonArmorSystem = new DragonArmorSystem();
@@ -85,7 +89,7 @@ public class HypixelSkyblockIntegration {
     public CompletableFuture<Void> initializeAllSystems() {
         return CompletableFuture.runAsync(() -> {
             try {
-                plugin.getLogger().info("Initializing complete Hypixel SkyBlock integration...");
+                SkyblockPlugin.getLogger().info("Initializing complete Hypixel SkyBlock integration...");
                 
                 // Initialize all systems in parallel for better performance
                 CompletableFuture.allOf(
@@ -106,10 +110,10 @@ public class HypixelSkyblockIntegration {
                     enchantmentsSystem.initialize()
                 ).join();
                 
-                plugin.getLogger().info("All Hypixel SkyBlock systems initialized successfully!");
+                SkyblockPlugin.getLogger().info("All Hypixel SkyBlock systems initialized successfully!");
                 
             } catch (Exception e) {
-                plugin.getLogger().severe("Failed to initialize Hypixel SkyBlock systems: " + e.getMessage());
+                SkyblockPlugin.getLogger().severe("Failed to initialize Hypixel SkyBlock systems: " + e.getMessage());
                 e.printStackTrace();
             }
         });
@@ -292,10 +296,10 @@ public class HypixelSkyblockIntegration {
                     enchantmentsSystem.shutdown()
                 ).join();
                 
-                plugin.getLogger().info("All Hypixel SkyBlock systems shut down successfully!");
+                SkyblockPlugin.getLogger().info("All Hypixel SkyBlock systems shut down successfully!");
                 
             } catch (Exception e) {
-                plugin.getLogger().severe("Error shutting down Hypixel SkyBlock systems: " + e.getMessage());
+                SkyblockPlugin.getLogger().severe("Error shutting down Hypixel SkyBlock systems: " + e.getMessage());
                 e.printStackTrace();
             }
         });

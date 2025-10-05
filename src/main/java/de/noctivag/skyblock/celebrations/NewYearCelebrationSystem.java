@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.celebrations;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -16,24 +20,26 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 
 /**
  * New Year Celebration System - Hypixel Skyblock Style
  */
 public class NewYearCelebrationSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerCelebrationData> playerCelebrationData = new ConcurrentHashMap<>();
     private final Map<CelebrationType, CelebrationConfig> celebrationConfigs = new HashMap<>();
     private final Map<UUID, BukkitTask> celebrationTasks = new ConcurrentHashMap<>();
     
-    public NewYearCelebrationSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public NewYearCelebrationSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeCelebrationConfigs();
         startCelebrationUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeCelebrationConfigs() {
@@ -95,7 +101,7 @@ public class NewYearCelebrationSystem implements Listener {
                     celebrationData.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L * 60L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L * 60L);
     }
     
     @EventHandler
@@ -116,7 +122,7 @@ public class NewYearCelebrationSystem implements Listener {
     }
     
     public void openCelebrationGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§e§lNew Year Celebration");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§e§lNew Year Celebration"));
         
         addGUIItem(gui, 10, Material.FIREWORK_ROCKET, "§e§lFireworks", "§7Launch fireworks to celebrate!");
         addGUIItem(gui, 11, Material.LEATHER_HELMET, "§a§lParty Hat", "§7Wear a festive party hat!");
@@ -126,7 +132,7 @@ public class NewYearCelebrationSystem implements Listener {
         addGUIItem(gui, 15, Material.CHEST, "§5§lNew Year Gift", "§7Open a special new year gift!");
         
         player.openInventory(gui);
-        player.sendMessage("§aNew Year Celebration GUI geöffnet!");
+        player.sendMessage(Component.text("§aNew Year Celebration GUI geöffnet!"));
     }
     
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String description) {
@@ -150,48 +156,48 @@ public class NewYearCelebrationSystem implements Listener {
         
         switch (celebrationType) {
             case FIREWORKS:
-                player.sendMessage("§e§l🎆 FIREWORKS LAUNCHED! 🎆");
-                player.sendMessage("§7Happy New Year!");
+                player.sendMessage(Component.text("§e§l🎆 FIREWORKS LAUNCHED! 🎆"));
+                player.sendMessage(Component.text("§7Happy New Year!"));
                 break;
             case PARTY_HAT:
-                player.sendMessage("§a§l🎉 PARTY HAT EQUIPPED! 🎉");
-                player.sendMessage("§7You're ready to party!");
+                player.sendMessage(Component.text("§a§l🎉 PARTY HAT EQUIPPED! 🎉"));
+                player.sendMessage(Component.text("§7You're ready to party!"));
                 break;
             case CONFETTI:
-                player.sendMessage("§d§l🎊 CONFETTI THROWN! 🎊");
-                player.sendMessage("§7Let's celebrate!");
+                player.sendMessage(Component.text("§d§l🎊 CONFETTI THROWN! 🎊"));
+                player.sendMessage(Component.text("§7Let's celebrate!"));
                 break;
             case NEW_YEAR_CAKE:
-                player.sendMessage("§6§l🍰 NEW YEAR CAKE ENJOYED! 🍰");
-                player.sendMessage("§7Delicious celebration treat!");
+                player.sendMessage(Component.text("§6§l🍰 NEW YEAR CAKE ENJOYED! 🍰"));
+                player.sendMessage(Component.text("§7Delicious celebration treat!"));
                 break;
             case CELEBRATION_BANNER:
-                player.sendMessage("§c§l🏳️ CELEBRATION BANNER DISPLAYED! 🏳️");
-                player.sendMessage("§7Festive decoration active!");
+                player.sendMessage(Component.text("§c§l🏳️ CELEBRATION BANNER DISPLAYED! 🏳️"));
+                player.sendMessage(Component.text("§7Festive decoration active!"));
                 break;
             case NEW_YEAR_GIFT:
-                player.sendMessage("§5§l🎁 NEW YEAR GIFT OPENED! 🎁");
-                player.sendMessage("§7Happy New Year surprise!");
+                player.sendMessage(Component.text("§5§l🎁 NEW YEAR GIFT OPENED! 🎁"));
+                player.sendMessage(Component.text("§7Happy New Year surprise!"));
                 break;
             case BALLOONS:
-                player.sendMessage("§e§l🎈 BALLOONS RELEASED! 🎈");
-                player.sendMessage("§7Floating celebration!");
+                player.sendMessage(Component.text("§e§l🎈 BALLOONS RELEASED! 🎈"));
+                player.sendMessage(Component.text("§7Floating celebration!"));
                 break;
             case STREAMERS:
-                player.sendMessage("§a§l🎀 STREAMERS UNFURLED! 🎀");
-                player.sendMessage("§7Colorful celebration!");
+                player.sendMessage(Component.text("§a§l🎀 STREAMERS UNFURLED! 🎀"));
+                player.sendMessage(Component.text("§7Colorful celebration!"));
                 break;
             case PARTY_POPPERS:
-                player.sendMessage("§d§l🎉 PARTY POPPERS FIRED! 🎉");
-                player.sendMessage("§7Pop goes the celebration!");
+                player.sendMessage(Component.text("§d§l🎉 PARTY POPPERS FIRED! 🎉"));
+                player.sendMessage(Component.text("§7Pop goes the celebration!"));
                 break;
             case CELEBRATION_MUSIC:
-                player.sendMessage("§b§l🎵 CELEBRATION MUSIC PLAYING! 🎵");
-                player.sendMessage("§7Dance to the New Year beat!");
+                player.sendMessage(Component.text("§b§l🎵 CELEBRATION MUSIC PLAYING! 🎵"));
+                player.sendMessage(Component.text("§7Dance to the New Year beat!"));
                 break;
             case NEW_YEAR_DECORATIONS:
-                player.sendMessage("§6§l🏮 NEW YEAR DECORATIONS PLACED! 🏮");
-                player.sendMessage("§7Festive atmosphere created!");
+                player.sendMessage(Component.text("§6§l🏮 NEW YEAR DECORATIONS PLACED! 🏮"));
+                player.sendMessage(Component.text("§7Festive atmosphere created!"));
                 break;
         }
     }
@@ -287,11 +293,11 @@ public class NewYearCelebrationSystem implements Listener {
         
         public PlayerCelebrationData(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void addCelebrationUsage(CelebrationType type) {

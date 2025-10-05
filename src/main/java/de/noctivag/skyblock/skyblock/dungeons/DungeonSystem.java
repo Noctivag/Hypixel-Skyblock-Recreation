@@ -1,4 +1,8 @@
 package de.noctivag.skyblock.skyblock.dungeons;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
@@ -12,7 +16,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import net.kyori.adventure.text.Component;
 
@@ -31,17 +35,17 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DungeonSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerDungeonData> playerDungeonData = new ConcurrentHashMap<>();
     private final Map<String, DungeonInstance> activeDungeons = new ConcurrentHashMap<>();
     private final Map<UUID, DungeonParty> playerParties = new ConcurrentHashMap<>();
     
-    public DungeonSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public DungeonSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
         initializeDungeonFloors();
     }
     
@@ -96,7 +100,7 @@ public class DungeonSystem implements Listener {
         
         // Check requirements
         if (!canEnterDungeon(player, floor)) {
-            player.sendMessage("§cYou don't meet the requirements for this dungeon floor!");
+            player.sendMessage(Component.text("§cYou don't meet the requirements for this dungeon floor!"));
             return;
         }
         
@@ -119,19 +123,19 @@ public class DungeonSystem implements Listener {
     public void joinDungeonParty(Player player, String partyId) {
         DungeonParty party = getDungeonParty(partyId);
         if (party == null) {
-            player.sendMessage("§cParty not found!");
+            player.sendMessage(Component.text("§cParty not found!"));
             return;
         }
         
         if (party.isFull()) {
-            player.sendMessage("§cParty is full!");
+            player.sendMessage(Component.text("§cParty is full!"));
             return;
         }
         
         party.addPlayer(player);
         playerParties.put(player.getUniqueId(), party);
         
-        player.sendMessage("§aJoined dungeon party!");
+        player.sendMessage(Component.text("§aJoined dungeon party!"));
     }
     
     public void createDungeonParty(Player leader) {
@@ -195,7 +199,7 @@ public class DungeonSystem implements Listener {
                 // Update dungeon progress
                 updateDungeonProgress(dungeon);
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Every second
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Every second
     }
     
     private void updateDungeonProgress(DungeonInstance dungeon) {
@@ -344,7 +348,7 @@ public class DungeonSystem implements Listener {
             this.scores = new HashMap<>();
             this.completed = false;
             this.failed = false;
-            this.startTime = System.currentTimeMillis();
+            this.startTime = java.lang.System.currentTimeMillis();
         }
         
         public void addPlayer(Player player) {

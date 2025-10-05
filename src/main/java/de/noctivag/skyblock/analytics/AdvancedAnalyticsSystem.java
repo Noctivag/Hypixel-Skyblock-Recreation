@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.analytics;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -31,19 +36,19 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Analytics Customization
  */
 public class AdvancedAnalyticsSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerAnalytics> playerAnalytics = new ConcurrentHashMap<>();
     private final Map<AnalyticsType, AnalyticsConfig> analyticsConfigs = new HashMap<>();
     private final Map<UUID, BukkitTask> analyticsTasks = new ConcurrentHashMap<>();
     
-    public AdvancedAnalyticsSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedAnalyticsSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeAnalyticsConfigs();
         startAnalyticsUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeAnalyticsConfigs() {
@@ -218,7 +223,7 @@ public class AdvancedAnalyticsSystem implements Listener {
                     analytics.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L);
     }
     
     @EventHandler
@@ -231,7 +236,7 @@ public class AdvancedAnalyticsSystem implements Listener {
     }
     
     private void openAnalyticsGUI(Player player) {
-        player.sendMessage("§aAnalytics GUI geöffnet!");
+        player.sendMessage(Component.text("§aAnalytics GUI geöffnet!"));
     }
     
     public PlayerAnalytics getPlayerAnalytics(UUID playerId) {
@@ -332,11 +337,11 @@ public class AdvancedAnalyticsSystem implements Listener {
         
         public PlayerAnalytics(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long timeDiff = currentTime - lastUpdate;
             
             if (timeDiff >= 60000) {

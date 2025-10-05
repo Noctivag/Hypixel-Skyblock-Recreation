@@ -1,6 +1,9 @@
 package de.noctivag.skyblock.events;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.api.Service;
 import java.util.concurrent.CompletableFuture;
 
@@ -9,11 +12,11 @@ import java.util.concurrent.CompletableFuture;
  */
 public class UltimateEventSystem implements Service {
     
-    private JavaSkyblockPlugin plugin;
+    private SkyblockPlugin SkyblockPlugin;
     private boolean initialized = false;
     
-    public UltimateEventSystem(JavaSkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public UltimateEventSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
     
     @Override

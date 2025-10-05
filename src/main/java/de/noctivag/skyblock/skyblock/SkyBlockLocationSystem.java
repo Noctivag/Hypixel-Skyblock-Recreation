@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.skyblock;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 // import de.noctivag.skyblock.skills.SkillType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -12,7 +16,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-// import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.Component;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,15 +34,15 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SkyBlockLocationSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<String, SkyBlockLocation> locations = new HashMap<>();
     private final Map<UUID, String> playerCurrentLocation = new ConcurrentHashMap<>();
     private final Map<UUID, Set<String>> discoveredLocations = new ConcurrentHashMap<>();
     
-    public SkyBlockLocationSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public SkyBlockLocationSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         initializeLocations();
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeLocations() {
@@ -370,7 +374,7 @@ public class SkyBlockLocationSystem implements Listener {
         
         // Show available features
         if (location.getFeatureDetails().length > 0) {
-            player.sendMessage("§7Available features:");
+            player.sendMessage(Component.text("§7Available features:"));
             for (LocationFeature feature : location.getFeatureDetails()) {
                 player.sendMessage("  " + feature.getDisplayName() + " §7- " + feature.getDescription());
             }

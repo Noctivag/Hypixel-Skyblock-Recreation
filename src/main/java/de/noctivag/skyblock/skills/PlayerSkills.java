@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.skills;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -34,7 +35,7 @@ public class PlayerSkills {
             skillXP.put(skillType, 0.0);
             skillLevels.put(skillType, 1);
             totalXP.put(skillType, 0.0);
-            lastActivity.put(skillType, System.currentTimeMillis());
+            lastActivity.put(skillType, java.lang.System.currentTimeMillis());
             skillUses.put(skillType, 0);
             skillEfficiency.put(skillType, 1.0);
         }
@@ -47,7 +48,7 @@ public class PlayerSkills {
         // Update XP
         skillXP.put(skillType, newXP);
         totalXP.put(skillType, totalXP.get(skillType) + xpAmount);
-        lastActivity.put(skillType, System.currentTimeMillis());
+        lastActivity.put(skillType, java.lang.System.currentTimeMillis());
         
         // Update level
         int newLevel = calculateLevel(newXP);
@@ -183,7 +184,7 @@ public class PlayerSkills {
         skillXP.put(skillType, 0.0);
         skillLevels.put(skillType, 1);
         totalXP.put(skillType, 0.0);
-        lastActivity.put(skillType, System.currentTimeMillis());
+        lastActivity.put(skillType, java.lang.System.currentTimeMillis());
         skillUses.put(skillType, 0);
         skillEfficiency.put(skillType, 1.0);
     }

@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.festivals;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -17,24 +21,26 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 
 /**
  * Spooky Festival System - Hypixel Skyblock Style
  */
 public class SpookyFestivalSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerSpookyData> playerSpookyData = new ConcurrentHashMap<>();
     private final Map<SpookyType, SpookyConfig> spookyConfigs = new HashMap<>();
     private final Map<UUID, BukkitTask> spookyTasks = new ConcurrentHashMap<>();
     
-    public SpookyFestivalSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public SpookyFestivalSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeSpookyConfigs();
         startSpookyUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeSpookyConfigs() {
@@ -96,7 +102,7 @@ public class SpookyFestivalSystem implements Listener {
                     spookyData.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L * 60L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L * 60L);
     }
     
     @EventHandler
@@ -108,7 +114,7 @@ public class SpookyFestivalSystem implements Listener {
         
         // Give candy for killing mobs during spooky festival
         spookyData.addCandy(1);
-        player.sendMessage("§e+1 Candy! §7(Spooky Festival)");
+        player.sendMessage(Component.text("§e+1 Candy! §7(Spooky Festival)"));
     }
     
     @EventHandler
@@ -129,7 +135,7 @@ public class SpookyFestivalSystem implements Listener {
     }
     
     public void openSpookyGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§5§lSpooky Festival");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§5§lSpooky Festival"));
         
         addGUIItem(gui, 10, Material.SUGAR, "§e§lCandy", "§7Collect candy during the festival!");
         addGUIItem(gui, 11, Material.LEATHER_CHESTPLATE, "§5§lSpooky Armor", "§7Wear spooky armor!");
@@ -139,7 +145,7 @@ public class SpookyFestivalSystem implements Listener {
         addGUIItem(gui, 15, Material.IRON_SWORD, "§5§lSpooky Weapon", "§7Get a spooky weapon!");
         
         player.openInventory(gui);
-        player.sendMessage("§aSpooky Festival GUI geöffnet!");
+        player.sendMessage(Component.text("§aSpooky Festival GUI geöffnet!"));
     }
     
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String description) {
@@ -163,28 +169,28 @@ public class SpookyFestivalSystem implements Listener {
         
         switch (spookyType) {
             case CANDY:
-                player.sendMessage("§e§l🍭 CANDY COLLECTED! 🍭");
-                player.sendMessage("§7Spooky festival candy!");
+                player.sendMessage(Component.text("§e§l🍭 CANDY COLLECTED! 🍭"));
+                player.sendMessage(Component.text("§7Spooky festival candy!"));
                 break;
             case SPOOKY_ARMOR:
-                player.sendMessage("§5§l👻 SPOOKY ARMOR EQUIPPED! 👻");
-                player.sendMessage("§7You look spooky!");
+                player.sendMessage(Component.text("§5§l👻 SPOOKY ARMOR EQUIPPED! 👻"));
+                player.sendMessage(Component.text("§7You look spooky!"));
                 break;
             case PUMPKIN_HEAD:
-                player.sendMessage("§6§l🎃 PUMPKIN HEAD EQUIPPED! 🎃");
-                player.sendMessage("§7Spooky Halloween vibes!");
+                player.sendMessage(Component.text("§6§l🎃 PUMPKIN HEAD EQUIPPED! 🎃"));
+                player.sendMessage(Component.text("§7Spooky Halloween vibes!"));
                 break;
             case SPOOKY_PET:
-                player.sendMessage("§5§l💀 SPOOKY PET SUMMONED! 💀");
-                player.sendMessage("§7Your spooky companion!");
+                player.sendMessage(Component.text("§5§l💀 SPOOKY PET SUMMONED! 💀"));
+                player.sendMessage(Component.text("§7Your spooky companion!"));
                 break;
             case HAUNTED_HOUSE:
-                player.sendMessage("§8§l🏚️ HAUNTED HOUSE BUILT! 🏚️");
-                player.sendMessage("§7Spooky building complete!");
+                player.sendMessage(Component.text("§8§l🏚️ HAUNTED HOUSE BUILT! 🏚️"));
+                player.sendMessage(Component.text("§7Spooky building complete!"));
                 break;
             case SPOOKY_WEAPON:
-                player.sendMessage("§5§l⚔️ SPOOKY WEAPON EQUIPPED! ⚔️");
-                player.sendMessage("§7Spooky weapon ready!");
+                player.sendMessage(Component.text("§5§l⚔️ SPOOKY WEAPON EQUIPPED! ⚔️"));
+                player.sendMessage(Component.text("§7Spooky weapon ready!"));
                 break;
         }
     }
@@ -284,11 +290,11 @@ public class SpookyFestivalSystem implements Listener {
         public PlayerSpookyData(UUID playerId) {
             this.playerId = playerId;
             this.candy = 0;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void addCandy(int amount) {

@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.managers;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -11,19 +15,19 @@ import java.util.Map;
 import java.util.UUID;
 
 public class TeleportManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, Location> lastLocationByPlayer = new HashMap<>();
     private Location spawnLocation;
 
-    public TeleportManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public TeleportManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         // Fix: Only set spawnLocation if worlds are loaded
-        if (!plugin.getServer().getWorlds().isEmpty()) {
-            World world = plugin.getServer().getWorlds().get(0);
+        if (!SkyblockPlugin.getServer().getWorlds().isEmpty()) {
+            World world = SkyblockPlugin.getServer().getWorlds().get(0);
             if (world != null) this.spawnLocation = world.getSpawnLocation();
         } else {
             this.spawnLocation = null;
-            plugin.getLogger().warning("No worlds loaded during TeleportManager initialization; spawn location not set.");
+            SkyblockPlugin.getLogger().warning("No worlds loaded during TeleportManager initialization; spawn location not set.");
         }
     }
 

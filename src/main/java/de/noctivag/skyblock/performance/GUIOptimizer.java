@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.performance;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -10,6 +13,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 
 /**
  * GUIOptimizer - Optimiert GUI-Performance
@@ -21,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Memory-Optimierung
  */
 public class GUIOptimizer {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     
     // GUI-Template-Cache
     private final Map<String, Inventory> guiTemplates = new ConcurrentHashMap<>();
@@ -32,8 +37,8 @@ public class GUIOptimizer {
     private final long CACHE_EXPIRY = 300000; // 5 Minuten
     private final Map<String, Long> cacheTimestamps = new ConcurrentHashMap<>();
     
-    public GUIOptimizer(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public GUIOptimizer(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         startCacheCleanup();
     }
     
@@ -91,7 +96,7 @@ public class GUIOptimizer {
         Map<Integer, ItemStack> itemCache = new HashMap<>();
         itemCache.put(0, item.clone());
         itemTemplates.put(cacheKey, itemCache);
-        cacheTimestamps.put(cacheKey, System.currentTimeMillis());
+        cacheTimestamps.put(cacheKey, java.lang.System.currentTimeMillis());
         
         return item;
     }
@@ -136,7 +141,7 @@ public class GUIOptimizer {
                     }
                 }
             }
-        }.runTask(plugin);
+        }.runTask(SkyblockPlugin);
     }
     
     /**
@@ -149,7 +154,7 @@ public class GUIOptimizer {
         }
         
         guiTemplates.put(cacheKey, cloneInventory(gui, "GUI"));
-        cacheTimestamps.put(cacheKey, System.currentTimeMillis());
+        cacheTimestamps.put(cacheKey, java.lang.System.currentTimeMillis());
     }
     
     /**
@@ -188,7 +193,7 @@ public class GUIOptimizer {
         Long timestamp = cacheTimestamps.get(cacheKey);
         if (timestamp == null) return false;
         
-        return System.currentTimeMillis() - timestamp < CACHE_EXPIRY;
+        return java.lang.System.currentTimeMillis() - timestamp < CACHE_EXPIRY;
     }
     
     /**
@@ -200,12 +205,12 @@ public class GUIOptimizer {
             public void run() {
                 // Entferne abgelaufene Caches
                 cacheTimestamps.entrySet().removeIf(entry -> 
-                    System.currentTimeMillis() - entry.getValue() > CACHE_EXPIRY);
+                    java.lang.System.currentTimeMillis() - entry.getValue() > CACHE_EXPIRY);
                 
                 guiTemplates.keySet().removeIf(key -> !cacheTimestamps.containsKey(key));
                 itemTemplates.keySet().removeIf(key -> !cacheTimestamps.containsKey(key));
             }
-        }.runTaskTimerAsynchronously(plugin, 6000L, 6000L); // Alle 5 Minuten
+        }.runTaskTimerAsynchronously(SkyblockPlugin, 6000L, 6000L); // Alle 5 Minuten
     }
     
     /**

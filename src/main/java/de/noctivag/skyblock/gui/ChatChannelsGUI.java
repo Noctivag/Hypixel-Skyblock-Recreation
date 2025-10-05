@@ -1,15 +1,19 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import net.kyori.adventure.text.Component;
 
 public class ChatChannelsGUI extends CustomGUI {
     private final Player player;
     
-    public ChatChannelsGUI(SkyblockPlugin plugin, Player player) {
-        super(plugin, "§b§lChat Channels", 54);
+    public ChatChannelsGUI(SkyblockPlugin SkyblockPlugin, Player player) {
+        super(SkyblockPlugin, "§b§lChat Channels", 54);
         this.player = player;
         setupItems();
     }

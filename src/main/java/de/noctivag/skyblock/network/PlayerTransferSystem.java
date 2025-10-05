@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.network;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -26,7 +30,7 @@ import java.util.concurrent.CompletableFuture;
  */
 public class PlayerTransferSystem {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final ServerManager serverManager;
     private final NetworkCommunication networkCommunication;
@@ -39,10 +43,10 @@ public class PlayerTransferSystem {
     private final int maxConcurrentTransfers;
     private final long transferTimeout;
     
-    public PlayerTransferSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager,
+    public PlayerTransferSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager,
                                ServerManager serverManager, NetworkCommunication networkCommunication,
                                JedisPool jedisPool, int maxConcurrentTransfers, long transferTimeout) {
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         this.serverManager = serverManager;
         this.networkCommunication = networkCommunication;
@@ -61,7 +65,7 @@ public class PlayerTransferSystem {
                 processTransferQueue();
                 cleanupExpiredTransfers();
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Every second
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Every second
     }
     
     private void processTransferQueue() {
@@ -74,11 +78,11 @@ public class PlayerTransferSystem {
     }
     
     private void cleanupExpiredTransfers() {
-        long currentTime = System.currentTimeMillis();
+        long currentTime = java.lang.System.currentTimeMillis();
         activeTransfers.entrySet().removeIf(entry -> {
             TransferInfo transfer = entry.getValue();
             if (currentTime - transfer.getStartTime() > transferTimeout) {
-                plugin.getLogger().warning("Transfer expired for player: " + entry.getKey());
+                SkyblockPlugin.getLogger().warning("Transfer expired for player: " + entry.getKey());
                 return true;
             }
             return false;
@@ -150,7 +154,7 @@ public class PlayerTransferSystem {
             transferQueue.offer(request);
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to initiate player transfer: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to initiate player transfer: " + e.getMessage());
             future.complete(false);
         }
         
@@ -181,7 +185,7 @@ public class PlayerTransferSystem {
                 request.getTargetServerId(),
                 request.getTargetServerType(),
                 request.getReason(),
-                System.currentTimeMillis(),
+                java.lang.System.currentTimeMillis(),
                 TransferInfo.TransferStatus.PREPARING
             );
             
@@ -198,7 +202,7 @@ public class PlayerTransferSystem {
             transferData.put("targetServerId", request.getTargetServerId());
             transferData.put("targetServerType", request.getTargetServerType().name());
             transferData.put("reason", request.getReason().name());
-            transferData.put("timestamp", String.valueOf(System.currentTimeMillis()));
+            transferData.put("timestamp", String.valueOf(java.lang.System.currentTimeMillis()));
             
             if (request.getCustomData() != null) {
                 transferData.putAll(request.getCustomData());
@@ -216,14 +220,14 @@ public class PlayerTransferSystem {
                         if (activeTransfers.containsKey(request.getPlayerId())) {
                             TransferInfo transfer = activeTransfers.get(request.getPlayerId());
                             if (transfer.getStatus() == TransferInfo.TransferStatus.TRANSFERRING) {
-                                plugin.getLogger().warning("Transfer timeout for player: " + request.getPlayerId());
+                                SkyblockPlugin.getLogger().warning("Transfer timeout for player: " + request.getPlayerId());
                                 transfer.setStatus(TransferInfo.TransferStatus.FAILED);
                                 request.getFuture().complete(false);
                                 activeTransfers.remove(request.getPlayerId());
                             }
                         }
                     }
-                }.runTaskLater(plugin, transferTimeout / 50); // Convert to ticks
+                }.runTaskLater(SkyblockPlugin, transferTimeout / 50); // Convert to ticks
                 
             } else {
                 transferInfo.setStatus(TransferInfo.TransferStatus.FAILED);
@@ -232,7 +236,7 @@ public class PlayerTransferSystem {
             }
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to process transfer: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to process transfer: " + e.getMessage());
             request.getFuture().complete(false);
         }
     }
@@ -252,7 +256,7 @@ public class PlayerTransferSystem {
                     player.getLevel(),
                     player.getExp(),
                     player.getGameMode(),
-                    System.currentTimeMillis()
+                    java.lang.System.currentTimeMillis()
                 );
                 
                 playerDataCache.put(playerId, playerData);
@@ -262,7 +266,7 @@ public class PlayerTransferSystem {
                 
             }
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to save player data: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to save player data: " + e.getMessage());
         }
     }
     
@@ -289,7 +293,7 @@ public class PlayerTransferSystem {
             jedis.expire(playerKey, 3600);
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to save player data to Redis: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to save player data to Redis: " + e.getMessage());
         }
     }
     
@@ -307,7 +311,7 @@ public class PlayerTransferSystem {
             }
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to handle player transfer message: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to handle player transfer message: " + e.getMessage());
         }
     }
     
@@ -331,7 +335,7 @@ public class PlayerTransferSystem {
             }
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to handle player transfer request: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to handle player transfer request: " + e.getMessage());
             return "REJECT:Internal error";
         }
     }
@@ -369,7 +373,7 @@ public class PlayerTransferSystem {
             }
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to prepare for player arrival: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to prepare for player arrival: " + e.getMessage());
         }
     }
     
@@ -383,7 +387,7 @@ public class PlayerTransferSystem {
             }
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to load player data: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to load player data: " + e.getMessage());
         }
         
         return null;
@@ -451,13 +455,13 @@ public class PlayerTransferSystem {
             jedis.hset(arrivalKey, "spawnY", String.valueOf(spawnLocation.getY()));
             jedis.hset(arrivalKey, "spawnZ", String.valueOf(spawnLocation.getZ()));
             jedis.hset(arrivalKey, "spawnWorld", spawnLocation.getWorld().getName());
-            jedis.hset(arrivalKey, "timestamp", String.valueOf(System.currentTimeMillis()));
+            jedis.hset(arrivalKey, "timestamp", String.valueOf(java.lang.System.currentTimeMillis()));
             
             // Set expiration (arrival data expires after 5 minutes)
             jedis.expire(arrivalKey, 300);
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to store arrival data: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to store arrival data: " + e.getMessage());
         }
     }
     
@@ -480,7 +484,7 @@ public class PlayerTransferSystem {
             }
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to handle player join event: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to handle player join event: " + e.getMessage());
         }
     }
     
@@ -493,7 +497,7 @@ public class PlayerTransferSystem {
             serverManager.removePlayerServer(playerId);
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to handle player leave event: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to handle player leave event: " + e.getMessage());
         }
     }
     

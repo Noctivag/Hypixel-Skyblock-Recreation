@@ -21,7 +21,7 @@ public class SkillProgress {
         this.level = 0;
         this.currentLevelExperience = 0.0;
         this.experienceToNextLevel = calculateXPToNextLevel(0);
-        this.lastUpdateTime = System.currentTimeMillis();
+        this.lastUpdateTime = java.lang.System.currentTimeMillis();
     }
     
     /**
@@ -29,7 +29,7 @@ public class SkillProgress {
      */
     public void addExperience(double experience) {
         this.totalExperience += experience;
-        this.lastUpdateTime = System.currentTimeMillis();
+        this.lastUpdateTime = java.lang.System.currentTimeMillis();
         
         // Update current level experience
         this.currentLevelExperience += experience;
@@ -102,7 +102,7 @@ public class SkillProgress {
     public double getEfficiency() {
         if (lastUpdateTime == 0) return 0.0;
         
-        long timeElapsed = System.currentTimeMillis() - lastUpdateTime;
+        long timeElapsed = java.lang.System.currentTimeMillis() - lastUpdateTime;
         double hoursElapsed = timeElapsed / (1000.0 * 60 * 60);
         
         return hoursElapsed > 0 ? totalExperience / hoursElapsed : 0.0;

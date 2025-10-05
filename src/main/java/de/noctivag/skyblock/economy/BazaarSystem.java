@@ -1,4 +1,6 @@
 package de.noctivag.skyblock.economy;
+import net.kyori.adventure.text.Component;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.core.PlayerProfile;
@@ -68,7 +70,7 @@ public class BazaarSystem {
                 processOrders();
                 updateBazaarPrices();
             }
-        }.runTaskTimer(economySystem.plugin, 0L, 20L * 5L); // Every 5 seconds
+        }.runTaskTimer(economySystem.SkyblockPlugin, 0L, 20L * 5L); // Every 5 seconds
     }
     
     private void processOrders() {
@@ -201,13 +203,13 @@ public class BazaarSystem {
         
         // Validate inputs
         if (amount <= 0 || price <= 0) {
-            player.sendMessage("§cInvalid order parameters!");
+            player.sendMessage(Component.text("§cInvalid order parameters!"));
             return;
         }
         
         BazaarItem bazaarItem = bazaarItems.get(itemId);
         if (bazaarItem == null) {
-            player.sendMessage("§cThis item is not available in the bazaar!");
+            player.sendMessage(Component.text("§cThis item is not available in the bazaar!"));
             return;
         }
         
@@ -221,7 +223,7 @@ public class BazaarSystem {
         // Check if item has reached order limit
         List<BazaarOrder> itemOrders = buyOrders.getOrDefault(itemId, new ArrayList<>());
         if (itemOrders.size() >= MAX_ORDERS_PER_ITEM) {
-            player.sendMessage("§cThis item has reached the maximum number of orders!");
+            player.sendMessage(Component.text("§cThis item has reached the maximum number of orders!"));
             return;
         }
         
@@ -229,7 +231,7 @@ public class BazaarSystem {
         double totalCost = amount * price;
         PlayerProfile profile = economySystem.corePlatform.getPlayerProfile(playerId);
         if (profile == null || !profile.hasBalance(totalCost)) {
-            player.sendMessage("§cYou don't have enough coins!");
+            player.sendMessage(Component.text("§cYou don't have enough coins!"));
             return;
         }
         
@@ -284,14 +286,14 @@ public class BazaarSystem {
             profile.removeCoins(totalSpent);
         }
         
-        player.sendMessage("§a§lORDER PROCESSED!");
+        player.sendMessage(Component.text("§a§lORDER PROCESSED!"));
         player.sendMessage("§7Item: §e" + itemId);
         player.sendMessage("§7Total Amount: §e" + amount);
         if (remainingAmount > 0) {
             player.sendMessage("§7Instant Buy: §e" + (amount - remainingAmount));
             player.sendMessage("§7Order Created: §e" + remainingAmount);
         } else {
-            player.sendMessage("§7All items bought instantly!");
+            player.sendMessage(Component.text("§7All items bought instantly!"));
         }
         player.sendMessage("§7Total Cost: §6" + (totalSpent + (remainingAmount * price)) + " coins");
     }
@@ -301,13 +303,13 @@ public class BazaarSystem {
         
         // Validate inputs
         if (amount <= 0 || price <= 0) {
-            player.sendMessage("§cInvalid order parameters!");
+            player.sendMessage(Component.text("§cInvalid order parameters!"));
             return;
         }
         
         BazaarItem bazaarItem = bazaarItems.get(itemId);
         if (bazaarItem == null) {
-            player.sendMessage("§cThis item is not available in the bazaar!");
+            player.sendMessage(Component.text("§cThis item is not available in the bazaar!"));
             return;
         }
         
@@ -321,14 +323,14 @@ public class BazaarSystem {
         // Check if item has reached order limit
         List<BazaarOrder> itemOrders = sellOrders.getOrDefault(itemId, new ArrayList<>());
         if (itemOrders.size() >= MAX_ORDERS_PER_ITEM) {
-            player.sendMessage("§cThis item has reached the maximum number of orders!");
+            player.sendMessage(Component.text("§cThis item has reached the maximum number of orders!"));
             return;
         }
         
         // Check if player has enough items
         org.bukkit.Material material = org.bukkit.Material.valueOf(itemId);
         if (!player.getInventory().contains(material, amount)) {
-            player.sendMessage("§cYou don't have enough items!");
+            player.sendMessage(Component.text("§cYou don't have enough items!"));
             return;
         }
         
@@ -385,14 +387,14 @@ public class BazaarSystem {
             player.getInventory().removeItem(toRemove);
         }
         
-        player.sendMessage("§a§lORDER PROCESSED!");
+        player.sendMessage(Component.text("§a§lORDER PROCESSED!"));
         player.sendMessage("§7Item: §e" + itemId);
         player.sendMessage("§7Total Amount: §e" + amount);
         if (remainingAmount > 0) {
             player.sendMessage("§7Instant Sell: §e" + (amount - remainingAmount));
             player.sendMessage("§7Order Created: §e" + remainingAmount);
         } else {
-            player.sendMessage("§7All items sold instantly!");
+            player.sendMessage(Component.text("§7All items sold instantly!"));
         }
         player.sendMessage("§7Total Earnings: §6" + totalEarned + " coins");
     }
@@ -471,7 +473,7 @@ public class BazaarSystem {
             player.getInventory().addItem(new ItemStack(material, order.getAmount()));
         }
         
-        player.sendMessage("§c§lORDER CANCELLED!");
+        player.sendMessage(Component.text("§c§lORDER CANCELLED!"));
         player.sendMessage("§7Order ID: §e" + orderId);
     }
     
@@ -498,7 +500,7 @@ public class BazaarSystem {
     public void instantBuy(Player player, String itemId, int amount) {
         BazaarItem bazaarItem = bazaarItems.get(itemId);
         if (bazaarItem == null) {
-            player.sendMessage("§cThis item is not available in the bazaar!");
+            player.sendMessage(Component.text("§cThis item is not available in the bazaar!"));
             return;
         }
         
@@ -509,7 +511,7 @@ public class BazaarSystem {
         
         PlayerProfile profile = economySystem.corePlatform.getPlayerProfile(player.getUniqueId());
         if (profile == null || !profile.hasBalance(totalWithFee)) {
-            player.sendMessage("§cYou don't have enough coins!");
+            player.sendMessage(Component.text("§cYou don't have enough coins!"));
             player.sendMessage("§7Required: §6" + totalWithFee + " coins");
             return;
         }
@@ -524,7 +526,7 @@ public class BazaarSystem {
         // Update bazaar item
         bazaarItem.addTrade(amount, price);
         
-        player.sendMessage("§a§lINSTANT BUY COMPLETED!");
+        player.sendMessage(Component.text("§a§lINSTANT BUY COMPLETED!"));
         player.sendMessage("§7Item: §e" + itemId);
         player.sendMessage("§7Amount: §e" + amount);
         player.sendMessage("§7Price per unit: §6" + price + " coins");
@@ -536,13 +538,13 @@ public class BazaarSystem {
     public void instantSell(Player player, String itemId, int amount) {
         BazaarItem bazaarItem = bazaarItems.get(itemId);
         if (bazaarItem == null) {
-            player.sendMessage("§cThis item is not available in the bazaar!");
+            player.sendMessage(Component.text("§cThis item is not available in the bazaar!"));
             return;
         }
         
         org.bukkit.Material material = org.bukkit.Material.valueOf(itemId);
         if (!player.getInventory().contains(material, amount)) {
-            player.sendMessage("§cYou don't have enough items!");
+            player.sendMessage(Component.text("§cYou don't have enough items!"));
             return;
         }
         
@@ -564,7 +566,7 @@ public class BazaarSystem {
         // Update bazaar item
         bazaarItem.addTrade(amount, price);
         
-        player.sendMessage("§a§lINSTANT SELL COMPLETED!");
+        player.sendMessage(Component.text("§a§lINSTANT SELL COMPLETED!"));
         player.sendMessage("§7Item: §e" + itemId);
         player.sendMessage("§7Amount: §e" + amount);
         player.sendMessage("§7Price per unit: §6" + price + " coins");
@@ -604,7 +606,7 @@ public class BazaarSystem {
                 lore.add("§eRight Click to Sell");
                 lore.add("§eShift + Click for Orders");
                 
-                meta.setLore(lore);
+                meta.lore(lore.stream().map(Component::text).toList());
                 displayItem.setItemMeta(meta);
             }
             
@@ -734,7 +736,7 @@ public class BazaarSystem {
             this.amount = amount;
             this.price = price;
             this.type = type;
-            this.createdAt = System.currentTimeMillis();
+            this.createdAt = java.lang.System.currentTimeMillis();
         }
         
         // Getters and Setters

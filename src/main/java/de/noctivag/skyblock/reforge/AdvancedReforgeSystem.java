@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.reforge;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -19,15 +24,15 @@ import java.util.concurrent.CompletableFuture;
  */
 public class AdvancedReforgeSystem {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerReforgeData> playerReforgeData = new ConcurrentHashMap<>();
     private final Map<String, ReforgeStone> reforgeStones = new HashMap<>();
     private final Map<String, ReforgeType> reforgeTypes = new HashMap<>();
     private final Map<UUID, List<ReforgeEffect>> activeReforgeEffects = new ConcurrentHashMap<>();
     
-    public AdvancedReforgeSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedReforgeSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeReforgeStones();
         initializeReforgeTypes();
@@ -347,7 +352,7 @@ public class AdvancedReforgeSystem {
             public void run() {
                 updateActiveReforgeEffects();
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Every second
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Every second
     }
     
     /**
@@ -505,7 +510,7 @@ public class AdvancedReforgeSystem {
         lore.add("§6Reforge: " + reforgeType.getName());
         lore.addAll(reforgeType.getEffects());
         
-        meta.setLore(lore);
+        meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
         item.setItemMeta(meta);
     }
     
@@ -520,7 +525,7 @@ public class AdvancedReforgeSystem {
         ItemMeta meta = item.getItemMeta();
         
         if (meta != null) {
-            meta.setDisplayName(stone.getRarity().getColor() + stone.getName());
+            meta.displayName(Component.text(stone.getRarity().getColor() + stone.getName()));
             List<String> lore = new ArrayList<>(stone.getDescription());
             lore.add("");
             lore.add("§7Rarity: " + stone.getRarity().getDisplayName());
@@ -531,7 +536,7 @@ public class AdvancedReforgeSystem {
             lore.add("§7or armor piece to reforge it!");
             lore.add("");
             lore.add("§8A reforge stone");
-            meta.setLore(lore);
+            meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             
             item.setItemMeta(meta);
         }
@@ -651,7 +656,7 @@ public class AdvancedReforgeSystem {
                 playerReforgeData.put(playerId, data);
             }
         } catch (Exception e) {
-            plugin.getLogger().warning("Failed to load reforge data for player " + playerId + ": " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Failed to load reforge data for player " + playerId + ": " + e.getMessage());
         }
     }
     

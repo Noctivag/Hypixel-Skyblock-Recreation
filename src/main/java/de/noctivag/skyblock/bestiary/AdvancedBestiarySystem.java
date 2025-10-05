@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.bestiary;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -10,19 +15,20 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Advanced Bestiary System - Tracks and manages creature encounters
  */
 public class AdvancedBestiarySystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerBestiaryData> playerBestiaryData = new ConcurrentHashMap<>();
     private final Map<String, BestiaryEntry> bestiaryEntries = new HashMap<>();
     private final Map<String, BestiaryCategory> bestiaryCategories = new HashMap<>();
     
-    public AdvancedBestiarySystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedBestiarySystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeBestiaryEntries();
     }
@@ -44,7 +50,7 @@ public class AdvancedBestiarySystem {
     }
     
     public void openBestiaryGUI(Player player) {
-        Inventory gui = plugin.getServer().createInventory(null, 54, "§6§lBestiary");
+        Inventory gui = SkyblockPlugin.getServer().createInventory(null, 54, "§6§lBestiary");
         
         // Add bestiary categories
         addGUIItem(gui, 10, Material.GRASS_BLOCK, "§a§lOverworld", "§7Overworld creatures");
@@ -63,9 +69,9 @@ public class AdvancedBestiarySystem {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(name);
+            meta.displayName(Component.text(name));
             if (lore.length > 0) {
-                meta.setLore(Arrays.asList(lore));
+                meta.lore(java.util.Arrays.stream(lore).map(Component::text).collect(java.util.stream.Collectors.toList()));
             }
             item.setItemMeta(meta);
         }

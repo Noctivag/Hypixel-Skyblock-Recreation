@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.skyblock;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 
 import java.sql.Connection;
@@ -25,19 +29,19 @@ public class IslandManager {
 
     private static IslandManager instance;
 
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
 
     // Map owner UUID -> Island
     private final Map<UUID, Island> islands = new ConcurrentHashMap<>();
 
-    private IslandManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.databaseManager = plugin.getMultiServerDatabaseManager();
+    private IslandManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.databaseManager = SkyblockPlugin.getMultiServerDatabaseManager();
     }
 
-    public static synchronized IslandManager getInstance(SkyblockPlugin plugin) {
-        if (instance == null) instance = new IslandManager(plugin);
+    public static synchronized IslandManager getInstance(SkyblockPlugin SkyblockPlugin) {
+        if (instance == null) instance = new IslandManager(SkyblockPlugin);
         return instance;
     }
 
@@ -95,12 +99,12 @@ public class IslandManager {
                     ps.executeUpdate();
                 }
             } catch (Exception e) {
-                plugin.getLogger().log(Level.WARNING, "Failed to persist new island to DB (will continue in-memory)", e);
+                SkyblockPlugin.getLogger().log(Level.WARNING, "Failed to persist new island to DB (will continue in-memory)", e);
             }
         }
 
         // Ensure world creation is requested (on-demand)
-        // plugin.getWorld(worldName); // TODO: Implement method in Plugin class
+        // SkyblockPlugin.getWorld(worldName); // TODO: Implement method in SkyblockPlugin class
         return true;
     }
 
@@ -121,7 +125,7 @@ public class IslandManager {
                     ps.executeUpdate();
                 }
             } catch (Exception e) {
-                plugin.getLogger().log(Level.WARNING, "Failed to persist island member addition", e);
+                SkyblockPlugin.getLogger().log(Level.WARNING, "Failed to persist island member addition", e);
             }
         }
         return true;
@@ -144,7 +148,7 @@ public class IslandManager {
                     ps.executeUpdate();
                 }
             } catch (Exception e) {
-                plugin.getLogger().log(Level.WARNING, "Failed to persist island member removal", e);
+                SkyblockPlugin.getLogger().log(Level.WARNING, "Failed to persist island member removal", e);
             }
         }
         return true;
@@ -155,7 +159,7 @@ public class IslandManager {
      */
     public synchronized void loadAll() {
         if (databaseManager == null) {
-            plugin.getLogger().info("IslandManager.loadAll: no database manager available, skipping load.");
+            SkyblockPlugin.getLogger().info("IslandManager.loadAll: no database manager available, skipping load.");
             return;
         }
 
@@ -192,9 +196,9 @@ public class IslandManager {
                 }
             }
 
-            plugin.getLogger().info("IslandManager: loaded " + islands.size() + " islands from database.");
+            SkyblockPlugin.getLogger().info("IslandManager: loaded " + islands.size() + " islands from database.");
         } catch (Exception e) {
-            plugin.getLogger().log(Level.WARNING, "Failed to load islands from DB (will continue with in-memory state)", e);
+            SkyblockPlugin.getLogger().log(Level.WARNING, "Failed to load islands from DB (will continue with in-memory state)", e);
         }
     }
 
@@ -203,7 +207,7 @@ public class IslandManager {
      */
     public synchronized void saveAll() {
         if (databaseManager == null) {
-            plugin.getLogger().info("IslandManager.saveAll: no database manager available, skipping save.");
+            SkyblockPlugin.getLogger().info("IslandManager.saveAll: no database manager available, skipping save.");
             return;
         }
 
@@ -247,9 +251,9 @@ public class IslandManager {
             } finally {
                 conn.setAutoCommit(true);
             }
-            plugin.getLogger().info("IslandManager: saved " + islands.size() + " islands to database.");
+            SkyblockPlugin.getLogger().info("IslandManager: saved " + islands.size() + " islands to database.");
         } catch (Exception e) {
-            plugin.getLogger().log(Level.WARNING, "Failed to save islands to DB", e);
+            SkyblockPlugin.getLogger().log(Level.WARNING, "Failed to save islands to DB", e);
         }
     }
 
@@ -284,7 +288,7 @@ public class IslandManager {
                     ps2.executeUpdate();
                 }
             } catch (Exception e) {
-                plugin.getLogger().log(Level.WARNING, "Failed to delete island from DB", e);
+                SkyblockPlugin.getLogger().log(Level.WARNING, "Failed to delete island from DB", e);
             }
         }
         return true;
@@ -330,12 +334,12 @@ public class IslandManager {
                     ins.executeUpdate();
                 }
             } catch (Exception e) {
-                plugin.getLogger().log(Level.WARNING, "Failed to persist island ownership transfer", e);
+                SkyblockPlugin.getLogger().log(Level.WARNING, "Failed to persist island ownership transfer", e);
             }
         }
 
         // Ensure world creation for new owner naming
-        // plugin.getWorld(created.getWorldName()); // TODO: Implement method in Plugin class
+        // SkyblockPlugin.getWorld(created.getWorldName()); // TODO: Implement method in SkyblockPlugin class
 
         return true;
     }

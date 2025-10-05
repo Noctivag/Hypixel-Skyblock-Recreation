@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.events;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.CorePlatform;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -15,6 +19,7 @@ import net.kyori.adventure.text.Component;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Events System - Hypixel Skyblock Style
@@ -29,19 +34,19 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Event rewards and achievements
  */
 public class EventsSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CorePlatform corePlatform;
     private final Map<String, SkyBlockEvent> events = new HashMap<>();
     private final Map<UUID, PlayerEventData> playerEventData = new ConcurrentHashMap<>();
     private final Map<String, EventReward> eventRewards = new HashMap<>();
     
-    public EventsSystem(SkyblockPlugin plugin, CorePlatform corePlatform) {
-        this.plugin = plugin;
+    public EventsSystem(SkyblockPlugin SkyblockPlugin, CorePlatform corePlatform) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.corePlatform = corePlatform;
         initializeEvents();
         initializeEventRewards();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
         startEventScheduler();
     }
     
@@ -140,7 +145,7 @@ public class EventsSystem implements Listener {
     
     private void startEventScheduler() {
         Thread.ofVirtual().start(() -> {
-            while (plugin.isEnabled()) {
+            while (SkyblockPlugin.isEnabled()) {
                 try {
                     // Check for active events and update them
                     for (SkyBlockEvent event : events.values()) {
@@ -171,7 +176,7 @@ public class EventsSystem implements Listener {
     }
     
     public void openEventsGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lEvents");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lEvents"));
         
         // Active events
         List<SkyBlockEvent> activeEvents = events.values().stream()
@@ -279,9 +284,9 @@ public class EventsSystem implements Listener {
         PlayerEventData eventData = getPlayerEventData(player.getUniqueId());
         eventData.addParticipatedEvent(eventId);
         
-        player.sendMessage("§a§lEVENT PARTICIPATION!");
+        player.sendMessage(Component.text("§a§lEVENT PARTICIPATION!"));
         player.sendMessage("§7Event: §e" + event.getName());
-        player.sendMessage("§7You are now participating in this event!");
+        player.sendMessage(Component.text("§7You are now participating in this event!"));
         
         return true;
     }
@@ -292,13 +297,13 @@ public class EventsSystem implements Listener {
         
         PlayerEventData eventData = getPlayerEventData(player.getUniqueId());
         if (eventData.hasEarnedReward(rewardId)) {
-            player.sendMessage("§cYou have already claimed this reward!");
+            player.sendMessage(Component.text("§cYou have already claimed this reward!"));
             return false;
         }
         
         // Check if player meets requirements
         if (!meetsRewardRequirements(player, reward)) {
-            player.sendMessage("§cYou don't meet the requirements for this reward!");
+            player.sendMessage(Component.text("§cYou don't meet the requirements for this reward!"));
             return false;
         }
         
@@ -306,7 +311,7 @@ public class EventsSystem implements Listener {
         giveEventReward(player, reward);
         eventData.addEarnedReward(rewardId);
         
-        player.sendMessage("§a§lEVENT REWARD CLAIMED!");
+        player.sendMessage(Component.text("§a§lEVENT REWARD CLAIMED!"));
         player.sendMessage("§7Reward: " + reward.getDisplayName());
         
         return true;
@@ -324,7 +329,9 @@ public class EventsSystem implements Listener {
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
             meta.displayName(Component.text(reward.getDisplayName()));
-            meta.lore(reward.getEffects().stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
+            meta.lore(reward.getEffects().stream()
+                .map(effect -> Component.text(effect))
+                .collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         player.getInventory().addItem(item);
@@ -384,19 +391,19 @@ public class EventsSystem implements Listener {
     private void handleEventsGUIClick(Player player, int slot) {
         switch (slot) {
             case 19: // Seasonal Events
-                player.sendMessage("§eSeasonal Events coming soon!");
+                player.sendMessage(Component.text("§eSeasonal Events coming soon!"));
                 break;
             case 20: // Contest Events
-                player.sendMessage("§eContest Events coming soon!");
+                player.sendMessage(Component.text("§eContest Events coming soon!"));
                 break;
             case 21: // Special Events
-                player.sendMessage("§eSpecial Events coming soon!");
+                player.sendMessage(Component.text("§eSpecial Events coming soon!"));
                 break;
             case 28: // My Event Progress
-                player.sendMessage("§eMy Event Progress coming soon!");
+                player.sendMessage(Component.text("§eMy Event Progress coming soon!"));
                 break;
             case 29: // Event Rewards
-                player.sendMessage("§eEvent Rewards coming soon!");
+                player.sendMessage(Component.text("§eEvent Rewards coming soon!"));
                 break;
             case 49: // Close
                 player.closeInventory();
@@ -455,7 +462,7 @@ public class EventsSystem implements Listener {
         }
         
         public void update() {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             if (currentTime >= startTime && currentTime <= endTime) {
                 active = true;
             } else {
@@ -464,14 +471,14 @@ public class EventsSystem implements Listener {
         }
         
         public void startEvent(long duration) {
-            this.startTime = System.currentTimeMillis();
+            this.startTime = java.lang.System.currentTimeMillis();
             this.endTime = startTime + duration;
             this.active = true;
         }
         
         public void stopEvent() {
             this.active = false;
-            this.endTime = System.currentTimeMillis();
+            this.endTime = java.lang.System.currentTimeMillis();
         }
         
         // Getters

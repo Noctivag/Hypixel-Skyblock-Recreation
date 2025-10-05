@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.slayers;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -32,7 +33,7 @@ public class PlayerSlayerData {
             slayerXP.put(slayerType, 0.0);
             slayerKills.put(slayerType, 0);
             totalXP.put(slayerType, 0.0);
-            lastActivity.put(slayerType, System.currentTimeMillis());
+            lastActivity.put(slayerType, java.lang.System.currentTimeMillis());
         }
     }
     
@@ -45,7 +46,7 @@ public class PlayerSlayerData {
         slayerKills.put(slayerType, slayerKills.get(slayerType) + 1);
         
         // Update last activity
-        lastActivity.put(slayerType, System.currentTimeMillis());
+        lastActivity.put(slayerType, java.lang.System.currentTimeMillis());
     }
     
     public void addXP(SlayerType slayerType, double xpAmount) {
@@ -185,7 +186,7 @@ public class PlayerSlayerData {
         slayerXP.put(slayerType, 0.0);
         slayerKills.put(slayerType, 0);
         totalXP.put(slayerType, 0.0);
-        lastActivity.put(slayerType, System.currentTimeMillis());
+        lastActivity.put(slayerType, java.lang.System.currentTimeMillis());
     }
     
     public void resetAllSlayers() {

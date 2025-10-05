@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.items;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.CorePlatform;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -15,6 +19,7 @@ import net.kyori.adventure.text.Component;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Alpha Items System - Hypixel Skyblock Style
@@ -27,17 +32,17 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Alpha item GUI interface
  */
 public class AlphaItemsSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CorePlatform corePlatform;
     private final Map<String, AlphaItem> alphaItems = new HashMap<>();
     private final Map<UUID, List<AlphaItem>> playerAlphaItems = new ConcurrentHashMap<>();
     
-    public AlphaItemsSystem(SkyblockPlugin plugin, CorePlatform corePlatform) {
-        this.plugin = plugin;
+    public AlphaItemsSystem(SkyblockPlugin SkyblockPlugin, CorePlatform corePlatform) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.corePlatform = corePlatform;
         initializeAlphaItems();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeAlphaItems() {
@@ -124,7 +129,7 @@ public class AlphaItemsSystem implements Listener {
     }
     
     public void openAlphaItemsGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§d§lAlpha Items");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§d§lAlpha Items"));
         
         // Alpha item categories
         addGUIItem(gui, 10, Material.DIAMOND_SWORD, "§c§lAlpha Weapons", 
@@ -187,7 +192,7 @@ public class AlphaItemsSystem implements Listener {
     }
     
     public void openMyAlphaItemsGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§e§lMy Alpha Items");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§e§lMy Alpha Items"));
         
         List<AlphaItem> myAlphaItems = playerAlphaItems.getOrDefault(player.getUniqueId(), new ArrayList<>());
         
@@ -241,7 +246,7 @@ public class AlphaItemsSystem implements Listener {
         // Give alpha item
         giveAlphaItem(player, alphaItem);
         
-        player.sendMessage("§a§lALPHA ITEM CRAFTED!");
+        player.sendMessage(Component.text("§a§lALPHA ITEM CRAFTED!"));
         player.sendMessage("§7Item: " + alphaItem.getDisplayName());
         
         return true;
@@ -307,10 +312,10 @@ public class AlphaItemsSystem implements Listener {
                 openMyAlphaItemsGUI(player);
                 break;
             case 20: // Alpha Crafting
-                player.sendMessage("§eAlpha Crafting coming soon!");
+                player.sendMessage(Component.text("§eAlpha Crafting coming soon!"));
                 break;
             case 21: // Alpha Upgrades
-                player.sendMessage("§eAlpha Upgrades coming soon!");
+                player.sendMessage(Component.text("§eAlpha Upgrades coming soon!"));
                 break;
             case 49: // Close
                 player.closeInventory();

@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.core.di;
 
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+
 import de.noctivag.skyblock.core.api.Service;
-import org.bukkit.plugin.java.JavaPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -19,21 +22,21 @@ public class ServiceLocator {
     private final Map<Class<?>, Class<?>> implementations = new ConcurrentHashMap<>();
     private final Set<Service> initializedServices = ConcurrentHashMap.newKeySet();
     private final Logger logger;
-    private final JavaSkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     
-    private ServiceLocator(JavaSkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.logger = plugin.getLogger();
+    private ServiceLocator(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.logger = SkyblockPlugin.getLogger();
     }
     
     /**
      * Get the singleton instance
-     * @param plugin the plugin instance
+     * @param SkyblockPlugin the SkyblockPlugin instance
      * @return service locator instance
      */
-    public static synchronized ServiceLocator getInstance(JavaSkyblockPlugin plugin) {
+    public static synchronized ServiceLocator getInstance(SkyblockPlugin SkyblockPlugin) {
         if (instance == null) {
-            instance = new ServiceLocator(plugin);
+            instance = new ServiceLocator(SkyblockPlugin);
         }
         return instance;
     }
@@ -116,7 +119,7 @@ public class ServiceLocator {
                     .exceptionally(throwable -> {
                         logger.severe("Failed to initialize service: " + service.getName() + " - " + throwable.getMessage());
                         if (service.isRequired()) {
-                            logger.severe("Required service failed to initialize, plugin may not work correctly");
+                            logger.severe("Required service failed to initialize, SkyblockPlugin may not work correctly");
                         }
                         return null;
                     });

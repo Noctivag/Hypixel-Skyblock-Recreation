@@ -1,17 +1,21 @@
 package de.noctivag.skyblock.kit;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 public class KitCommand implements CommandExecutor {
     private final KitManager kitManager;
 
-    public KitCommand(SkyblockPlugin plugin) {
-        this.kitManager = (KitManager) plugin.getKitManager();
+    public KitCommand(SkyblockPlugin SkyblockPlugin) {
+        this.kitManager = (KitManager) SkyblockPlugin.getKitManager();
     }
 
     @Override
@@ -24,7 +28,7 @@ public class KitCommand implements CommandExecutor {
         Player player = (Player) sender;
 
         if (args.length == 0) {
-            player.sendMessage("§cVerwendung: /kit <Name>");
+            player.sendMessage(Component.text("§cVerwendung: /kit <Name>"));
             player.sendMessage("§7Verfügbare Kits: §e" + String.join("§7, §e", kitManager.getKitNames()));
             return true;
         }

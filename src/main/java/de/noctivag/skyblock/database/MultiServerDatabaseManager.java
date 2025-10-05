@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.database;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -25,24 +29,24 @@ import java.util.logging.Level;
  * - Data Synchronization
  */
 public class MultiServerDatabaseManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private HikariDataSource dataSource;
     private String serverId;
     private boolean isConnected = false;
 
-    public MultiServerDatabaseManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.serverId = plugin.getConfig().getString("database.server-id", "server-1");
+    public MultiServerDatabaseManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.serverId = SkyblockPlugin.getConfig().getString("database.server-id", "server-1");
         initializeDatabase();
     }
 
     private void initializeDatabase() {
-        FileConfiguration config = plugin.getConfig();
+        FileConfiguration config = SkyblockPlugin.getConfig();
 
         // Respect the config flag: if database is disabled, skip attempting a connection.
         boolean dbEnabled = config.getBoolean("database.enabled", false);
         if (!dbEnabled) {
-            plugin.getLogger().info("Database is disabled in config.yml (database.enabled=false). Skipping database initialization.");
+            SkyblockPlugin.getLogger().info("Database is disabled in config.yml (database.enabled=false). Skipping database initialization.");
             return;
         }
 
@@ -54,12 +58,12 @@ public class MultiServerDatabaseManager {
         try {
             boolean reachable = isPortOpen(host, port, (int) Math.min(config.getLong("database.driver-connect-timeout", 10000), 5000));
             if (!reachable) {
-                plugin.getLogger().warning("TCP check: Database host " + host + " port " + port + " is not reachable (connection refused or filtered). This often means MySQL is not running, bound to a different address, or a firewall blocks the port.");
+                SkyblockPlugin.getLogger().warning("TCP check: Database host " + host + " port " + port + " is not reachable (connection refused or filtered). This often means MySQL is not running, bound to a different address, or a firewall blocks the port.");
             } else {
-                plugin.getLogger().info("TCP check: Database host " + host + " port " + port + " is reachable.");
+                SkyblockPlugin.getLogger().info("TCP check: Database host " + host + " port " + port + " is reachable.");
             }
         } catch (Exception ex) {
-            plugin.getLogger().log(Level.WARNING, "TCP connectivity check failed unexpectedly", ex);
+            SkyblockPlugin.getLogger().log(Level.WARNING, "TCP connectivity check failed unexpectedly", ex);
         }
 
         String database = config.getString("database.database", "basics_plugin");
@@ -107,7 +111,7 @@ public class MultiServerDatabaseManager {
         if (tryInitializeDataSource(hikariConfig, jdbcUrl)) return;
 
         if (!"127.0.0.1".equals(host)) {
-            plugin.getLogger().warning("Initial DB connection failed. Retrying with host=127.0.0.1 as fallback...");
+            SkyblockPlugin.getLogger().warning("Initial DB connection failed. Retrying with host=127.0.0.1 as fallback...");
             String fallbackJdbcUrl = String.format(
                     "jdbc:mysql://%s:%d/%s?useSSL=%b&allowPublicKeyRetrieval=%b&serverTimezone=%s&connectTimeout=%d&socketTimeout=%d",
                     "127.0.0.1", port, database, useSSL, allowPublicKeyRetrieval, serverTimezone, driverConnectTimeout, driverSocketTimeout
@@ -115,7 +119,7 @@ public class MultiServerDatabaseManager {
             hikariConfig.setJdbcUrl(fallbackJdbcUrl);
             tryInitializeDataSource(hikariConfig, fallbackJdbcUrl);
         } else {
-            plugin.getLogger().severe("Failed to connect to database and no fallback host available. JDBC URL: " + jdbcUrl);
+            SkyblockPlugin.getLogger().severe("Failed to connect to database and no fallback host available. JDBC URL: " + jdbcUrl);
         }
     }
 
@@ -125,18 +129,18 @@ public class MultiServerDatabaseManager {
             dataSource = new HikariDataSource(config);
             createTables();
             isConnected = true;
-            plugin.getLogger().info("Multi-Server Database connected successfully! JDBC URL: " + jdbcUrl);
+            SkyblockPlugin.getLogger().info("Multi-Server Database connected successfully! JDBC URL: " + jdbcUrl);
             return true;
         } catch (Exception e) {
             // Log the failure with full details for diagnosis
-            plugin.getLogger().log(Level.SEVERE, "Failed to connect to database. JDBC URL: " + (config.getJdbcUrl() != null ? config.getJdbcUrl() : "<unknown>"), e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to connect to database. JDBC URL: " + (config.getJdbcUrl() != null ? config.getJdbcUrl() : "<unknown>"), e);
             // Ensure we don't leave a half-open datasource
             try {
                 if (dataSource != null && !dataSource.isClosed()) dataSource.close();
             } catch (Exception ignore) {}
             dataSource = null;
             isConnected = false;
-            // Schedule background reconnect attempts so plugin can continue running
+            // Schedule background reconnect attempts so SkyblockPlugin can continue running
             scheduleReconnect(config, jdbcUrl, 10, 30); // 10 attempts, 30 seconds apart
             return false;
         }
@@ -145,25 +149,25 @@ public class MultiServerDatabaseManager {
     // Schedule asynchronous reconnection attempts using Bukkit scheduler
     private void scheduleReconnect(HikariConfig config, String jdbcUrl, int maxAttempts, int intervalSeconds) {
         final java.util.concurrent.atomic.AtomicInteger attempts = new java.util.concurrent.atomic.AtomicInteger(0);
-        plugin.getLogger().info("Scheduling background DB reconnect attempts every " + intervalSeconds + "s (max " + maxAttempts + ")");
+        SkyblockPlugin.getLogger().info("Scheduling background DB reconnect attempts every " + intervalSeconds + "s (max " + maxAttempts + ")");
         var task = new org.bukkit.scheduler.BukkitRunnable() {
             @Override
             public void run() {
                 int current = attempts.incrementAndGet();
-                plugin.getLogger().info("DB reconnect attempt " + current + " of " + maxAttempts + "...");
+                SkyblockPlugin.getLogger().info("DB reconnect attempt " + current + " of " + maxAttempts + "...");
                 if (tryInitializeDataSourceWithoutScheduling(config, jdbcUrl)) {
-                    plugin.getLogger().info("Background DB reconnect succeeded on attempt " + current);
+                    SkyblockPlugin.getLogger().info("Background DB reconnect succeeded on attempt " + current);
                     this.cancel();
                     return;
                 }
                 if (current >= maxAttempts) {
-                    plugin.getLogger().warning("Background DB reconnect failed after " + current + " attempts; will stop retrying.");
+                    SkyblockPlugin.getLogger().warning("Background DB reconnect failed after " + current + " attempts; will stop retrying.");
                     this.cancel();
                 }
             }
         };
         // schedule with delay intervalSeconds*20 ticks
-        task.runTaskTimerAsynchronously(plugin, intervalSeconds * 20L, intervalSeconds * 20L);
+        task.runTaskTimerAsynchronously(SkyblockPlugin, intervalSeconds * 20L, intervalSeconds * 20L);
     }
 
     // Helper that attempts initialization but does NOT schedule another reconnect (to avoid recursion)
@@ -172,10 +176,10 @@ public class MultiServerDatabaseManager {
             dataSource = new HikariDataSource(config);
             createTables();
             isConnected = true;
-            plugin.getLogger().info("Multi-Server Database connected successfully! JDBC URL: " + jdbcUrl);
+            SkyblockPlugin.getLogger().info("Multi-Server Database connected successfully! JDBC URL: " + jdbcUrl);
             return true;
         } catch (Exception e) {
-            plugin.getLogger().log(Level.WARNING, "Background attempt failed to connect to database: " + (config.getJdbcUrl() != null ? config.getJdbcUrl() : "<unknown>"), e);
+            SkyblockPlugin.getLogger().log(Level.WARNING, "Background attempt failed to connect to database: " + (config.getJdbcUrl() != null ? config.getJdbcUrl() : "<unknown>"), e);
             try {
                 if (dataSource != null && !dataSource.isClosed()) dataSource.close();
             } catch (Exception ignore) {}
@@ -483,7 +487,7 @@ public class MultiServerDatabaseManager {
                 )
             """);
 
-            plugin.getLogger().info("Database tables created successfully!");
+            SkyblockPlugin.getLogger().info("Database tables created successfully!");
         }
     }
 
@@ -492,7 +496,7 @@ public class MultiServerDatabaseManager {
             try {
                 return dataSource.getConnection();
             } catch (SQLException e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to get database connection", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to get database connection", e);
                 throw new RuntimeException(e);
             }
         });
@@ -509,7 +513,7 @@ public class MultiServerDatabaseManager {
 
                 return statement.executeUpdate() > 0;
             } catch (SQLException e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to execute update: " + sql, e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to execute update: " + sql, e);
                 return false;
             }
         });
@@ -527,7 +531,7 @@ public class MultiServerDatabaseManager {
 
                 return statement.executeQuery();
             } catch (SQLException e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to execute query: " + sql, e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to execute query: " + sql, e);
                 throw new RuntimeException(e);
             }
         });
@@ -541,11 +545,11 @@ public class MultiServerDatabaseManager {
             player_count = VALUES(player_count),
             last_seen = CURRENT_TIMESTAMP,
             status = 'online'
-        """, serverId, plugin.getServer().getName(), plugin.getServer().getOnlinePlayers().size());
+        """, serverId, SkyblockPlugin.getServer().getName(), SkyblockPlugin.getServer().getOnlinePlayers().size());
     }
 
     // Animation Data Methods
-    public CompletableFuture<Boolean> saveServerAnimationData(de.noctivag.plugin.worlds.MultiServerAnimationManager.ServerAnimationData data) {
+    public CompletableFuture<Boolean> saveServerAnimationData(de.noctivag.skyblock.worlds.MultiServerAnimationManager.ServerAnimationData data) {
         return executeUpdate("""
             INSERT INTO server_animation_data (server_id, server_name, player_count, active_world_animations, active_island_animations, last_update)
             VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
@@ -560,7 +564,7 @@ public class MultiServerDatabaseManager {
             data.getActiveIslandAnimations().stream().map(UUID::toString).reduce((a, b) -> a + "," + b).orElse(""));
     }
 
-    public CompletableFuture<Boolean> saveGlobalAnimationData(de.noctivag.plugin.worlds.MultiServerAnimationManager.GlobalAnimationData data) {
+    public CompletableFuture<Boolean> saveGlobalAnimationData(de.noctivag.skyblock.worlds.MultiServerAnimationManager.GlobalAnimationData data) {
         return executeUpdate("""
             INSERT INTO global_animation_data (animation_id, animation_type, world_name, x, y, z, player_uuid, server_id, timestamp)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -569,7 +573,7 @@ public class MultiServerDatabaseManager {
             data.getPlayerId() != null ? data.getPlayerId().toString() : null, data.getServerId(), new Timestamp(data.getTimestamp()));
     }
 
-    public CompletableFuture<Boolean> savePlayerAnimationData(de.noctivag.plugin.worlds.MultiServerAnimationManager.PlayerAnimationData data) {
+    public CompletableFuture<Boolean> savePlayerAnimationData(de.noctivag.skyblock.worlds.MultiServerAnimationManager.PlayerAnimationData data) {
         return executeUpdate("""
             INSERT INTO player_animation_data (player_uuid, current_animation, start_time, last_update)
             VALUES (?, ?, ?, CURRENT_TIMESTAMP)
@@ -580,17 +584,17 @@ public class MultiServerDatabaseManager {
         """, data.getPlayerId().toString(), data.getCurrentAnimation(), new Timestamp(data.getStartTime()));
     }
 
-    public CompletableFuture<java.util.List<de.noctivag.plugin.worlds.MultiServerAnimationManager.ServerAnimationData>> getAnimationDataFromOtherServers() {
+    public CompletableFuture<java.util.List<de.noctivag.skyblock.worlds.MultiServerAnimationManager.ServerAnimationData>> getAnimationDataFromOtherServers() {
         return executeQuery("""
             SELECT server_id, server_name, player_count, active_world_animations, active_island_animations, last_update
             FROM server_animation_data
             WHERE server_id != ? AND last_update > DATE_SUB(NOW(), INTERVAL 5 MINUTE)
         """, serverId).thenApply(resultSet -> {
-            java.util.List<de.noctivag.plugin.worlds.MultiServerAnimationManager.ServerAnimationData> data = new java.util.ArrayList<>();
+            java.util.List<de.noctivag.skyblock.worlds.MultiServerAnimationManager.ServerAnimationData> data = new java.util.ArrayList<>();
             try {
                 while (resultSet.next()) {
-                    de.noctivag.plugin.worlds.MultiServerAnimationManager.ServerAnimationData serverData =
-                        new de.noctivag.plugin.worlds.MultiServerAnimationManager.ServerAnimationData(
+                    de.noctivag.skyblock.worlds.MultiServerAnimationManager.ServerAnimationData serverData =
+                        new de.noctivag.skyblock.worlds.MultiServerAnimationManager.ServerAnimationData(
                             resultSet.getString("server_id"),
                             resultSet.getString("server_name"),
                             resultSet.getInt("player_count"),
@@ -619,23 +623,23 @@ public class MultiServerDatabaseManager {
                     data.add(serverData);
                 }
             } catch (SQLException e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to parse animation data", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to parse animation data", e);
             }
             return data;
         });
     }
 
-    public CompletableFuture<java.util.List<de.noctivag.plugin.worlds.MultiServerAnimationManager.ServerAnimationData>> getAllServerAnimationData() {
+    public CompletableFuture<java.util.List<de.noctivag.skyblock.worlds.MultiServerAnimationManager.ServerAnimationData>> getAllServerAnimationData() {
         return executeQuery("""
             SELECT server_id, server_name, player_count, active_world_animations, active_island_animations, last_update
             FROM server_animation_data
             WHERE last_update > DATE_SUB(NOW(), INTERVAL 10 MINUTE)
         """).thenApply(resultSet -> {
-            java.util.List<de.noctivag.plugin.worlds.MultiServerAnimationManager.ServerAnimationData> data = new java.util.ArrayList<>();
+            java.util.List<de.noctivag.skyblock.worlds.MultiServerAnimationManager.ServerAnimationData> data = new java.util.ArrayList<>();
             try {
                 while (resultSet.next()) {
-                    de.noctivag.plugin.worlds.MultiServerAnimationManager.ServerAnimationData serverData =
-                        new de.noctivag.plugin.worlds.MultiServerAnimationManager.ServerAnimationData(
+                    de.noctivag.skyblock.worlds.MultiServerAnimationManager.ServerAnimationData serverData =
+                        new de.noctivag.skyblock.worlds.MultiServerAnimationManager.ServerAnimationData(
                             resultSet.getString("server_id"),
                             resultSet.getString("server_name"),
                             resultSet.getInt("player_count"),
@@ -664,23 +668,23 @@ public class MultiServerDatabaseManager {
                     data.add(serverData);
                 }
             } catch (SQLException e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to parse animation data", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to parse animation data", e);
             }
             return data;
         });
     }
 
-    public CompletableFuture<java.util.List<de.noctivag.plugin.worlds.MultiServerAnimationManager.GlobalAnimationData>> getGlobalAnimationData() {
+    public CompletableFuture<java.util.List<de.noctivag.skyblock.worlds.MultiServerAnimationManager.GlobalAnimationData>> getGlobalAnimationData() {
         return executeQuery("""
             SELECT animation_id, animation_type, world_name, x, y, z, player_uuid, server_id, timestamp
             FROM global_animation_data
             WHERE server_id != ? AND timestamp > DATE_SUB(NOW(), INTERVAL 1 MINUTE)
             ORDER BY timestamp DESC
         """, serverId).thenApply(resultSet -> {
-            java.util.List<de.noctivag.plugin.worlds.MultiServerAnimationManager.GlobalAnimationData> data = new java.util.ArrayList<>();
+            java.util.List<de.noctivag.skyblock.worlds.MultiServerAnimationManager.GlobalAnimationData> data = new java.util.ArrayList<>();
             try {
                 while (resultSet.next()) {
-                    org.bukkit.World world = plugin.getServer().getWorld(resultSet.getString("world_name"));
+                    org.bukkit.World world = SkyblockPlugin.getServer().getWorld(resultSet.getString("world_name"));
                     if (world != null) {
                         org.bukkit.Location location = new org.bukkit.Location(
                             world,
@@ -699,8 +703,8 @@ public class MultiServerDatabaseManager {
                             }
                         }
 
-                        de.noctivag.plugin.worlds.MultiServerAnimationManager.GlobalAnimationData animationData =
-                            new de.noctivag.plugin.worlds.MultiServerAnimationManager.GlobalAnimationData(
+                        de.noctivag.skyblock.worlds.MultiServerAnimationManager.GlobalAnimationData animationData =
+                            new de.noctivag.skyblock.worlds.MultiServerAnimationManager.GlobalAnimationData(
                                 UUID.fromString(resultSet.getString("animation_id")),
                                 resultSet.getString("animation_type"),
                                 location,
@@ -713,7 +717,7 @@ public class MultiServerDatabaseManager {
                     }
                 }
             } catch (SQLException e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to parse global animation data", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to parse global animation data", e);
             }
             return data;
         });
@@ -723,7 +727,7 @@ public class MultiServerDatabaseManager {
     public CompletableFuture<Boolean> savePlayerAccessoryData(UUID playerId, Object data) {
         return CompletableFuture.supplyAsync(() -> {
             // Placeholder implementation
-            plugin.getLogger().info("Saving accessory data for player: " + playerId);
+            SkyblockPlugin.getLogger().info("Saving accessory data for player: " + playerId);
             return true;
         });
     }
@@ -731,154 +735,154 @@ public class MultiServerDatabaseManager {
     public CompletableFuture<Object> loadPlayerAccessoryData(UUID playerId) {
         return CompletableFuture.supplyAsync(() -> {
             // Placeholder implementation
-            plugin.getLogger().info("Loading accessory data for player: " + playerId);
+            SkyblockPlugin.getLogger().info("Loading accessory data for player: " + playerId);
             return new Object();
         });
     }
 
     public CompletableFuture<Boolean> savePlayerBrewingData(UUID playerId, Object data) {
         return CompletableFuture.supplyAsync(() -> {
-            plugin.getLogger().info("Saving brewing data for player: " + playerId);
+            SkyblockPlugin.getLogger().info("Saving brewing data for player: " + playerId);
             return true;
         });
     }
 
     public CompletableFuture<Object> loadPlayerBrewingData(UUID playerId) {
         return CompletableFuture.supplyAsync(() -> {
-            plugin.getLogger().info("Loading brewing data for player: " + playerId);
+            SkyblockPlugin.getLogger().info("Loading brewing data for player: " + playerId);
             return new Object();
         });
     }
 
     public CompletableFuture<Boolean> savePlayerExperimentData(UUID playerId, Object data) {
         return CompletableFuture.supplyAsync(() -> {
-            plugin.getLogger().info("Saving experiment data for player: " + playerId);
+            SkyblockPlugin.getLogger().info("Saving experiment data for player: " + playerId);
             return true;
         });
     }
 
     public CompletableFuture<Object> loadPlayerExperimentData(UUID playerId) {
         return CompletableFuture.supplyAsync(() -> {
-            plugin.getLogger().info("Loading experiment data for player: " + playerId);
+            SkyblockPlugin.getLogger().info("Loading experiment data for player: " + playerId);
             return new Object();
         });
     }
 
     public CompletableFuture<Boolean> savePlayerFairySoulData(UUID playerId, Object data) {
         return CompletableFuture.supplyAsync(() -> {
-            plugin.getLogger().info("Saving fairy soul data for player: " + playerId);
+            SkyblockPlugin.getLogger().info("Saving fairy soul data for player: " + playerId);
             return true;
         });
     }
 
     public CompletableFuture<Object> loadPlayerFairySoulData(UUID playerId) {
         return CompletableFuture.supplyAsync(() -> {
-            plugin.getLogger().info("Loading fairy soul data for player: " + playerId);
+            SkyblockPlugin.getLogger().info("Loading fairy soul data for player: " + playerId);
             return new Object();
         });
     }
 
     public CompletableFuture<Boolean> savePlayerFurnitureData(UUID playerId, Object data) {
         return CompletableFuture.supplyAsync(() -> {
-            plugin.getLogger().info("Saving furniture data for player: " + playerId);
+            SkyblockPlugin.getLogger().info("Saving furniture data for player: " + playerId);
             return true;
         });
     }
 
     public CompletableFuture<Object> loadPlayerFurnitureData(UUID playerId) {
         return CompletableFuture.supplyAsync(() -> {
-            plugin.getLogger().info("Loading furniture data for player: " + playerId);
+            SkyblockPlugin.getLogger().info("Loading furniture data for player: " + playerId);
             return new Object();
         });
     }
 
     public CompletableFuture<Boolean> savePlayerGemstoneData(UUID playerId, Object data) {
         return CompletableFuture.supplyAsync(() -> {
-            plugin.getLogger().info("Saving gemstone data for player: " + playerId);
+            SkyblockPlugin.getLogger().info("Saving gemstone data for player: " + playerId);
             return true;
         });
     }
 
     public CompletableFuture<Object> loadPlayerGemstoneData(UUID playerId) {
         return CompletableFuture.supplyAsync(() -> {
-            plugin.getLogger().info("Loading gemstone data for player: " + playerId);
+            SkyblockPlugin.getLogger().info("Loading gemstone data for player: " + playerId);
             return new Object();
         });
     }
 
     public CompletableFuture<Boolean> savePlayerMagicData(UUID playerId, Object data) {
         return CompletableFuture.supplyAsync(() -> {
-            plugin.getLogger().info("Saving magic data for player: " + playerId);
+            SkyblockPlugin.getLogger().info("Saving magic data for player: " + playerId);
             return true;
         });
     }
 
     public CompletableFuture<Object> loadPlayerMagicData(UUID playerId) {
         return CompletableFuture.supplyAsync(() -> {
-            plugin.getLogger().info("Loading magic data for player: " + playerId);
+            SkyblockPlugin.getLogger().info("Loading magic data for player: " + playerId);
             return new Object();
         });
     }
 
     public CompletableFuture<Boolean> savePlayerReforgeData(UUID playerId, Object data) {
         return CompletableFuture.supplyAsync(() -> {
-            plugin.getLogger().info("Saving reforge data for player: " + playerId);
+            SkyblockPlugin.getLogger().info("Saving reforge data for player: " + playerId);
             return true;
         });
     }
 
     public CompletableFuture<Object> loadPlayerReforgeData(UUID playerId) {
         return CompletableFuture.supplyAsync(() -> {
-            plugin.getLogger().info("Loading reforge data for player: " + playerId);
+            SkyblockPlugin.getLogger().info("Loading reforge data for player: " + playerId);
             return new Object();
         });
     }
 
     public CompletableFuture<Boolean> savePlayerRuneData(UUID playerId, Object data) {
         return CompletableFuture.supplyAsync(() -> {
-            plugin.getLogger().info("Saving rune data for player: " + playerId);
+            SkyblockPlugin.getLogger().info("Saving rune data for player: " + playerId);
             return true;
         });
     }
 
     public CompletableFuture<Object> loadPlayerRuneData(UUID playerId) {
         return CompletableFuture.supplyAsync(() -> {
-            plugin.getLogger().info("Loading rune data for player: " + playerId);
+            SkyblockPlugin.getLogger().info("Loading rune data for player: " + playerId);
             return new Object();
         });
     }
 
     public CompletableFuture<Boolean> savePlayerSackData(UUID playerId, Object data) {
         return CompletableFuture.supplyAsync(() -> {
-            plugin.getLogger().info("Saving sack data for player: " + playerId);
+            SkyblockPlugin.getLogger().info("Saving sack data for player: " + playerId);
             return true;
         });
     }
 
     public CompletableFuture<Object> loadPlayerSackData(UUID playerId) {
         return CompletableFuture.supplyAsync(() -> {
-            plugin.getLogger().info("Loading sack data for player: " + playerId);
+            SkyblockPlugin.getLogger().info("Loading sack data for player: " + playerId);
             return new Object();
         });
     }
 
     public CompletableFuture<Boolean> savePlayerTravelData(UUID playerId, Object data) {
         return CompletableFuture.supplyAsync(() -> {
-            plugin.getLogger().info("Saving travel data for player: " + playerId);
+            SkyblockPlugin.getLogger().info("Saving travel data for player: " + playerId);
             return true;
         });
     }
 
     public CompletableFuture<Boolean> savePlayerProfileAsync(UUID playerId, Object profile) {
         return CompletableFuture.supplyAsync(() -> {
-            plugin.getLogger().info("Saving player profile for: " + playerId);
+            SkyblockPlugin.getLogger().info("Saving player profile for: " + playerId);
             return true;
         });
     }
 
     public CompletableFuture<Object> loadPlayerProfileAsync(UUID playerId) {
         return CompletableFuture.supplyAsync(() -> {
-            plugin.getLogger().info("Loading player profile for: " + playerId);
+            SkyblockPlugin.getLogger().info("Loading player profile for: " + playerId);
             return new Object();
         });
     }
@@ -894,7 +898,7 @@ public class MultiServerDatabaseManager {
 
     public CompletableFuture<Object> loadPlayerTravelData(UUID playerId) {
         return CompletableFuture.supplyAsync(() -> {
-            plugin.getLogger().info("Loading travel data for player: " + playerId);
+            SkyblockPlugin.getLogger().info("Loading travel data for player: " + playerId);
             return new Object();
         });
     }
@@ -902,7 +906,7 @@ public class MultiServerDatabaseManager {
     // Minion data methods
     public CompletableFuture<Object> loadMinionData(UUID playerId) {
         return CompletableFuture.supplyAsync(() -> {
-            plugin.getLogger().info("Loading minion data for player: " + playerId);
+            SkyblockPlugin.getLogger().info("Loading minion data for player: " + playerId);
             // Return a placeholder object for now
             return new Object();
         });
@@ -910,7 +914,7 @@ public class MultiServerDatabaseManager {
     
     public CompletableFuture<Boolean> saveMinionData(UUID playerId, Object data) {
         return CompletableFuture.supplyAsync(() -> {
-            plugin.getLogger().info("Saving minion data for player: " + playerId);
+            SkyblockPlugin.getLogger().info("Saving minion data for player: " + playerId);
             return true;
         });
     }
@@ -919,7 +923,7 @@ public class MultiServerDatabaseManager {
         if (dataSource != null && !dataSource.isClosed()) {
             dataSource.close();
             isConnected = false;
-            plugin.getLogger().info("Database connection closed.");
+            SkyblockPlugin.getLogger().info("Database connection closed.");
         }
     }
 
@@ -929,7 +933,7 @@ public class MultiServerDatabaseManager {
     public void shutdown() {
         if (dataSource != null && !dataSource.isClosed()) {
             dataSource.close();
-            plugin.getLogger().info("MultiServerDatabaseManager: Connection pool shut down successfully.");
+            SkyblockPlugin.getLogger().info("MultiServerDatabaseManager: Connection pool shut down successfully.");
         }
         isConnected = false;
     }
@@ -940,7 +944,7 @@ public class MultiServerDatabaseManager {
     public void closeAll() {
         if (dataSource != null && !dataSource.isClosed()) {
             dataSource.close();
-            plugin.getLogger().info("Database connection pool shut down successfully.");
+            SkyblockPlugin.getLogger().info("Database connection pool shut down successfully.");
         }
         isConnected = false;
     }

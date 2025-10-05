@@ -1,171 +1,140 @@
 package de.noctivag.skyblock.gui;
-import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
-import org.bukkit.Bukkit;
+import org.bukkit.event.inventory.ClickType;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 
 import java.util.Arrays;
 
 /**
- * Messages GUI - Nachrichten und Kommunikation
+ * Messages GUI - Customize join/leave messages
  */
-public class MessagesGUI {
-    
-    private final SkyblockPlugin plugin;
-    
-    public MessagesGUI(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+public class MessagesGUI extends CustomGUI {
+    private final SkyblockPlugin SkyblockPlugin;
+    private final Player player;
+
+    public MessagesGUI(SkyblockPlugin SkyblockPlugin, Player player) {
+        super(54, Component.text("§6§l💬 Messages").color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD));
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.player = player;
+        setupItems();
+        playOpenSound();
     }
-    
-    public void openMessagesGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lMessages");
-        
-        // Message Types
-        setItem(gui, 10, Material.WRITABLE_BOOK, "§a§lSend Message",
-            "§7Nachricht senden",
-            "§7• Private Message",
-            "§7• Message to Player",
-            "§7• Message History",
-            "",
-            "§eKlicke zum Öffnen");
-            
-        setItem(gui, 11, Material.BOOK, "§b§lInbox",
-            "§7Posteingang",
-            "§7• Unread Messages: §a0",
-            "§7• Total Messages: §a0",
-            "§7• Message Archive",
-            "",
-            "§eKlicke zum Öffnen");
-            
-        setItem(gui, 12, Material.PAPER, "§e§lSent Messages",
-            "§7Gesendete Nachrichten",
-            "§7• Sent Messages: §a0",
-            "§7• Message History",
-            "§7• Message Status",
-            "",
-            "§eKlicke zum Öffnen");
-            
-        setItem(gui, 13, Material.ENCHANTED_BOOK, "§d§lMessage Templates",
-            "§7Nachrichten-Vorlagen",
-            "§7• Quick Messages",
-            "§7• Custom Templates",
-            "§7• Template Management",
-            "",
-            "§eKlicke zum Öffnen");
-            
-        setItem(gui, 14, Material.REDSTONE, "§c§lBlocked Players",
-            "§7Blockierte Spieler",
-            "§7• Blocked Players: §a0",
-            "§7• Block Management",
-            "§7• Unblock Players",
-            "",
-            "§eKlicke zum Öffnen");
-            
-        // Chat Features
-        setItem(gui, 19, Material.ANVIL, "§6§lChat Settings",
-            "§7Chat-Einstellungen",
-            "§7• Chat Format",
-            "§7• Chat Colors",
-            "§7• Chat Filters",
-            "",
-            "§eKlicke zum Öffnen");
-            
-        setItem(gui, 20, Material.NAME_TAG, "§a§lChat Channels",
-            "§7Chat-Kanäle",
-            "§7• Global Chat",
-            "§7• Local Chat",
-            "§7• Private Chat",
-            "",
-            "§eKlicke zum Öffnen");
-            
-        setItem(gui, 21, Material.BELL, "§e§lNotifications",
-            "§7Benachrichtigungen",
-            "§7• Message Notifications",
-            "§7• Sound Notifications",
-            "§7• Visual Notifications",
-            "",
-            "§eKlicke zum Öffnen");
-            
-        setItem(gui, 22, Material.CLOCK, "§6§lMessage History",
-            "§7Nachrichten-Verlauf",
-            "§7• Recent Messages",
-            "§7• Message Archive",
-            "§7• Search Messages",
-            "",
-            "§eKlicke zum Öffnen");
-            
-        setItem(gui, 23, Material.EMERALD, "§a§lMessage Rewards",
-            "§7Nachrichten-Belohnungen",
-            "§7• Message Streaks",
-            "§7• Activity Rewards",
-            "§7• Social Rewards",
-            "",
-            "§eKlicke zum Öffnen");
-            
-        // Communication Tools
-        setItem(gui, 28, Material.COMPASS, "§b§lFind Players",
-            "§7Spieler finden",
-            "§7• Online Players",
-            "§7• Player Search",
-            "§7• Player Status",
-            "",
-            "§eKlicke zum Öffnen");
-            
-        setItem(gui, 29, Material.FIREWORK_ROCKET, "§d§lAnnouncements",
-            "§7Ankündigungen",
-            "§7• Server Announcements",
-            "§7• Event Announcements",
-            "§7• Personal Announcements",
-            "",
-            "§eKlicke zum Öffnen");
-            
-        setItem(gui, 30, Material.BOOK, "§e§lMessage Guide",
-            "§7Nachrichten-Anleitung",
-            "§7• Message System",
-            "§7• Chat Commands",
-            "§7• Communication Tips",
-            "",
-            "§eKlicke zum Öffnen");
-            
-        // Message Management
-        setItem(gui, 37, Material.REDSTONE, "§c§lMessage Settings",
-            "§7Nachrichten-Einstellungen",
-            "§7• Privacy Settings",
-            "§7• Message Filters",
-            "§7• Auto-Reply",
-            "",
-            "§eKlicke zum Öffnen");
-            
-        setItem(gui, 40, Material.CLOCK, "§e§lMessage Statistics",
-            "§7Nachrichten-Statistiken",
-            "§7• Messages Sent: §a0",
-            "§7• Messages Received: §a0",
-            "§7• Active Conversations: §a0",
-            "",
-            "§eKlicke zum Öffnen");
-            
-        // Navigation
-        setItem(gui, 45, Material.ARROW, "§7« Back",
-            "§7Zurück zum Hauptmenü");
-            
-        setItem(gui, 49, Material.BARRIER, "§c§lClose",
-            "§7GUI schließen");
-            
-        player.openInventory(gui);
+
+    private void setupItems() {
+        // Header
+        setItem(4, createGuiItem(Material.WRITABLE_BOOK, "§6§l💬 Messages",
+            "§7Customize your join/leave messages",
+            "§eChoose your message type"));
+
+        // Join Messages
+        setItem(10, createGuiItem(Material.EMERALD, "§a§l✅ Join Messages",
+            "§7Customize your join messages",
+            "§7• Set custom join messages",
+            "§7• Use placeholders",
+            "§7• Preview messages",
+            "§eClick to open"));
+
+        // Leave Messages
+        setItem(11, createGuiItem(Material.REDSTONE, "§c§l❌ Leave Messages",
+            "§7Customize your leave messages",
+            "§7• Set custom leave messages",
+            "§7• Use placeholders",
+            "§7• Preview messages",
+            "§eClick to open"));
+
+        // Message Presets
+        setItem(12, createGuiItem(Material.BOOK, "§b§l📚 Message Presets",
+            "§7Use predefined message templates",
+            "§7• Various themes available",
+            "§7• Easy to customize",
+            "§7• Quick setup",
+            "§eClick to open"));
+
+        // Message Settings
+        setItem(13, createGuiItem(Material.REDSTONE_TORCH, "§e§l⚙️ Message Settings",
+            "§7Configure message behavior",
+            "§7• Enable/disable messages",
+            "§7• Sound settings",
+            "§7• Display options",
+            "§eClick to open"));
+
+        // Message History
+        setItem(14, createGuiItem(Material.CLOCK, "§6§l🕐 Message History",
+            "§7View your message history",
+            "§7• Previous messages",
+            "§7• Usage statistics",
+            "§7• Restore old messages",
+            "§eClick to open"));
+
+        // Back
+        setItem(49, createGuiItem(Material.BARRIER, "§c§lBack",
+            "§7Return to main menu"));
     }
-    
-    private void setItem(Inventory gui, int slot, Material material, String name, String... lore) {
+
+    public void onClick(Player player, int slot, ItemStack item, ClickType clickType) {
+        switch (slot) {
+            case 10 -> openJoinMessageGUI(player);
+            case 11 -> openLeaveMessageGUI(player);
+            case 12 -> openMessagePresetsGUI(player);
+            case 13 -> openMessageSettingsGUI(player);
+            case 14 -> openMessageHistoryGUI(player);
+            case 49 -> {
+                player.closeInventory();
+                new UnifiedMainMenuSystem(SkyblockPlugin, player, UnifiedMainMenuSystem.MenuMode.ENHANCED).open(player);
+            }
+        }
+    }
+
+    private void openJoinMessageGUI(Player player) {
+        new JoinMessageGUI(SkyblockPlugin, player).open(player);
+    }
+
+    private void openLeaveMessageGUI(Player player) {
+        player.sendMessage(Component.text("§aLeave Message GUI wird geöffnet..."));
+        // TODO: Implement leave message GUI
+    }
+
+    private void openMessagePresetsGUI(Player player) {
+        new JoinMessagePresetsGUI(SkyblockPlugin).open(player);
+    }
+
+    private void openMessageSettingsGUI(Player player) {
+        player.sendMessage(Component.text("§aMessage Settings GUI wird geöffnet..."));
+        // TODO: Implement message settings GUI
+    }
+
+    private void openMessageHistoryGUI(Player player) {
+        player.sendMessage(Component.text("§aMessage History GUI wird geöffnet..."));
+        // TODO: Implement message history GUI
+    }
+
+    private void playOpenSound() {
+        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+    }
+
+    public ItemStack createGuiItem(Material material, String name, String... lore) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
+        
         if (meta != null) {
-            meta.setDisplayName(name);
-            meta.setLore(Arrays.asList(lore));
+            meta.displayName(Component.text(name));
+            if (lore.length > 0) {
+                meta.lore(java.util.Arrays.stream(lore).map(Component::text).collect(java.util.stream.Collectors.toList()));
+            }
             item.setItemMeta(meta);
         }
-        gui.setItem(slot, item);
+        
+        return item;
     }
 }

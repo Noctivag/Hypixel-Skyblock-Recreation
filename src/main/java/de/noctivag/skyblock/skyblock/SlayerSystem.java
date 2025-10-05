@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.skyblock;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -10,13 +15,13 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SlayerSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, Map<SlayerType, Integer>> playerSlayerLevels = new ConcurrentHashMap<>();
     private final Map<UUID, Map<SlayerType, Integer>> playerSlayerXP = new ConcurrentHashMap<>();
     private final Map<UUID, SlayerQuest> activeQuests = new ConcurrentHashMap<>();
     
-    public SlayerSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public SlayerSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         initializeSlayerData();
     }
     
@@ -40,7 +45,7 @@ public class SlayerSystem {
     
     public void startSlayerQuest(Player player, SlayerType type, SlayerTier tier) {
         if (activeQuests.containsKey(player.getUniqueId())) {
-            player.sendMessage("§cYou already have an active slayer quest!");
+            player.sendMessage(Component.text("§cYou already have an active slayer quest!"));
             return;
         }
         
@@ -55,32 +60,32 @@ public class SlayerSystem {
         
         // Check if player has enough coins
         double cost = tier.getCost();
-        if (!plugin.getEconomyManager().hasBalance(player, cost)) {
-            player.sendMessage("§cYou don't have enough coins! Cost: " + plugin.getEconomyManager().formatMoney(cost));
+        if (!SkyblockPlugin.getEconomyManager().hasBalance(player, cost)) {
+            player.sendMessage("§cYou don't have enough coins! Cost: " + SkyblockPlugin.getEconomyManager().formatMoney(cost));
             return;
         }
         
         // Start quest
-        plugin.getEconomyManager().withdrawMoney(player, cost);
+        SkyblockPlugin.getEconomyManager().withdrawMoney(player, cost);
         SlayerQuest quest = new SlayerQuest(player.getUniqueId(), type, tier);
         activeQuests.put(player.getUniqueId(), quest);
         
-        player.sendMessage("§a§lSLAYER QUEST STARTED!");
+        player.sendMessage(Component.text("§a§lSLAYER QUEST STARTED!"));
         player.sendMessage("§7Type: §e" + type.getName());
         player.sendMessage("§7Tier: §e" + tier.getName());
-        player.sendMessage("§7Cost: §6" + plugin.getEconomyManager().formatMoney(cost));
+        player.sendMessage("§7Cost: §6" + SkyblockPlugin.getEconomyManager().formatMoney(cost));
         player.sendMessage("§7Objective: §eKill " + tier.getKillsRequired() + " " + type.getName() + "s");
     }
     
     public void completeSlayerQuest(Player player) {
         SlayerQuest quest = activeQuests.get(player.getUniqueId());
         if (quest == null) {
-            player.sendMessage("§cYou don't have an active slayer quest!");
+            player.sendMessage(Component.text("§cYou don't have an active slayer quest!"));
             return;
         }
         
         if (!quest.isCompleted()) {
-            player.sendMessage("§cYour slayer quest is not completed yet!");
+            player.sendMessage(Component.text("§cYour slayer quest is not completed yet!"));
             return;
         }
         
@@ -93,7 +98,7 @@ public class SlayerSystem {
         // Remove quest
         activeQuests.remove(player.getUniqueId());
         
-        player.sendMessage("§a§lSLAYER QUEST COMPLETED!");
+        player.sendMessage(Component.text("§a§lSLAYER QUEST COMPLETED!"));
         player.sendMessage("§7Type: §e" + quest.getType().getName());
         player.sendMessage("§7Tier: §e" + quest.getTier().getName());
         player.sendMessage("§7XP Gained: §e" + quest.getTier().getXPReward());
@@ -104,7 +109,7 @@ public class SlayerSystem {
         SlayerType type = quest.getType();
         
         // Give coins
-        plugin.getEconomyManager().giveMoney(player, tier.getCoinReward());
+        SkyblockPlugin.getEconomyManager().giveMoney(player, tier.getCoinReward());
         
         // Give items based on slayer type and tier
         switch (type) {
@@ -145,8 +150,8 @@ public class SlayerSystem {
             }
         }
         
-        player.sendMessage("§a§lREWARDS RECEIVED!");
-        player.sendMessage("§7Coins: §6" + plugin.getEconomyManager().formatMoney(tier.getCoinReward()));
+        player.sendMessage(Component.text("§a§lREWARDS RECEIVED!"));
+        player.sendMessage("§7Coins: §6" + SkyblockPlugin.getEconomyManager().formatMoney(tier.getCoinReward()));
         player.sendMessage("§7Items: §e" + tier.getTier() + " items");
     }
     
@@ -164,7 +169,7 @@ public class SlayerSystem {
         
         if (newLevel > oldLevel) {
             playerSlayerLevels.get(playerId).put(type, newLevel);
-            player.sendMessage("§a§lSLAYER LEVEL UP!");
+            player.sendMessage(Component.text("§a§lSLAYER LEVEL UP!"));
             player.sendMessage("§7" + type.getName() + " Slayer: §e" + oldLevel + " §7→ §a" + newLevel);
             
             // Give level up rewards
@@ -177,31 +182,31 @@ public class SlayerSystem {
         switch (type) {
             case ZOMBIE -> {
                 if (level % 5 == 0) {
-                    plugin.getEconomyManager().giveMoney(player, level * 100);
+                    SkyblockPlugin.getEconomyManager().giveMoney(player, level * 100);
                     player.getInventory().addItem(new ItemStack(Material.GOLDEN_APPLE, 1));
                 }
             }
             case SPIDER -> {
                 if (level % 5 == 0) {
-                    plugin.getEconomyManager().giveMoney(player, level * 100);
+                    SkyblockPlugin.getEconomyManager().giveMoney(player, level * 100);
                     player.getInventory().addItem(new ItemStack(Material.COBWEB, 1));
                 }
             }
             case WOLF -> {
                 if (level % 5 == 0) {
-                    plugin.getEconomyManager().giveMoney(player, level * 100);
+                    SkyblockPlugin.getEconomyManager().giveMoney(player, level * 100);
                     player.getInventory().addItem(new ItemStack(Material.WOLF_SPAWN_EGG, 1));
                 }
             }
             case ENDERMAN -> {
                 if (level % 5 == 0) {
-                    plugin.getEconomyManager().giveMoney(player, level * 100);
+                    SkyblockPlugin.getEconomyManager().giveMoney(player, level * 100);
                     player.getInventory().addItem(new ItemStack(Material.ENDER_CHEST, 1));
                 }
             }
             case BLAZE -> {
                 if (level % 5 == 0) {
-                    plugin.getEconomyManager().giveMoney(player, level * 100);
+                    SkyblockPlugin.getEconomyManager().giveMoney(player, level * 100);
                     player.getInventory().addItem(new ItemStack(Material.FIRE_CHARGE, 1));
                 }
             }
@@ -338,7 +343,7 @@ public class SlayerSystem {
             this.playerId = playerId;
             this.type = type;
             this.tier = tier;
-            this.startTime = System.currentTimeMillis();
+            this.startTime = java.lang.System.currentTimeMillis();
             this.kills = 0;
             this.completed = false;
         }
@@ -357,7 +362,7 @@ public class SlayerSystem {
         public long getTimeRemaining() {
             // Slayer quests have a 2-hour time limit
             long timeLimit = 2 * 60 * 60 * 1000L; // 2 hours in milliseconds
-            long elapsed = System.currentTimeMillis() - startTime;
+            long elapsed = java.lang.System.currentTimeMillis() - startTime;
             return Math.max(0, timeLimit - elapsed);
         }
         

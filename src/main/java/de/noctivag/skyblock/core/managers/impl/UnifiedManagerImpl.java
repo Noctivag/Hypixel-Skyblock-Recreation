@@ -1,9 +1,12 @@
 package de.noctivag.skyblock.core.managers.impl;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.core.api.Service;
 import de.noctivag.skyblock.core.managers.UnifiedManager;
-import org.bukkit.plugin.java.JavaPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -17,19 +20,19 @@ import java.util.stream.Collectors;
  */
 public class UnifiedManagerImpl<K, V> implements UnifiedManager<K, V> {
     
-    private final JavaSkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Logger logger;
     private final ConcurrentHashMap<K, V> data;
     private final ManagerType managerType;
     private final String name;
     
     private boolean initialized = false;
-    private long lastAccessed = System.currentTimeMillis();
-    private long lastModified = System.currentTimeMillis();
+    private long lastAccessed = java.lang.System.currentTimeMillis();
+    private long lastModified = java.lang.System.currentTimeMillis();
     
-    public UnifiedManagerImpl(JavaSkyblockPlugin plugin, String name, ManagerType managerType) {
-        this.plugin = plugin;
-        this.logger = plugin.getLogger();
+    public UnifiedManagerImpl(SkyblockPlugin SkyblockPlugin, String name, ManagerType managerType) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.logger = SkyblockPlugin.getLogger();
         this.data = new ConcurrentHashMap<>();
         this.name = name;
         this.managerType = managerType;
@@ -83,53 +86,53 @@ public class UnifiedManagerImpl<K, V> implements UnifiedManager<K, V> {
     
     @Override
     public V get(K key) {
-        lastAccessed = System.currentTimeMillis();
+        lastAccessed = java.lang.System.currentTimeMillis();
         return data.get(key);
     }
     
     @Override
     public void set(K key, V value) {
         data.put(key, value);
-        lastModified = System.currentTimeMillis();
+        lastModified = java.lang.System.currentTimeMillis();
     }
     
     @Override
     public V remove(K key) {
         V removed = data.remove(key);
         if (removed != null) {
-            lastModified = System.currentTimeMillis();
+            lastModified = java.lang.System.currentTimeMillis();
         }
         return removed;
     }
     
     @Override
     public boolean contains(K key) {
-        lastAccessed = System.currentTimeMillis();
+        lastAccessed = java.lang.System.currentTimeMillis();
         return data.containsKey(key);
     }
     
     @Override
     public Set<K> getKeys() {
-        lastAccessed = System.currentTimeMillis();
+        lastAccessed = java.lang.System.currentTimeMillis();
         return new HashSet<>(data.keySet());
     }
     
     @Override
     public Iterable<V> getValues() {
-        lastAccessed = System.currentTimeMillis();
+        lastAccessed = java.lang.System.currentTimeMillis();
         return new ArrayList<>(data.values());
     }
     
     @Override
     public Map<K, V> getAll() {
-        lastAccessed = System.currentTimeMillis();
+        lastAccessed = java.lang.System.currentTimeMillis();
         return new HashMap<>(data);
     }
     
     @Override
     public void clear() {
         data.clear();
-        lastModified = System.currentTimeMillis();
+        lastModified = java.lang.System.currentTimeMillis();
     }
     
     @Override
@@ -168,7 +171,7 @@ public class UnifiedManagerImpl<K, V> implements UnifiedManager<K, V> {
     
     @Override
     public Map<K, V> getMultiple(List<K> keys) {
-        lastAccessed = System.currentTimeMillis();
+        lastAccessed = java.lang.System.currentTimeMillis();
         Map<K, V> result = new HashMap<>();
         for (K key : keys) {
             V value = data.get(key);
@@ -182,7 +185,7 @@ public class UnifiedManagerImpl<K, V> implements UnifiedManager<K, V> {
     @Override
     public void setMultiple(Map<K, V> entries) {
         data.putAll(entries);
-        lastModified = System.currentTimeMillis();
+        lastModified = java.lang.System.currentTimeMillis();
     }
     
     @Override
@@ -195,14 +198,14 @@ public class UnifiedManagerImpl<K, V> implements UnifiedManager<K, V> {
             }
         }
         if (!removed.isEmpty()) {
-            lastModified = System.currentTimeMillis();
+            lastModified = java.lang.System.currentTimeMillis();
         }
         return removed;
     }
     
     @Override
     public Map<K, Boolean> containsMultiple(List<K> keys) {
-        lastAccessed = System.currentTimeMillis();
+        lastAccessed = java.lang.System.currentTimeMillis();
         Map<K, Boolean> result = new HashMap<>();
         for (K key : keys) {
             result.put(key, data.containsKey(key));
@@ -212,7 +215,7 @@ public class UnifiedManagerImpl<K, V> implements UnifiedManager<K, V> {
     
     @Override
     public Map<K, V> getByPattern(String pattern) {
-        lastAccessed = System.currentTimeMillis();
+        lastAccessed = java.lang.System.currentTimeMillis();
         Pattern compiledPattern = Pattern.compile(pattern);
         
         return data.entrySet().stream()
@@ -222,7 +225,7 @@ public class UnifiedManagerImpl<K, V> implements UnifiedManager<K, V> {
     
     @Override
     public List<K> getKeysByPattern(String pattern) {
-        lastAccessed = System.currentTimeMillis();
+        lastAccessed = java.lang.System.currentTimeMillis();
         Pattern compiledPattern = Pattern.compile(pattern);
         
         return data.keySet().stream()

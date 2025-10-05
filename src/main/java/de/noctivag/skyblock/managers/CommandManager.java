@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.managers;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -13,14 +17,14 @@ import java.util.Map;
 import java.util.UUID;
 
 public class CommandManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final File commandsFile;
     private FileConfiguration commandsConfig;
     private final Map<UUID, Map<String, Long>> playerCooldowns = new HashMap<>();
 
-    public CommandManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.commandsFile = new File(plugin.getDataFolder(), "commands.yml");
+    public CommandManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.commandsFile = new File(SkyblockPlugin.getDataFolder(), "commands.yml");
         load();
     }
 
@@ -30,7 +34,7 @@ public class CommandManager {
                 commandsFile.getParentFile().mkdirs();
                 commandsFile.createNewFile();
             } catch (IOException e) {
-                plugin.getLogger().severe("Could not create commands.yml: " + e.getMessage());
+                SkyblockPlugin.getLogger().severe("Could not create commands.yml: " + e.getMessage());
             }
         }
         commandsConfig = YamlConfiguration.loadConfiguration(commandsFile);
@@ -53,7 +57,7 @@ public class CommandManager {
         try {
             commandsConfig.save(commandsFile);
         } catch (IOException e) {
-            plugin.getLogger().severe("Could not save commands.yml: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Could not save commands.yml: " + e.getMessage());
         }
     }
 
@@ -95,7 +99,7 @@ public class CommandManager {
         int cooldownSeconds = getCooldown(command);
         if (cooldownSeconds <= 0) return false;
 
-        long timePassed = (System.currentTimeMillis() - lastUsed) / 1000;
+        long timePassed = (java.lang.System.currentTimeMillis() - lastUsed) / 1000;
         return timePassed < cooldownSeconds;
     }
 
@@ -110,13 +114,13 @@ public class CommandManager {
         int cooldownSeconds = getCooldown(command);
         if (cooldownSeconds <= 0) return 0;
 
-        long timePassed = (System.currentTimeMillis() - lastUsed) / 1000;
+        long timePassed = (java.lang.System.currentTimeMillis() - lastUsed) / 1000;
         return Math.max(0, (int) (cooldownSeconds - timePassed));
     }
 
     public void setCooldown(Player player, String command) {
         UUID uuid = player.getUniqueId();
-        playerCooldowns.computeIfAbsent(uuid, k -> new HashMap<>()).put(command, System.currentTimeMillis());
+        playerCooldowns.computeIfAbsent(uuid, k -> new HashMap<>()).put(command, java.lang.System.currentTimeMillis());
     }
 
     public void clearCooldown(Player player, String command) {

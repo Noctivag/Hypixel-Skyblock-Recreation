@@ -1,8 +1,11 @@
 package de.noctivag.skyblock.core.managers;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.core.managers.impl.UnifiedManagerImpl;
-import org.bukkit.plugin.java.JavaPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
@@ -14,24 +17,24 @@ import java.util.logging.Logger;
 public class ManagerFactory {
     
     private static ManagerFactory instance;
-    private final JavaSkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Logger logger;
     private final ConcurrentHashMap<String, UnifiedManager<?, ?>> managers;
     
-    private ManagerFactory(JavaSkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.logger = plugin.getLogger();
+    private ManagerFactory(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.logger = SkyblockPlugin.getLogger();
         this.managers = new ConcurrentHashMap<>();
     }
     
     /**
      * Get the singleton instance
-     * @param plugin the plugin instance
+     * @param SkyblockPlugin the SkyblockPlugin instance
      * @return manager factory instance
      */
-    public static synchronized ManagerFactory getInstance(JavaSkyblockPlugin plugin) {
+    public static synchronized ManagerFactory getInstance(SkyblockPlugin SkyblockPlugin) {
         if (instance == null) {
-            instance = new ManagerFactory(plugin);
+            instance = new ManagerFactory(SkyblockPlugin);
         }
         return instance;
     }
@@ -47,7 +50,7 @@ public class ManagerFactory {
     @SuppressWarnings("unchecked")
     public <K, V> UnifiedManager<K, V> getManager(String name, Class<K> keyType, Class<V> valueType, UnifiedManager.ManagerType managerType) {
         return (UnifiedManager<K, V>) managers.computeIfAbsent(name, k -> {
-            UnifiedManager<K, V> manager = new UnifiedManagerImpl<>(plugin, name, managerType);
+            UnifiedManager<K, V> manager = new UnifiedManagerImpl<>(SkyblockPlugin, name, managerType);
             logger.info("Created manager: " + name + " (" + managerType.getDisplayName() + ")");
             return manager;
         });

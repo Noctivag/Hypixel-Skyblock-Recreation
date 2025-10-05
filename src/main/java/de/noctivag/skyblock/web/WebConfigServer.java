@@ -1,10 +1,13 @@
 package de.noctivag.skyblock.web;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -19,14 +22,14 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class WebConfigServer {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private HttpServer server;
     private final int port;
     private final String password;
 
-    public WebConfigServer(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        FileConfiguration config = plugin.getConfig();
+    public WebConfigServer(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        FileConfiguration config = SkyblockPlugin.getConfig();
         this.port = config.getInt("web-config.port", 8080);
         this.password = config.getString("web-config.password", "changeme");
     }
@@ -39,9 +42,9 @@ public class WebConfigServer {
             server.createContext("/api/features", new FeaturesHandler());
             server.setExecutor(null);
             server.start();
-            plugin.getLogger().info("Web-Konfiguration läuft auf Port " + port);
+            SkyblockPlugin.getLogger().info("Web-Konfiguration läuft auf Port " + port);
         } catch (IOException e) {
-            plugin.getLogger().severe("Fehler beim Starten des Web-Servers: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Fehler beim Starten des Web-Servers: " + e.getMessage());
         }
     }
 
@@ -90,7 +93,7 @@ public class WebConfigServer {
         private void handleConfigGet(HttpExchange exchange) throws IOException {
             Map<String, Object> config = new HashMap<>();
             // Lade Konfigurationswerte
-            config.put("maxHomes", plugin.getConfig().getInt("max-homes", 3));
+            config.put("maxHomes", SkyblockPlugin.getConfig().getInt("max-homes", 3));
             config.put("webPort", port);
             config.put("features", readFeatureStates());
 
@@ -118,10 +121,10 @@ public class WebConfigServer {
                 // Aktualisiere Konfiguration safely (check presence and types)
                 Object maxHomesObj = json.get("maxHomes");
                 if (maxHomesObj instanceof Number) {
-                    plugin.getConfig().set("max-homes", ((Number) maxHomesObj).intValue());
+                    SkyblockPlugin.getConfig().set("max-homes", ((Number) maxHomesObj).intValue());
                 } else if (maxHomesObj instanceof String) {
                     try {
-                        plugin.getConfig().set("max-homes", Integer.parseInt((String) maxHomesObj));
+                        SkyblockPlugin.getConfig().set("max-homes", Integer.parseInt((String) maxHomesObj));
                     } catch (NumberFormatException ignored) {
                         // ignore invalid number
                     }
@@ -129,16 +132,16 @@ public class WebConfigServer {
 
                 Object webPortObj = json.get("webPort");
                 if (webPortObj instanceof Number) {
-                    plugin.getConfig().set("web-config.port", ((Number) webPortObj).intValue());
+                    SkyblockPlugin.getConfig().set("web-config.port", ((Number) webPortObj).intValue());
                 } else if (webPortObj instanceof String) {
                     try {
-                        plugin.getConfig().set("web-config.port", Integer.parseInt((String) webPortObj));
+                        SkyblockPlugin.getConfig().set("web-config.port", Integer.parseInt((String) webPortObj));
                     } catch (NumberFormatException ignored) {
                         // ignore invalid number
                     }
                 }
 
-                plugin.getConfigManager().saveConfig("config");
+                SkyblockPlugin.getConfigManager().saveConfig("config");
 
                 sendJsonResponse(exchange, Map.of("success", true));
             } catch (Exception e) {
@@ -206,7 +209,7 @@ public class WebConfigServer {
     }
 
     private String loadHtmlTemplate(String path) {
-        try (InputStream is = plugin.getResource(path)) {
+        try (InputStream is = SkyblockPlugin.getResource(path)) {
             if (is == null) return "Error: Template not found";
             try (Scanner scanner = new Scanner(is, StandardCharsets.UTF_8.name())) {
                 scanner.useDelimiter("\\A");
@@ -219,7 +222,7 @@ public class WebConfigServer {
 
     private Map<String, Boolean> readFeatureStates() {
         Map<String, Boolean> states = new HashMap<>();
-        var cfg = plugin.getConfig();
+        var cfg = SkyblockPlugin.getConfig();
         var section = cfg.getConfigurationSection("features");
         if (section == null) return states;
         for (String key : section.getKeys(false)) {

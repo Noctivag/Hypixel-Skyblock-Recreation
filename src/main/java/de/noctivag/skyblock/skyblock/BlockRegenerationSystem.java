@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.skyblock;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -19,7 +23,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class BlockRegenerationSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<Location, BlockData> blockRegeneration = new ConcurrentHashMap<>();
     private final Map<Location, BukkitTask> regenerationTasks = new ConcurrentHashMap<>();
     private final Map<Location, Long> blockBreakTimes = new ConcurrentHashMap<>();
@@ -27,8 +31,8 @@ public class BlockRegenerationSystem implements Listener {
     // Regeneration times for different areas (in ticks)
     private final Map<String, Long> areaRegenerationTimes = new HashMap<>();
 
-    public BlockRegenerationSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public BlockRegenerationSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         initializeRegenerationTimes();
         startBlockRegenerationTimer();
     }
@@ -64,13 +68,13 @@ public class BlockRegenerationSystem implements Listener {
         // Store original block data for regeneration
         BlockData blockData = new BlockData(block.getType(), block.getBlockData());
         blockRegeneration.put(location, blockData);
-        blockBreakTimes.put(location, System.currentTimeMillis());
+        blockBreakTimes.put(location, java.lang.System.currentTimeMillis());
 
         // Start regeneration timer
         startBlockRegeneration(location, blockData);
 
         // Send message to player
-        player.sendMessage("§a§lBLOCK BROKEN!");
+        player.sendMessage(Component.text("§a§lBLOCK BROKEN!"));
         player.sendMessage("§7Block: §e" + block.getType().name());
         player.sendMessage("§7Regeneration: §e" + getRegenerationTime(location) + " seconds");
     }
@@ -94,13 +98,13 @@ public class BlockRegenerationSystem implements Listener {
         // Store original block data for regeneration
         BlockData blockData = new BlockData(block.getType(), block.getBlockData());
         blockRegeneration.put(location, blockData);
-        blockBreakTimes.put(location, System.currentTimeMillis());
+        blockBreakTimes.put(location, java.lang.System.currentTimeMillis());
 
         // Start regeneration timer
         startBlockRegeneration(location, blockData);
 
         // Send message to player
-        player.sendMessage("§a§lBLOCK PLACED!");
+        player.sendMessage(Component.text("§a§lBLOCK PLACED!"));
         player.sendMessage("§7Block: §e" + block.getType().name());
         player.sendMessage("§7Regeneration: §e" + getRegenerationTime(location) + " seconds");
     }
@@ -132,13 +136,13 @@ public class BlockRegenerationSystem implements Listener {
                 // Send message to nearby players
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     if (player.getLocation().distance(location) <= 10) {
-                        player.sendMessage("§a§lBLOCK REGENERATED!");
+                        player.sendMessage(Component.text("§a§lBLOCK REGENERATED!"));
                         player.sendMessage("§7Block: §e" + blockData.getType().name());
                         player.sendMessage("§7Location: §e" + location.getBlockX() + ", " + location.getBlockY() + ", " + location.getBlockZ());
                     }
                 }
             }
-        }.runTaskLater(plugin, regenerationTime);
+        }.runTaskLater(SkyblockPlugin, regenerationTime);
 
         regenerationTasks.put(location, task);
     }
@@ -181,7 +185,7 @@ public class BlockRegenerationSystem implements Listener {
         // Use virtual thread for Folia compatibility
         Thread.ofVirtual().start(() -> {
             try {
-                while (plugin.isEnabled()) {
+                while (SkyblockPlugin.isEnabled()) {
                     // Check for expired regeneration tasks
                     List<Location> expiredLocations = new ArrayList<>();
                     for (Map.Entry<Location, BukkitTask> entry : regenerationTasks.entrySet()) {
@@ -202,13 +206,13 @@ public class BlockRegenerationSystem implements Listener {
                         Location location = entry.getKey();
                         long breakTime = entry.getValue();
                         long regenerationTime = getRegenerationTime(location);
-                        long timeRemaining = regenerationTime - (System.currentTimeMillis() - breakTime);
+                        long timeRemaining = regenerationTime - (java.lang.System.currentTimeMillis() - breakTime);
 
                         if (timeRemaining <= 5000 && timeRemaining > 0) { // 5 seconds before regeneration
                             // Send warning to nearby players
                             for (Player player : Bukkit.getOnlinePlayers()) {
                                 if (player.getLocation().distance(location) <= 10) {
-                                    player.sendMessage("§e§lBLOCK REGENERATING SOON!");
+                                    player.sendMessage(Component.text("§e§lBLOCK REGENERATING SOON!"));
                                     player.sendMessage("§7Block: §e" + blockRegeneration.get(location).getType().name());
                                     player.sendMessage("§7Time remaining: §e" + (timeRemaining / 1000) + " seconds");
                                 }
@@ -234,7 +238,7 @@ public class BlockRegenerationSystem implements Listener {
         regenerationTasks.clear();
         blockRegeneration.clear();
         blockBreakTimes.clear();
-        plugin.getLogger().info("All block regeneration tasks have been stopped.");
+        SkyblockPlugin.getLogger().info("All block regeneration tasks have been stopped.");
     }
 
     public Map<Location, BlockData> getBlockRegeneration() {

@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.items;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,13 +29,13 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ItemCooldownSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, Map<String, Long>> playerCooldowns = new ConcurrentHashMap<>();
     private final Map<String, ItemCooldown> itemCooldowns = new HashMap<>();
     
-    public ItemCooldownSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public ItemCooldownSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeItemCooldowns();
     }
@@ -120,7 +124,7 @@ public class ItemCooldownSystem implements Listener {
             "§7Fires an ice bolt"
         ));
         
-        plugin.getLogger().info("§a[ItemCooldown] Initialized " + itemCooldowns.size() + " item cooldowns");
+        SkyblockPlugin.getLogger().info("§a[ItemCooldown] Initialized " + itemCooldowns.size() + " item cooldowns");
     }
     
     /**
@@ -180,7 +184,7 @@ public class ItemCooldownSystem implements Listener {
             return false;
         }
         
-        return System.currentTimeMillis() - lastUsed < itemCooldown.getCooldown();
+        return java.lang.System.currentTimeMillis() - lastUsed < itemCooldown.getCooldown();
     }
     
     /**
@@ -188,7 +192,7 @@ public class ItemCooldownSystem implements Listener {
      */
     public void setCooldown(Player player, String itemName) {
         playerCooldowns.computeIfAbsent(player.getUniqueId(), k -> new ConcurrentHashMap<>())
-            .put(itemName, System.currentTimeMillis());
+            .put(itemName, java.lang.System.currentTimeMillis());
     }
     
     /**
@@ -210,7 +214,7 @@ public class ItemCooldownSystem implements Listener {
             return 0L;
         }
         
-        long remaining = itemCooldown.getCooldown() - (System.currentTimeMillis() - lastUsed);
+        long remaining = itemCooldown.getCooldown() - (java.lang.System.currentTimeMillis() - lastUsed);
         return Math.max(0L, remaining);
     }
     

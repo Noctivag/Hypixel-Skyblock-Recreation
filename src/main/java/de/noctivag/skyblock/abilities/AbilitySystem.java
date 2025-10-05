@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.abilities;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import de.noctivag.skyblock.magic.ManaSystem;
 import org.bukkit.Bukkit;
@@ -27,7 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Ability System - Hypixel Skyblock Style
  */
 public class AbilitySystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     @SuppressWarnings({"FieldCanBeLocal", "unused"})
     private final MultiServerDatabaseManager databaseManager;
     private final ManaSystem manaSystem;
@@ -39,15 +43,15 @@ public class AbilitySystem implements Listener {
     @SuppressWarnings("unused")
     private final Map<UUID, BukkitTask> abilityTasks = new ConcurrentHashMap<>();
 
-    public AbilitySystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager, ManaSystem manaSystem) {
-        this.plugin = plugin;
+    public AbilitySystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager, ManaSystem manaSystem) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         this.manaSystem = manaSystem;
         initializeAbilityConfigs();
         startAbilityUpdateTask();
 
         // Register events
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
 
     private void initializeAbilityConfigs() {
@@ -130,7 +134,7 @@ public class AbilitySystem implements Listener {
 
     private void startAbilityUpdateTask() {
         Thread.ofVirtual().start(() -> {
-            while (plugin.isEnabled()) {
+            while (SkyblockPlugin.isEnabled()) {
                 try {
                     updateActiveAbilities();
                     updateCooldowns();
@@ -453,7 +457,7 @@ public class AbilitySystem implements Listener {
 
     private void setCooldown(Player player, AbilityType abilityType, long cooldown) {
         // Store expiry time (ms) instead of last-used timestamp
-        long expiry = System.currentTimeMillis() + cooldown;
+        long expiry = java.lang.System.currentTimeMillis() + cooldown;
         playerCooldowns.computeIfAbsent(player.getUniqueId(), k -> new ConcurrentHashMap<>())
                 .put(abilityType, expiry);
     }
@@ -464,7 +468,7 @@ public class AbilitySystem implements Listener {
             List<ActiveAbility> abilities = entry.getValue();
 
             // Remove expired abilities
-            abilities.removeIf(ability -> System.currentTimeMillis() - ability.getStartTime() > ability.getDuration());
+            abilities.removeIf(ability -> java.lang.System.currentTimeMillis() - ability.getStartTime() > ability.getDuration());
         }
     }
 
@@ -473,7 +477,7 @@ public class AbilitySystem implements Listener {
         for (Map.Entry<UUID, Map<AbilityType, Long>> entry : playerCooldowns.entrySet()) {
             Map<AbilityType, Long> cooldowns = entry.getValue();
 
-            long now = System.currentTimeMillis();
+            long now = java.lang.System.currentTimeMillis();
             cooldowns.entrySet().removeIf(e -> e.getValue() == null || now >= e.getValue());
         }
     }
@@ -484,7 +488,7 @@ public class AbilitySystem implements Listener {
 
         Long expiry = cooldowns.get(abilityType);
         if (expiry == null) return true;
-        return System.currentTimeMillis() >= expiry;
+        return java.lang.System.currentTimeMillis() >= expiry;
     }
 
     private long getCooldownLeft(Player player, AbilityType abilityType) {
@@ -493,7 +497,7 @@ public class AbilitySystem implements Listener {
 
         Long expiry = cooldowns.get(abilityType);
         if (expiry == null) return 0;
-        long timeLeft = expiry - System.currentTimeMillis();
+        long timeLeft = expiry - java.lang.System.currentTimeMillis();
         return Math.max(0, timeLeft);
     }
 

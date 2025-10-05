@@ -8,6 +8,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.kyori.adventure.text.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * NPC Shop System - NPC-basierte Shops mit verschiedenen Kategorien
@@ -231,7 +232,7 @@ public class NPCShopSystem {
         // Update stock
         item.setStock(item.getStock() - amount);
         
-        player.sendMessage("§a§lITEM PURCHASED!");
+        player.sendMessage(Component.text("§a§lITEM PURCHASED!"));
         player.sendMessage("§7Item: §e" + item.getDisplayName());
         player.sendMessage("§7Amount: §e" + amount);
         player.sendMessage("§7Total Cost: §6" + totalCost + " coins");

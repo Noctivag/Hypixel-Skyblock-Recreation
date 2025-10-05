@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.compatibility;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 
@@ -113,8 +116,8 @@ public class CompatibilityManager {
      * Prüft die Java Version
      */
     private void checkJavaVersion() {
-        String javaVersion = System.getProperty("java.version");
-        String javaVendor = System.getProperty("java.vendor");
+        String javaVersion = java.lang.System.getProperty("java.version");
+        String javaVendor = java.lang.System.getProperty("java.vendor");
         
         compatibilityReport.append("§7Java Version: §a").append(javaVersion).append("\n");
         compatibilityReport.append("§7Java Vendor: §a").append(javaVendor).append("\n");

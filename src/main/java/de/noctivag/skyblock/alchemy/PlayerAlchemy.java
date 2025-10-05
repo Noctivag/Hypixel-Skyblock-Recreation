@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.alchemy;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -40,7 +41,7 @@ public class PlayerAlchemy {
         this.alchemyLevel = 1;
         this.alchemyXP = 0.0;
         this.totalXP = 0.0;
-        this.lastActivity = System.currentTimeMillis();
+        this.lastActivity = java.lang.System.currentTimeMillis();
         
         // Initialize statistics
         this.potionsBrewed = 0;
@@ -59,7 +60,7 @@ public class PlayerAlchemy {
     public void addXP(double xpAmount) {
         this.alchemyXP += xpAmount;
         this.totalXP += xpAmount;
-        this.lastActivity = System.currentTimeMillis();
+        this.lastActivity = java.lang.System.currentTimeMillis();
         
         // Check for level up
         int newLevel = calculateLevel(alchemyXP);
@@ -236,7 +237,7 @@ public class PlayerAlchemy {
         this.alchemyLevel = 1;
         this.alchemyXP = 0.0;
         this.totalXP = 0.0;
-        this.lastActivity = System.currentTimeMillis();
+        this.lastActivity = java.lang.System.currentTimeMillis();
         
         this.potionsBrewed = 0;
         this.successfulBrews = 0;

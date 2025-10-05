@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.commands;
+import net.kyori.adventure.text.Component;
 
 import de.noctivag.skyblock.core.api.Service;
 import de.noctivag.skyblock.core.api.SystemStatus;
@@ -65,7 +66,7 @@ public class VaultCommand implements CommandExecutor, Service {
                 break;
                 
             default:
-                player.sendMessage("§cUnbekannter Befehl! Verwende §e/vault help §cfür Hilfe.");
+                player.sendMessage(Component.text("§cUnbekannter Befehl! Verwende §e/vault help §cfür Hilfe."));
                 break;
         }
         
@@ -76,13 +77,13 @@ public class VaultCommand implements CommandExecutor, Service {
      * Show help message
      */
     private void showHelp(Player player) {
-        player.sendMessage("§6§l=== VAULT BEFEHLE ===");
-        player.sendMessage("§e/vault §7- Öffnet das Hauptmenü");
-        player.sendMessage("§e/vault help §7- Zeigt diese Hilfe an");
-        player.sendMessage("§e/vault main §7- Öffnet das Hauptmenü");
-        player.sendMessage("§e/vault profile §7- Öffnet das Profil-Menü");
-        player.sendMessage("§e/vault weapons §7- Öffnet das Waffen-Menü");
-        player.sendMessage("§e/vault swords §7- Öffnet das Schwerter-Menü");
+        player.sendMessage(Component.text("§6§l=== VAULT BEFEHLE ==="));
+        player.sendMessage(Component.text("§e/vault §7- Öffnet das Hauptmenü"));
+        player.sendMessage(Component.text("§e/vault help §7- Zeigt diese Hilfe an"));
+        player.sendMessage(Component.text("§e/vault main §7- Öffnet das Hauptmenü"));
+        player.sendMessage(Component.text("§e/vault profile §7- Öffnet das Profil-Menü"));
+        player.sendMessage(Component.text("§e/vault weapons §7- Öffnet das Waffen-Menü"));
+        player.sendMessage(Component.text("§e/vault swords §7- Öffnet das Schwerter-Menü"));
     }
     
     /**
@@ -90,8 +91,8 @@ public class VaultCommand implements CommandExecutor, Service {
      */
     private void openMainMenu(Player player) {
         menuSystem.openMainMenu(player);
-        player.sendMessage("§6§lVault §7→ §6SkyBlock Hauptmenü geöffnet!");
-        player.sendMessage("§7Verwende §e/vault help §7für alle verfügbaren Menüs!");
+        player.sendMessage(Component.text("§6§lVault §7→ §6SkyBlock Hauptmenü geöffnet!"));
+        player.sendMessage(Component.text("§7Verwende §e/vault help §7für alle verfügbaren Menüs!"));
     }
     
     /**
@@ -99,7 +100,7 @@ public class VaultCommand implements CommandExecutor, Service {
      */
     private void openProfileMenu(Player player) {
         menuSystem.openProfileMenu(player);
-        player.sendMessage("§6§lVault §7→ §6Profil-Menü geöffnet!");
+        player.sendMessage(Component.text("§6§lVault §7→ §6Profil-Menü geöffnet!"));
     }
     
     /**
@@ -107,7 +108,7 @@ public class VaultCommand implements CommandExecutor, Service {
      */
     private void openWeaponsMenu(Player player) {
         menuSystem.openWeaponsMenu(player);
-        player.sendMessage("§6§lVault §7→ §6Waffen-Menü geöffnet!");
+        player.sendMessage(Component.text("§6§lVault §7→ §6Waffen-Menü geöffnet!"));
     }
     
     /**
@@ -115,7 +116,7 @@ public class VaultCommand implements CommandExecutor, Service {
      */
     private void openSwordsMenu(Player player) {
         menuSystem.openSwordsMenu(player);
-        player.sendMessage("§6§lVault §7→ §6Schwerter-Menü geöffnet!");
+        player.sendMessage(Component.text("§6§lVault §7→ §6Schwerter-Menü geöffnet!"));
     }
     
     @Override

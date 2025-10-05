@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.economy;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -19,18 +24,18 @@ import java.util.concurrent.ConcurrentHashMap;
  * Advanced Bazaar System - Hypixel Skyblock Style
  */
 public class AdvancedBazaarSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<Material, BazaarItem> bazaarItems = new ConcurrentHashMap<>();
     private final Map<UUID, BukkitTask> bazaarTasks = new ConcurrentHashMap<>();
     
-    public AdvancedBazaarSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedBazaarSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeBazaarItems();
         startBazaarUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeBazaarItems() {
@@ -54,7 +59,7 @@ public class AdvancedBazaarSystem implements Listener {
                     item.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L);
     }
     
     @EventHandler
@@ -67,13 +72,13 @@ public class AdvancedBazaarSystem implements Listener {
     }
     
     private void openBazaarGUI(Player player) {
-        player.sendMessage("§aBazaar GUI geöffnet!");
+        player.sendMessage(Component.text("§aBazaar GUI geöffnet!"));
     }
     
     public void buyItem(Player player, Material material, int amount) {
         BazaarItem item = bazaarItems.get(material);
         if (item == null) {
-            player.sendMessage("§cItem nicht im Bazaar verfügbar!");
+            player.sendMessage(Component.text("§cItem nicht im Bazaar verfügbar!"));
             return;
         }
         
@@ -88,7 +93,7 @@ public class AdvancedBazaarSystem implements Listener {
     public void sellItem(Player player, Material material, int amount) {
         BazaarItem item = bazaarItems.get(material);
         if (item == null) {
-            player.sendMessage("§cItem nicht im Bazaar verfügbar!");
+            player.sendMessage(Component.text("§cItem nicht im Bazaar verfügbar!"));
             return;
         }
         
@@ -122,11 +127,11 @@ public class AdvancedBazaarSystem implements Listener {
             this.sellPrice = sellPrice;
             this.instantBuyPrice = instantBuyPrice;
             this.instantSellPrice = sellPrice;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long timeDiff = currentTime - lastUpdate;
             
             if (timeDiff >= 60000) {

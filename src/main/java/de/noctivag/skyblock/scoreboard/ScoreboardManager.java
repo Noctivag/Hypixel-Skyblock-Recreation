@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.scoreboard;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.utils.TPSUtil;
 import de.noctivag.skyblock.utils.ColorUtils;
 import net.kyori.adventure.text.Component;
@@ -18,16 +22,16 @@ import java.util.UUID;
 import java.util.Objects;
 
 public class ScoreboardManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, Scoreboard> playerScoreboards;
     private final org.bukkit.scoreboard.ScoreboardManager bukkitScoreboardManager;
 
-    public ScoreboardManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public ScoreboardManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.playerScoreboards = new HashMap<>();
         this.bukkitScoreboardManager = Bukkit.getScoreboardManager();
 
-        // TPS-Tracking moved to Plugin.onEnable() to avoid IllegalPluginAccessException
+        // TPS-Tracking moved to SkyblockPlugin.onEnable() to avoid IllegalPluginAccessException
     }
 
     @SuppressWarnings("deprecation")
@@ -35,7 +39,7 @@ public class ScoreboardManager {
         Scoreboard board = bukkitScoreboardManager.getNewScoreboard();
         // Use Adventure Component for the objective display name
         // TODO: Implement proper ConfigManager interface
-        // Component titleComp = ColorUtils.translate(((ConfigManager) plugin.getConfigManager()).getScoreboardTitle());
+        // Component titleComp = ColorUtils.translate(((ConfigManager) SkyblockPlugin.getConfigManager()).getScoreboardTitle());
         Component titleComp = ColorUtils.translate("§6§lSkyblock");
         // Use string key for scoreboard objective
         Objective obj = board.registerNewObjective("main", "dummy", titleComp);
@@ -43,7 +47,7 @@ public class ScoreboardManager {
 
         int score = 15;
         // TODO: Implement proper ConfigManager interface
-        // List<String> configuredLines = ((ConfigManager) plugin.getConfigManager()).getScoreboardLines();
+        // List<String> configuredLines = ((ConfigManager) SkyblockPlugin.getConfigManager()).getScoreboardLines();
         List<String> configuredLines = Arrays.asList("§7Welcome to Skyblock!", "§7Your level: §e1", "§7Coins: §6$0");
 
         for (String line : configuredLines) {
@@ -59,20 +63,20 @@ public class ScoreboardManager {
 
     private boolean shouldShowLine(String line) {
         // TODO: Implement proper ConfigManager interface
-        // if (line.contains("{player_rank}") && !((ConfigManager) plugin.getConfigManager()).isScoreboardFeatureEnabled("show-rank")) {
+        // if (line.contains("{player_rank}") && !((ConfigManager) SkyblockPlugin.getConfigManager()).isScoreboardFeatureEnabled("show-rank")) {
         //     return false;
         // }
-        // if (line.contains("{player_money}") && !((ConfigManager) plugin.getConfigManager()).isScoreboardFeatureEnabled("show-money")) {
+        // if (line.contains("{player_money}") && !((ConfigManager) SkyblockPlugin.getConfigManager()).isScoreboardFeatureEnabled("show-money")) {
         //     return false;
         // }
-        // if (line.contains("{online_players}") && !((ConfigManager) plugin.getConfigManager()).isScoreboardFeatureEnabled("show-online-players")) {
+        // if (line.contains("{online_players}") && !((ConfigManager) SkyblockPlugin.getConfigManager()).isScoreboardFeatureEnabled("show-online-players")) {
         //     return false;
         // }
         // TODO: Implement proper ConfigManager interface
-        // if (!((ConfigManager) plugin.getConfigManager()).isScoreboardFeatureEnabled("show-tps") && line.contains("{server_tps}")) {
+        // if (!((ConfigManager) SkyblockPlugin.getConfigManager()).isScoreboardFeatureEnabled("show-tps") && line.contains("{server_tps}")) {
         //     return false;
         // }
-        // if (!((ConfigManager) plugin.getConfigManager()).isScoreboardFeatureEnabled("show-website") && line.contains("example.com")) {
+        // if (!((ConfigManager) SkyblockPlugin.getConfigManager()).isScoreboardFeatureEnabled("show-website") && line.contains("example.com")) {
         //     return false;
         // }
         return true;
@@ -84,9 +88,9 @@ public class ScoreboardManager {
         result = result.replace('&', '§');
         result = result.replace("{player_name}", Objects.toString(player.getName(), ""));
         // TODO: Implement proper RankManager interface
-        // result = result.replace("{player_rank}", Objects.toString(((RankManager) plugin.getRankManager()).getPlayerRank(player), ""));
+        // result = result.replace("{player_rank}", Objects.toString(((RankManager) SkyblockPlugin.getRankManager()).getPlayerRank(player), ""));
         result = result.replace("{player_rank}", "Default");
-        result = result.replace("{player_money}", Objects.toString(plugin.getEconomyManager().formatMoney(plugin.getEconomyManager().getBalance(player)), ""));
+        result = result.replace("{player_money}", Objects.toString(SkyblockPlugin.getEconomyManager().formatMoney(SkyblockPlugin.getEconomyManager().getBalance(player)), ""));
         result = result.replace("{server_tps}", Objects.toString(TPSUtil.getFormattedTPS(), ""));
         result = result.replace("{online_players}", String.valueOf(Bukkit.getOnlinePlayers().size()));
         result = result.replace("{max_players}", String.valueOf(Bukkit.getMaxPlayers()));

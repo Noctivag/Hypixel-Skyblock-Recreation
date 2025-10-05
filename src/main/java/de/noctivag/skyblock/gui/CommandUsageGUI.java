@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -10,11 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommandUsageGUI extends CustomGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public CommandUsageGUI(SkyblockPlugin plugin) {
+    public CommandUsageGUI(SkyblockPlugin SkyblockPlugin) {
         super(54, Component.text("§c§lCommand-Verwaltung"));
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     public void open(Player admin) {
@@ -28,9 +31,9 @@ public class CommandUsageGUI extends CustomGUI {
         String[] commands = {"tpa", "rtp", "back", "spawn", "home", "warp"};
         int slot = 18;
         for (String cmd : commands) {
-            boolean enabled = plugin.getCommandManager().isCommandEnabled(cmd);
-            int cooldown = (int) plugin.getCommandManager().getCooldown(cmd);
-            int cost = (int) plugin.getCommandManager().getCost(cmd);
+            boolean enabled = SkyblockPlugin.getCommandManager().isCommandEnabled(cmd);
+            int cooldown = (int) SkyblockPlugin.getCommandManager().getCooldown(cmd);
+            int cost = (int) SkyblockPlugin.getCommandManager().getCost(cmd);
             
             List<String> lore = new ArrayList<>();
             lore.add("§7Status: " + (enabled ? "§aAktiviert" : "§cDeaktiviert"));

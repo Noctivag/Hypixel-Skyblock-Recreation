@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.features.npcs;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.api.System;
 import de.noctivag.skyblock.core.api.SystemStatus;
 import de.noctivag.skyblock.features.npcs.types.CompleteNPCType;
@@ -17,14 +20,14 @@ import java.util.logging.Level;
 
 public class CompleteNPCsSystem implements System {
 
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private SystemStatus status = SystemStatus.UNINITIALIZED;
     private boolean enabled = false;
     private NPCWorldManager worldManager;
 
-    public CompleteNPCsSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.worldManager = new NPCWorldManager(plugin);
+    public CompleteNPCsSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.worldManager = new NPCWorldManager(SkyblockPlugin);
     }
 
     @Override
@@ -40,23 +43,23 @@ public class CompleteNPCsSystem implements System {
     @Override
     public CompletableFuture<Void> initialize() {
         status = SystemStatus.INITIALIZING;
-        plugin.getLogger().info("Initializing Complete NPCs System...");
+        SkyblockPlugin.getLogger().info("Initializing Complete NPCs System...");
         try {
             // Load all NPC types
             int totalNPCs = CompleteNPCType.values().length;
-            plugin.getLogger().info("Loaded " + totalNPCs + " NPC types.");
+            SkyblockPlugin.getLogger().info("Loaded " + totalNPCs + " NPC types.");
 
             // Initialize world manager for multi-world support
             worldManager.initialize();
 
             // Register event listeners if any (e.g., for NPC interactions, quests, etc.)
-            // plugin.getServer().getPluginManager().registerEvents(new NPCListener(), plugin);
+            // SkyblockPlugin.getServer().getPluginManager().registerEvents(new NPCListener(), SkyblockPlugin);
 
             status = SystemStatus.INITIALIZED;
-            plugin.getLogger().info("Complete NPCs System initialized successfully.");
+            SkyblockPlugin.getLogger().info("Complete NPCs System initialized successfully.");
             return CompletableFuture.completedFuture(null);
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to initialize Complete NPCs System", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to initialize Complete NPCs System", e);
             status = SystemStatus.ERROR;
             return CompletableFuture.failedFuture(e);
         }
@@ -65,7 +68,7 @@ public class CompleteNPCsSystem implements System {
     @Override
     public CompletableFuture<Void> shutdown() {
         status = SystemStatus.SHUTTING_DOWN;
-        plugin.getLogger().info("Shutting down Complete NPCs System...");
+        SkyblockPlugin.getLogger().info("Shutting down Complete NPCs System...");
         
         // Shutdown world manager
         if (worldManager != null) {
@@ -73,7 +76,7 @@ public class CompleteNPCsSystem implements System {
         }
         
         status = SystemStatus.SHUTDOWN;
-        plugin.getLogger().info("Complete NPCs System shut down.");
+        SkyblockPlugin.getLogger().info("Complete NPCs System shut down.");
         return CompletableFuture.completedFuture(null);
     }
 
@@ -91,7 +94,7 @@ public class CompleteNPCsSystem implements System {
     public CompletableFuture<Void> enable() {
         enabled = true;
         status = SystemStatus.ENABLED;
-        plugin.getLogger().info("Complete NPCs System enabled.");
+        SkyblockPlugin.getLogger().info("Complete NPCs System enabled.");
         return CompletableFuture.completedFuture(null);
     }
 
@@ -99,7 +102,7 @@ public class CompleteNPCsSystem implements System {
     public CompletableFuture<Void> disable() {
         enabled = false;
         status = SystemStatus.DISABLED;
-        plugin.getLogger().info("Complete NPCs System disabled.");
+        SkyblockPlugin.getLogger().info("Complete NPCs System disabled.");
         return CompletableFuture.completedFuture(null);
     }
 

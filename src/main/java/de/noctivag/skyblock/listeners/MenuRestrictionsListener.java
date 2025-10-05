@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.listeners;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,10 +26,10 @@ import net.kyori.adventure.text.Component;
  * - Dragging items in menus
  */
 public class MenuRestrictionsListener implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public MenuRestrictionsListener(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public MenuRestrictionsListener(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -39,13 +42,13 @@ public class MenuRestrictionsListener implements Listener {
             // Check if player is dropping from the last slot (slot 8)
             if (player.getInventory().getHeldItemSlot() == 8) {
                 event.setCancelled(true);
-                player.sendMessage("§cDu kannst Menü-Items nicht aus dem letzten Slot droppen!");
+                player.sendMessage(Component.text("§cDu kannst Menü-Items nicht aus dem letzten Slot droppen!"));
                 return;
             }
             
             // Also prevent dropping menu items from any slot
             event.setCancelled(true);
-            player.sendMessage("§cDu kannst Menü-Items nicht droppen!");
+            player.sendMessage(Component.text("§cDu kannst Menü-Items nicht droppen!"));
         }
     }
 
@@ -61,7 +64,7 @@ public class MenuRestrictionsListener implements Listener {
                 // Prevent taking menu items from player inventory
                 if (event.getClick().isShiftClick() || event.getClick().isLeftClick() || event.getClick().isRightClick()) {
                     event.setCancelled(true);
-                    player.sendMessage("§cDu kannst Menü-Items nicht aus deinem Inventar nehmen!");
+                    player.sendMessage(Component.text("§cDu kannst Menü-Items nicht aus deinem Inventar nehmen!"));
                 }
             }
             return;
@@ -87,7 +90,7 @@ public class MenuRestrictionsListener implements Listener {
                 
                 // Prevent taking empty slots or invalid items
                 event.setCancelled(true);
-                player.sendMessage("§cDu kannst keine Items aus dem Menü nehmen oder verschieben!");
+                player.sendMessage(Component.text("§cDu kannst keine Items aus dem Menü nehmen oder verschieben!"));
             }
         }
     }
@@ -101,7 +104,7 @@ public class MenuRestrictionsListener implements Listener {
         
         if (isMenuTitle(title)) {
             event.setCancelled(true);
-            player.sendMessage("§cDu kannst keine Items im Menü verschieben!");
+            player.sendMessage(Component.text("§cDu kannst keine Items im Menü verschieben!"));
         }
         
         // Also prevent dragging menu items from player inventory
@@ -110,7 +113,7 @@ public class MenuRestrictionsListener implements Listener {
                 ItemStack item = event.getInventory().getItem(slot);
                 if (item != null && isMenuItem(item)) {
                     event.setCancelled(true);
-                    player.sendMessage("§cDu kannst Menü-Items nicht verschieben!");
+                    player.sendMessage(Component.text("§cDu kannst Menü-Items nicht verschieben!"));
                     break;
                 }
             }

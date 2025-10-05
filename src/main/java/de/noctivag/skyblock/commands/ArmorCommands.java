@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.commands;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.armor.ArmorType;
 import de.noctivag.skyblock.armor.CompleteArmorGUI;
 import org.bukkit.command.Command;
@@ -18,12 +22,12 @@ import java.util.List;
  * ArmorCommands - Commands for armor system management
  */
 public class ArmorCommands implements CommandExecutor, TabCompleter {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CompleteArmorGUI armorGUI;
     
-    public ArmorCommands(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.armorGUI = new CompleteArmorGUI(plugin);
+    public ArmorCommands(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.armorGUI = new CompleteArmorGUI(SkyblockPlugin);
     }
     
     @Override
@@ -41,7 +45,7 @@ public class ArmorCommands implements CommandExecutor, TabCompleter {
             case "armorability" -> handleArmorAbilityCommand(player, args);
             case "armorlist" -> handleArmorListCommand(player, args);
             default -> {
-                player.sendMessage("§cUnknown armor command!");
+                player.sendMessage(Component.text("§cUnknown armor command!"));
                 return true;
             }
         }
@@ -62,7 +66,7 @@ public class ArmorCommands implements CommandExecutor, TabCompleter {
             case "list" -> showArmorList(player);
             case "help" -> showArmorHelp(player);
             default -> {
-                player.sendMessage("§cUsage: /armor [gui|dragon|mining|list|help]");
+                player.sendMessage(Component.text("§cUsage: /armor [gui|dragon|mining|list|help]"));
             }
         }
     }
@@ -82,8 +86,8 @@ public class ArmorCommands implements CommandExecutor, TabCompleter {
     
     private void handleArmorAbilityCommand(Player player, String[] args) {
         if (args.length == 0) {
-            player.sendMessage("§cUsage: /armorability <armor_type>");
-            player.sendMessage("§7Available armor types: protector, old, wise, young, strong, unstable, superior");
+            player.sendMessage(Component.text("§cUsage: /armorability <armor_type>"));
+            player.sendMessage(Component.text("§7Available armor types: protector, old, wise, young, strong, unstable, superior"));
             return;
         }
         
@@ -93,16 +97,16 @@ public class ArmorCommands implements CommandExecutor, TabCompleter {
         try {
             armorType = ArmorType.valueOf(armorTypeName + "_DRAGON");
         } catch (IllegalArgumentException e) {
-            player.sendMessage("§cInvalid armor type! Use: protector, old, wise, young, strong, unstable, superior");
+            player.sendMessage(Component.text("§cInvalid armor type! Use: protector, old, wise, young, strong, unstable, superior"));
             return;
         }
         
         // Activate armor ability
-        if (plugin.getAdvancedArmorSystem() != null) {
+        if (SkyblockPlugin.getAdvancedArmorSystem() != null) {
             // This would activate the armor ability
             player.sendMessage("§a" + armorType.getDisplayName() + " ability activated!");
         } else {
-            player.sendMessage("§cArmor system not available!");
+            player.sendMessage(Component.text("§cArmor system not available!"));
         }
     }
     
@@ -111,29 +115,29 @@ public class ArmorCommands implements CommandExecutor, TabCompleter {
     }
     
     private void showArmorHelp(Player player) {
-        player.sendMessage("§6§l=== Hypixel SkyBlock Armor System ===");
-        player.sendMessage("§7Commands:");
-        player.sendMessage("§e/armor gui §7- Open armor GUI");
-        player.sendMessage("§e/armor dragon §7- Browse dragon armor");
-        player.sendMessage("§e/armor mining §7- Browse mining armor");
-        player.sendMessage("§e/armor list §7- List all armor types");
-        player.sendMessage("§e/armorability <type> §7- Activate armor ability");
+        player.sendMessage(Component.text("§6§l=== Hypixel SkyBlock Armor System ==="));
+        player.sendMessage(Component.text("§7Commands:"));
+        player.sendMessage(Component.text("§e/armor gui §7- Open armor GUI"));
+        player.sendMessage(Component.text("§e/armor dragon §7- Browse dragon armor"));
+        player.sendMessage(Component.text("§e/armor mining §7- Browse mining armor"));
+        player.sendMessage(Component.text("§e/armor list §7- List all armor types"));
+        player.sendMessage(Component.text("§e/armorability <type> §7- Activate armor ability"));
         player.sendMessage("");
-        player.sendMessage("§7Available armor categories:");
-        player.sendMessage("§6• Dragon Armor §7- 7 different dragon types");
-        player.sendMessage("§e• Mining Armor §7- Enhanced mining capabilities");
-        player.sendMessage("§c• Combat Armor §7- High damage and defense");
-        player.sendMessage("§b• Fishing Armor §7- Sea creature bonuses");
-        player.sendMessage("§d• Event Armor §7- Seasonal and event armor");
-        player.sendMessage("§4• Crimson Isle Armor §7- Nether-based armor");
-        player.sendMessage("§5• Special Armor §7- Unique and rare armor");
+        player.sendMessage(Component.text("§7Available armor categories:"));
+        player.sendMessage(Component.text("§6• Dragon Armor §7- 7 different dragon types"));
+        player.sendMessage(Component.text("§e• Mining Armor §7- Enhanced mining capabilities"));
+        player.sendMessage(Component.text("§c• Combat Armor §7- High damage and defense"));
+        player.sendMessage(Component.text("§b• Fishing Armor §7- Sea creature bonuses"));
+        player.sendMessage(Component.text("§d• Event Armor §7- Seasonal and event armor"));
+        player.sendMessage(Component.text("§4• Crimson Isle Armor §7- Nether-based armor"));
+        player.sendMessage(Component.text("§5• Special Armor §7- Unique and rare armor"));
     }
     
     private void showArmorList(Player player) {
-        player.sendMessage("§6§l=== All Hypixel SkyBlock Armor Sets ===");
+        player.sendMessage(Component.text("§6§l=== All Hypixel SkyBlock Armor Sets ==="));
         
         // Dragon Armor
-        player.sendMessage("§6§lDragon Armor:");
+        player.sendMessage(Component.text("§6§lDragon Armor:"));
         for (ArmorType type : ArmorType.values()) {
             if (type.name().contains("DRAGON")) {
                 player.sendMessage("§7• " + type.getDisplayName() + " §8(" + type.getRarity().name() + ")");
@@ -142,7 +146,7 @@ public class ArmorCommands implements CommandExecutor, TabCompleter {
         
         // Mining Armor
         player.sendMessage("");
-        player.sendMessage("§e§lMining Armor:");
+        player.sendMessage(Component.text("§e§lMining Armor:"));
         for (ArmorType type : ArmorType.values()) {
             if (type.name().contains("MINERAL") || type.name().contains("GLACITE") || 
                 type.name().contains("SORROW") || type.name().contains("DIVAN")) {
@@ -152,7 +156,7 @@ public class ArmorCommands implements CommandExecutor, TabCompleter {
         
         // Combat Armor
         player.sendMessage("");
-        player.sendMessage("§c§lCombat Armor:");
+        player.sendMessage(Component.text("§c§lCombat Armor:"));
         for (ArmorType type : ArmorType.values()) {
             if (type.name().contains("SHADOW") || type.name().contains("NECRON") || 
                 type.name().contains("STORM") || type.name().contains("GOLDOR") || 
@@ -163,7 +167,7 @@ public class ArmorCommands implements CommandExecutor, TabCompleter {
         
         // Fishing Armor
         player.sendMessage("");
-        player.sendMessage("§b§lFishing Armor:");
+        player.sendMessage(Component.text("§b§lFishing Armor:"));
         for (ArmorType type : ArmorType.values()) {
             if (type.name().contains("SPONGE") || type.name().contains("SHARK")) {
                 player.sendMessage("§7• " + type.getDisplayName() + " §8(" + type.getRarity().name() + ")");
@@ -172,7 +176,7 @@ public class ArmorCommands implements CommandExecutor, TabCompleter {
         
         // Event Armor
         player.sendMessage("");
-        player.sendMessage("§d§lEvent Armor:");
+        player.sendMessage(Component.text("§d§lEvent Armor:"));
         for (ArmorType type : ArmorType.values()) {
             if (type.name().contains("SPOOKY") || type.name().contains("SNOW") || 
                 type.name().contains("BAT") || type.name().contains("HALLOWEEN") || 
@@ -183,7 +187,7 @@ public class ArmorCommands implements CommandExecutor, TabCompleter {
         
         // Crimson Isle Armor
         player.sendMessage("");
-        player.sendMessage("§4§lCrimson Isle Armor:");
+        player.sendMessage(Component.text("§4§lCrimson Isle Armor:"));
         for (ArmorType type : ArmorType.values()) {
             if (type.name().contains("CRIMSON") || type.name().contains("TERROR") || 
                 type.name().contains("AURORA") || type.name().contains("HOLLOW")) {
@@ -192,7 +196,7 @@ public class ArmorCommands implements CommandExecutor, TabCompleter {
         }
         
         player.sendMessage("");
-        player.sendMessage("§7Use §e/armor gui §7to browse all armor sets with detailed information!");
+        player.sendMessage(Component.text("§7Use §e/armor gui §7to browse all armor sets with detailed information!"));
     }
     
     @Override

@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.notifications;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -31,19 +36,19 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Notification Customization
  */
 public class AdvancedNotificationSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerNotifications> playerNotifications = new ConcurrentHashMap<>();
     private final Map<NotificationType, NotificationConfig> notificationConfigs = new HashMap<>();
     private final Map<UUID, BukkitTask> notificationTasks = new ConcurrentHashMap<>();
     
-    public AdvancedNotificationSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedNotificationSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeNotificationConfigs();
         startNotificationUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeNotificationConfigs() {
@@ -218,7 +223,7 @@ public class AdvancedNotificationSystem implements Listener {
                     notifications.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L);
     }
     
     @EventHandler
@@ -231,7 +236,7 @@ public class AdvancedNotificationSystem implements Listener {
     }
     
     private void openNotificationGUI(Player player) {
-        player.sendMessage("§aNotification GUI geöffnet!");
+        player.sendMessage(Component.text("§aNotification GUI geöffnet!"));
     }
     
     public PlayerNotifications getPlayerNotifications(UUID playerId) {
@@ -332,11 +337,11 @@ public class AdvancedNotificationSystem implements Listener {
         
         public PlayerNotifications(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long timeDiff = currentTime - lastUpdate;
             
             if (timeDiff >= 60000) {

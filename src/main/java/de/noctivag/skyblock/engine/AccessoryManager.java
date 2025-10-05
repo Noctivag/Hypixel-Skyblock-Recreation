@@ -1,5 +1,9 @@
 package de.noctivag.skyblock.engine;
 
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+
 import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import de.noctivag.skyblock.features.stats.types.PrimaryStat;
@@ -27,7 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AccessoryManager {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerAccessoryData> playerAccessoryData = new ConcurrentHashMap<>();
     private final Map<String, PowerStone> powerStones = new HashMap<>();
@@ -45,8 +49,8 @@ public class AccessoryManager {
         "very_special", 1
     );
     
-    public AccessoryManager(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AccessoryManager(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializePowerStones();
     }

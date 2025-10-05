@@ -1,4 +1,9 @@
 package de.noctivag.skyblock.leaderboards;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
@@ -10,25 +15,26 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class AdvancedLeaderboardSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerLeaderboardData> playerLeaderboardData = new ConcurrentHashMap<>();
     private final Map<LeaderboardType, List<Leaderboard>> leaderboards = new HashMap<>();
     
-    public AdvancedLeaderboardSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedLeaderboardSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
         initializeLeaderboards();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeLeaderboards() {
@@ -257,7 +263,7 @@ public class AdvancedLeaderboardSystem implements Listener {
     }
     
     public void openLeaderboardGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lLeaderboards");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lLeaderboards"));
         
         // Add leaderboard categories
         addGUIItem(gui, 10, Material.DIAMOND_SWORD, "§c§lSkill Leaderboards", "§7Leaderboards for skill levels.");
@@ -272,15 +278,17 @@ public class AdvancedLeaderboardSystem implements Listener {
         addGUIItem(gui, 53, Material.ARROW, "§7§lNext Page", "§7Go to next page.");
         
         player.openInventory(gui);
-        player.sendMessage("§aLeaderboard GUI geöffnet!");
+        player.sendMessage(Component.text("§aLeaderboard GUI geöffnet!"));
     }
     
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String description) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(name);
-            meta.setLore(Arrays.asList(description));
+            meta.displayName(Component.text(name));
+            meta.lore(Arrays.asList(description).stream()
+                .map(desc -> Component.text(desc))
+                .collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         gui.setItem(slot, item);
@@ -409,11 +417,11 @@ public class AdvancedLeaderboardSystem implements Listener {
         
         public PlayerLeaderboardData(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void updateLeaderboard(LeaderboardType type, String category, int value) {

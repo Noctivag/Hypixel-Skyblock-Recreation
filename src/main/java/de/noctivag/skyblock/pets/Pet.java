@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.pets;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import org.bukkit.Material;
@@ -6,6 +7,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.kyori.adventure.text.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Pet - Einzelnes Haustier mit Level, XP und Effekten
@@ -38,7 +40,7 @@ public class Pet {
         this.isActive = false;
         this.hunger = 100;
         this.happiness = 100;
-        this.lastFeedTime = System.currentTimeMillis();
+        this.lastFeedTime = java.lang.System.currentTimeMillis();
         
         initializeUpgrades();
     }
@@ -110,7 +112,7 @@ public class Pet {
         
         // Increase hunger
         hunger = Math.min(100, hunger + foodValue);
-        lastFeedTime = System.currentTimeMillis();
+        lastFeedTime = java.lang.System.currentTimeMillis();
         
         // Increase happiness
         happiness = Math.min(100, happiness + (foodValue / 2));
@@ -225,7 +227,7 @@ public class Pet {
     
     public void updateStats() {
         // Update hunger and happiness over time
-        long currentTime = System.currentTimeMillis();
+        long currentTime = java.lang.System.currentTimeMillis();
         long timeSinceLastFeed = currentTime - lastFeedTime;
         
         // Decrease hunger over time (1 point per minute)

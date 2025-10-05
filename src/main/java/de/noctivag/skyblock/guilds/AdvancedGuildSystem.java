@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.guilds;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -35,14 +40,14 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Guild Rewards
  */
 public class AdvancedGuildSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, Guild> playerGuilds = new ConcurrentHashMap<>();
     private final Map<String, Guild> guilds = new ConcurrentHashMap<>();
     private final Map<UUID, BukkitTask> guildTasks = new ConcurrentHashMap<>();
     
-    public AdvancedGuildSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedGuildSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         loadGuilds();
         startGuildUpdateTask();
@@ -68,7 +73,7 @@ public class AdvancedGuildSystem {
                     guilds.put(guildId, guild);
                 }
             } catch (Exception e) {
-                plugin.getLogger().severe("Failed to load guilds: " + e.getMessage());
+                SkyblockPlugin.getLogger().severe("Failed to load guilds: " + e.getMessage());
             }
         });
     }
@@ -81,33 +86,33 @@ public class AdvancedGuildSystem {
                     guild.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L * 60L); // Every minute
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L * 60L); // Every minute
     }
     
     public boolean createGuild(Player player, String guildName, String guildTag) {
         if (playerGuilds.containsKey(player.getUniqueId())) {
-            player.sendMessage("§cDu bist bereits in einer Gilde!");
+            player.sendMessage(Component.text("§cDu bist bereits in einer Gilde!"));
             return false;
         }
         
         if (guildName.length() < 3 || guildName.length() > 30) {
-            player.sendMessage("§cGildenname muss zwischen 3 und 30 Zeichen lang sein!");
+            player.sendMessage(Component.text("§cGildenname muss zwischen 3 und 30 Zeichen lang sein!"));
             return false;
         }
         
         if (guildTag.length() < 2 || guildTag.length() > 6) {
-            player.sendMessage("§cGildentag muss zwischen 2 und 6 Zeichen lang sein!");
+            player.sendMessage(Component.text("§cGildentag muss zwischen 2 und 6 Zeichen lang sein!"));
             return false;
         }
         
         // Check if guild name already exists
         for (Guild guild : guilds.values()) {
             if (guild.getName().equalsIgnoreCase(guildName)) {
-                player.sendMessage("§cDieser Gildenname ist bereits vergeben!");
+                player.sendMessage(Component.text("§cDieser Gildenname ist bereits vergeben!"));
                 return false;
             }
             if (guild.getTag().equalsIgnoreCase(guildTag)) {
-                player.sendMessage("§cDieser Gildentag ist bereits vergeben!");
+                player.sendMessage(Component.text("§cDieser Gildentag ist bereits vergeben!"));
                 return false;
             }
         }
@@ -134,7 +139,7 @@ public class AdvancedGuildSystem {
     
     public boolean joinGuild(Player player, String guildName) {
         if (playerGuilds.containsKey(player.getUniqueId())) {
-            player.sendMessage("§cDu bist bereits in einer Gilde!");
+            player.sendMessage(Component.text("§cDu bist bereits in einer Gilde!"));
             return false;
         }
         
@@ -147,12 +152,12 @@ public class AdvancedGuildSystem {
         }
         
         if (guild == null) {
-            player.sendMessage("§cGilde nicht gefunden!");
+            player.sendMessage(Component.text("§cGilde nicht gefunden!"));
             return false;
         }
         
         if (guild.getMemberCount() >= guild.getMaxMembers()) {
-            player.sendMessage("§cDie Gilde ist voll!");
+            player.sendMessage(Component.text("§cDie Gilde ist voll!"));
             return false;
         }
         
@@ -175,12 +180,12 @@ public class AdvancedGuildSystem {
     public boolean leaveGuild(Player player) {
         Guild guild = playerGuilds.get(player.getUniqueId());
         if (guild == null) {
-            player.sendMessage("§cDu bist in keiner Gilde!");
+            player.sendMessage(Component.text("§cDu bist in keiner Gilde!"));
             return false;
         }
         
         if (guild.getOwner().equals(player.getUniqueId())) {
-            player.sendMessage("§cAls Gildenbesitzer kannst du die Gilde nicht verlassen! Verwende /guild disband um die Gilde aufzulösen.");
+            player.sendMessage(Component.text("§cAls Gildenbesitzer kannst du die Gilde nicht verlassen! Verwende /guild disband um die Gilde aufzulösen."));
             return false;
         }
         
@@ -199,12 +204,12 @@ public class AdvancedGuildSystem {
     public boolean disbandGuild(Player player) {
         Guild guild = playerGuilds.get(player.getUniqueId());
         if (guild == null) {
-            player.sendMessage("§cDu bist in keiner Gilde!");
+            player.sendMessage(Component.text("§cDu bist in keiner Gilde!"));
             return false;
         }
         
         if (!guild.getOwner().equals(player.getUniqueId())) {
-            player.sendMessage("§cNur der Gildenbesitzer kann die Gilde auflösen!");
+            player.sendMessage(Component.text("§cNur der Gildenbesitzer kann die Gilde auflösen!"));
             return false;
         }
         
@@ -226,24 +231,24 @@ public class AdvancedGuildSystem {
     public boolean promoteMember(Player player, String targetName, GuildRole newRole) {
         Guild guild = playerGuilds.get(player.getUniqueId());
         if (guild == null) {
-            player.sendMessage("§cDu bist in keiner Gilde!");
+            player.sendMessage(Component.text("§cDu bist in keiner Gilde!"));
             return false;
         }
         
         GuildRole playerRole = guild.getMemberRole(player.getUniqueId());
         if (playerRole != GuildRole.LEADER && playerRole != GuildRole.OFFICER) {
-            player.sendMessage("§cDu hast keine Berechtigung, Mitglieder zu befördern!");
+            player.sendMessage(Component.text("§cDu hast keine Berechtigung, Mitglieder zu befördern!"));
             return false;
         }
         
         Player target = Bukkit.getPlayer(targetName);
         if (target == null) {
-            player.sendMessage("§cSpieler nicht gefunden!");
+            player.sendMessage(Component.text("§cSpieler nicht gefunden!"));
             return false;
         }
         
         if (!guild.hasMember(target.getUniqueId())) {
-            player.sendMessage("§cDieser Spieler ist nicht in deiner Gilde!");
+            player.sendMessage(Component.text("§cDieser Spieler ist nicht in deiner Gilde!"));
             return false;
         }
         
@@ -261,35 +266,35 @@ public class AdvancedGuildSystem {
     public boolean kickMember(Player player, String targetName) {
         Guild guild = playerGuilds.get(player.getUniqueId());
         if (guild == null) {
-            player.sendMessage("§cDu bist in keiner Gilde!");
+            player.sendMessage(Component.text("§cDu bist in keiner Gilde!"));
             return false;
         }
         
         GuildRole playerRole = guild.getMemberRole(player.getUniqueId());
         if (playerRole != GuildRole.LEADER && playerRole != GuildRole.OFFICER) {
-            player.sendMessage("§cDu hast keine Berechtigung, Mitglieder zu kicken!");
+            player.sendMessage(Component.text("§cDu hast keine Berechtigung, Mitglieder zu kicken!"));
             return false;
         }
         
         Player target = Bukkit.getPlayer(targetName);
         if (target == null) {
-            player.sendMessage("§cSpieler nicht gefunden!");
+            player.sendMessage(Component.text("§cSpieler nicht gefunden!"));
             return false;
         }
         
         if (!guild.hasMember(target.getUniqueId())) {
-            player.sendMessage("§cDieser Spieler ist nicht in deiner Gilde!");
+            player.sendMessage(Component.text("§cDieser Spieler ist nicht in deiner Gilde!"));
             return false;
         }
         
         GuildRole targetRole = guild.getMemberRole(target.getUniqueId());
         if (targetRole == GuildRole.LEADER) {
-            player.sendMessage("§cDu kannst den Gildenbesitzer nicht kicken!");
+            player.sendMessage(Component.text("§cDu kannst den Gildenbesitzer nicht kicken!"));
             return false;
         }
         
         if (playerRole == GuildRole.OFFICER && targetRole == GuildRole.OFFICER) {
-            player.sendMessage("§cOffiziere können andere Offiziere nicht kicken!");
+            player.sendMessage(Component.text("§cOffiziere können andere Offiziere nicht kicken!"));
             return false;
         }
         
@@ -309,7 +314,7 @@ public class AdvancedGuildSystem {
     public void contributeCoins(Player player, double amount) {
         Guild guild = playerGuilds.get(player.getUniqueId());
         if (guild == null) {
-            player.sendMessage("§cDu bist in keiner Gilde!");
+            player.sendMessage(Component.text("§cDu bist in keiner Gilde!"));
             return;
         }
         

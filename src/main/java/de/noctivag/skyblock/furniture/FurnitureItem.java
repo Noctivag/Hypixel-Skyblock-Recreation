@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.furniture;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import org.bukkit.Location;
@@ -19,7 +20,7 @@ public class FurnitureItem {
         this.furnitureType = furnitureType;
         this.location = location;
         this.ownerId = ownerId;
-        this.placedTime = System.currentTimeMillis();
+        this.placedTime = java.lang.System.currentTimeMillis();
     }
     
     public FurnitureType getFurnitureType() {

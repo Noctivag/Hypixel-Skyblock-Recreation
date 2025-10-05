@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.collections;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.features.collections.types.CollectionType;
@@ -7,6 +8,7 @@ import de.noctivag.skyblock.features.collections.types.CollectionCategory;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Player's collection progress

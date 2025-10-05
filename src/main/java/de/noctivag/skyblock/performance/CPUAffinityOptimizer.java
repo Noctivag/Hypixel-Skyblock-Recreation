@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.performance;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -19,7 +22,7 @@ import java.util.logging.Level;
  */
 public class CPUAffinityOptimizer {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final int availableProcessors;
     private final AtomicInteger[] coreUsage;
     private final AtomicLong[] coreExecutionTime;
@@ -27,8 +30,8 @@ public class CPUAffinityOptimizer {
     
     private volatile boolean affinityEnabled = false;
     
-    public CPUAffinityOptimizer(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public CPUAffinityOptimizer(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.availableProcessors = Runtime.getRuntime().availableProcessors();
         this.coreUsage = new AtomicInteger[availableProcessors];
         this.coreExecutionTime = new AtomicLong[availableProcessors];
@@ -41,7 +44,7 @@ public class CPUAffinityOptimizer {
             coreAvailable[i] = true;
         }
         
-        plugin.getLogger().info("CPU Affinity Optimizer initialized with " + availableProcessors + " processors");
+        SkyblockPlugin.getLogger().info("CPU Affinity Optimizer initialized with " + availableProcessors + " processors");
     }
     
     /**
@@ -49,7 +52,7 @@ public class CPUAffinityOptimizer {
      */
     public void enableAffinity() {
         affinityEnabled = true;
-        plugin.getLogger().info("CPU Affinity optimization enabled");
+        SkyblockPlugin.getLogger().info("CPU Affinity optimization enabled");
     }
     
     /**
@@ -57,7 +60,7 @@ public class CPUAffinityOptimizer {
      */
     public void disableAffinity() {
         affinityEnabled = false;
-        plugin.getLogger().info("CPU Affinity optimization disabled");
+        SkyblockPlugin.getLogger().info("CPU Affinity optimization disabled");
     }
     
     /**
@@ -73,9 +76,9 @@ public class CPUAffinityOptimizer {
             try {
                 setThreadAffinity(thread, coreId);
                 coreUsage[coreId].incrementAndGet();
-                plugin.getLogger().fine("Assigned thread " + thread.getName() + " to core " + coreId);
+                SkyblockPlugin.getLogger().fine("Assigned thread " + thread.getName() + " to core " + coreId);
             } catch (Exception e) {
-                plugin.getLogger().log(Level.WARNING, "Failed to set thread affinity for " + thread.getName(), e);
+                SkyblockPlugin.getLogger().log(Level.WARNING, "Failed to set thread affinity for " + thread.getName(), e);
                 return -1;
             }
         }
@@ -190,7 +193,7 @@ public class CPUAffinityOptimizer {
         
         // Log Optimierung
         if (overloadedCount > 0 || underloadedCount > 0) {
-            plugin.getLogger().info("CPU Core optimization: " + overloadedCount + " overloaded, " + 
+            SkyblockPlugin.getLogger().info("CPU Core optimization: " + overloadedCount + " overloaded, " + 
                 underloadedCount + " underloaded cores");
         }
     }

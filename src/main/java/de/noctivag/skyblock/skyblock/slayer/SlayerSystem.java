@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.skyblock.slayer;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -19,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SlayerSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, Map<SlayerType, Integer>> playerSlayerLevels = new ConcurrentHashMap<>();
     private final Map<UUID, Map<SlayerType, Integer>> playerSlayerXP = new ConcurrentHashMap<>();
     private final Map<UUID, SlayerQuest> activeQuests = new ConcurrentHashMap<>();
@@ -66,7 +71,7 @@ public class SlayerSystem implements Listener {
             this.targetEntity = targetEntity;
             this.requiredKills = requiredKills;
             this.currentKills = 0;
-            this.startTime = System.currentTimeMillis();
+            this.startTime = java.lang.System.currentTimeMillis();
             this.playerId = playerId;
         }
         
@@ -129,9 +134,9 @@ public class SlayerSystem implements Listener {
     // Slayer Boss Registry
     private final Map<String, SlayerBoss> slayerBosses = new HashMap<>();
     
-    public SlayerSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    public SlayerSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        SkyblockPlugin.getServer().getPluginManager().registerEvents(this, SkyblockPlugin);
         initializeSlayerBosses();
     }
     
@@ -215,7 +220,7 @@ public class SlayerSystem implements Listener {
         
         // Prüfe ob bereits eine Quest aktiv ist
         if (activeQuests.containsKey(playerId)) {
-            player.sendMessage("§cDu hast bereits eine aktive Slayer Quest!");
+            player.sendMessage(Component.text("§cDu hast bereits eine aktive Slayer Quest!"));
             return false;
         }
         
@@ -233,7 +238,7 @@ public class SlayerSystem implements Listener {
         SlayerQuest quest = new SlayerQuest(type, tier, targetEntity, requiredKills, playerId);
         activeQuests.put(playerId, quest);
         
-        player.sendMessage("§a§lSLAYER QUEST GESTARTET!");
+        player.sendMessage(Component.text("§a§lSLAYER QUEST GESTARTET!"));
         player.sendMessage("§e" + type.getIcon() + " " + type.getDisplayName() + " Tier " + tier);
         player.sendMessage("§7Töte " + requiredKills + " " + targetEntity.name());
         
@@ -279,7 +284,7 @@ public class SlayerSystem implements Listener {
         
         addSlayerXP(playerId, quest.getType(), xpReward);
         
-        player.sendMessage("§6§lSLAYER QUEST ABGESCHLOSSEN!");
+        player.sendMessage(Component.text("§6§lSLAYER QUEST ABGESCHLOSSEN!"));
         player.sendMessage("§e" + quest.getType().getIcon() + " " + quest.getType().getDisplayName() + " Tier " + quest.getTier());
         player.sendMessage("§a+" + xpReward + " " + quest.getType().getDisplayName() + " XP");
         player.sendMessage("§6+" + coinReward + " Coins");
@@ -350,9 +355,9 @@ public class SlayerSystem implements Listener {
      * Wird aufgerufen wenn ein Spieler ein Slayer Level aufsteigt
      */
     private void onSlayerLevelUp(UUID playerId, SlayerType type, int newLevel) {
-        Player player = plugin.getServer().getPlayer(playerId);
+        Player player = SkyblockPlugin.getServer().getPlayer(playerId);
         if (player != null) {
-            player.sendMessage("§6§lSLAYER LEVEL UP!");
+            player.sendMessage(Component.text("§6§lSLAYER LEVEL UP!"));
             player.sendMessage("§e" + type.getIcon() + " " + type.getDisplayName() + " Level " + newLevel);
             player.sendMessage("§7" + type.getDescription());
             

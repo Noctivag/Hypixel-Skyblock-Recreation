@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.skyblock.skills;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.skyblock.SkyblockManager;
 import de.noctivag.skyblock.skyblock.SkyblockSkills;
 import org.bukkit.entity.Player;
@@ -23,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SkillsSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final SkyblockManager skyblockManager;
     private final Map<UUID, Map<String, Integer>> playerSkillXP = new ConcurrentHashMap<>();
     private final Map<UUID, Map<String, Integer>> playerSkillLevels = new ConcurrentHashMap<>();
@@ -189,10 +194,10 @@ public class SkillsSystem implements Listener {
         FARMING_MATERIALS.put(Material.RED_MUSHROOM_BLOCK, Skill.FARMING);
     }
     
-    public SkillsSystem(SkyblockPlugin plugin, SkyblockManager skyblockManager) {
-        this.plugin = plugin;
+    public SkillsSystem(SkyblockPlugin SkyblockPlugin, SkyblockManager skyblockManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.skyblockManager = skyblockManager;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        SkyblockPlugin.getServer().getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     /**
@@ -425,9 +430,9 @@ public class SkillsSystem implements Listener {
      * Wird aufgerufen wenn ein Spieler ein Level aufsteigt
      */
     private void onSkillLevelUp(UUID playerId, Skill skill, int newLevel) {
-        Player player = plugin.getServer().getPlayer(playerId);
+        Player player = SkyblockPlugin.getServer().getPlayer(playerId);
         if (player != null) {
-            player.sendMessage("§6§lSKILL LEVEL UP!");
+            player.sendMessage(Component.text("§6§lSKILL LEVEL UP!"));
             player.sendMessage("§e" + skill.getIcon() + " " + skill.getGermanName() + " Level " + newLevel);
             player.sendMessage("§7" + skill.getDescription());
             

@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.npcs.AdvancedNPCSystem;
 import de.noctivag.skyblock.npcs.HypixelStyleNPC;
 import org.bukkit.Material;
@@ -16,15 +19,15 @@ import java.util.List;
 import java.util.Map;
 
 public class NPCManagementGUI extends CustomGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Player player;
     private final AdvancedNPCSystem npcSystem;
 
-    public NPCManagementGUI(SkyblockPlugin plugin, Player player) {
+    public NPCManagementGUI(SkyblockPlugin SkyblockPlugin, Player player) {
         super(54, Component.text("§6§lNPC Management").color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD));
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.player = player;
-        this.npcSystem = plugin.getAdvancedNPCSystem();
+        this.npcSystem = SkyblockPlugin.getAdvancedNPCSystem();
         setupItems();
     }
 
@@ -222,7 +225,7 @@ public class NPCManagementGUI extends CustomGUI {
         if (meta != null) {
             meta.displayName(Component.text(name));
             if (lore.length > 0) {
-                meta.lore(Arrays.stream(lore).map(Component::text).toList());
+                meta.lore(java.util.Arrays.stream(lore).map(Component::text).collect(java.util.stream.Collectors.toList()));
             }
             item.setItemMeta(meta);
         }

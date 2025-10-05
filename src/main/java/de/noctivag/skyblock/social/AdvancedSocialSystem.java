@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.social;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -16,6 +20,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Advanced Social System - Hypixel Skyblock Style
@@ -23,20 +28,20 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AdvancedSocialSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerSocialData> playerSocialData = new ConcurrentHashMap<>();
     private final Map<SocialActivity, SocialConfig> socialConfigs = new HashMap<>();
     private final Map<SocialLocation, SocialLocationConfig> socialLocationConfigs = new HashMap<>();
     
-    public AdvancedSocialSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedSocialSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
         initializeSocialConfigs();
         initializeSocialLocationConfigs();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeSocialConfigs() {
@@ -271,7 +276,7 @@ public class AdvancedSocialSystem implements Listener {
         addGUIItem(gui, 53, Material.BARRIER, "§c§lModerate", "§7Moderate the server");
         
         player.openInventory(gui);
-        player.sendMessage("§aSocial GUI opened!");
+        player.sendMessage(Component.text("§aSocial GUI opened!"));
     }
     
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String description) {

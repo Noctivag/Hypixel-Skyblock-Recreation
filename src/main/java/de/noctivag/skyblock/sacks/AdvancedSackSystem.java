@@ -1,4 +1,9 @@
 package de.noctivag.skyblock.sacks;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
@@ -10,27 +15,28 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class AdvancedSackSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerSackData> playerSackData = new ConcurrentHashMap<>();
     private final Map<SackType, SackConfig> sackConfigs = new HashMap<>();
     
-    public AdvancedSackSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedSackSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
         initializeSackConfigs();
         startSackUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeSackConfigs() {
@@ -193,7 +199,7 @@ public class AdvancedSackSystem implements Listener {
             public void run() {
                 updateAllPlayerSackData();
             }
-        }.runTaskTimer(plugin, 0L, 20L * 60L); // Update every minute
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L * 60L); // Update every minute
     }
     
     private void updateAllPlayerSackData() {
@@ -220,7 +226,7 @@ public class AdvancedSackSystem implements Listener {
     }
     
     public void openSackGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§e§lSack System");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§e§lSack System"));
         
         // Add sack categories
         addGUIItem(gui, 10, Material.WHEAT, "§e§lFarming Sacks", "§7View farming sacks.");
@@ -245,15 +251,17 @@ public class AdvancedSackSystem implements Listener {
         addGUIItem(gui, 53, Material.ARROW, "§7§lNext Page", "§7Go to next page.");
         
         player.openInventory(gui);
-        player.sendMessage("§aSack GUI geöffnet!");
+        player.sendMessage(Component.text("§aSack GUI geöffnet!"));
     }
     
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String description) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(name);
-            meta.setLore(Arrays.asList(description));
+            meta.displayName(Component.text(name));
+            meta.lore(Arrays.asList(description).stream()
+                .map(desc -> Component.text(desc))
+                .collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         gui.setItem(slot, item);
@@ -367,11 +375,11 @@ public class AdvancedSackSystem implements Listener {
         
         public PlayerSackData(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void addSackContent(SackType type, int amount) {

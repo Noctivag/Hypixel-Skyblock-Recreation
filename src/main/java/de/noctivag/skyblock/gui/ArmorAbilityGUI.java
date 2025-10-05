@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.armor.ArmorAbilitySystem;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -14,13 +17,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ArmorAbilityGUI extends CustomGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Player player;
     private final ArmorAbilitySystem armorAbilitySystem;
 
-    public ArmorAbilityGUI(SkyblockPlugin plugin, Player player) {
+    public ArmorAbilityGUI(SkyblockPlugin SkyblockPlugin, Player player) {
         super(54, Component.text("§6§l🛡️ Armor Ability System 🛡️").color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD));
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.player = player;
         // Placeholder - method not implemented
         this.armorAbilitySystem = null;
@@ -323,7 +326,7 @@ public class ArmorAbilityGUI extends CustomGUI {
         if (meta != null) {
             meta.displayName(Component.text(name));
             if (lore.length > 0) {
-                meta.lore(Arrays.stream(lore).map(Component::text).toList());
+                meta.lore(java.util.Arrays.stream(lore).map(Component::text).collect(java.util.stream.Collectors.toList()));
             }
             item.setItemMeta(meta);
         }

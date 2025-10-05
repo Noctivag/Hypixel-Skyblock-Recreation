@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,20 +12,22 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 
 /**
  * Economy Settings GUI - Wirtschafts-Einstellungen und -Konfiguration
  */
 public class EconomySettingsGUI {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     
-    public EconomySettingsGUI(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public EconomySettingsGUI(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
     
     public void openEconomySettingsGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lEconomy Settings");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lEconomy Settings"));
         
         // General Settings
         setItem(gui, 10, Material.REDSTONE, "§c§lGeneral Settings",
@@ -178,8 +183,8 @@ public class EconomySettingsGUI {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(name);
-            meta.setLore(Arrays.asList(lore));
+            meta.displayName(Component.text(name));
+            meta.lore(Arrays.asList(lore).stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         gui.setItem(slot, item);

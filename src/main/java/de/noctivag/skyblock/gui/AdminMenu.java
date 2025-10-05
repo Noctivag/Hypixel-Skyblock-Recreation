@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -14,17 +17,17 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 
 public class AdminMenu implements InventoryHolder {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Inventory inventory;
 
-    public AdminMenu(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public AdminMenu(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.inventory = Bukkit.createInventory(this, 27, Component.text("§c§lAdmin-Menü"));
         initializeItems();
     }
     
-    public AdminMenu(SkyblockPlugin plugin, Player player) {
-        this.plugin = plugin;
+    public AdminMenu(SkyblockPlugin SkyblockPlugin, Player player) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.inventory = Bukkit.createInventory(this, 27, Component.text("§c§lAdmin-Menü"));
         initializeItems();
     }
@@ -74,7 +77,7 @@ public class AdminMenu implements InventoryHolder {
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
             meta.displayName(Component.text(name));
-            if (lore.length > 0) meta.lore(Arrays.stream(lore).map(Component::text).toList());
+            if (lore.length > 0) meta.lore(java.util.Arrays.stream(lore).map(Component::text).collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         return item;

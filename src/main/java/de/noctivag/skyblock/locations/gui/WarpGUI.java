@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.locations.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.locations.EnhancedWarp;
 import de.noctivag.skyblock.utils.ColorUtils;
 import net.kyori.adventure.text.Component;
@@ -18,12 +21,12 @@ import java.util.Collections;
 import java.util.List;
 
 public class WarpGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private static final String MAIN_MENU_TITLE = "§8» §6Warp-Menü §8«";
     private static final String CATEGORY_MENU_TITLE = "§8» §6Warps: §e%s §8«";
 
-    public WarpGUI(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public WarpGUI(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     public void openMainMenu(Player player) {
@@ -32,8 +35,8 @@ public class WarpGUI {
 
         // Featured Warps in der oberen Reihe
         List<EnhancedWarp> featuredWarps = new ArrayList<>();
-        for (String name : plugin.getLocationManager().getWarpNames()) {
-            var w = plugin.getLocationManager().getWarp(name);
+        for (String name : SkyblockPlugin.getLocationManager().getWarpNames()) {
+            var w = SkyblockPlugin.getLocationManager().getWarp(name);
             // Type conversion issue - using LocationManager.Warp instead of EnhancedWarp
             // if (w instanceof EnhancedWarp ew && ew.isFeatured()) featuredWarps.add(ew);
         }
@@ -48,7 +51,7 @@ public class WarpGUI {
         for (EnhancedWarp.WarpCategory category : EnhancedWarp.WarpCategory.values()) {
             if (slot > 34) break;
 
-            List<EnhancedWarp> warpsInCategory = plugin.getLocationManager().getWarpsByCategory(category);
+            List<EnhancedWarp> warpsInCategory = SkyblockPlugin.getLocationManager().getWarpsByCategory(category);
             if (!warpsInCategory.isEmpty()) {
                 inv.setItem(slot++, createCategoryItem(category, warpsInCategory.size()));
             }
@@ -59,7 +62,7 @@ public class WarpGUI {
             Material.PLAYER_HEAD,
             "§6» §eSpielerprofil",
             Arrays.asList(
-                "§7Kontostand: §e" + plugin.getEconomyManager().formatMoney(plugin.getEconomyManager().getBalance(player)),
+                "§7Kontostand: §e" + SkyblockPlugin.getEconomyManager().formatMoney(SkyblockPlugin.getEconomyManager().getBalance(player)),
                 "§7Level: §e" + "1",
                 "",
                 "§7Entdeckte Warps: §e" + 0
@@ -80,8 +83,8 @@ public class WarpGUI {
 
         // Build list from available warps
         List<EnhancedWarp> warps = new ArrayList<>();
-        for (String name : plugin.getLocationManager().getWarpNames()) {
-            var w = plugin.getLocationManager().getWarp(name);
+        for (String name : SkyblockPlugin.getLocationManager().getWarpNames()) {
+            var w = SkyblockPlugin.getLocationManager().getWarp(name);
             // Type conversion issue - using LocationManager.Warp instead of EnhancedWarp
             // if (w instanceof EnhancedWarp ew && ew.getCategory() == category) warps.add(ew);
         }
@@ -111,15 +114,15 @@ public class WarpGUI {
 
         // Anforderungen (Player level support optional)
         if (warp.getMinLevel() > 0) {
-            int playerLevel = plugin.getPlayerDataManager().getLevel(player);
+            int playerLevel = SkyblockPlugin.getPlayerDataManager().getLevel(player);
             boolean hasLevel = playerLevel >= warp.getMinLevel();
             lore.add("§7Level: " + (hasLevel ? "§a" : "§c") + playerLevel + "§7/§e" + warp.getMinLevel());
         }
 
         if (warp.getPrice() > 0) {
-            boolean canAfford = plugin.getEconomyManager().hasBalance(player, warp.getPrice());
+            boolean canAfford = SkyblockPlugin.getEconomyManager().hasBalance(player, warp.getPrice());
             lore.add("§7Preis: " + (canAfford ? "§a" : "§c") +
-                     plugin.getEconomyManager().formatMoney(warp.getPrice()));
+                     SkyblockPlugin.getEconomyManager().formatMoney(warp.getPrice()));
         }
 
         if (!warp.getPermission().isEmpty() && !player.hasPermission(warp.getPermission())) {
@@ -147,10 +150,10 @@ public class WarpGUI {
     }
 
     private boolean canUseWarp(EnhancedWarp warp, Player player) {
-        int playerLevel = plugin.getPlayerDataManager().getLevel(player);
+        int playerLevel = SkyblockPlugin.getPlayerDataManager().getLevel(player);
         return (warp.getPermission().isEmpty() || player.hasPermission(warp.getPermission())) &&
                playerLevel >= warp.getMinLevel() &&
-               plugin.getEconomyManager().hasBalance(player, warp.getPrice());
+               SkyblockPlugin.getEconomyManager().hasBalance(player, warp.getPrice());
     }
 
     private void decorateInventory(Inventory inv) {

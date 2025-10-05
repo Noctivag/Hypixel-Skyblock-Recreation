@@ -1,4 +1,7 @@
 package de.noctivag.skyblock;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.utils.ColorUtils;
@@ -19,11 +22,11 @@ public class TabListListener implements Listener {
     private final Map<String, String> prefixMap;
     private final Map<String, String> nickMap;
     private final JoinMessageManager joinMessageManager;
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public TabListListener(@NotNull SkyblockPlugin plugin, @NotNull Map<String, String> prefixMap,
+    public TabListListener(@NotNull SkyblockPlugin SkyblockPlugin, @NotNull Map<String, String> prefixMap,
                            @NotNull Map<String, String> nickMap, @NotNull JoinMessageManager joinMessageManager) {
-        this.plugin = Objects.requireNonNull(plugin, "Plugin cannot be null");
+        this.SkyblockPlugin = Objects.requireNonNull(SkyblockPlugin, "SkyblockPlugin cannot be null");
         this.prefixMap = Objects.requireNonNull(prefixMap, "prefixMap cannot be null");
         this.nickMap = Objects.requireNonNull(nickMap, "nickMap cannot be null");
         this.joinMessageManager = Objects.requireNonNull(joinMessageManager, "JoinMessageManager cannot be null");
@@ -45,14 +48,14 @@ public class TabListListener implements Listener {
                     .append(ColorUtils.translate(nick));
 
             // Setze den DisplayName und TabList-Namen synchron
-            plugin.getServer().getScheduler().runTask(plugin, () -> {
+            SkyblockPlugin.getServer().getScheduler().runTask(SkyblockPlugin, () -> {
                 try {
                     if (player.isOnline()) {
                         player.displayName(displayName);
                         player.playerListName(displayName);
                     }
                 } catch (Exception e) {
-                    plugin.getLogger().warning("Fehler beim Setzen des Displaynamens für " + playerName);
+                    SkyblockPlugin.getLogger().warning("Fehler beim Setzen des Displaynamens für " + playerName);
                 }
             });
 
@@ -63,12 +66,12 @@ public class TabListListener implements Listener {
                 event.joinMessage(joinMessage);
             }
         } catch (Exception e) {
-            plugin.getLogger().severe("Fehler im TabListListener: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Fehler im TabListListener: " + e.getMessage());
             try {
                 // TODO: Implement proper ConfigManager interface
-                // if (plugin.getConfigManager() != null && ((ConfigManager) plugin.getConfigManager()).isDebugMode()) {
+                // if (SkyblockPlugin.getConfigManager() != null && ((ConfigManager) SkyblockPlugin.getConfigManager()).isDebugMode()) {
                 if (false) { // Placeholder for debug mode check
-                    plugin.getLogger().log(Level.SEVERE, "Stacktrace:", e);
+                    SkyblockPlugin.getLogger().log(Level.SEVERE, "Stacktrace:", e);
                 }
             } catch (Exception ignored) {
                 // Nothing we can do here
@@ -93,18 +96,18 @@ public class TabListListener implements Listener {
                     .append(Component.space())
                     .append(ColorUtils.translate(nick));
 
-            plugin.getServer().getScheduler().runTask(plugin, () -> {
+            SkyblockPlugin.getServer().getScheduler().runTask(SkyblockPlugin, () -> {
                 try {
                     if (player.isOnline()) {
                         player.displayName(displayName);
                         player.playerListName(displayName);
                     }
                 } catch (Exception e) {
-                    plugin.getLogger().warning("Fehler beim Aktualisieren des Displaynamens für " + playerName);
+                    SkyblockPlugin.getLogger().warning("Fehler beim Aktualisieren des Displaynamens für " + playerName);
                 }
             });
         } catch (Exception e) {
-            plugin.getLogger().severe("Fehler beim Aktualisieren der Spieleranzeige: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Fehler beim Aktualisieren der Spieleranzeige: " + e.getMessage());
         }
     }
 }

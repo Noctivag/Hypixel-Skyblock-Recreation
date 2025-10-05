@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.commands;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -31,10 +34,10 @@ import java.util.List;
  * - Tab-Completion
  */
 public class UnifiedSystemCommands implements CommandExecutor, TabCompleter {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     
-    public UnifiedSystemCommands(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public UnifiedSystemCommands(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
     
     @Override
@@ -45,7 +48,7 @@ public class UnifiedSystemCommands implements CommandExecutor, TabCompleter {
         }
 
         if (!player.hasPermission("basics.admin")) {
-            player.sendMessage("§cDu hast keine Berechtigung für diesen Befehl!");
+            player.sendMessage(Component.text("§cDu hast keine Berechtigung für diesen Befehl!"));
             return true;
         }
 
@@ -58,7 +61,7 @@ public class UnifiedSystemCommands implements CommandExecutor, TabCompleter {
             case "restart" -> handleRestart(player, args);
             case "admin" -> handleAdmin(player, args);
             default -> {
-                player.sendMessage("§cUnbekannter Befehl!");
+                player.sendMessage(Component.text("§cUnbekannter Befehl!"));
                 return true;
             }
         }
@@ -82,7 +85,7 @@ public class UnifiedSystemCommands implements CommandExecutor, TabCompleter {
             case "full" -> runFullSystemTest(player);
             case "performance" -> testPerformance(player);
             case "database" -> testDatabase(player);
-            default -> player.sendMessage("§cUngültiger Test-Typ! Verwende: menus, restrictions, islands, guis, full, performance, database");
+            default -> player.sendMessage(Component.text("§cUngültiger Test-Typ! Verwende: menus, restrictions, islands, guis, full, performance, database"));
         }
     }
     
@@ -101,7 +104,7 @@ public class UnifiedSystemCommands implements CommandExecutor, TabCompleter {
             case "all" -> testAllFeatures(player);
             case "skyblock" -> testSkyblockFeatures(player);
             case "economy" -> testEconomy(player);
-            default -> player.sendMessage("§cUngültiger Test-Typ! Verwende: booster, recipe, calendar, all, skyblock, economy");
+            default -> player.sendMessage(Component.text("§cUngültiger Test-Typ! Verwende: booster, recipe, calendar, all, skyblock, economy"));
         }
     }
     
@@ -115,11 +118,11 @@ public class UnifiedSystemCommands implements CommandExecutor, TabCompleter {
         
         switch (statusType) {
             case "server" -> showServerStatus(player);
-            case "plugin" -> showPluginStatus(player);
+            case "SkyblockPlugin" -> showPluginStatus(player);
             case "systems" -> showSystemsStatus(player);
             case "performance" -> showPerformanceStatus(player);
             case "players" -> showPlayersStatus(player);
-            default -> player.sendMessage("§cUngültiger Status-Typ! Verwende: server, plugin, systems, performance, players");
+            default -> player.sendMessage(Component.text("§cUngültiger Status-Typ! Verwende: server, SkyblockPlugin, systems, performance, players"));
         }
     }
     
@@ -132,11 +135,11 @@ public class UnifiedSystemCommands implements CommandExecutor, TabCompleter {
         String restartType = args[0].toLowerCase();
         
         switch (restartType) {
-            case "plugin" -> restartPlugin(player);
+            case "SkyblockPlugin" -> restartPlugin(player);
             case "server" -> restartServer(player);
             case "systems" -> restartSystems(player);
             case "database" -> restartDatabase(player);
-            default -> player.sendMessage("§cUngültiger Restart-Typ! Verwende: plugin, server, systems, database");
+            default -> player.sendMessage(Component.text("§cUngültiger Restart-Typ! Verwende: SkyblockPlugin, server, systems, database"));
         }
     }
     
@@ -154,91 +157,91 @@ public class UnifiedSystemCommands implements CommandExecutor, TabCompleter {
             case "backup" -> createBackup(player);
             case "cleanup" -> cleanupData(player);
             case "permissions" -> checkPermissions(player);
-            default -> player.sendMessage("§cUngültiger Admin-Typ! Verwende: reload, maintenance, backup, cleanup, permissions");
+            default -> player.sendMessage(Component.text("§cUngültiger Admin-Typ! Verwende: reload, maintenance, backup, cleanup, permissions"));
         }
     }
     
     // System Test Methods
     private void showSystemTestHelp(Player player) {
-        player.sendMessage("§6§l=== SYSTEM TEST COMMAND ===");
-        player.sendMessage("§e/systemtest menus §7- Testet alle Menü-Systeme");
-        player.sendMessage("§e/systemtest restrictions §7- Testet Menü-Beschränkungen");
-        player.sendMessage("§e/systemtest islands §7- Testet Insel-System");
-        player.sendMessage("§e/systemtest guis §7- Testet alle GUI-Systeme");
-        player.sendMessage("§e/systemtest full §7- Führt vollständigen System-Test durch");
-        player.sendMessage("§e/systemtest performance §7- Testet Performance");
-        player.sendMessage("§e/systemtest database §7- Testet Datenbank-Verbindung");
+        player.sendMessage(Component.text("§6§l=== SYSTEM TEST COMMAND ==="));
+        player.sendMessage(Component.text("§e/systemtest menus §7- Testet alle Menü-Systeme"));
+        player.sendMessage(Component.text("§e/systemtest restrictions §7- Testet Menü-Beschränkungen"));
+        player.sendMessage(Component.text("§e/systemtest islands §7- Testet Insel-System"));
+        player.sendMessage(Component.text("§e/systemtest guis §7- Testet alle GUI-Systeme"));
+        player.sendMessage(Component.text("§e/systemtest full §7- Führt vollständigen System-Test durch"));
+        player.sendMessage(Component.text("§e/systemtest performance §7- Testet Performance"));
+        player.sendMessage(Component.text("§e/systemtest database §7- Testet Datenbank-Verbindung"));
     }
     
     private void testAllMenus(Player player) {
-        player.sendMessage("§a§l=== TESTING ALL MENU SYSTEMS ===");
+        player.sendMessage(Component.text("§a§l=== TESTING ALL MENU SYSTEMS ==="));
         
         // Test Unified Main Menu
-        player.sendMessage("§eTesting Unified Main Menu...");
-        new de.noctivag.plugin.gui.UnifiedMainMenuSystem(plugin, player, 
-            de.noctivag.plugin.gui.UnifiedMainMenuSystem.MenuMode.ULTIMATE).open(player);
-        player.sendMessage("§a✓ Unified Main Menu opened successfully");
+        player.sendMessage(Component.text("§eTesting Unified Main Menu..."));
+        new de.noctivag.skyblock.gui.UnifiedMainMenuSystem(SkyblockPlugin, player, 
+            de.noctivag.skyblock.gui.UnifiedMainMenuSystem.MenuMode.ULTIMATE).open(player);
+        player.sendMessage(Component.text("§a✓ Unified Main Menu opened successfully"));
         
         // Test other menus
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            player.sendMessage("§eTesting Island Menu...");
-            if (plugin.getAdvancedIslandSystem() != null) {
+        SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
+            player.sendMessage(Component.text("§eTesting Island Menu..."));
+            if (SkyblockPlugin.getAdvancedIslandSystem() != null) {
                 // Island system not implemented yet
-            player.sendMessage("§cIsland system not implemented yet!");
-                player.sendMessage("§a✓ Island Menu opened successfully");
+            player.sendMessage(Component.text("§cIsland system not implemented yet!"));
+                player.sendMessage(Component.text("§a✓ Island Menu opened successfully"));
             }
         }, 20L);
         
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            player.sendMessage("§eTesting Cosmetics Menu...");
-            if (plugin.getCosmeticsManager() != null) {
-                new de.noctivag.plugin.gui.CosmeticsMenu(plugin, plugin.getCosmeticsManager()).open(player);
-                player.sendMessage("§a✓ Cosmetics Menu opened successfully");
+        SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
+            player.sendMessage(Component.text("§eTesting Cosmetics Menu..."));
+            if (SkyblockPlugin.getCosmeticsManager() != null) {
+                new de.noctivag.skyblock.gui.CosmeticsMenu(SkyblockPlugin, SkyblockPlugin.getCosmeticsManager()).open(player);
+                player.sendMessage(Component.text("§a✓ Cosmetics Menu opened successfully"));
             }
         }, 40L);
         
-        player.sendMessage("§a§l=== ALL MENU TESTS COMPLETED ===");
+        player.sendMessage(Component.text("§a§l=== ALL MENU TESTS COMPLETED ==="));
     }
     
     private void testMenuRestrictions(Player player) {
-        player.sendMessage("§a§l=== TESTING MENU RESTRICTIONS ===");
+        player.sendMessage(Component.text("§a§l=== TESTING MENU RESTRICTIONS ==="));
         
         // Give menu items in different slots
         giveMenuItemInSlot(player, 0, "§6✧ Hauptmenü ✧", Material.NETHER_STAR);
         giveMenuItemInSlot(player, 4, "§a§lIsland Menu", Material.GRASS_BLOCK);
         giveMenuItemInSlot(player, 8, "§c§lEvent Menü", Material.FIREWORK_ROCKET);
         
-        player.sendMessage("§eMenu items placed in slots 0, 4, and 8");
-        player.sendMessage("§eTry to drop the item in slot 8 (last slot) - it should be blocked!");
-        player.sendMessage("§eTry to take items from any menu - it should be blocked!");
-        player.sendMessage("§eTry to drag items in menus - it should be blocked!");
+        player.sendMessage(Component.text("§eMenu items placed in slots 0, 4, and 8"));
+        player.sendMessage(Component.text("§eTry to drop the item in slot 8 (last slot) - it should be blocked!"));
+        player.sendMessage(Component.text("§eTry to take items from any menu - it should be blocked!"));
+        player.sendMessage(Component.text("§eTry to drag items in menus - it should be blocked!"));
     }
     
     private void testIslandSystem(Player player) {
-        player.sendMessage("§a§l=== TESTING ISLAND SYSTEM ===");
+        player.sendMessage(Component.text("§a§l=== TESTING ISLAND SYSTEM ==="));
         
-        if (plugin.getAdvancedIslandSystem() == null) {
-            player.sendMessage("§cIsland System not available!");
+        if (SkyblockPlugin.getAdvancedIslandSystem() == null) {
+            player.sendMessage(Component.text("§cIsland System not available!"));
             return;
         }
         
         // Test island GUI opening
-        player.sendMessage("§eTesting Island GUI...");
+        player.sendMessage(Component.text("§eTesting Island GUI..."));
         // Island system not implemented yet
-        player.sendMessage("§cIsland system not implemented yet!");
-        player.sendMessage("§a✓ Island GUI opened successfully");
+        player.sendMessage(Component.text("§cIsland system not implemented yet!"));
+        player.sendMessage(Component.text("§a✓ Island GUI opened successfully"));
         
         // Test island categories
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            player.sendMessage("§eTesting Island Categories...");
+        SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
+            player.sendMessage(Component.text("§eTesting Island Categories..."));
             // Island system not implemented yet
-            player.sendMessage("§cIsland system not implemented yet!");
-            player.sendMessage("§a✓ Basic Islands category opened successfully");
+            player.sendMessage(Component.text("§cIsland system not implemented yet!"));
+            player.sendMessage(Component.text("§a✓ Basic Islands category opened successfully"));
         }, 20L);
     }
     
     private void testAllGUIs(Player player) {
-        player.sendMessage("§a§l=== TESTING ALL GUI SYSTEMS ===");
+        player.sendMessage(Component.text("§a§l=== TESTING ALL GUI SYSTEMS ==="));
         
         // Test different GUI types
         String[] guiTypes = {
@@ -248,21 +251,21 @@ public class UnifiedSystemCommands implements CommandExecutor, TabCompleter {
         
         for (int i = 0; i < guiTypes.length; i++) {
             final int index = i;
-            plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+            SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
                 player.sendMessage("§eTesting " + guiTypes[index] + "...");
                 openGUIType(player, guiTypes[index]);
             }, i * 20L);
         }
         
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            player.sendMessage("§a§l=== ALL GUI TESTS COMPLETED ===");
+        SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
+            player.sendMessage(Component.text("§a§l=== ALL GUI TESTS COMPLETED ==="));
         }, guiTypes.length * 20L);
     }
     
     private void testPerformance(Player player) {
-        player.sendMessage("§a§l=== TESTING PERFORMANCE ===");
+        player.sendMessage(Component.text("§a§l=== TESTING PERFORMANCE ==="));
         
-        long startTime = System.currentTimeMillis();
+        long startTime = java.lang.System.currentTimeMillis();
         
         // Test various operations
         for (int i = 0; i < 1000; i++) {
@@ -270,186 +273,186 @@ public class UnifiedSystemCommands implements CommandExecutor, TabCompleter {
             Math.random();
         }
         
-        long endTime = System.currentTimeMillis();
+        long endTime = java.lang.System.currentTimeMillis();
         long duration = endTime - startTime;
         
         player.sendMessage("§ePerformance test completed in " + duration + "ms");
-        player.sendMessage("§a✓ Performance test passed");
+        player.sendMessage(Component.text("§a✓ Performance test passed"));
     }
     
     private void testDatabase(Player player) {
-        player.sendMessage("§a§l=== TESTING DATABASE ===");
+        player.sendMessage(Component.text("§a§l=== TESTING DATABASE ==="));
         
-        if (plugin.getDatabaseManager() == null) {
-            player.sendMessage("§cDatabase Manager not available!");
+        if (SkyblockPlugin.getDatabaseManager() == null) {
+            player.sendMessage(Component.text("§cDatabase Manager not available!"));
             return;
         }
         
         // Test database connection
-        player.sendMessage("§eTesting database connection...");
+        player.sendMessage(Component.text("§eTesting database connection..."));
         // Add actual database test here
-        player.sendMessage("§a✓ Database connection test passed");
+        player.sendMessage(Component.text("§a✓ Database connection test passed"));
     }
     
     private void runFullSystemTest(Player player) {
-        player.sendMessage("§6§l=== RUNNING FULL SYSTEM TEST ===");
+        player.sendMessage(Component.text("§6§l=== RUNNING FULL SYSTEM TEST ==="));
         
         // Test all systems in sequence
         testAllMenus(player);
         
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+        SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
             testMenuRestrictions(player);
         }, 100L);
         
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+        SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
             testIslandSystem(player);
         }, 200L);
         
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+        SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
             testAllGUIs(player);
         }, 300L);
         
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+        SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
             testPerformance(player);
         }, 400L);
         
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+        SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
             testDatabase(player);
         }, 500L);
         
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            player.sendMessage("§6§l=== FULL SYSTEM TEST COMPLETED ===");
-            player.sendMessage("§aAll systems have been tested successfully!");
+        SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
+            player.sendMessage(Component.text("§6§l=== FULL SYSTEM TEST COMPLETED ==="));
+            player.sendMessage(Component.text("§aAll systems have been tested successfully!"));
         }, 600L);
     }
     
     // Test Methods
     private void showTestHelp(Player player) {
-        player.sendMessage("§6§l=== TEST COMMAND ===");
-        player.sendMessage("§e/test booster §7- Testet Booster Cookie System");
-        player.sendMessage("§e/test recipe §7- Testet Recipe Book System");
-        player.sendMessage("§e/test calendar §7- Testet Calendar System");
-        player.sendMessage("§e/test all §7- Testet alle Features");
-        player.sendMessage("§e/test skyblock §7- Testet Skyblock Features");
-        player.sendMessage("§e/test economy §7- Testet Economy System");
+        player.sendMessage(Component.text("§6§l=== TEST COMMAND ==="));
+        player.sendMessage(Component.text("§e/test booster §7- Testet Booster Cookie System"));
+        player.sendMessage(Component.text("§e/test recipe §7- Testet Recipe Book System"));
+        player.sendMessage(Component.text("§e/test calendar §7- Testet Calendar System"));
+        player.sendMessage(Component.text("§e/test all §7- Testet alle Features"));
+        player.sendMessage(Component.text("§e/test skyblock §7- Testet Skyblock Features"));
+        player.sendMessage(Component.text("§e/test economy §7- Testet Economy System"));
     }
     
     private void testBoosterCookie(Player player) {
-        if (plugin.getBoosterCookieSystem() == null) {
-            player.sendMessage("§cBooster Cookie System not available!");
+        if (SkyblockPlugin.getBoosterCookieSystem() == null) {
+            player.sendMessage(Component.text("§cBooster Cookie System not available!"));
             return;
         }
         
         // Booster cookie system not implemented yet
-        player.sendMessage("§cBooster cookie system not implemented yet!");
-        player.sendMessage("§aBooster Cookie added to your inventory!");
-        player.sendMessage("§7Right-click the cookie to consume it and get 4 days of bonuses!");
+        player.sendMessage(Component.text("§cBooster cookie system not implemented yet!"));
+        player.sendMessage(Component.text("§aBooster Cookie added to your inventory!"));
+        player.sendMessage(Component.text("§7Right-click the cookie to consume it and get 4 days of bonuses!"));
     }
     
     private void testRecipeBook(Player player) {
-        if (plugin.getRecipeBookSystem() == null) {
-            player.sendMessage("§cRecipe Book System not available!");
+        if (SkyblockPlugin.getRecipeBookSystem() == null) {
+            player.sendMessage(Component.text("§cRecipe Book System not available!"));
             return;
         }
         
         // Discover some test recipes
         // Recipe book system not implemented yet
-        player.sendMessage("§cRecipe book system not implemented yet!");
+        player.sendMessage(Component.text("§cRecipe book system not implemented yet!"));
         
-        player.sendMessage("§aTest recipes discovered!");
-        player.sendMessage("§7Use /menu to open the Recipe Book!");
+        player.sendMessage(Component.text("§aTest recipes discovered!"));
+        player.sendMessage(Component.text("§7Use /menu to open the Recipe Book!"));
     }
     
     private void testCalendar(Player player) {
-        if (plugin.getCalendarSystem() == null) {
-            player.sendMessage("§cCalendar System not available!");
+        if (SkyblockPlugin.getCalendarSystem() == null) {
+            player.sendMessage(Component.text("§cCalendar System not available!"));
             return;
         }
         
         // Calendar system not implemented yet
-        player.sendMessage("§cCalendar system not implemented yet!");
-        player.sendMessage("§aCalendar opened! Check for upcoming events!");
+        player.sendMessage(Component.text("§cCalendar system not implemented yet!"));
+        player.sendMessage(Component.text("§aCalendar opened! Check for upcoming events!"));
     }
     
     private void testAllFeatures(Player player) {
-        player.sendMessage("§6§l=== Testing All New Hypixel SkyBlock Features ===");
+        player.sendMessage(Component.text("§6§l=== Testing All New Hypixel SkyBlock Features ==="));
         
         // Test Booster Cookie
-        if (plugin.getBoosterCookieSystem() != null) {
+        if (SkyblockPlugin.getBoosterCookieSystem() != null) {
             // Booster cookie system not implemented yet
-        player.sendMessage("§cBooster cookie system not implemented yet!");
-            player.sendMessage("§a✓ Booster Cookie added");
+        player.sendMessage(Component.text("§cBooster cookie system not implemented yet!"));
+            player.sendMessage(Component.text("§a✓ Booster Cookie added"));
         }
         
         // Test Recipe Book
-        if (plugin.getRecipeBookSystem() != null) {
+        if (SkyblockPlugin.getRecipeBookSystem() != null) {
             // Recipe book system not implemented yet
-            player.sendMessage("§cRecipe book system not implemented yet!");
-            player.sendMessage("§a✓ Test recipes discovered");
+            player.sendMessage(Component.text("§cRecipe book system not implemented yet!"));
+            player.sendMessage(Component.text("§a✓ Test recipes discovered"));
         }
         
         // Test Calendar
-        if (plugin.getCalendarSystem() != null) {
-            player.sendMessage("§a✓ Calendar system ready");
+        if (SkyblockPlugin.getCalendarSystem() != null) {
+            player.sendMessage(Component.text("§a✓ Calendar system ready"));
         }
         
-        player.sendMessage("§6§l=== All Features Tested Successfully! ===");
-        player.sendMessage("§7• Use /menu to access all features");
-        player.sendMessage("§7• Right-click the Booster Cookie to consume it");
-        player.sendMessage("§7• Check the Recipe Book for discovered recipes");
-        player.sendMessage("§7• View the Calendar for upcoming events");
+        player.sendMessage(Component.text("§6§l=== All Features Tested Successfully! ==="));
+        player.sendMessage(Component.text("§7• Use /menu to access all features"));
+        player.sendMessage(Component.text("§7• Right-click the Booster Cookie to consume it"));
+        player.sendMessage(Component.text("§7• Check the Recipe Book for discovered recipes"));
+        player.sendMessage(Component.text("§7• View the Calendar for upcoming events"));
     }
     
     private void testSkyblockFeatures(Player player) {
-        player.sendMessage("§6§l=== Testing Skyblock Features ===");
+        player.sendMessage(Component.text("§6§l=== Testing Skyblock Features ==="));
         
         // Test various skyblock systems
-        player.sendMessage("§eTesting Skyblock systems...");
+        player.sendMessage(Component.text("§eTesting Skyblock systems..."));
         // Add actual skyblock tests here
-        player.sendMessage("§a✓ Skyblock features tested");
+        player.sendMessage(Component.text("§a✓ Skyblock features tested"));
     }
     
     private void testEconomy(Player player) {
-        player.sendMessage("§6§l=== Testing Economy System ===");
+        player.sendMessage(Component.text("§6§l=== Testing Economy System ==="));
         
-        if (plugin.getEconomyManager() == null) {
-            player.sendMessage("§cEconomy Manager not available!");
+        if (SkyblockPlugin.getEconomyManager() == null) {
+            player.sendMessage(Component.text("§cEconomy Manager not available!"));
             return;
         }
         
         // Test economy operations
-        double balance = plugin.getEconomyManager().getBalance(player);
-        player.sendMessage("§eCurrent balance: " + plugin.getEconomyManager().formatMoney(balance));
-        player.sendMessage("§a✓ Economy system tested");
+        double balance = SkyblockPlugin.getEconomyManager().getBalance(player);
+        player.sendMessage("§eCurrent balance: " + SkyblockPlugin.getEconomyManager().formatMoney(balance));
+        player.sendMessage(Component.text("§a✓ Economy system tested"));
     }
     
     // Status Methods
     private void showServerStatus(Player player) {
-        player.sendMessage("§6§l=== SERVER STATUS ===");
-        player.sendMessage("§eOnline Players: §a" + plugin.getServer().getOnlinePlayers().size());
-        player.sendMessage("§eMax Players: §a" + plugin.getServer().getMaxPlayers());
-        player.sendMessage("§eServer Version: §a" + plugin.getServer().getVersion());
-        player.sendMessage("§ePlugin Version: §a" + plugin.getDescription().getVersion());
+        player.sendMessage(Component.text("§6§l=== SERVER STATUS ==="));
+        player.sendMessage("§eOnline Players: §a" + SkyblockPlugin.getServer().getOnlinePlayers().size());
+        player.sendMessage("§eMax Players: §a" + SkyblockPlugin.getServer().getMaxPlayers());
+        player.sendMessage("§eServer Version: §a" + SkyblockPlugin.getServer().getVersion());
+        player.sendMessage("§ePlugin Version: §a" + SkyblockPlugin.getDescription().getVersion());
     }
     
     private void showPluginStatus(Player player) {
-        player.sendMessage("§6§l=== SkyblockPlugin ==");
-        player.sendMessage("§ePlugin Name: §a" + plugin.getName());
-        player.sendMessage("§eVersion: §a" + plugin.getDescription().getVersion());
-        player.sendMessage("§eAuthors: §a" + String.join(", ", plugin.getDescription().getAuthors()));
-        player.sendMessage("§eDescription: §a" + plugin.getDescription().getDescription());
+        player.sendMessage(Component.text("§6§l=== SkyblockPlugin =="));
+        player.sendMessage("§ePlugin Name: §a" + SkyblockPlugin.getName());
+        player.sendMessage("§eVersion: §a" + SkyblockPlugin.getDescription().getVersion());
+        player.sendMessage("§eAuthors: §a" + String.join(", ", SkyblockPlugin.getDescription().getAuthors()));
+        player.sendMessage("§eDescription: §a" + SkyblockPlugin.getDescription().getDescription());
     }
     
     private void showSystemsStatus(Player player) {
-        player.sendMessage("§6§l=== SYSTEMS STATUS ===");
-        player.sendMessage("§eData Manager: §a" + (plugin.getDatabaseManager() != null ? "✓ Active" : "✗ Inactive"));
-        player.sendMessage("§eEconomy Manager: §a" + (plugin.getEconomyManager() != null ? "✓ Active" : "✗ Inactive"));
-        player.sendMessage("§eCosmetics Manager: §a" + (plugin.getCosmeticsManager() != null ? "✓ Active" : "✗ Inactive"));
-        player.sendMessage("§eIsland System: §a" + (plugin.getAdvancedIslandSystem() != null ? "✓ Active" : "✗ Inactive"));
+        player.sendMessage(Component.text("§6§l=== SYSTEMS STATUS ==="));
+        player.sendMessage("§eData Manager: §a" + (SkyblockPlugin.getDatabaseManager() != null ? "✓ Active" : "✗ Inactive"));
+        player.sendMessage("§eEconomy Manager: §a" + (SkyblockPlugin.getEconomyManager() != null ? "✓ Active" : "✗ Inactive"));
+        player.sendMessage("§eCosmetics Manager: §a" + (SkyblockPlugin.getCosmeticsManager() != null ? "✓ Active" : "✗ Inactive"));
+        player.sendMessage("§eIsland System: §a" + (SkyblockPlugin.getAdvancedIslandSystem() != null ? "✓ Active" : "✗ Inactive"));
     }
     
     private void showPerformanceStatus(Player player) {
-        player.sendMessage("§6§l=== PERFORMANCE STATUS ===");
+        player.sendMessage(Component.text("§6§l=== PERFORMANCE STATUS ==="));
         Runtime runtime = Runtime.getRuntime();
         long maxMemory = runtime.maxMemory() / 1024 / 1024;
         long totalMemory = runtime.totalMemory() / 1024 / 1024;
@@ -463,88 +466,88 @@ public class UnifiedSystemCommands implements CommandExecutor, TabCompleter {
     }
     
     private void showPlayersStatus(Player player) {
-        player.sendMessage("§6§l=== PLAYERS STATUS ===");
-        player.sendMessage("§eOnline Players: §a" + plugin.getServer().getOnlinePlayers().size());
-        player.sendMessage("§eTotal Players: §a" + plugin.getServer().getOfflinePlayers().length);
+        player.sendMessage(Component.text("§6§l=== PLAYERS STATUS ==="));
+        player.sendMessage("§eOnline Players: §a" + SkyblockPlugin.getServer().getOnlinePlayers().size());
+        player.sendMessage("§eTotal Players: §a" + SkyblockPlugin.getServer().getOfflinePlayers().length);
         
         // Show some online players
-        plugin.getServer().getOnlinePlayers().stream()
+        SkyblockPlugin.getServer().getOnlinePlayers().stream()
             .limit(10)
             .forEach(p -> player.sendMessage("§e- §a" + p.getName()));
     }
     
     // Restart Methods
     private void showRestartHelp(Player player) {
-        player.sendMessage("§6§l=== RESTART COMMAND ===");
-        player.sendMessage("§e/restart plugin §7- Startet Plugin neu");
-        player.sendMessage("§e/restart server §7- Startet Server neu");
-        player.sendMessage("§e/restart systems §7- Startet alle Systeme neu");
-        player.sendMessage("§e/restart database §7- Startet Datenbank neu");
+        player.sendMessage(Component.text("§6§l=== RESTART COMMAND ==="));
+        player.sendMessage(Component.text("§e/restart SkyblockPlugin §7- Startet SkyblockPlugin neu"));
+        player.sendMessage(Component.text("§e/restart server §7- Startet Server neu"));
+        player.sendMessage(Component.text("§e/restart systems §7- Startet alle Systeme neu"));
+        player.sendMessage(Component.text("§e/restart database §7- Startet Datenbank neu"));
     }
     
     private void restartPlugin(Player player) {
-        player.sendMessage("§eRestarting plugin...");
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            plugin.getServer().getPluginManager().disablePlugin(plugin);
-            plugin.getServer().getPluginManager().enablePlugin(plugin);
-            player.sendMessage("§aPlugin restarted successfully!");
+        player.sendMessage(Component.text("§eRestarting SkyblockPlugin..."));
+        SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
+            SkyblockPlugin.getServer().getPluginManager().disablePlugin(SkyblockPlugin);
+            SkyblockPlugin.getServer().getPluginManager().enablePlugin(SkyblockPlugin);
+            player.sendMessage(Component.text("§aPlugin restarted successfully!"));
         }, 20L);
     }
     
     private void restartServer(Player player) {
-        player.sendMessage("§cRestarting server in 10 seconds...");
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            plugin.getServer().shutdown();
+        player.sendMessage(Component.text("§cRestarting server in 10 seconds..."));
+        SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
+            SkyblockPlugin.getServer().shutdown();
         }, 200L);
     }
     
     private void restartSystems(Player player) {
-        player.sendMessage("§eRestarting all systems...");
+        player.sendMessage(Component.text("§eRestarting all systems..."));
         // Add system restart logic here
-        player.sendMessage("§aAll systems restarted successfully!");
+        player.sendMessage(Component.text("§aAll systems restarted successfully!"));
     }
     
     private void restartDatabase(Player player) {
-        player.sendMessage("§eRestarting database connection...");
+        player.sendMessage(Component.text("§eRestarting database connection..."));
         // Add database restart logic here
-        player.sendMessage("§aDatabase restarted successfully!");
+        player.sendMessage(Component.text("§aDatabase restarted successfully!"));
     }
     
     // Admin Methods
     private void showAdminHelp(Player player) {
-        player.sendMessage("§6§l=== ADMIN COMMAND ===");
-        player.sendMessage("§e/admin reload §7- Lädt Plugin neu");
-        player.sendMessage("§e/admin maintenance §7- Aktiviert/Deaktiviert Wartungsmodus");
-        player.sendMessage("§e/admin backup §7- Erstellt Backup");
-        player.sendMessage("§e/admin cleanup §7- Bereinigt Daten");
-        player.sendMessage("§e/admin permissions §7- Überprüft Berechtigungen");
+        player.sendMessage(Component.text("§6§l=== ADMIN COMMAND ==="));
+        player.sendMessage(Component.text("§e/admin reload §7- Lädt SkyblockPlugin neu"));
+        player.sendMessage(Component.text("§e/admin maintenance §7- Aktiviert/Deaktiviert Wartungsmodus"));
+        player.sendMessage(Component.text("§e/admin backup §7- Erstellt Backup"));
+        player.sendMessage(Component.text("§e/admin cleanup §7- Bereinigt Daten"));
+        player.sendMessage(Component.text("§e/admin permissions §7- Überprüft Berechtigungen"));
     }
     
     private void reloadPlugin(Player player) {
-        player.sendMessage("§eReloading plugin...");
-        plugin.reloadConfig();
-        player.sendMessage("§aPlugin reloaded successfully!");
+        player.sendMessage(Component.text("§eReloading SkyblockPlugin..."));
+        SkyblockPlugin.reloadConfig();
+        player.sendMessage(Component.text("§aPlugin reloaded successfully!"));
     }
     
     private void toggleMaintenance(Player player) {
         // Add maintenance toggle logic here
-        player.sendMessage("§eMaintenance mode toggled!");
+        player.sendMessage(Component.text("§eMaintenance mode toggled!"));
     }
     
     private void createBackup(Player player) {
-        player.sendMessage("§eCreating backup...");
+        player.sendMessage(Component.text("§eCreating backup..."));
         // Add backup creation logic here
-        player.sendMessage("§aBackup created successfully!");
+        player.sendMessage(Component.text("§aBackup created successfully!"));
     }
     
     private void cleanupData(Player player) {
-        player.sendMessage("§eCleaning up data...");
+        player.sendMessage(Component.text("§eCleaning up data..."));
         // Add cleanup logic here
-        player.sendMessage("§aData cleanup completed!");
+        player.sendMessage(Component.text("§aData cleanup completed!"));
     }
     
     private void checkPermissions(Player player) {
-        player.sendMessage("§6§l=== PERMISSIONS CHECK ===");
+        player.sendMessage(Component.text("§6§l=== PERMISSIONS CHECK ==="));
         player.sendMessage("§eAdmin: §a" + (player.hasPermission("basics.admin") ? "✓" : "✗"));
         player.sendMessage("§eModerator: §a" + (player.hasPermission("basics.moderator") ? "✓" : "✗"));
         player.sendMessage("§eVIP: §a" + (player.hasPermission("basics.vip") ? "✓" : "✗"));
@@ -556,34 +559,34 @@ public class UnifiedSystemCommands implements CommandExecutor, TabCompleter {
         try {
             switch (guiType) {
                 case "UnifiedMainMenu":
-                    new de.noctivag.plugin.gui.UnifiedMainMenuSystem(plugin, player, 
-                        de.noctivag.plugin.gui.UnifiedMainMenuSystem.MenuMode.ULTIMATE).open(player);
+                    new de.noctivag.skyblock.gui.UnifiedMainMenuSystem(SkyblockPlugin, player, 
+                        de.noctivag.skyblock.gui.UnifiedMainMenuSystem.MenuMode.ULTIMATE).open(player);
                     break;
                 case "CosmeticsMenu":
-                    if (plugin.getCosmeticsManager() != null) {
-                        new de.noctivag.plugin.gui.CosmeticsMenu(plugin, plugin.getCosmeticsManager()).open(player);
+                    if (SkyblockPlugin.getCosmeticsManager() != null) {
+                        new de.noctivag.skyblock.gui.CosmeticsMenu(SkyblockPlugin, SkyblockPlugin.getCosmeticsManager()).open(player);
                     }
                     break;
                 case "WarpGUI":
-                    new de.noctivag.plugin.locations.gui.WarpGUI(plugin).openMainMenu(player);
+                    new de.noctivag.skyblock.locations.gui.WarpGUI(SkyblockPlugin).openMainMenu(player);
                     break;
                 case "IslandGUI":
-                    if (plugin.getAdvancedIslandSystem() != null) {
+                    if (SkyblockPlugin.getAdvancedIslandSystem() != null) {
                         // Island system not implemented yet
-            player.sendMessage("§cIsland system not implemented yet!");
+            player.sendMessage(Component.text("§cIsland system not implemented yet!"));
                     }
                     break;
                 case "EventMenu":
-                    new de.noctivag.plugin.gui.EventMenu(plugin).open(player);
+                    new de.noctivag.skyblock.gui.EventMenu(SkyblockPlugin).open(player);
                     break;
                 case "SettingsGUI":
-                    new de.noctivag.plugin.gui.SettingsGUI(plugin).openGUI(player);
+                    new de.noctivag.skyblock.gui.SettingsGUI(SkyblockPlugin).openGUI(player);
                     break;
                 case "FriendsGUI":
-                    new de.noctivag.plugin.gui.FriendsGUI(plugin).openGUI(player);
+                    new de.noctivag.skyblock.gui.FriendsGUI(SkyblockPlugin, player).openGUI(player);
                     break;
                 case "PartyGUI":
-                    new de.noctivag.plugin.gui.PartyGUI(plugin).openGUI(player);
+                    new de.noctivag.skyblock.gui.PartyGUI(SkyblockPlugin).openGUI(player);
                     break;
             }
             player.sendMessage("§a✓ " + guiType + " opened successfully");
@@ -620,10 +623,10 @@ public class UnifiedSystemCommands implements CommandExecutor, TabCompleter {
                     completions.addAll(Arrays.asList("booster", "recipe", "calendar", "all", "skyblock", "economy"));
                 }
                 case "status" -> {
-                    completions.addAll(Arrays.asList("server", "plugin", "systems", "performance", "players"));
+                    completions.addAll(Arrays.asList("server", "SkyblockPlugin", "systems", "performance", "players"));
                 }
                 case "restart" -> {
-                    completions.addAll(Arrays.asList("plugin", "server", "systems", "database"));
+                    completions.addAll(Arrays.asList("SkyblockPlugin", "server", "systems", "database"));
                 }
                 case "admin" -> {
                     completions.addAll(Arrays.asList("reload", "maintenance", "backup", "cleanup", "permissions"));

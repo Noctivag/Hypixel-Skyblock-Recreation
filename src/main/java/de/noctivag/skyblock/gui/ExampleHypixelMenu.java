@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import net.kyori.adventure.text.Component;
@@ -15,15 +18,15 @@ import net.kyori.adventure.text.format.TextDecoration;
  * to create menus that look and feel like Hypixel Skyblock.
  */
 public class ExampleHypixelMenu extends CustomGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Player player;
     private final HypixelMenuStyleSystem styleSystem;
 
-    public ExampleHypixelMenu(SkyblockPlugin plugin, Player player) {
+    public ExampleHypixelMenu(SkyblockPlugin SkyblockPlugin, Player player) {
         super(54, Component.text("§6§l⚡ EXAMPLE MENU ⚡").color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD));
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.player = player;
-        this.styleSystem = new HypixelMenuStyleSystem(plugin);
+        this.styleSystem = new HypixelMenuStyleSystem(SkyblockPlugin);
         setupItems();
     }
 

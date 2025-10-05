@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.economy;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.core.PlayerProfile;
@@ -8,6 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import net.kyori.adventure.text.Component;
 
 /**
  * Trading System - Player-to-Player Trading
@@ -59,7 +61,7 @@ public class TradingSystem {
                     }
                 }
             }
-        }.runTaskTimer(economySystem.plugin, 0L, 20L * 10L); // Check every 10 seconds
+        }.runTaskTimer(economySystem.SkyblockPlugin, 0L, 20L * 10L); // Check every 10 seconds
     }
     
     public void sendTradeRequest(Player requester, Player target) {
@@ -221,7 +223,7 @@ public class TradingSystem {
         }
         openTradeGUI(player, session);
         
-        player.sendMessage("§a§lITEM ADDED TO TRADE!");
+        player.sendMessage(Component.text("§a§lITEM ADDED TO TRADE!"));
         player.sendMessage("§7Item: §e" + item.getType().name());
         player.sendMessage("§7Amount: §e" + item.getAmount());
     }
@@ -243,7 +245,7 @@ public class TradingSystem {
         }
         openTradeGUI(player, session);
         
-        player.sendMessage("§c§lITEM REMOVED FROM TRADE!");
+        player.sendMessage(Component.text("§c§lITEM REMOVED FROM TRADE!"));
         player.sendMessage("§7Item: §e" + removedItem.getType().name());
         player.sendMessage("§7Amount: §e" + removedItem.getAmount());
     }
@@ -266,10 +268,10 @@ public class TradingSystem {
             openTradeGUI(player, session);
             
             if (ready) {
-                player.sendMessage("§a§lYOU ARE READY!");
-                player.sendMessage("§7Waiting for the other player...");
+                player.sendMessage(Component.text("§a§lYOU ARE READY!"));
+                player.sendMessage(Component.text("§7Waiting for the other player..."));
             } else {
-                player.sendMessage("§c§lYOU ARE NOT READY!");
+                player.sendMessage(Component.text("§c§lYOU ARE NOT READY!"));
             }
         }
     }
@@ -286,7 +288,7 @@ public class TradingSystem {
         activeTrades.remove(session.getPlayer2());
         
         // Send messages
-        player.sendMessage("§c§lTRADE CANCELLED!");
+        player.sendMessage(Component.text("§c§lTRADE CANCELLED!"));
         
         Player otherPlayer = Bukkit.getPlayer(getOtherPlayerId(player, session));
         if (otherPlayer != null) {
@@ -426,11 +428,11 @@ public class TradingSystem {
             this.target = target;
             this.requesterName = requesterName;
             this.targetName = targetName;
-            this.createdAt = System.currentTimeMillis();
+            this.createdAt = java.lang.System.currentTimeMillis();
         }
         
         public boolean isExpired() {
-            return System.currentTimeMillis() - createdAt > 60 * 1000L; // 60 seconds
+            return java.lang.System.currentTimeMillis() - createdAt > 60 * 1000L; // 60 seconds
         }
         
         public UUID getRequester() { return requester; }
@@ -493,7 +495,7 @@ public class TradingSystem {
             this.player2 = player2;
             this.player1Items = new ArrayList<>(player1Items);
             this.player2Items = new ArrayList<>(player2Items);
-            this.timestamp = System.currentTimeMillis();
+            this.timestamp = java.lang.System.currentTimeMillis();
         }
         
         public UUID getPlayer1() { return player1; }

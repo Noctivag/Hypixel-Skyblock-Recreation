@@ -15,7 +15,7 @@ public class TalismanEffect {
     public TalismanEffect(TalismanType talismanType, int level, int durationSeconds) {
         this.talismanType = talismanType;
         this.level = level;
-        this.expirationTime = System.currentTimeMillis() + (durationSeconds * 1000L);
+        this.expirationTime = java.lang.System.currentTimeMillis() + (durationSeconds * 1000L);
     }
     
     public TalismanType getTalismanType() {
@@ -31,11 +31,11 @@ public class TalismanEffect {
     }
     
     public boolean isExpired() {
-        return System.currentTimeMillis() >= expirationTime;
+        return java.lang.System.currentTimeMillis() >= expirationTime;
     }
     
     public int getRemainingTime() {
-        long remaining = expirationTime - System.currentTimeMillis();
+        long remaining = expirationTime - java.lang.System.currentTimeMillis();
         return (int) Math.max(0, remaining / 1000);
     }
     

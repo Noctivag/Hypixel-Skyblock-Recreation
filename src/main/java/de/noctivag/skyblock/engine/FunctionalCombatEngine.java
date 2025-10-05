@@ -1,5 +1,9 @@
 package de.noctivag.skyblock.engine;
 
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+
 import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 // import de.noctivag.skyblock.player.PlayerProfile;
@@ -31,7 +35,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class FunctionalCombatEngine {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerCombatProfile> playerProfiles = new ConcurrentHashMap<>();
     private final Map<UUID, BukkitTask> updateTasks = new ConcurrentHashMap<>();
@@ -41,8 +45,8 @@ public class FunctionalCombatEngine {
     private static final int CACHE_DURATION_TICKS = 20; // 1 second
     private static final int ASYNC_UPDATE_INTERVAL = 5; // 5 ticks = 0.25 seconds
     
-    public FunctionalCombatEngine(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public FunctionalCombatEngine(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         startAsyncUpdateTask();
     }
@@ -322,7 +326,7 @@ public class FunctionalCombatEngine {
                         public void run() {
                             calculatePlayerStatsAsync(player).thenAccept(stats -> {
                 // Update player profile with new stats
-                // PlayerProfile profile = plugin.getPlayerProfile(playerId);
+                // PlayerProfile profile = SkyblockPlugin.getPlayerProfile(playerId);
                 // if (profile != null) {
                 //     profile.updateStats(stats.getFinalStats());
                 // }
@@ -331,12 +335,12 @@ public class FunctionalCombatEngine {
                                 updateTasks.remove(playerId);
                             });
                         }
-                    }.runTaskAsynchronously(plugin);
+                    }.runTaskAsynchronously(SkyblockPlugin);
                     
                     updateTasks.put(playerId, task);
                 }
             }
-        }.runTaskTimer(plugin, 0, ASYNC_UPDATE_INTERVAL);
+        }.runTaskTimer(SkyblockPlugin, 0, ASYNC_UPDATE_INTERVAL);
     }
     
     /**
@@ -388,7 +392,7 @@ public class FunctionalCombatEngine {
         
         public PlayerStats(UUID playerId) {
             this.playerId = playerId;
-            this.calculationTime = System.currentTimeMillis();
+            this.calculationTime = java.lang.System.currentTimeMillis();
             initializeBaseStats();
         }
         
@@ -436,7 +440,7 @@ public class FunctionalCombatEngine {
         }
         
         public boolean isExpired() {
-            return System.currentTimeMillis() - calculationTime > CACHE_DURATION_TICKS * 50; // 1 second
+            return java.lang.System.currentTimeMillis() - calculationTime > CACHE_DURATION_TICKS * 50; // 1 second
         }
         
         // Getters

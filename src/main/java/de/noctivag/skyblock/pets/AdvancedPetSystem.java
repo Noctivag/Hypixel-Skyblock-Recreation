@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.pets;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -19,21 +24,21 @@ import java.util.concurrent.ConcurrentHashMap;
  * Advanced Pet System - Hypixel Skyblock Style
  */
 public class AdvancedPetSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerPets> playerPets = new ConcurrentHashMap<>();
     private final Map<PetType, PetConfig> petConfigs = new HashMap<>();
     private final Map<UUID, BukkitTask> petTasks = new ConcurrentHashMap<>();
 
-    public AdvancedPetSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedPetSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializePetConfigs();
         startPetUpdateTask();
     }
 
     public void registerEvents() {
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
 
     private void initializePetConfigs() {
@@ -54,7 +59,7 @@ public class AdvancedPetSystem implements Listener {
 
     private void startPetUpdateTask() {
         Thread.ofVirtual().start(() -> {
-            while (plugin.isEnabled()) {
+            while (SkyblockPlugin.isEnabled()) {
                 try {
                     for (Map.Entry<UUID, PlayerPets> entry : playerPets.entrySet()) {
                         PlayerPets pets = entry.getValue();
@@ -79,7 +84,7 @@ public class AdvancedPetSystem implements Listener {
     }
 
     private void openPetGUI(Player player) {
-        player.sendMessage("§aPet GUI geöffnet!");
+        player.sendMessage(Component.text("§aPet GUI geöffnet!"));
     }
 
     public void createPet(Player player, PetType type) {
@@ -88,7 +93,7 @@ public class AdvancedPetSystem implements Listener {
         Pet pet = new Pet(petId, player.getUniqueId(), type);
         playerPets.addPet(pet);
 
-        player.sendMessage("§aPet erstellt!");
+        player.sendMessage(Component.text("§aPet erstellt!"));
     }
 
     public PlayerPets getPlayerPets(UUID playerId) {
@@ -170,11 +175,11 @@ public class AdvancedPetSystem implements Listener {
             this.id = id;
             this.owner = owner;
             this.type = type;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
 
         public void update() {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long timeDiff = currentTime - lastUpdate;
 
             if (timeDiff >= 60000) {
@@ -216,11 +221,11 @@ public class AdvancedPetSystem implements Listener {
 
         public PlayerPets(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
 
         public void update() {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long timeDiff = currentTime - lastUpdate;
 
             if (timeDiff >= 60000) {

@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.skyblock;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.data.SQLiteStorage;
 import de.noctivag.skyblock.worlds.WorldManager;
 import org.bukkit.Bukkit;
@@ -15,7 +20,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SkyblockManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final WorldManager worldManager;
     private final Map<UUID, SkyblockProfile> profiles = new ConcurrentHashMap<>();
     private final Map<UUID, SkyblockIsland> islands = new ConcurrentHashMap<>();
@@ -28,8 +33,8 @@ public class SkyblockManager {
     private World privateIslandWorld;
     private World publicIslandWorld;
 
-    public SkyblockManager(SkyblockPlugin plugin, WorldManager worldManager) {
-        this.plugin = plugin;
+    public SkyblockManager(SkyblockPlugin SkyblockPlugin, WorldManager worldManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.worldManager = worldManager;
         initializeWorlds();
         startAutoSave();
@@ -43,7 +48,7 @@ public class SkyblockManager {
             SkyblockProfile p = SQLiteStorage.loadProfile(uuid);
             if (p != null) return p;
         } catch (Exception e) {
-            plugin.getLogger().warning("SQLite loadProfile failed for " + uuid + ": " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("SQLite loadProfile failed for " + uuid + ": " + e.getMessage());
         }
         // Fallback to YAML-based loader
         SkyblockProfile yamlProfile = SkyblockProfile.load(uuid);
@@ -57,17 +62,17 @@ public class SkyblockManager {
             SkyblockIsland island = SQLiteStorage.loadIsland(owner);
             if (island != null) return island;
         } catch (Exception e) {
-            plugin.getLogger().warning("SQLite loadIsland failed for " + owner + ": " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("SQLite loadIsland failed for " + owner + ": " + e.getMessage());
         }
         return null;
     }
 
     private void initializeWorlds() {
-        plugin.getLogger().info("Initializing Skyblock worlds...");
+        SkyblockPlugin.getLogger().info("Initializing Skyblock worlds...");
 
         // Warte auf WorldManager Initialisierung
         if (!worldManager.isInitialized()) {
-            plugin.getLogger().warning("WorldManager not initialized, deferring world initialization...");
+            SkyblockPlugin.getLogger().warning("WorldManager not initialized, deferring world initialization...");
             // Use thread-based delay for Folia compatibility instead of Bukkit scheduler
             Thread.ofVirtual().start(() -> {
                 try {
@@ -75,7 +80,7 @@ public class SkyblockManager {
                     initializeWorlds();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
-                    plugin.getLogger().warning("World initialization retry interrupted");
+                    SkyblockPlugin.getLogger().warning("World initialization retry interrupted");
                 }
             });
             return;
@@ -88,24 +93,24 @@ public class SkyblockManager {
 
         // Validiere Welten
         if (hubWorld == null) {
-            plugin.getLogger().severe("Failed to load skyblock_hub world!");
+            SkyblockPlugin.getLogger().severe("Failed to load skyblock_hub world!");
         } else {
-            plugin.getLogger().info("Loaded skyblock_hub world successfully");
+            SkyblockPlugin.getLogger().info("Loaded skyblock_hub world successfully");
         }
 
         if (privateIslandWorld == null) {
-            plugin.getLogger().severe("Failed to load skyblock_private world!");
+            SkyblockPlugin.getLogger().severe("Failed to load skyblock_private world!");
         } else {
-            plugin.getLogger().info("Loaded skyblock_private world successfully");
+            SkyblockPlugin.getLogger().info("Loaded skyblock_private world successfully");
         }
 
         if (publicIslandWorld == null) {
-            plugin.getLogger().severe("Failed to load skyblock_public world!");
+            SkyblockPlugin.getLogger().severe("Failed to load skyblock_public world!");
         } else {
-            plugin.getLogger().info("Loaded skyblock_public world successfully");
+            SkyblockPlugin.getLogger().info("Loaded skyblock_public world successfully");
         }
 
-        plugin.getLogger().info("Skyblock world initialization completed");
+        SkyblockPlugin.getLogger().info("Skyblock world initialization completed");
     }
 
     public void createProfile(Player player) {
@@ -123,11 +128,11 @@ public class SkyblockManager {
         try {
             profile.save(); // existing YAML save for compatibility
             SQLiteStorage.saveProfile(profile);
-        } catch (Exception e) { plugin.getLogger().warning("Failed to persist profile for " + player.getName()); }
+        } catch (Exception e) { SkyblockPlugin.getLogger().warning("Failed to persist profile for " + player.getName()); }
         try {
             island.save(); // placeholder
             SQLiteStorage.saveIsland(island);
-        } catch (Exception e) { plugin.getLogger().warning("Failed to persist island for " + player.getName()); }
+        } catch (Exception e) { SkyblockPlugin.getLogger().warning("Failed to persist island for " + player.getName()); }
 
         // Initialize skills
         SkyblockSkills playerSkills = new SkyblockSkills();
@@ -147,7 +152,7 @@ public class SkyblockManager {
         // Teleport to island
         teleportToIsland(player);
 
-        player.sendMessage("§a§lWelcome to Skyblock!");
+        player.sendMessage(Component.text("§a§lWelcome to Skyblock!"));
         player.sendMessage("§7Your island has been created at: §e" + island.getSpawnLocation());
     }
 
@@ -167,7 +172,7 @@ public class SkyblockManager {
             // If no island exists and this is a first join (default true), create starter island
             try {
                 if (profile.isFirstJoin()) {
-                    plugin.getLogger().info("Creating starter island for new player: " + player.getName());
+                    SkyblockPlugin.getLogger().info("Creating starter island for new player: " + player.getName());
                     SkyblockIsland created = createIsland(player);
                     islands.put(uuid, created);
                     profile.setFirstJoin(false);
@@ -178,7 +183,7 @@ public class SkyblockManager {
                     SQLiteStorage.saveIsland(created);
                 }
             } catch (Exception e) {
-                plugin.getLogger().warning("Failed to auto-create island for " + player.getName() + ": " + e.getMessage());
+                SkyblockPlugin.getLogger().warning("Failed to auto-create island for " + player.getName() + ": " + e.getMessage());
             }
         }
     }
@@ -197,13 +202,13 @@ public class SkyblockManager {
     private Location generateIslandLocation() {
         // Prüfe ob private Island Welt verfügbar ist
         if (privateIslandWorld == null) {
-            plugin.getLogger().warning("Private island world not available, using fallback location");
+            SkyblockPlugin.getLogger().warning("Private island world not available, using fallback location");
             World fallbackWorld = worldManager.getWorld("skyblock_private");
             if (fallbackWorld == null) {
                 fallbackWorld = Bukkit.getWorlds().isEmpty() ? null : Bukkit.getWorlds().get(0);
             }
             if (fallbackWorld == null) {
-                plugin.getLogger().severe("No worlds available for island generation!");
+                SkyblockPlugin.getLogger().severe("No worlds available for island generation!");
                 return null;
             }
             return new Location(fallbackWorld, 0, 100, 0);
@@ -245,12 +250,12 @@ public class SkyblockManager {
             if (spawnLocation != null && spawnLocation.getWorld() != null) {
                 player.teleport(spawnLocation);
             } else {
-                plugin.getLogger().warning("Invalid island spawn location for player: " + player.getName());
+                SkyblockPlugin.getLogger().warning("Invalid island spawn location for player: " + player.getName());
                 // Fallback zur Hub-Welt
                 teleportToHub(player);
             }
         } else {
-            plugin.getLogger().warning("No island found for player: " + player.getName());
+            SkyblockPlugin.getLogger().warning("No island found for player: " + player.getName());
             // Fallback zur Hub-Welt
             teleportToHub(player);
         }
@@ -261,7 +266,7 @@ public class SkyblockManager {
         if (hubSpawn != null) {
             player.teleport(hubSpawn);
         } else {
-            plugin.getLogger().severe("No valid hub spawn location available for player: " + player.getName());
+            SkyblockPlugin.getLogger().severe("No valid hub spawn location available for player: " + player.getName());
             // Letzter Fallback
             if (!Bukkit.getWorlds().isEmpty()) {
                 player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
@@ -291,9 +296,9 @@ public class SkyblockManager {
         for (int milestone : milestones) {
             if (total >= milestone && !playerCollections.hasMilestone(material, milestone)) {
                 playerCollections.addMilestone(material, milestone);
-                player.sendMessage("§a§lCOLLECTION MILESTONE!");
+                player.sendMessage(Component.text("§a§lCOLLECTION MILESTONE!"));
                 player.sendMessage("§7" + material.name() + " Collection: §e" + milestone);
-                player.sendMessage("§7Reward: §6+1 Collection Level");
+                player.sendMessage(Component.text("§7Reward: §6+1 Collection Level"));
 
                 // Give reward
                 giveCollectionReward(player, material, milestone);
@@ -306,24 +311,24 @@ public class SkyblockManager {
         switch (milestone) {
             case 50 -> {
                 player.getInventory().addItem(new ItemStack(material, 8));
-                plugin.getEconomyManager().giveMoney(player, 100);
+                SkyblockPlugin.getEconomyManager().giveMoney(player, 100);
             }
             case 100 -> {
                 player.getInventory().addItem(new ItemStack(material, 16));
-                plugin.getEconomyManager().giveMoney(player, 250);
+                SkyblockPlugin.getEconomyManager().giveMoney(player, 250);
             }
             case 250 -> {
                 player.getInventory().addItem(new ItemStack(material, 32));
-                plugin.getEconomyManager().giveMoney(player, 500);
+                SkyblockPlugin.getEconomyManager().giveMoney(player, 500);
             }
             case 500 -> {
                 player.getInventory().addItem(new ItemStack(material, 64));
-                plugin.getEconomyManager().giveMoney(player, 1000);
+                SkyblockPlugin.getEconomyManager().giveMoney(player, 1000);
             }
             case 1000 -> {
                 player.getInventory().addItem(new ItemStack(material, 64));
                 player.getInventory().addItem(new ItemStack(material, 64));
-                plugin.getEconomyManager().giveMoney(player, 2500);
+                SkyblockPlugin.getEconomyManager().giveMoney(player, 2500);
             }
             // Add more milestones...
         }
@@ -337,7 +342,7 @@ public class SkyblockManager {
             int newLevel = playerSkills.getLevel(skill);
 
             if (newLevel > oldLevel) {
-                player.sendMessage("§a§lSKILL LEVEL UP!");
+                player.sendMessage(Component.text("§a§lSKILL LEVEL UP!"));
                 player.sendMessage("§7" + skill.getDisplayName() + " Level: §e" + oldLevel + " §7→ §a" + newLevel);
 
                 // Give skill rewards
@@ -351,52 +356,52 @@ public class SkyblockManager {
         switch (skill) {
             case MINING -> {
                 if (level % 5 == 0) {
-                    plugin.getEconomyManager().giveMoney(player, level * 100);
+                    SkyblockPlugin.getEconomyManager().giveMoney(player, level * 100);
                 }
             }
             case FARMING -> {
                 if (level % 5 == 0) {
-                    plugin.getEconomyManager().giveMoney(player, level * 80);
+                    SkyblockPlugin.getEconomyManager().giveMoney(player, level * 80);
                 }
             }
             case COMBAT -> {
                 if (level % 5 == 0) {
-                    plugin.getEconomyManager().giveMoney(player, level * 120);
+                    SkyblockPlugin.getEconomyManager().giveMoney(player, level * 120);
                 }
             }
             case ALCHEMY -> {
                 if (level % 5 == 0) {
-                    plugin.getEconomyManager().giveMoney(player, level * 90);
+                    SkyblockPlugin.getEconomyManager().giveMoney(player, level * 90);
                 }
             }
             case FISHING -> {
                 if (level % 5 == 0) {
-                    plugin.getEconomyManager().giveMoney(player, level * 70);
+                    SkyblockPlugin.getEconomyManager().giveMoney(player, level * 70);
                 }
             }
             case RUNECRAFTING -> {
                 if (level % 5 == 0) {
-                    plugin.getEconomyManager().giveMoney(player, level * 110);
+                    SkyblockPlugin.getEconomyManager().giveMoney(player, level * 110);
                 }
             }
             case FORAGING -> {
                 if (level % 5 == 0) {
-                    plugin.getEconomyManager().giveMoney(player, level * 85);
+                    SkyblockPlugin.getEconomyManager().giveMoney(player, level * 85);
                 }
             }
             case CARPENTRY -> {
                 if (level % 5 == 0) {
-                    plugin.getEconomyManager().giveMoney(player, level * 95);
+                    SkyblockPlugin.getEconomyManager().giveMoney(player, level * 95);
                 }
             }
             case SOCIAL -> {
                 if (level % 5 == 0) {
-                    plugin.getEconomyManager().giveMoney(player, level * 60);
+                    SkyblockPlugin.getEconomyManager().giveMoney(player, level * 60);
                 }
             }
             case ENCHANTING -> {
                 if (level % 5 == 0) {
-                    plugin.getEconomyManager().giveMoney(player, level * 100);
+                    SkyblockPlugin.getEconomyManager().giveMoney(player, level * 100);
                 }
             }
             // Add more skills...
@@ -406,10 +411,10 @@ public class SkyblockManager {
     private void startAutoSave() {
         // Use virtual thread for Folia compatibility instead of BukkitRunnable
         Thread.ofVirtual().start(() -> {
-            while (plugin.isEnabled()) {
+            while (SkyblockPlugin.isEnabled()) {
                 try {
                     Thread.sleep(20 * 60 * 5L * 50); // Save every 5 minutes = 15,000,000 ms
-                    if (plugin.isEnabled()) {
+                    if (SkyblockPlugin.isEnabled()) {
                         saveAllData();
                     }
                 } catch (InterruptedException e) {

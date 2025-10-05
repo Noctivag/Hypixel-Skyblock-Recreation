@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.runecrafting;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -16,6 +20,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Advanced Runecrafting System - Hypixel Skyblock Style
@@ -23,20 +28,20 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AdvancedRunecraftingSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerRunecraftingData> playerRunecraftingData = new ConcurrentHashMap<>();
     private final Map<RuneType, RuneConfig> runeConfigs = new HashMap<>();
     private final Map<RunecraftingLocation, RunecraftingConfig> runecraftingConfigs = new HashMap<>();
     
-    public AdvancedRunecraftingSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedRunecraftingSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
         initializeRuneConfigs();
         initializeRunecraftingConfigs();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeRuneConfigs() {
@@ -325,7 +330,7 @@ public class AdvancedRunecraftingSystem implements Listener {
         addGUIItem(gui, 53, Material.OAK_SAPLING, "§2§lForest Rune", "§7Increases forest growth");
         
         player.openInventory(gui);
-        player.sendMessage("§aRunecrafting GUI opened!");
+        player.sendMessage(Component.text("§aRunecrafting GUI opened!"));
     }
     
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String description) {

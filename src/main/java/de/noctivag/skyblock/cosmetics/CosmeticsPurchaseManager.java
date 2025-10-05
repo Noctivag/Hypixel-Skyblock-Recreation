@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.cosmetics;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -11,14 +16,14 @@ import java.io.IOException;
 import java.util.*;
 
 public class CosmeticsPurchaseManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final File purchasesFile;
     private FileConfiguration purchasesConfig;
     private final Map<UUID, Set<String>> playerPurchases = new HashMap<>();
     
-    public CosmeticsPurchaseManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.purchasesFile = new File(plugin.getDataFolder(), "cosmetics_purchases.yml");
+    public CosmeticsPurchaseManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.purchasesFile = new File(SkyblockPlugin.getDataFolder(), "cosmetics_purchases.yml");
         loadPurchases();
     }
     
@@ -27,7 +32,7 @@ public class CosmeticsPurchaseManager {
             try {
                 purchasesFile.createNewFile();
             } catch (IOException e) {
-                plugin.getLogger().severe("Could not create cosmetics purchases file: " + e.getMessage());
+                SkyblockPlugin.getLogger().severe("Could not create cosmetics purchases file: " + e.getMessage());
             }
         }
         
@@ -40,7 +45,7 @@ public class CosmeticsPurchaseManager {
                 List<String> purchases = purchasesConfig.getStringList(playerId);
                 playerPurchases.put(uuid, new HashSet<>(purchases));
             } catch (IllegalArgumentException e) {
-                plugin.getLogger().warning("Invalid UUID in purchases file: " + playerId);
+                SkyblockPlugin.getLogger().warning("Invalid UUID in purchases file: " + playerId);
             }
         }
     }
@@ -59,7 +64,7 @@ public class CosmeticsPurchaseManager {
             
             purchasesConfig.save(purchasesFile);
         } catch (IOException e) {
-            plugin.getLogger().severe("Could not save cosmetics purchases: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Could not save cosmetics purchases: " + e.getMessage());
         }
     }
     
@@ -69,18 +74,18 @@ public class CosmeticsPurchaseManager {
     
     public void purchaseCosmetic(Player player, String cosmeticId, double cost) {
         if (hasPurchased(player, cosmeticId)) {
-            player.sendMessage("§cDu besitzt dieses Cosmetic bereits!");
+            player.sendMessage(Component.text("§cDu besitzt dieses Cosmetic bereits!"));
             return;
         }
         
-        if (!plugin.getEconomyManager().hasBalance(player, cost)) {
+        if (!SkyblockPlugin.getEconomyManager().hasBalance(player, cost)) {
             player.sendMessage("§cDu kannst dir dieses Cosmetic nicht leisten: " + 
-                plugin.getEconomyManager().formatMoney(cost));
+                SkyblockPlugin.getEconomyManager().formatMoney(cost));
             return;
         }
         
         // Deduct cost
-        plugin.getEconomyManager().withdrawMoney(player, cost);
+        SkyblockPlugin.getEconomyManager().withdrawMoney(player, cost);
         
         // Add to purchases
         playerPurchases.computeIfAbsent(player.getUniqueId(), k -> new HashSet<>()).add(cosmeticId);
@@ -89,7 +94,7 @@ public class CosmeticsPurchaseManager {
         savePurchases();
         
         player.sendMessage("§aCosmetic gekauft: §e" + cosmeticId);
-        player.sendMessage("§7Kosten: §c" + plugin.getEconomyManager().formatMoney(cost));
+        player.sendMessage("§7Kosten: §c" + SkyblockPlugin.getEconomyManager().formatMoney(cost));
     }
     
     public void giveCosmetic(Player player, String cosmeticId) {
@@ -114,7 +119,7 @@ public class CosmeticsPurchaseManager {
     public void clearPlayerPurchases(Player player) {
         playerPurchases.remove(player.getUniqueId());
         savePurchases();
-        player.sendMessage("§cAlle Cosmetics entfernt!");
+        player.sendMessage(Component.text("§cAlle Cosmetics entfernt!"));
     }
     
     // Cosmetic definitions with costs

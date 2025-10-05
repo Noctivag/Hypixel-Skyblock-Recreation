@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.fairysouls;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -20,15 +25,15 @@ import java.util.concurrent.CompletableFuture;
  */
 public class AdvancedFairySoulsSystem {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerFairySoulData> playerFairySoulData = new ConcurrentHashMap<>();
     private final Map<String, FairySoul> fairySouls = new HashMap<>();
     private final Map<UUID, Set<String>> collectedFairySouls = new ConcurrentHashMap<>();
     private final Map<UUID, List<FairySoulEffect>> activeFairySoulEffects = new ConcurrentHashMap<>();
     
-    public AdvancedFairySoulsSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedFairySoulsSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeFairySouls();
         startFairySoulTask();
@@ -333,7 +338,7 @@ public class AdvancedFairySoulsSystem {
             public void run() {
                 updateActiveFairySoulEffects();
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Every second
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Every second
     }
     
     /**
@@ -488,7 +493,7 @@ public class AdvancedFairySoulsSystem {
         ItemMeta meta = item.getItemMeta();
         
         if (meta != null) {
-            meta.setDisplayName("§6" + soul.getName());
+            meta.displayName(Component.text("§6" + soul.getName()));
             List<String> lore = new ArrayList<>(soul.getDescription());
             lore.add("");
             lore.add("§7Category: " + soul.getCategory().getDisplayName());
@@ -499,7 +504,7 @@ public class AdvancedFairySoulsSystem {
             lore.add("§7and gain permanent stat bonuses!");
             lore.add("");
             lore.add("§8A magical fairy soul");
-            meta.setLore(lore);
+            meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             
             item.setItemMeta(meta);
         }
@@ -575,7 +580,7 @@ public class AdvancedFairySoulsSystem {
                 playerFairySoulData.put(playerId, data);
             }
         } catch (Exception e) {
-            plugin.getLogger().warning("Failed to load fairy soul data for player " + playerId + ": " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Failed to load fairy soul data for player " + playerId + ": " + e.getMessage());
         }
     }
     

@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.pets;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.CorePlatform;
 // import de.noctivag.skyblock.core.PlayerProfile;
 import org.bukkit.Material;
@@ -10,6 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.kyori.adventure.text.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Pet Candy System - Special items that boost pet XP and abilities
@@ -23,13 +28,13 @@ import java.util.*;
  * - Candy effects duration
  */
 public class PetCandySystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CorePlatform corePlatform;
     private final Map<String, PetCandy> petCandies = new HashMap<>();
     private final Map<UUID, List<CandyEffect>> activeEffects = new HashMap<>();
     
-    public PetCandySystem(SkyblockPlugin plugin, CorePlatform corePlatform) {
-        this.plugin = plugin;
+    public PetCandySystem(SkyblockPlugin SkyblockPlugin, CorePlatform corePlatform) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.corePlatform = corePlatform;
         initializePetCandies();
     }
@@ -118,7 +123,7 @@ public class PetCandySystem {
         
         // Check if player has the candy
         if (!hasCandy(player, candyId)) {
-            player.sendMessage("§cYou don't have this candy!");
+            player.sendMessage(Component.text("§cYou don't have this candy!"));
             return;
         }
         
@@ -128,7 +133,7 @@ public class PetCandySystem {
         // Apply candy effects
         applyCandyEffects(player, pet, candy);
         
-        player.sendMessage("§a§lCANDY USED!");
+        player.sendMessage(Component.text("§a§lCANDY USED!"));
         player.sendMessage("§7Pet: §e" + pet.getType().getName());
         player.sendMessage("§7Candy: " + candy.getDisplayName());
         player.sendMessage("§7Duration: §e" + (candy.getDuration() / 60) + " minutes");
@@ -147,7 +152,7 @@ public class PetCandySystem {
             candy.getDisplayName(),
             candy.getXpMultiplier(),
             candy.getDuration(),
-            System.currentTimeMillis()
+            java.lang.System.currentTimeMillis()
         );
         
         // Add to active effects
@@ -163,7 +168,7 @@ public class PetCandySystem {
         }
         
         // Schedule effect removal
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+        SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
             removeCandyEffect(playerId, effect);
         }, candy.getDuration() * 20L); // Convert seconds to ticks
     }
@@ -328,11 +333,11 @@ public class PetCandySystem {
         }
         
         public boolean isExpired() {
-            return System.currentTimeMillis() - startTime > duration * 1000L;
+            return java.lang.System.currentTimeMillis() - startTime > duration * 1000L;
         }
         
         public long getTimeRemaining() {
-            long elapsed = System.currentTimeMillis() - startTime;
+            long elapsed = java.lang.System.currentTimeMillis() - startTime;
             return Math.max(0, (duration * 1000L) - elapsed);
         }
         

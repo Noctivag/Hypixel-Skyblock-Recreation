@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.skyblock;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -19,12 +24,12 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MiningAreaSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<String, MiningArea> miningAreas = new HashMap<>();
     private final Map<UUID, String> playerCurrentArea = new ConcurrentHashMap<>();
     
-    public MiningAreaSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public MiningAreaSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         initializeMiningAreas();
         startAreaCheckTimer();
     }
@@ -171,13 +176,13 @@ public class MiningAreaSystem implements Listener {
         giveMiningXP(player, block, area);
         
         // Add to collection
-        plugin.getSkyblockManager().addCollection(player, block.getType(), 1);
+        SkyblockPlugin.getSkyblockManager().addCollection(player, block.getType(), 1);
         
         // Give block drops
         giveBlockDrops(player, block, area);
         
         // Send success message
-        player.sendMessage("§a§lBLOCK BROKEN!");
+        player.sendMessage(Component.text("§a§lBLOCK BROKEN!"));
         player.sendMessage("§7Block: §e" + block.getType().name());
         player.sendMessage("§7XP Gained: §e" + area.getXPAmount(block.getType()));
         player.sendMessage("§7Area: §e" + area.getName());
@@ -210,7 +215,7 @@ public class MiningAreaSystem implements Listener {
         }
         
         // Send success message
-        player.sendMessage("§a§lBLOCK PLACED!");
+        player.sendMessage(Component.text("§a§lBLOCK PLACED!"));
         player.sendMessage("§7Block: §e" + block.getType().name());
         player.sendMessage("§7Area: §e" + area.getName());
     }
@@ -227,13 +232,13 @@ public class MiningAreaSystem implements Listener {
         if (newArea != null && !newArea.getId().equals(currentArea)) {
             // Player entered a new mining area
             playerCurrentArea.put(player.getUniqueId(), newArea.getId());
-            player.sendMessage("§a§lENTERED MINING AREA!");
+            player.sendMessage(Component.text("§a§lENTERED MINING AREA!"));
             player.sendMessage("§7Area: §e" + newArea.getName());
             player.sendMessage("§7Description: §7" + getAreaDescription(newArea.getId()));
         } else if (newArea == null && currentArea != null) {
             // Player left a mining area
             playerCurrentArea.remove(player.getUniqueId());
-            player.sendMessage("§c§lLEFT MINING AREA!");
+            player.sendMessage(Component.text("§c§lLEFT MINING AREA!"));
             player.sendMessage("§7Area: §e" + getMiningArea(currentArea).getName());
         }
     }
@@ -259,7 +264,7 @@ public class MiningAreaSystem implements Listener {
     }
     
     private int getPlayerMiningLevel(Player player) {
-        return plugin.getSkyblockManager().getSkills(player.getUniqueId())
+        return SkyblockPlugin.getSkyblockManager().getSkills(player.getUniqueId())
             .getLevel(SkyblockManager.SkyblockSkill.MINING);
     }
     
@@ -268,11 +273,11 @@ public class MiningAreaSystem implements Listener {
         double xp = area.getXPAmount(block.getType());
         
         // Add mining XP
-        plugin.getSkyblockManager().addSkillXP(player, SkyblockManager.SkyblockSkill.MINING, xp);
+        SkyblockPlugin.getSkyblockManager().addSkillXP(player, SkyblockManager.SkyblockSkill.MINING, xp);
         
         // Add foraging XP for certain blocks
         if (block.getType().name().contains("LOG") || block.getType().name().contains("LEAVES")) {
-            plugin.getSkyblockManager().addSkillXP(player, SkyblockManager.SkyblockSkill.FORAGING, xp);
+            SkyblockPlugin.getSkyblockManager().addSkillXP(player, SkyblockManager.SkyblockSkill.FORAGING, xp);
         }
     }
     
@@ -347,7 +352,7 @@ public class MiningAreaSystem implements Listener {
     
     private void startAreaCheckTimer() {
         Thread.ofVirtual().start(() -> {
-            while (plugin.isEnabled()) {
+            while (SkyblockPlugin.isEnabled()) {
                 try {
                     for (Player player : Bukkit.getOnlinePlayers()) {
                         Location location = player.getLocation();
@@ -357,7 +362,7 @@ public class MiningAreaSystem implements Listener {
                         if (area == null && currentArea != null) {
                             // Player left a mining area
                             playerCurrentArea.remove(player.getUniqueId());
-                            player.sendMessage("§c§lLEFT MINING AREA!");
+                            player.sendMessage(Component.text("§c§lLEFT MINING AREA!"));
                             player.sendMessage("§7Area: §e" + currentArea);
                         }
                     }

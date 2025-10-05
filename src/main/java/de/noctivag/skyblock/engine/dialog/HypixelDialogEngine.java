@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.engine.dialog;
+import java.util.UUID;
 
 import de.noctivag.skyblock.core.api.Service;
 import de.noctivag.skyblock.core.api.SystemStatus;
@@ -84,7 +85,7 @@ public class HypixelDialogEngine implements Service {
             }
             
             // Create dialog session
-            DialogSession session = new DialogSession(playerId, npcId, startNode);
+            DialogSession session = new DialogSession(UUID.randomUUID(), playerId, npcId);
             activeSessions.put(playerId, session);
             
             return session;
@@ -220,24 +221,27 @@ public class HypixelDialogEngine implements Service {
         String npcId = "maddox_slayer";
         
         // Welcome dialog
+        java.util.List<de.noctivag.skyblock.engine.dialog.types.DialogCondition> conditions = Arrays.asList(
+                new DialogCondition("player_level", ">=", "5", "You must be at least level 5 to access slayer quests")
+            );
         DialogNode welcomeNode = new DialogNode(
             "maddox_welcome",
             npcId,
             "Welcome to the Slayer's Den! I'm Maddox, and I'm here to help you become a true slayer.",
             true, // isStartNode
-            Arrays.asList(
-                new DialogCondition("player_level", ">= 5", "You must be at least level 5 to access slayer quests")
-            )
+            conditions
         );
         
         // Add options to welcome dialog
+        java.util.List<DialogAction> slayerActions = Arrays.asList(
+            new DialogAction("give_item", "slayer_guide", "1", "Give slayer guide")
+        );
         welcomeNode.addOption(new DialogOption(
             "slayer_info",
             "Tell me about slayer quests",
             "maddox_slayer_info",
-            Arrays.asList(
-                new DialogAction("give_item", "slayer_guide", 1)
-            )
+            new ArrayList<>(),
+            slayerActions
         ));
         
         welcomeNode.addOption(new DialogOption(
@@ -245,7 +249,7 @@ public class HypixelDialogEngine implements Service {
             "I want to start a slayer quest",
             "maddox_quest_selection",
             Arrays.asList(
-                new DialogCondition("player_level", ">= 10", "You must be at least level 10 to start slayer quests")
+                new DialogCondition("player_level", ">=", "10", "You must be at least level 10 to start slayer quests")
             )
         ));
         
@@ -254,7 +258,7 @@ public class HypixelDialogEngine implements Service {
             "I want to claim my rewards",
             "maddox_rewards",
             Arrays.asList(
-                new DialogCondition("has_completed_quest", "true", "You must complete a quest first")
+                new DialogCondition("has_completed_quest", "==", "true", "You must complete a quest first")
             )
         ));
         
@@ -297,8 +301,8 @@ public class HypixelDialogEngine implements Service {
             "Zombie Slayer",
             "maddox_zombie_quest",
             Arrays.asList(
-                new DialogCondition("player_level", ">= 10", "You must be at least level 10"),
-                new DialogCondition("has_zombie_slayer_access", "true", "You don't have access to zombie slayer quests")
+                new DialogCondition("player_level", ">=", "10", "You must be at least level 10"),
+                new DialogCondition("has_zombie_slayer_access", "==", "true", "You don't have access to zombie slayer quests")
             )
         ));
         
@@ -307,8 +311,8 @@ public class HypixelDialogEngine implements Service {
             "Spider Slayer",
             "maddox_spider_quest",
             Arrays.asList(
-                new DialogCondition("player_level", ">= 15", "You must be at least level 15"),
-                new DialogCondition("has_spider_slayer_access", "true", "You don't have access to spider slayer quests")
+                new DialogCondition("player_level", ">=", "15", "You must be at least level 15"),
+                new DialogCondition("has_spider_slayer_access", "==", "true", "You don't have access to spider slayer quests")
             )
         ));
         
@@ -317,8 +321,8 @@ public class HypixelDialogEngine implements Service {
             "Wolf Slayer",
             "maddox_wolf_quest",
             Arrays.asList(
-                new DialogCondition("player_level", ">= 20", "You must be at least level 20"),
-                new DialogCondition("has_wolf_slayer_access", "true", "You don't have access to wolf slayer quests")
+                new DialogCondition("player_level", ">=", "20", "You must be at least level 20"),
+                new DialogCondition("has_wolf_slayer_access", "==", "true", "You don't have access to wolf slayer quests")
             )
         ));
         
@@ -327,8 +331,8 @@ public class HypixelDialogEngine implements Service {
             "Enderman Slayer",
             "maddox_enderman_quest",
             Arrays.asList(
-                new DialogCondition("player_level", ">= 25", "You must be at least level 25"),
-                new DialogCondition("has_enderman_slayer_access", "true", "You don't have access to enderman slayer quests")
+                new DialogCondition("player_level", ">=", "25", "You must be at least level 25"),
+                new DialogCondition("has_enderman_slayer_access", "==", "true", "You don't have access to enderman slayer quests")
             )
         ));
         
@@ -337,8 +341,8 @@ public class HypixelDialogEngine implements Service {
             "Blaze Slayer",
             "maddox_blaze_quest",
             Arrays.asList(
-                new DialogCondition("player_level", ">= 30", "You must be at least level 30"),
-                new DialogCondition("has_blaze_slayer_access", "true", "You don't have access to blaze slayer quests")
+                new DialogCondition("player_level", ">=", "30", "You must be at least level 30"),
+                new DialogCondition("has_blaze_slayer_access", "==", "true", "You don't have access to blaze slayer quests")
             )
         ));
         
@@ -359,14 +363,16 @@ public class HypixelDialogEngine implements Service {
             null
         );
         
+        java.util.List<de.noctivag.skyblock.engine.dialog.types.DialogAction> actions = Arrays.asList(
+                new DialogAction("start_quest", "zombie_slayer_1", "1", "Start zombie slayer quest"),
+                new DialogAction("give_item", "zombie_slayer_sword", "1", "Give zombie slayer sword")
+            );
         zombieQuestNode.addOption(new DialogOption(
             "accept_quest",
             "Accept Quest",
             "maddox_quest_accepted",
-            Arrays.asList(
-                new DialogAction("start_quest", "zombie_slayer_1"),
-                new DialogAction("give_item", "zombie_slayer_sword", 1)
-            )
+            new java.util.ArrayList<>(),
+            actions
         ));
         
         zombieQuestNode.addOption(new DialogOption(

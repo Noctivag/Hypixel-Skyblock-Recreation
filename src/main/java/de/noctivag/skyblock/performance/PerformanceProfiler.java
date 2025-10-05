@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.performance;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.LongAdder;
@@ -19,7 +22,7 @@ import java.util.concurrent.atomic.LongAdder;
  */
 public class PerformanceProfiler {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final ConcurrentHashMap<String, MethodProfile> methodProfiles = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, SystemProfile> systemProfiles = new ConcurrentHashMap<>();
     
@@ -31,8 +34,8 @@ public class PerformanceProfiler {
     private volatile boolean profilingEnabled = false;
     private volatile long profilingStartTime = 0;
     
-    public PerformanceProfiler(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public PerformanceProfiler(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
     
     /**
@@ -40,13 +43,13 @@ public class PerformanceProfiler {
      */
     public void startProfiling() {
         profilingEnabled = true;
-        profilingStartTime = System.currentTimeMillis();
+        profilingStartTime = java.lang.System.currentTimeMillis();
         methodProfiles.clear();
         systemProfiles.clear();
         totalMethodCalls.reset();
         totalExecutionTime.reset();
         
-        plugin.getLogger().info("Performance profiling started");
+        SkyblockPlugin.getLogger().info("Performance profiling started");
     }
     
     /**
@@ -54,9 +57,9 @@ public class PerformanceProfiler {
      */
     public void stopProfiling() {
         profilingEnabled = false;
-        long profilingDuration = System.currentTimeMillis() - profilingStartTime;
+        long profilingDuration = java.lang.System.currentTimeMillis() - profilingStartTime;
         
-        plugin.getLogger().info("Performance profiling stopped after " + profilingDuration + "ms");
+        SkyblockPlugin.getLogger().info("Performance profiling stopped after " + profilingDuration + "ms");
         generateProfilingReport();
     }
     
@@ -163,23 +166,23 @@ public class PerformanceProfiler {
         profile.setGcCount(getGcCount());
         profile.setGcTime(getGcTime());
         
-        systemProfiles.put(String.valueOf(System.currentTimeMillis()), profile);
+        systemProfiles.put(String.valueOf(java.lang.System.currentTimeMillis()), profile);
     }
     
     /**
      * Generiert einen Profiling-Report
      */
     private void generateProfilingReport() {
-        plugin.getLogger().info("=== Performance Profiling Report ===");
+        SkyblockPlugin.getLogger().info("=== Performance Profiling Report ===");
         
         // Method-level statistics
-        plugin.getLogger().info("Method Performance:");
+        SkyblockPlugin.getLogger().info("Method Performance:");
         methodProfiles.entrySet().stream()
             .sorted((e1, e2) -> Long.compare(e2.getValue().getTotalExecutionTime(), e1.getValue().getTotalExecutionTime()))
             .limit(10)
             .forEach(entry -> {
                 MethodProfile profile = entry.getValue();
-                plugin.getLogger().info(String.format("  %s: %d calls, %.2fms avg, %.2fms total, %d bytes memory",
+                SkyblockPlugin.getLogger().info(String.format("  %s: %d calls, %.2fms avg, %.2fms total, %d bytes memory",
                     entry.getKey(),
                     profile.getCallCount(),
                     profile.getAverageExecutionTime() / 1_000_000.0,
@@ -188,17 +191,17 @@ public class PerformanceProfiler {
             });
         
         // System statistics
-        plugin.getLogger().info("System Performance:");
-        plugin.getLogger().info("  Total method calls: " + totalMethodCalls.sum());
-        plugin.getLogger().info("  Total execution time: " + (totalExecutionTime.sum() / 1_000_000.0) + "ms");
-        plugin.getLogger().info("  Peak memory usage: " + (peakMemoryUsage.get() / 1024 / 1024) + "MB");
-        plugin.getLogger().info("  Peak thread count: " + peakThreadCount.get());
+        SkyblockPlugin.getLogger().info("System Performance:");
+        SkyblockPlugin.getLogger().info("  Total method calls: " + totalMethodCalls.sum());
+        SkyblockPlugin.getLogger().info("  Total execution time: " + (totalExecutionTime.sum() / 1_000_000.0) + "ms");
+        SkyblockPlugin.getLogger().info("  Peak memory usage: " + (peakMemoryUsage.get() / 1024 / 1024) + "MB");
+        SkyblockPlugin.getLogger().info("  Peak thread count: " + peakThreadCount.get());
         
         // Current system state
         Runtime runtime = Runtime.getRuntime();
-        plugin.getLogger().info("  Current memory usage: " + ((runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024) + "MB");
-        plugin.getLogger().info("  Current thread count: " + Thread.activeCount());
-        plugin.getLogger().info("  Available processors: " + runtime.availableProcessors());
+        SkyblockPlugin.getLogger().info("  Current memory usage: " + ((runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024) + "MB");
+        SkyblockPlugin.getLogger().info("  Current thread count: " + Thread.activeCount());
+        SkyblockPlugin.getLogger().info("  Available processors: " + runtime.availableProcessors());
     }
     
     /**
@@ -369,7 +372,7 @@ public class PerformanceProfiler {
         private long timestamp;
         
         public SystemProfile() {
-            this.timestamp = System.currentTimeMillis();
+            this.timestamp = java.lang.System.currentTimeMillis();
         }
         
         // Getters und Setters

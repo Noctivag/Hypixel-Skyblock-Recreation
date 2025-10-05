@@ -23,7 +23,7 @@ public class ScalingResponse {
         this.success = success;
         this.message = message;
         this.instanceCount = instanceCount;
-        this.timestamp = System.currentTimeMillis();
+        this.timestamp = java.lang.System.currentTimeMillis();
         this.responseId = generateResponseId();
     }
     
@@ -38,7 +38,7 @@ public class ScalingResponse {
      * Get response age in milliseconds
      */
     public long getAge() {
-        return System.currentTimeMillis() - timestamp;
+        return java.lang.System.currentTimeMillis() - timestamp;
     }
     
     /**

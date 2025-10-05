@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.travel;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.data.DatabaseManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,6 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.kyori.adventure.text.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Travel System - Hypixel Skyblock Style
@@ -21,12 +26,12 @@ import java.util.*;
  * - Travel scroll trading
  */
 public class TravelSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final DatabaseManager databaseManager;
     private final Map<UUID, List<TravelScroll>> playerScrolls = new HashMap<>();
 
-    public TravelSystem(SkyblockPlugin plugin, DatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public TravelSystem(SkyblockPlugin SkyblockPlugin, DatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
     }
 
@@ -60,8 +65,8 @@ public class TravelSystem {
         for (TravelScroll scroll : scrolls) {
             if (scroll.getName().equalsIgnoreCase(scrollName)) {
                 // Teleport player to location
-                if (plugin.getLocationManager() != null) {
-                    plugin.getLocationManager().teleportToLocation(player, scroll.getLocation());
+                if (SkyblockPlugin.getLocationManager() != null) {
+                    SkyblockPlugin.getLocationManager().teleportToLocation(player, scroll.getLocation());
                     return true;
                 }
             }
@@ -84,8 +89,8 @@ public class TravelSystem {
             ItemMeta meta = scrollItem.getItemMeta();
             if (meta != null) {
                 meta.displayName(Component.text("§6§l" + scroll.getName()));
-                meta.lore(Arrays.asList(
-                    Component.text("§7Location: §e" + scroll.getLocation()),
+                meta.lore(Arrays.stream(
+                    Component.text("§7Location: §e" + scroll.getLocation().collect(java.util.stream.Collectors.toList())),
                     Component.text("§eClick to use")
                 ));
                 scrollItem.setItemMeta(meta);

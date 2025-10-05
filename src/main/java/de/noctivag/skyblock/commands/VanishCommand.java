@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.commands;
+import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.managers.VanishManager;
@@ -21,7 +22,7 @@ public class VanishCommand implements CommandExecutor {
             return true;
         }
         if (!player.hasPermission("basics.vanish")) {
-            player.sendMessage("§cKeine Berechtigung.");
+            player.sendMessage(Component.text("§cKeine Berechtigung."));
             return true;
         }
         vanishManager.toggleVanish(player);

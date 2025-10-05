@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.skyblock;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import org.bukkit.configuration.file.FileConfiguration;

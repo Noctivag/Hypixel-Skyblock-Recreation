@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.gui;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -26,12 +30,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Loading Animations
  */
 public class GUIAnimationSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, List<BukkitTask>> playerAnimations = new ConcurrentHashMap<>();
     private final Map<UUID, GUISession> activeSessions = new ConcurrentHashMap<>();
     
-    public GUIAnimationSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public GUIAnimationSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
     
     public void startLoadingAnimation(Player player, String title) {
@@ -58,7 +62,7 @@ public class GUIAnimationSystem {
                 
                 frame++;
             }
-        }.runTaskTimer(plugin, 0L, 10L); // Update every 0.5 seconds
+        }.runTaskTimer(SkyblockPlugin, 0L, 10L); // Update every 0.5 seconds
         
         addPlayerAnimation(playerId, animation);
     }
@@ -82,7 +86,7 @@ public class GUIAnimationSystem {
                 
                 duration++;
             }
-        }.runTaskTimer(plugin, 0L, 1L); // Update every tick
+        }.runTaskTimer(SkyblockPlugin, 0L, 1L); // Update every tick
         
         addPlayerAnimation(playerId, effect);
     }
@@ -119,7 +123,7 @@ public class GUIAnimationSystem {
                 
                 step++;
             }
-        }.runTaskTimer(plugin, 0L, 1L); // Update every tick
+        }.runTaskTimer(SkyblockPlugin, 0L, 1L); // Update every tick
         
         addPlayerAnimation(playerId, transition);
     }
@@ -142,7 +146,7 @@ public class GUIAnimationSystem {
                 
                 progress++;
             }
-        }.runTaskTimer(plugin, 0L, 2L); // Update every 0.1 seconds
+        }.runTaskTimer(SkyblockPlugin, 0L, 2L); // Update every 0.1 seconds
         
         addPlayerAnimation(playerId, progressBar);
     }
@@ -167,7 +171,7 @@ public class GUIAnimationSystem {
                 
                 frame++;
             }
-        }.runTaskTimer(plugin, 0L, 1L); // Update every tick
+        }.runTaskTimer(SkyblockPlugin, 0L, 1L); // Update every tick
         
         addPlayerAnimation(playerId, textAnimation);
     }
@@ -192,7 +196,7 @@ public class GUIAnimationSystem {
                 
                 frame++;
             }
-        }.runTaskTimer(plugin, 0L, 2L); // Update every 0.1 seconds
+        }.runTaskTimer(SkyblockPlugin, 0L, 2L); // Update every 0.1 seconds
         
         addPlayerAnimation(playerId, glowAnimation);
     }
@@ -333,7 +337,7 @@ public class GUIAnimationSystem {
         public GUISession(Player player, CustomGUI gui) {
             this.player = player;
             this.gui = gui;
-            this.startTime = System.currentTimeMillis();
+            this.startTime = java.lang.System.currentTimeMillis();
             this.sessionData = new HashMap<>();
         }
         
@@ -351,7 +355,7 @@ public class GUIAnimationSystem {
         }
         
         public long getDuration() {
-            return System.currentTimeMillis() - startTime;
+            return java.lang.System.currentTimeMillis() - startTime;
         }
         
         public Player getPlayer() { return player; }

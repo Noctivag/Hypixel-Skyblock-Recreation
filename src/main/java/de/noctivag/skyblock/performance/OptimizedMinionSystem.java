@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.performance;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.minions.AdvancedMinionSystem;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -22,7 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * - Memory optimization
  */
 public class OptimizedMinionSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultithreadingManager multithreadingManager;
     @SuppressWarnings("unused")
     private final AdvancedMinionSystem minionSystem;
@@ -32,9 +35,9 @@ public class OptimizedMinionSystem {
     // Performance metrics
     private final ConcurrentHashMap<String, Long> minionPerformanceMetrics = new ConcurrentHashMap<>();
     
-    public OptimizedMinionSystem(SkyblockPlugin plugin, MultithreadingManager multithreadingManager, 
+    public OptimizedMinionSystem(SkyblockPlugin SkyblockPlugin, MultithreadingManager multithreadingManager, 
                                 AdvancedMinionSystem minionSystem) {
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.multithreadingManager = multithreadingManager;
         this.minionSystem = minionSystem;
     }
@@ -43,7 +46,7 @@ public class OptimizedMinionSystem {
      * Start optimized minion update task
      */
     public void startOptimizedMinionUpdates() {
-        plugin.getLogger().info("Starting optimized minion system...");
+        SkyblockPlugin.getLogger().info("Starting optimized minion system...");
         
         // Start async minion calculations
         BukkitTask task = new BukkitRunnable() {
@@ -53,7 +56,7 @@ public class OptimizedMinionSystem {
                     executeAsyncMinionCalculations();
                 }
             }
-        }.runTaskTimerAsynchronously(plugin, 0L, 20L); // Every second
+        }.runTaskTimerAsynchronously(SkyblockPlugin, 0L, 20L); // Every second
         
         minionTasks.put("minion_calculations", task);
         
@@ -81,7 +84,7 @@ public class OptimizedMinionSystem {
                 minionPerformanceMetrics.merge("calculation_count", 1L, Long::sum);
                 
                 if (durationMs > 50) { // Log slow calculations
-                    plugin.getLogger().warning("Slow minion calculation detected: " + 
+                    SkyblockPlugin.getLogger().warning("Slow minion calculation detected: " + 
                                              String.format("%.2f", durationMs) + "ms");
                 }
                 
@@ -191,7 +194,7 @@ public class OptimizedMinionSystem {
         return multithreadingManager.executeDatabaseAsync(() -> {
             // Optimize minion data for specific player
             // This would contain the actual optimization logic
-            plugin.getLogger().info("Optimizing minion data for player: " + player.getName());
+            SkyblockPlugin.getLogger().info("Optimizing minion data for player: " + player.getName());
         });
     }
     
@@ -212,7 +215,7 @@ public class OptimizedMinionSystem {
             // Wait for all optimizations to complete
             CompletableFuture.allOf(futures).join();
             
-            plugin.getLogger().info("Batch optimized minion data for " + players.length + " players");
+            SkyblockPlugin.getLogger().info("Batch optimized minion data for " + players.length + " players");
         });
     }
     
@@ -226,7 +229,7 @@ public class OptimizedMinionSystem {
                 // Log performance metrics every 5 minutes
                 logPerformanceMetrics();
             }
-        }.runTaskTimerAsynchronously(plugin, 6000L, 6000L); // Every 5 minutes
+        }.runTaskTimerAsynchronously(SkyblockPlugin, 6000L, 6000L); // Every 5 minutes
     }
     
     /**
@@ -238,7 +241,7 @@ public class OptimizedMinionSystem {
         
         if (calculationCount > 0) {
             double avgTimeMs = (totalTime / (double) calculationCount) / 1_000_000.0;
-            plugin.getLogger().info("Minion System Performance - Calculations: " + calculationCount + 
+            SkyblockPlugin.getLogger().info("Minion System Performance - Calculations: " + calculationCount + 
                                   ", Avg Time: " + String.format("%.2f", avgTimeMs) + "ms, " +
                                   "Active: " + activeMinionCalculations.get());
         }
@@ -261,21 +264,21 @@ public class OptimizedMinionSystem {
      * Stop optimized minion updates
      */
     public void stopOptimizedMinionUpdates() {
-        plugin.getLogger().info("Stopping optimized minion system...");
+        SkyblockPlugin.getLogger().info("Stopping optimized minion system...");
         
         for (BukkitTask task : minionTasks.values()) {
             task.cancel();
         }
         minionTasks.clear();
         
-        plugin.getLogger().info("Optimized minion system stopped");
+        SkyblockPlugin.getLogger().info("Optimized minion system stopped");
     }
     
     /**
      * Shutdown optimized minion system
      */
     public void shutdown() {
-        plugin.getLogger().info("Shutting down OptimizedMinionSystem...");
+        SkyblockPlugin.getLogger().info("Shutting down OptimizedMinionSystem...");
         
         stopOptimizedMinionUpdates();
         
@@ -289,6 +292,6 @@ public class OptimizedMinionSystem {
             }
         }
         
-        plugin.getLogger().info("OptimizedMinionSystem shutdown complete");
+        SkyblockPlugin.getLogger().info("OptimizedMinionSystem shutdown complete");
     }
 }

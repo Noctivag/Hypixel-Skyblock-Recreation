@@ -1,6 +1,10 @@
 package de.noctivag.skyblock.enchanting;
 
-import de.noctivag.skyblock.Plugin;
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.api.Service;
 import de.noctivag.skyblock.core.api.SystemStatus;
 import org.bukkit.entity.Player;
@@ -12,6 +16,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import net.kyori.adventure.text.Component;
 
 /**
  * EnchantingSystem - Complete enchanting system for Hypixel Skyblock
@@ -25,15 +30,15 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class EnchantingSystem implements Service {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, PlayerEnchantingData> playerData = new ConcurrentHashMap<>();
     private final Map<String, CustomEnchantment> enchantments = new HashMap<>();
     private final Map<EnchantmentType, List<CustomEnchantment>> enchantmentsByType = new HashMap<>();
     
     private SystemStatus status = SystemStatus.UNINITIALIZED;
     
-    public EnchantingSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public EnchantingSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
     
     @Override
@@ -45,7 +50,7 @@ public class EnchantingSystem implements Service {
             initializeEnchantments();
             
             status = SystemStatus.ENABLED;
-            plugin.getLogger().info("§a[EnchantingSystem] Initialized " + enchantments.size() + " enchantments");
+            SkyblockPlugin.getLogger().info("§a[EnchantingSystem] Initialized " + enchantments.size() + " enchantments");
         });
     }
     
@@ -318,12 +323,12 @@ public class EnchantingSystem implements Service {
         if (meta == null) return false;
         
         // Add custom enchantment lore
-        List<String> lore = meta.getLore();
+        List<Component> lore = meta.lore();
         if (lore == null) lore = new ArrayList<>();
         
         String enchantmentLore = enchantment.getColor() + enchantment.getName() + " " + level;
-        lore.add(enchantmentLore);
-        meta.setLore(lore);
+        lore.add(Component.text(enchantmentLore));
+        meta.lore(lore);
         item.setItemMeta(meta);
         
         // Deduct XP

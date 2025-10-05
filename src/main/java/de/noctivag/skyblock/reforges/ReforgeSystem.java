@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.reforges;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -22,11 +25,11 @@ import java.util.*;
  */
 public class ReforgeSystem {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<String, Reforge> reforges;
     
-    public ReforgeSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public ReforgeSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.reforges = new HashMap<>();
         initializeReforges();
     }
@@ -254,7 +257,7 @@ public class ReforgeSystem {
         
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            NamespacedKey key = new NamespacedKey(plugin, "reforge");
+            NamespacedKey key = new NamespacedKey(SkyblockPlugin, "reforge");
             meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, reforge.getName());
             item.setItemMeta(meta);
         }
@@ -263,7 +266,7 @@ public class ReforgeSystem {
     public Reforge getItemReforge(ItemStack item) {
         if (item == null || item.getItemMeta() == null) return null;
         
-        NamespacedKey key = new NamespacedKey(plugin, "reforge");
+        NamespacedKey key = new NamespacedKey(SkyblockPlugin, "reforge");
         String reforgeName = item.getItemMeta().getPersistentDataContainer()
             .getOrDefault(key, PersistentDataType.STRING, null);
         
@@ -278,7 +281,7 @@ public class ReforgeSystem {
         if (item == null || item.getItemMeta() == null) return;
         
         ItemMeta meta = item.getItemMeta();
-        NamespacedKey key = new NamespacedKey(plugin, "reforge");
+        NamespacedKey key = new NamespacedKey(SkyblockPlugin, "reforge");
         meta.getPersistentDataContainer().remove(key);
         item.setItemMeta(meta);
     }

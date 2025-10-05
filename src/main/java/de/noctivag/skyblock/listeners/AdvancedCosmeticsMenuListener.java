@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.listeners;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.cosmetics.AdvancedParticleManager;
 import de.noctivag.skyblock.cosmetics.ParticleShape;
 import de.noctivag.skyblock.gui.AdvancedCosmeticsMenu;
@@ -12,13 +15,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.meta.ItemMeta;
+import net.kyori.adventure.text.Component;
 
 public class AdvancedCosmeticsMenuListener implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final AdvancedParticleManager particleManager;
 
-    public AdvancedCosmeticsMenuListener(SkyblockPlugin plugin, AdvancedParticleManager particleManager) {
-        this.plugin = plugin;
+    public AdvancedCosmeticsMenuListener(SkyblockPlugin SkyblockPlugin, AdvancedParticleManager particleManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.particleManager = particleManager;
     }
 
@@ -35,18 +39,18 @@ public class AdvancedCosmeticsMenuListener implements Listener {
         if (display == null) return;
 
         if (display.contains("Zurück")) {
-            new de.noctivag.plugin.gui.MainMenu(plugin).open(player);
+            new de.noctivag.skyblock.gui.MainMenu(SkyblockPlugin).open(player);
             return;
         }
 
         if (display.contains("Deaktivieren")) {
             particleManager.stopPlayerEffect(player);
-            new AdvancedCosmeticsMenu(plugin, particleManager).open(player);
+            new AdvancedCosmeticsMenu(SkyblockPlugin, particleManager).open(player);
             return;
         }
 
         if (display.contains("Einstellungen")) {
-            new de.noctivag.plugin.gui.ParticleSettingsGUI(plugin, particleManager).open(player);
+            new de.noctivag.skyblock.gui.ParticleSettingsGUI(SkyblockPlugin, particleManager).open(player);
             return;
         }
 
@@ -56,30 +60,30 @@ public class AdvancedCosmeticsMenuListener implements Listener {
             // Check if player has permission
             String permission = "basicsplugin.cosmetics." + shape.name().toLowerCase();
             if (!player.hasPermission(permission)) {
-                player.sendMessage("§cDu hast keine Berechtigung für diesen Effekt!");
+                player.sendMessage(Component.text("§cDu hast keine Berechtigung für diesen Effekt!"));
                 return;
             }
 
             // Check if player has enough money
-            int cost = plugin.getConfigManager().getConfig().getInt("cosmetics.shapes." + shape.name().toLowerCase() + ".cost", 1000);
-            if (!plugin.getEconomyManager().hasBalance(player, cost)) {
-                player.sendMessage("§cDu kannst dir diesen Effekt nicht leisten: " + plugin.getEconomyManager().formatMoney(cost));
+            int cost = SkyblockPlugin.getConfigManager().getConfig().getInt("cosmetics.shapes." + shape.name().toLowerCase() + ".cost", 1000);
+            if (!SkyblockPlugin.getEconomyManager().hasBalance(player, cost)) {
+                player.sendMessage("§cDu kannst dir diesen Effekt nicht leisten: " + SkyblockPlugin.getEconomyManager().formatMoney(cost));
                 return;
             }
 
             // Withdraw money
-            if (!plugin.getEconomyManager().withdrawMoney(player, cost)) {
+            if (!SkyblockPlugin.getEconomyManager().withdrawMoney(player, cost)) {
                 return;
             }
 
             // Get particle type and settings
             Particle particle = shape.getParticleType();
-            int particleCount = plugin.getConfigManager().getConfig().getInt("cosmetics.shapes." + shape.name().toLowerCase() + ".count", 20);
-            double speed = plugin.getConfigManager().getConfig().getDouble("cosmetics.shapes." + shape.name().toLowerCase() + ".speed", 0.1);
+            int particleCount = SkyblockPlugin.getConfigManager().getConfig().getInt("cosmetics.shapes." + shape.name().toLowerCase() + ".count", 20);
+            double speed = SkyblockPlugin.getConfigManager().getConfig().getDouble("cosmetics.shapes." + shape.name().toLowerCase() + ".speed", 0.1);
 
             // Activate effect
             particleManager.setPlayerEffect(player, shape, particle, particleCount, speed);
-            new AdvancedCosmeticsMenu(plugin, particleManager).open(player);
+            new AdvancedCosmeticsMenu(SkyblockPlugin, particleManager).open(player);
         }
     }
 }

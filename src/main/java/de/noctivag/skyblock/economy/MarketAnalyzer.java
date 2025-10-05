@@ -218,7 +218,7 @@ public class MarketAnalyzer {
             public void run() {
                 generateHourlyReport();
             }
-        }.runTaskTimer(economySystem.plugin, 0L, 20L * 60L * 60L); // Every hour
+        }.runTaskTimer(economySystem.SkyblockPlugin, 0L, 20L * 60L * 60L); // Every hour
     }
     
     private void generateHourlyReport() {
@@ -314,7 +314,7 @@ public class MarketAnalyzer {
             this.anomalyDetected = false;
             this.anomalyType = null;
             this.anomalySeverity = 0.0;
-            this.lastUpdated = System.currentTimeMillis();
+            this.lastUpdated = java.lang.System.currentTimeMillis();
         }
         
         public void updatePrice(double newPrice) {

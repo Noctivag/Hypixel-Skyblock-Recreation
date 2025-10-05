@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.items;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.CorePlatform;
 import de.noctivag.skyblock.data.DatabaseManager;
 import de.noctivag.skyblock.skyblock.EnchantingSystem;
@@ -33,7 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Animation System Integration
  */
 public class ItemsAndCustomizationManager implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CorePlatform corePlatform;
     
     // Core Systems
@@ -50,26 +54,26 @@ public class ItemsAndCustomizationManager implements Listener {
     private final GUIAnimationSystem animationSystem;
     private final Map<UUID, IntegratedMenuSystem> playerMenus = new ConcurrentHashMap<>();
     
-    public ItemsAndCustomizationManager(SkyblockPlugin plugin, CorePlatform corePlatform) {
-        this.plugin = plugin;
+    public ItemsAndCustomizationManager(SkyblockPlugin SkyblockPlugin, CorePlatform corePlatform) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.corePlatform = corePlatform;
         
         // Initialize systems
-        this.statModificationSystem = new StatModificationSystem(plugin, corePlatform);
-        this.reforgeSystem = new ReforgeSystem(plugin, corePlatform.getDatabaseManager());
-        this.reforgeStoneSystem = new ReforgeStoneSystem(plugin, corePlatform, reforgeSystem);
-        this.enchantingSystem = new EnchantingSystem(plugin);
-        this.petSystem = new PetSystem(plugin, corePlatform);
-        this.petManagementSystem = new PetManagementSystem(plugin, corePlatform, petSystem);
-        this.accessorySystem = new AccessorySystem(plugin, plugin.getDatabaseManager());
+        this.statModificationSystem = new StatModificationSystem(SkyblockPlugin, corePlatform);
+        this.reforgeSystem = new ReforgeSystem(SkyblockPlugin, corePlatform.getDatabaseManager());
+        this.reforgeStoneSystem = new ReforgeStoneSystem(SkyblockPlugin, corePlatform, reforgeSystem);
+        this.enchantingSystem = new EnchantingSystem(SkyblockPlugin);
+        this.petSystem = new PetSystem(SkyblockPlugin, corePlatform);
+        this.petManagementSystem = new PetManagementSystem(SkyblockPlugin, corePlatform, petSystem);
+        this.accessorySystem = new AccessorySystem(SkyblockPlugin, SkyblockPlugin.getDatabaseManager());
         
         // Initialize GUI systems
-        this.scoreboardSystem = new EnhancedScoreboardSystem(plugin, corePlatform, statModificationSystem, 
+        this.scoreboardSystem = new EnhancedScoreboardSystem(SkyblockPlugin, corePlatform, statModificationSystem, 
             petManagementSystem, accessorySystem);
-        this.animationSystem = new GUIAnimationSystem(plugin);
+        this.animationSystem = new GUIAnimationSystem(SkyblockPlugin);
         
         // Register events
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        SkyblockPlugin.getServer().getPluginManager().registerEvents(this, SkyblockPlugin);
         
         // Start systems
         startSystems();
@@ -80,9 +84,9 @@ public class ItemsAndCustomizationManager implements Listener {
         scoreboardSystem.enableForAllPlayers();
         
         // Start update tasks
-        plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
+        SkyblockPlugin.getServer().getScheduler().runTaskTimer(SkyblockPlugin, () -> {
             // Update all player stats
-            for (Player player : plugin.getServer().getOnlinePlayers()) {
+            for (Player player : SkyblockPlugin.getServer().getOnlinePlayers()) {
                 statModificationSystem.updatePlayerStats(player);
             }
             
@@ -200,7 +204,7 @@ public class ItemsAndCustomizationManager implements Listener {
         
         // Create or get existing menu
         IntegratedMenuSystem menu = playerMenus.computeIfAbsent(playerId, k -> 
-            new IntegratedMenuSystem(plugin, player, reforgeSystem, reforgeStoneSystem, 
+            new IntegratedMenuSystem(SkyblockPlugin, player, reforgeSystem, reforgeStoneSystem, 
                 statModificationSystem, enchantingSystem, petSystem, petManagementSystem, accessorySystem));
         
         // Start GUI session
@@ -214,28 +218,28 @@ public class ItemsAndCustomizationManager implements Listener {
     }
     
     public void openReforgeSystem(Player player) {
-        ReforgeGUI gui = new ReforgeGUI(plugin, player, reforgeSystem, reforgeStoneSystem, statModificationSystem);
+        ReforgeGUI gui = new ReforgeGUI(SkyblockPlugin, player, reforgeSystem, reforgeStoneSystem, statModificationSystem);
         // animationSystem.startGUISession(player, (CustomGUI) gui); // Commented out - ReforgeGUI doesn't extend CustomGUI
         gui.openGUI(player);
         animationSystem.startLoadingAnimation(player, "Opening Reforge System");
     }
     
     public void openEnchantingSystem(Player player) {
-        EnchantingGUI gui = new EnchantingGUI(plugin, player, enchantingSystem);
+        EnchantingGUI gui = new EnchantingGUI(SkyblockPlugin, player, enchantingSystem);
         animationSystem.startGUISession(player, gui);
         gui.openGUI(player);
         animationSystem.startLoadingAnimation(player, "Opening Enchanting System");
     }
     
     public void openPetSystem(Player player) {
-        PetManagementGUI gui = new PetManagementGUI(plugin, player, petSystem, petManagementSystem);
+        PetManagementGUI gui = new PetManagementGUI(SkyblockPlugin, player, petSystem, petManagementSystem);
         animationSystem.startGUISession(player, gui);
         gui.openGUI(player);
         animationSystem.startLoadingAnimation(player, "Opening Pet System");
     }
     
     public void openAccessorySystem(Player player) {
-        AccessoryGUI gui = new AccessoryGUI(plugin, player, accessorySystem);
+        AccessoryGUI gui = new AccessoryGUI(SkyblockPlugin, player, accessorySystem);
         // animationSystem.startGUISession(player, (CustomGUI) gui); // Commented out - ReforgeGUI doesn't extend CustomGUI
         gui.openGUI(player);
         animationSystem.startLoadingAnimation(player, "Opening Accessory System");
@@ -280,7 +284,7 @@ public class ItemsAndCustomizationManager implements Listener {
     
     public void reloadSystems() {
         // Reload all systems
-        plugin.getLogger().info("Reloading Items and Customization systems...");
+        SkyblockPlugin.getLogger().info("Reloading Items and Customization systems...");
         
         // Disable scoreboards
         scoreboardSystem.disableForAllPlayers();
@@ -294,12 +298,12 @@ public class ItemsAndCustomizationManager implements Listener {
         // Re-enable scoreboards
         scoreboardSystem.enableForAllPlayers();
         
-        plugin.getLogger().info("Items and Customization systems reloaded successfully!");
+        SkyblockPlugin.getLogger().info("Items and Customization systems reloaded successfully!");
     }
     
     public void shutdown() {
         // Shutdown all systems
-        plugin.getLogger().info("Shutting down Items and Customization systems...");
+        SkyblockPlugin.getLogger().info("Shutting down Items and Customization systems...");
         
         // Disable scoreboards
         scoreboardSystem.disableForAllPlayers();
@@ -310,6 +314,6 @@ public class ItemsAndCustomizationManager implements Listener {
         // Clear player menus
         playerMenus.clear();
         
-        plugin.getLogger().info("Items and Customization systems shut down successfully!");
+        SkyblockPlugin.getLogger().info("Items and Customization systems shut down successfully!");
     }
 }

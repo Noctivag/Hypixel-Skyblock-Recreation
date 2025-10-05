@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.collections;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.core.api.Service;
@@ -92,7 +93,7 @@ public class AdvancedCollectionsSystem implements Service {
         return new CollectionLeaderboard("Collection Leaderboard", 
             CollectionLeaderboard.LeaderboardType.TOTAL_ITEMS, 
             new ArrayList<>(), 
-            System.currentTimeMillis());
+            java.lang.System.currentTimeMillis());
     }
     
     /**

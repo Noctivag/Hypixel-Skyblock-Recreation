@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.auction;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.CorePlatform;
 import de.noctivag.skyblock.core.PlayerProfile;
 import org.bukkit.Bukkit;
@@ -16,6 +20,7 @@ import net.kyori.adventure.text.Component;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Auction House System - Hypixel Skyblock Style
@@ -29,24 +34,24 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Automatic auction completion
  */
 public class AuctionHouseSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CorePlatform corePlatform;
     private final Map<UUID, List<Auction>> playerAuctions = new ConcurrentHashMap<>();
     private final Map<UUID, List<Auction>> playerBids = new ConcurrentHashMap<>();
     private final List<Auction> activeAuctions = new ArrayList<>();
     private final Map<UUID, AuctionHouseStats> playerStats = new ConcurrentHashMap<>();
     
-    public AuctionHouseSystem(SkyblockPlugin plugin, CorePlatform corePlatform) {
-        this.plugin = plugin;
+    public AuctionHouseSystem(SkyblockPlugin SkyblockPlugin, CorePlatform corePlatform) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.corePlatform = corePlatform;
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
         startAuctionUpdateTask();
     }
     
     private void startAuctionUpdateTask() {
-        Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-            long currentTime = System.currentTimeMillis();
+        Bukkit.getScheduler().runTaskTimer(SkyblockPlugin, () -> {
+            long currentTime = java.lang.System.currentTimeMillis();
             Iterator<Auction> iterator = activeAuctions.iterator();
             
             while (iterator.hasNext()) {
@@ -73,7 +78,7 @@ public class AuctionHouseSystem implements Listener {
     }
     
     public void openAuctionHouseGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lAuction House");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lAuction House"));
         
         // Main categories
         addGUIItem(gui, 10, Material.DIAMOND_SWORD, "§c§lWeapons", 
@@ -137,7 +142,7 @@ public class AuctionHouseSystem implements Listener {
     }
     
     public void openMyAuctionsGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§e§lMy Auctions");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§e§lMy Auctions"));
         
         List<Auction> myAuctions = playerAuctions.getOrDefault(player.getUniqueId(), new ArrayList<>());
         int slot = 10;
@@ -163,13 +168,13 @@ public class AuctionHouseSystem implements Listener {
         
         // Check if player has the item
         if (!player.getInventory().containsAtLeast(item, item.getAmount())) {
-            player.sendMessage("§cYou don't have this item!");
+            player.sendMessage(Component.text("§cYou don't have this item!"));
             return false;
         }
         
         // Check minimum bid
         if (startingBid < 1) {
-            player.sendMessage("§cStarting bid must be at least 1 coin!");
+            player.sendMessage(Component.text("§cStarting bid must be at least 1 coin!"));
             return false;
         }
         
@@ -180,7 +185,7 @@ public class AuctionHouseSystem implements Listener {
             item.clone(),
             startingBid,
             buyoutPrice,
-            System.currentTimeMillis() + (durationHours * 60 * 60 * 1000L),
+            java.lang.System.currentTimeMillis() + (durationHours * 60 * 60 * 1000L),
             AuctionCategory.getCategoryForItem(item)
         );
         
@@ -197,7 +202,7 @@ public class AuctionHouseSystem implements Listener {
         AuctionHouseStats stats = getPlayerStats(player.getUniqueId());
         stats.incrementAuctionsCreated();
         
-        player.sendMessage("§a§lAUCTION CREATED!");
+        player.sendMessage(Component.text("§a§lAUCTION CREATED!"));
         player.sendMessage("§7Item: §e" + item.getType().name());
         player.sendMessage("§7Starting Bid: §6" + startingBid + " coins");
         if (buyoutPrice > 0) {
@@ -214,13 +219,13 @@ public class AuctionHouseSystem implements Listener {
         
         // Check if player has enough coins
         if (!profile.tryRemoveCoins(bidAmount)) {
-            player.sendMessage("§cYou don't have enough coins!");
+            player.sendMessage(Component.text("§cYou don't have enough coins!"));
             return false;
         }
         
         // Check if bid is higher than current bid
         if (bidAmount <= auction.getCurrentBid()) {
-            player.sendMessage("§cYour bid must be higher than the current bid!");
+            player.sendMessage(Component.text("§cYour bid must be higher than the current bid!"));
             profile.addCoins(bidAmount); // Refund
             return false;
         }
@@ -240,7 +245,7 @@ public class AuctionHouseSystem implements Listener {
         // Add to player's bids
         playerBids.computeIfAbsent(player.getUniqueId(), k -> new ArrayList<>()).add(auction);
         
-        player.sendMessage("§a§lBID PLACED!");
+        player.sendMessage(Component.text("§a§lBID PLACED!"));
         player.sendMessage("§7Auction: §e" + auction.getItem().getType().name());
         player.sendMessage("§7Bid: §6" + bidAmount + " coins");
         
@@ -249,7 +254,7 @@ public class AuctionHouseSystem implements Listener {
     
     public boolean buyoutAuction(Player player, Auction auction) {
         if (auction.getBuyoutPrice() <= 0) {
-            player.sendMessage("§cThis auction doesn't have a buyout price!");
+            player.sendMessage(Component.text("§cThis auction doesn't have a buyout price!"));
             return false;
         }
         
@@ -258,14 +263,14 @@ public class AuctionHouseSystem implements Listener {
         
         // Check if player has enough coins
         if (!profile.tryRemoveCoins(auction.getBuyoutPrice())) {
-            player.sendMessage("§cYou don't have enough coins!");
+            player.sendMessage(Component.text("§cYou don't have enough coins!"));
             return false;
         }
         
         // Complete auction immediately
         completeAuction(auction, player.getUniqueId(), auction.getBuyoutPrice());
         
-        player.sendMessage("§a§lAUCTION BOUGHT OUT!");
+        player.sendMessage(Component.text("§a§lAUCTION BOUGHT OUT!"));
         player.sendMessage("§7Item: §e" + auction.getItem().getType().name());
         player.sendMessage("§7Price: §6" + auction.getBuyoutPrice() + " coins");
         
@@ -367,7 +372,7 @@ public class AuctionHouseSystem implements Listener {
     }
     
     private String formatTimeLeft(long endTime) {
-        long timeLeft = endTime - System.currentTimeMillis();
+        long timeLeft = endTime - java.lang.System.currentTimeMillis();
         if (timeLeft <= 0) return "Expired";
         
         long hours = timeLeft / (1000 * 60 * 60);
@@ -401,16 +406,16 @@ public class AuctionHouseSystem implements Listener {
                 openMyAuctionsGUI(player);
                 break;
             case 20: // My Bids
-                player.sendMessage("§eMy Bids coming soon!");
+                player.sendMessage(Component.text("§eMy Bids coming soon!"));
                 break;
             case 21: // Auction History
-                player.sendMessage("§eAuction History coming soon!");
+                player.sendMessage(Component.text("§eAuction History coming soon!"));
                 break;
             case 22: // Create Auction
-                player.sendMessage("§eCreate Auction coming soon!");
+                player.sendMessage(Component.text("§eCreate Auction coming soon!"));
                 break;
             case 28: // Statistics
-                player.sendMessage("§eStatistics coming soon!");
+                player.sendMessage(Component.text("§eStatistics coming soon!"));
                 break;
             case 49: // Close
                 player.closeInventory();

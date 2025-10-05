@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.gui;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.CorePlatform;
 import de.noctivag.skyblock.core.PlayerProfile;
 import de.noctivag.skyblock.items.StatModificationSystem;
@@ -29,7 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * - System Status Indicators
  */
 public class EnhancedScoreboardSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CorePlatform corePlatform;
     private final StatModificationSystem statModificationSystem;
     private final PetManagementSystem petManagementSystem;
@@ -37,11 +41,11 @@ public class EnhancedScoreboardSystem {
     private final Map<UUID, BukkitTask> scoreboardTasks = new ConcurrentHashMap<>();
     private final Map<UUID, PlayerScoreboard> playerScoreboards = new ConcurrentHashMap<>();
 
-    public EnhancedScoreboardSystem(SkyblockPlugin plugin, CorePlatform corePlatform,
+    public EnhancedScoreboardSystem(SkyblockPlugin SkyblockPlugin, CorePlatform corePlatform,
                                   StatModificationSystem statModificationSystem,
                                   PetManagementSystem petManagementSystem,
                                   AccessorySystem accessorySystem) {
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.corePlatform = corePlatform;
         this.statModificationSystem = statModificationSystem;
         this.petManagementSystem = petManagementSystem;
@@ -67,7 +71,7 @@ public class EnhancedScoreboardSystem {
             public void run() {
                 updateScoreboard(player);
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Update every second
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Update every second
 
         scoreboardTasks.put(playerId, task);
     }
@@ -114,7 +118,7 @@ public class EnhancedScoreboardSystem {
         List<Component> lines = new ArrayList<>();
 
         // Header
-        lines.add(Component.text("§6§l⚡ BASICS PLUGIN ⚡").decorate(TextDecoration.BOLD));
+        lines.add(Component.text("§6§l⚡ BASICS SkyblockPlugin ⚡").decorate(TextDecoration.BOLD));
         lines.add(Component.text("§7━━━━━━━━━━━━━━━━━━━━���━━━"));
 
         // Player info
@@ -168,19 +172,19 @@ public class EnhancedScoreboardSystem {
     }
 
     public void updateAllScoreboards() {
-        for (Player player : plugin.getServer().getOnlinePlayers()) {
+        for (Player player : SkyblockPlugin.getServer().getOnlinePlayers()) {
             updateScoreboard(player);
         }
     }
 
     public void enableForAllPlayers() {
-        for (Player player : plugin.getServer().getOnlinePlayers()) {
+        for (Player player : SkyblockPlugin.getServer().getOnlinePlayers()) {
             enableScoreboard(player);
         }
     }
 
     public void disableForAllPlayers() {
-        for (Player player : plugin.getServer().getOnlinePlayers()) {
+        for (Player player : SkyblockPlugin.getServer().getOnlinePlayers()) {
             disableScoreboard(player);
         }
     }
@@ -207,10 +211,10 @@ public class EnhancedScoreboardSystem {
             this.player = player;
             this.scoreboard = player.getServer().getScoreboardManager().getNewScoreboard();
             // Register using NamespacedKey to avoid deprecated overloads when available
-            NamespacedKey key = new NamespacedKey(plugin, "basics_plugin");
+            NamespacedKey key = new NamespacedKey(SkyblockPlugin, "basics_plugin");
             @SuppressWarnings("deprecation")
             org.bukkit.scoreboard.Objective obj = scoreboard.registerNewObjective("main", "dummy",
-                Component.text("§6§l⚡ BASICS PLUGIN ⚡"));
+                Component.text("§6§l⚡ BASICS SkyblockPlugin ⚡"));
             this.objective = obj;
             this.objective.setDisplaySlot(org.bukkit.scoreboard.DisplaySlot.SIDEBAR);
 

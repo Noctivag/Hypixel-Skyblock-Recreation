@@ -1,10 +1,13 @@
 package de.noctivag.skyblock.kit;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +15,8 @@ import java.util.List;
 public class KitTabCompleter implements TabCompleter {
     private final KitManager kitManager;
 
-    public KitTabCompleter(SkyblockPlugin plugin) {
-        this.kitManager = (KitManager) plugin.getKitManager();
+    public KitTabCompleter(SkyblockPlugin SkyblockPlugin) {
+        this.kitManager = (KitManager) SkyblockPlugin.getKitManager();
     }
 
     @Override

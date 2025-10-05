@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.mining;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -17,11 +20,11 @@ import java.util.*;
  * Heart of the Mountain Command System - Hypixel Skyblock Style
  */
 public class HeartOfTheMountainCommand implements CommandExecutor, TabCompleter {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final HeartOfTheMountainSystem heartSystem;
 
-    public HeartOfTheMountainCommand(SkyblockPlugin plugin, HeartOfTheMountainSystem heartSystem) {
-        this.plugin = plugin;
+    public HeartOfTheMountainCommand(SkyblockPlugin SkyblockPlugin, HeartOfTheMountainSystem heartSystem) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.heartSystem = heartSystem;
     }
 
@@ -68,7 +71,7 @@ public class HeartOfTheMountainCommand implements CommandExecutor, TabCompleter 
 
     private void handleUpgrade(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage("§cVerwendung: /heartofthemountain upgrade <upgrade-type>");
+            player.sendMessage(Component.text("§cVerwendung: /heartofthemountain upgrade <upgrade-type>"));
             return;
         }
 
@@ -78,7 +81,7 @@ public class HeartOfTheMountainCommand implements CommandExecutor, TabCompleter 
             if (heartSystem.upgradeHeart(player, type)) {
                 player.sendMessage("§aHeart of the Mountain Upgrade '" + type.getDisplayName() + "' erfolgreich!");
             } else {
-                player.sendMessage("§cUpgrade konnte nicht durchgeführt werden!");
+                player.sendMessage(Component.text("§cUpgrade konnte nicht durchgeführt werden!"));
             }
         } catch (IllegalArgumentException e) {
             player.sendMessage("§cUngültiger Upgrade-Typ: " + upgradeType);
@@ -88,7 +91,7 @@ public class HeartOfTheMountainCommand implements CommandExecutor, TabCompleter 
     private void handleStats(Player player, String[] args) {
         HeartOfTheMountainSystem.HeartStats stats = heartSystem.getPlayerStats(player);
         
-        player.sendMessage("§6§l=== HEART OF THE MOUNTAIN STATISTIKEN ===");
+        player.sendMessage(Component.text("§6§l=== HEART OF THE MOUNTAIN STATISTIKEN ==="));
         player.sendMessage("§7Level: §a" + stats.getLevel());
         player.sendMessage("§7XP: §a" + stats.getXp() + "§7/§a" + stats.getXpToNextLevel());
         player.sendMessage("§7Upgrades: §a" + stats.getUpgrades().size());
@@ -103,7 +106,7 @@ public class HeartOfTheMountainCommand implements CommandExecutor, TabCompleter 
 
     private void handleChallenge(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage("§cVerwendung: /heartofthemountain challenge <challenge-type>");
+            player.sendMessage(Component.text("§cVerwendung: /heartofthemountain challenge <challenge-type>"));
             return;
         }
 
@@ -113,7 +116,7 @@ public class HeartOfTheMountainCommand implements CommandExecutor, TabCompleter 
             if (heartSystem.startChallenge(player, type)) {
                 player.sendMessage("§aChallenge '" + type.getDisplayName() + "' gestartet!");
             } else {
-                player.sendMessage("§cChallenge konnte nicht gestartet werden!");
+                player.sendMessage(Component.text("§cChallenge konnte nicht gestartet werden!"));
             }
         } catch (IllegalArgumentException e) {
             player.sendMessage("§cUngültiger Challenge-Typ: " + challengeType);
@@ -123,9 +126,9 @@ public class HeartOfTheMountainCommand implements CommandExecutor, TabCompleter 
     private void handleRewards(Player player, String[] args) {
         List<HeartOfTheMountainSystem.HeartReward> rewards = heartSystem.getAvailableRewards(player);
         
-        player.sendMessage("§6§l=== VERFÜGBARE BELOHNUNGEN ===");
+        player.sendMessage(Component.text("§6§l=== VERFÜGBARE BELOHNUNGEN ==="));
         if (rewards.isEmpty()) {
-            player.sendMessage("§7Keine Belohnungen verfügbar.");
+            player.sendMessage(Component.text("§7Keine Belohnungen verfügbar."));
         } else {
             for (HeartOfTheMountainSystem.HeartReward reward : rewards) {
                 player.sendMessage("§7- " + reward.getName() + " §8- " + reward.getDescription());
@@ -135,20 +138,20 @@ public class HeartOfTheMountainCommand implements CommandExecutor, TabCompleter 
 
     private void handleReset(Player player, String[] args) {
         if (heartSystem.resetHeart(player)) {
-            player.sendMessage("§aHeart of the Mountain zurückgesetzt!");
+            player.sendMessage(Component.text("§aHeart of the Mountain zurückgesetzt!"));
         } else {
-            player.sendMessage("§cReset konnte nicht durchgeführt werden!");
+            player.sendMessage(Component.text("§cReset konnte nicht durchgeführt werden!"));
         }
     }
 
     private void showHelp(Player player) {
-        player.sendMessage("§6§l=== HEART OF THE MOUNTAIN BEFEHLE ===");
-        player.sendMessage("§e/heartofthemountain upgrade <type> §7- Upgradet dein Heart of the Mountain");
-        player.sendMessage("§e/heartofthemountain stats §7- Zeigt deine Statistiken");
-        player.sendMessage("§e/heartofthemountain gui §7- Öffnet das Heart GUI");
-        player.sendMessage("§e/heartofthemountain challenge <type> §7- Startet eine Challenge");
-        player.sendMessage("§e/heartofthemountain rewards §7- Zeigt verfügbare Belohnungen");
-        player.sendMessage("§e/heartofthemountain reset §7- Setzt dein Heart zurück");
+        player.sendMessage(Component.text("§6§l=== HEART OF THE MOUNTAIN BEFEHLE ==="));
+        player.sendMessage(Component.text("§e/heartofthemountain upgrade <type> §7- Upgradet dein Heart of the Mountain"));
+        player.sendMessage(Component.text("§e/heartofthemountain stats §7- Zeigt deine Statistiken"));
+        player.sendMessage(Component.text("§e/heartofthemountain gui §7- Öffnet das Heart GUI"));
+        player.sendMessage(Component.text("§e/heartofthemountain challenge <type> §7- Startet eine Challenge"));
+        player.sendMessage(Component.text("§e/heartofthemountain rewards §7- Zeigt verfügbare Belohnungen"));
+        player.sendMessage(Component.text("§e/heartofthemountain reset §7- Setzt dein Heart zurück"));
     }
 
     @Override

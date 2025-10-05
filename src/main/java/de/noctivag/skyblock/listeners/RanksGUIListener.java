@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.listeners;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.gui.RanksGUI;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.Player;
@@ -9,12 +12,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.meta.ItemMeta;
+import net.kyori.adventure.text.Component;
 
 public class RanksGUIListener implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public RanksGUIListener(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public RanksGUIListener(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     @EventHandler
@@ -30,26 +34,26 @@ public class RanksGUIListener implements Listener {
         if (display == null) return;
 
         if (display.contains("Zurück")) {
-            new de.noctivag.plugin.gui.AdminMenu(plugin).open(admin);
+            new de.noctivag.skyblock.gui.AdminMenu(SkyblockPlugin).open(admin);
             return;
         }
 
         if (display.contains("Spieler wechseln") || display.contains("Spieler auswählen")) {
-            new de.noctivag.plugin.gui.PlayerSelectorMenu(plugin).open(admin);
+            new de.noctivag.skyblock.gui.PlayerSelectorMenu(SkyblockPlugin).open(admin);
             return;
         }
 
         // Left-click: set rank; Right-click: open permission editor
         boolean rightClick = event.isRightClick();
-        for (String key : plugin.getRankManager().getAllRankKeys()) {
-            String disp = plugin.getRankManager().getDisplayName(key);
+        for (String key : SkyblockPlugin.getRankManager().getAllRankKeys()) {
+            String disp = SkyblockPlugin.getRankManager().getDisplayName(key);
             if (display.contains(disp)) {
                 if (rightClick) {
-                    new de.noctivag.plugin.gui.RankPermissionsGUI(plugin, key).open(admin);
+                    new de.noctivag.skyblock.gui.RankPermissionsGUI(SkyblockPlugin, key).open(admin);
                 } else {
-                    Player target = ((de.noctivag.plugin.gui.RanksGUI) event.getInventory().getHolder()).getTarget();
+                    Player target = ((de.noctivag.skyblock.gui.RanksGUI) event.getInventory().getHolder()).getTarget();
                     if (target == null) target = admin; // fallback to admin
-                    plugin.getRankManager().setPlayerRank(target, key);
+                    SkyblockPlugin.getRankManager().setPlayerRank(target, key);
                     admin.sendMessage("§aRang gesetzt für §e" + target.getName() + "§a: §e" + disp);
                 }
                 return;

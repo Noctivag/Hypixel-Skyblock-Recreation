@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.messages;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
@@ -17,7 +21,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class JoinMessageManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, String> joinMessages;
     private final File file;
     private FileConfiguration config;
@@ -26,30 +30,30 @@ public class JoinMessageManager {
     private boolean enabled = true;
     private String defaultMessage = "§7[§a+§7] §e%player% §7hat den Server betreten";
 
-    public JoinMessageManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public JoinMessageManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.joinMessages = new HashMap<>();
-        this.file = new File(plugin.getDataFolder(), "join_messages.yml");
+        this.file = new File(SkyblockPlugin.getDataFolder(), "join_messages.yml");
         loadMessages();
     }
 
     private void loadMessages() {
         if (!file.exists()) {
-            plugin.saveResource("join_messages.yml", false);
+            SkyblockPlugin.saveResource("join_messages.yml", false);
         }
         config = YamlConfiguration.loadConfiguration(file);
         joinMessages.clear();
 
         // Initialize defaults from main config if present
         try {
-            Object configManager = plugin.getConfigManager();
+            Object configManager = SkyblockPlugin.getConfigManager();
             if (configManager != null) {
                 // TODO: Implement proper ConfigManager interface
                 // defaultMessage = ((ConfigManager) configManager).getConfig().getString("join-messages.default-message", defaultMessage);
                 // enabled = ((ConfigManager) configManager).getConfig().getBoolean("join-messages.enabled", true);
             }
         } catch (Exception ignored) {
-            // If plugin config isn't ready, keep defaults
+            // If SkyblockPlugin config isn't ready, keep defaults
         }
 
         ConfigurationSection messagesSection = config.getConfigurationSection("messages");
@@ -60,7 +64,7 @@ public class JoinMessageManager {
                     String message = config.getString("messages." + key);
                     joinMessages.put(uuid, message);
                 } catch (IllegalArgumentException e) {
-                    plugin.getLogger().warning("Ungültige UUID in join_messages.yml: " + key);
+                    SkyblockPlugin.getLogger().warning("Ungültige UUID in join_messages.yml: " + key);
                 }
             }
         }
@@ -80,14 +84,14 @@ public class JoinMessageManager {
         try {
             config.save(file);
         } catch (IOException e) {
-            plugin.getLogger().severe("Konnte join_messages.yml nicht speichern: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Konnte join_messages.yml nicht speichern: " + e.getMessage());
         }
     }
 
     public String getJoinMessage(Player player) {
         return joinMessages.getOrDefault(player.getUniqueId(),
             // TODO: Implement proper ConfigManager interface
-            // ((ConfigManager) plugin.getConfigManager()).getConfig().getString("join-messages.default-message",
+            // ((ConfigManager) SkyblockPlugin.getConfigManager()).getConfig().getString("join-messages.default-message",
             "&7[&a+&7] &e%player% &7hat den Server betreten")
             .replace("%player%", player.getName());
     }
@@ -102,7 +106,7 @@ public class JoinMessageManager {
             .replace("%player%", player.getName())
             .replace("%displayname%", LegacyComponentSerializer.legacySection().serialize(player.displayName())));
 
-        for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
+        for (Player onlinePlayer : SkyblockPlugin.getServer().getOnlinePlayers()) {
             onlinePlayer.sendMessage(formattedMessage);
         }
     }
@@ -154,7 +158,7 @@ public class JoinMessageManager {
         try {
             config.save(file);
         } catch (IOException e) {
-            plugin.getLogger().severe("Konnte join_messages.yml nicht speichern: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Konnte join_messages.yml nicht speichern: " + e.getMessage());
         }
     }
 
@@ -164,7 +168,7 @@ public class JoinMessageManager {
         try {
             config.save(file);
         } catch (IOException e) {
-            plugin.getLogger().severe("Konnte join_messages.yml nicht speichern: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Konnte join_messages.yml nicht speichern: " + e.getMessage());
         }
     }
 }

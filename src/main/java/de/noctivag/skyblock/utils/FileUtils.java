@@ -18,7 +18,7 @@ public class FileUtils {
 
     /**
      * Entpackt einen ZIP-InputStream in ein Zielverzeichnis.
-     * @param zipStream Der ZIP-InputStream aus den Plugin-Ressourcen.
+     * @param zipStream Der ZIP-InputStream aus den SkyblockPlugin-Ressourcen.
      * @param destDir Das Zielverzeichnis.
      * @throws IOException Wenn ein I/O-Fehler auftritt.
      */

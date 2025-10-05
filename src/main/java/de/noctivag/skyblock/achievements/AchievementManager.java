@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.achievements;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.ConfigurationSection;
@@ -13,23 +17,23 @@ import java.util.*;
 
 @SuppressWarnings("unused")
 public class AchievementManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, Set<Achievement>> unlockedAchievements;
     private final Map<UUID, Map<Achievement, Integer>> achievementProgress;
     private final File achievementFile;
     private FileConfiguration achievementConfig;
 
-    public AchievementManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public AchievementManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.unlockedAchievements = new HashMap<>();
         this.achievementProgress = new HashMap<>();
-        this.achievementFile = new File(plugin.getDataFolder(), "achievements.yml");
+        this.achievementFile = new File(SkyblockPlugin.getDataFolder(), "achievements.yml");
         loadData();
     }
 
     private void loadData() {
         if (!achievementFile.exists()) {
-            plugin.saveResource("achievements.yml", false);
+            SkyblockPlugin.saveResource("achievements.yml", false);
         }
         achievementConfig = YamlConfiguration.loadConfiguration(achievementFile);
 
@@ -90,7 +94,7 @@ public class AchievementManager {
         try {
             achievementConfig.save(achievementFile);
         } catch (IOException e) {
-            plugin.getLogger().severe("Fehler beim Speichern der Achievements: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Fehler beim Speichern der Achievements: " + e.getMessage());
         }
     }
 
@@ -107,8 +111,8 @@ public class AchievementManager {
 
             // Gebe Belohnungen
             // TODO: Implement proper PlayerDataManager interface
-            // ((PlayerDataManager) plugin.getPlayerDataManager()).addExp(player, achievement.getExpReward());
-            plugin.getEconomyManager().depositMoney(player, achievement.getCoinReward());
+            // ((PlayerDataManager) SkyblockPlugin.getPlayerDataManager()).addExp(player, achievement.getExpReward());
+            SkyblockPlugin.getEconomyManager().depositMoney(player, achievement.getCoinReward());
 
             // Zeige Erfolg an
             achievement.award(player);

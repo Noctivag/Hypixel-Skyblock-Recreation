@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.events;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.*;
@@ -17,20 +21,20 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class EventManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<String, Event> activeEvents = new ConcurrentHashMap<>();
     private final Map<String, Arena> arenas = new ConcurrentHashMap<>();
     private final Map<UUID, String> playerEvents = new ConcurrentHashMap<>();
     private final Map<String, BukkitTask> eventTasks = new ConcurrentHashMap<>();
     
-    public EventManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public EventManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         // initializeArenas() wird nicht mehr im Konstruktor aufgerufen
-        // um Bukkit-Task-Registrierung vor Plugin-Aktivierung zu vermeiden
+        // um Bukkit-Task-Registrierung vor SkyblockPlugin-Aktivierung zu vermeiden
     }
     
     /**
-     * Initialisiert die Arenen nach der Plugin-Aktivierung.
+     * Initialisiert die Arenen nach der SkyblockPlugin-Aktivierung.
      * Diese Methode sollte in onEnable() aufgerufen werden.
      */
     public void startArenaInitialization() {
@@ -40,15 +44,15 @@ public class EventManager {
     private void initializeArenas() {
         // Wait for worlds to be loaded
         if (Bukkit.getWorlds().isEmpty()) {
-            plugin.getLogger().warning("No worlds loaded yet, delaying arena initialization...");
+            SkyblockPlugin.getLogger().warning("No worlds loaded yet, delaying arena initialization...");
             // Schedule arena initialization for later
-            Bukkit.getScheduler().runTaskLater(plugin, this::initializeArenas, 20L); // 1 second delay
+            Bukkit.getScheduler().runTaskLater(SkyblockPlugin, this::initializeArenas, 20L); // 1 second delay
             return;
         }
         
         World world = Bukkit.getWorlds().get(0);
         if (world == null) {
-            plugin.getLogger().severe("Failed to get default world for arena initialization!");
+            SkyblockPlugin.getLogger().severe("Failed to get default world for arena initialization!");
             return;
         }
         
@@ -103,18 +107,18 @@ public class EventManager {
     
     public void joinEvent(Player player, String eventId) {
         if (playerEvents.containsKey(player.getUniqueId())) {
-            player.sendMessage("§cDu bist bereits in einem Event!");
+            player.sendMessage(Component.text("§cDu bist bereits in einem Event!"));
             return;
         }
         
         Event event = getEvent(eventId);
         if (event == null) {
-            player.sendMessage("§cEvent nicht gefunden!");
+            player.sendMessage(Component.text("§cEvent nicht gefunden!"));
             return;
         }
         
         if (event.getMaxPlayers() <= event.getPlayers().size()) {
-            player.sendMessage("§cEvent ist voll!");
+            player.sendMessage(Component.text("§cEvent ist voll!"));
             return;
         }
         
@@ -125,7 +129,7 @@ public class EventManager {
         
         // Deduct cost
         if (event.getCost() > 0) {
-            plugin.getEconomyManager().withdrawMoney(player, event.getCost());
+            SkyblockPlugin.getEconomyManager().withdrawMoney(player, event.getCost());
         }
         
         // Add player to event
@@ -137,7 +141,7 @@ public class EventManager {
         if (arena != null) {
             Location spawnLoc = arena.getSpawnLocation();
             player.teleport(spawnLoc);
-            player.sendMessage("§aDu bist dem Event beigetreten!");
+            player.sendMessage(Component.text("§aDu bist dem Event beigetreten!"));
             player.sendMessage("§eEvent: §f" + event.getName());
             player.sendMessage("§eSpieler: §f" + event.getPlayers().size() + "/" + event.getMaxPlayers());
         }
@@ -151,7 +155,7 @@ public class EventManager {
     public void leaveEvent(Player player) {
         String eventId = playerEvents.get(player.getUniqueId());
         if (eventId == null) {
-            player.sendMessage("§cDu bist in keinem Event!");
+            player.sendMessage(Component.text("§cDu bist in keinem Event!"));
             return;
         }
         
@@ -164,14 +168,14 @@ public class EventManager {
         
         // Teleport back to spawn
         player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
-        player.sendMessage("§aDu hast das Event verlassen!");
+        player.sendMessage(Component.text("§aDu hast das Event verlassen!"));
     }
     
     private boolean canJoinEvent(Player player, Event event) {
         // Check balance
-        if (event.getCost() > 0 && !plugin.getEconomyManager().hasBalance(player, event.getCost())) {
+        if (event.getCost() > 0 && !SkyblockPlugin.getEconomyManager().hasBalance(player, event.getCost())) {
             player.sendMessage("§cDu kannst dir dieses Event nicht leisten: " + 
-                plugin.getEconomyManager().formatMoney(event.getCost()));
+                SkyblockPlugin.getEconomyManager().formatMoney(event.getCost()));
             return false;
         }
         
@@ -196,8 +200,8 @@ public class EventManager {
         for (UUID playerId : event.getPlayers()) {
             Player player = Bukkit.getPlayer(playerId);
             if (player != null) {
-                player.sendMessage("§6§lEvent gestartet!");
-                player.sendMessage("§eBereite dich vor...");
+                player.sendMessage(Component.text("§6§lEvent gestartet!"));
+                player.sendMessage(Component.text("§eBereite dich vor..."));
                 player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1.0f, 1.0f);
             }
         }
@@ -230,7 +234,7 @@ public class EventManager {
                 
                 countdown--;
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L);
         
         eventTasks.put(eventId + "_countdown", countdownTask);
     }
@@ -277,7 +281,7 @@ public class EventManager {
                     cancel();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L);
         
         eventTasks.put(event.getArenaId() + "_monitor", monitorTask);
     }
@@ -296,7 +300,7 @@ public class EventManager {
         for (UUID playerId : event.getPlayers()) {
             Player player = Bukkit.getPlayer(playerId);
             if (player != null) {
-                player.sendMessage("§5§lDer Ender Dragon ist erschienen!");
+                player.sendMessage(Component.text("§5§lDer Ender Dragon ist erschienen!"));
                 player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 2.0f, 0.5f);
             }
         }
@@ -316,7 +320,7 @@ public class EventManager {
         for (UUID playerId : event.getPlayers()) {
             Player player = Bukkit.getPlayer(playerId);
             if (player != null) {
-                player.sendMessage("§8§lDer Wither ist erschienen!");
+                player.sendMessage(Component.text("§8§lDer Wither ist erschienen!"));
                 player.playSound(player.getLocation(), Sound.ENTITY_WITHER_SPAWN, 2.0f, 0.5f);
             }
         }
@@ -357,7 +361,7 @@ public class EventManager {
                     summonMinions(giant, event);
                 }
             }
-        }.runTaskTimer(plugin, 0L, 1L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 1L);
         
         eventTasks.put(event.getArenaId() + "_abilities", abilityTask);
         
@@ -365,7 +369,7 @@ public class EventManager {
         for (UUID playerId : event.getPlayers()) {
             Player player = Bukkit.getPlayer(playerId);
             if (player != null) {
-                player.sendMessage("§c§lDer Titan ist erwacht!");
+                player.sendMessage(Component.text("§c§lDer Titan ist erwacht!"));
                 player.playSound(player.getLocation(), Sound.ENTITY_WITHER_SKELETON_AMBIENT, 2.0f, 0.5f);
             }
         }
@@ -405,7 +409,7 @@ public class EventManager {
                     waterBlast(guardian, event);
                 }
             }
-        }.runTaskTimer(plugin, 0L, 1L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 1L);
         
         eventTasks.put(event.getArenaId() + "_abilities", abilityTask);
         
@@ -413,7 +417,7 @@ public class EventManager {
         for (UUID playerId : event.getPlayers()) {
             Player player = Bukkit.getPlayer(playerId);
             if (player != null) {
-                player.sendMessage("§b§lDer Elder Guardian ist erwacht!");
+                player.sendMessage(Component.text("§b§lDer Elder Guardian ist erwacht!"));
                 player.playSound(player.getLocation(), Sound.ENTITY_ELDER_GUARDIAN_AMBIENT, 2.0f, 0.5f);
             }
         }
@@ -453,7 +457,7 @@ public class EventManager {
                     ravagerRoar(ravager, event);
                 }
             }
-        }.runTaskTimer(plugin, 0L, 1L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 1L);
         
         eventTasks.put(event.getArenaId() + "_abilities", abilityTask);
         
@@ -461,7 +465,7 @@ public class EventManager {
         for (UUID playerId : event.getPlayers()) {
             Player player = Bukkit.getPlayer(playerId);
             if (player != null) {
-                player.sendMessage("§6§lDer Ravager ist erwacht!");
+                player.sendMessage(Component.text("§6§lDer Ravager ist erwacht!"));
                 player.playSound(player.getLocation(), Sound.ENTITY_RAVAGER_ROAR, 2.0f, 0.5f);
             }
         }
@@ -501,7 +505,7 @@ public class EventManager {
                     summonPhantoms(phantom, event);
                 }
             }
-        }.runTaskTimer(plugin, 0L, 1L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 1L);
         
         eventTasks.put(event.getArenaId() + "_abilities", abilityTask);
         
@@ -509,7 +513,7 @@ public class EventManager {
         for (UUID playerId : event.getPlayers()) {
             Player player = Bukkit.getPlayer(playerId);
             if (player != null) {
-                player.sendMessage("§8§lDer Phantom King ist erwacht!");
+                player.sendMessage(Component.text("§8§lDer Phantom King ist erwacht!"));
                 player.playSound(player.getLocation(), Sound.ENTITY_PHANTOM_AMBIENT, 2.0f, 0.5f);
             }
         }
@@ -549,7 +553,7 @@ public class EventManager {
                     explosiveFireballs(blaze, event);
                 }
             }
-        }.runTaskTimer(plugin, 0L, 1L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 1L);
         
         eventTasks.put(event.getArenaId() + "_abilities", abilityTask);
         
@@ -557,7 +561,7 @@ public class EventManager {
         for (UUID playerId : event.getPlayers()) {
             Player player = Bukkit.getPlayer(playerId);
             if (player != null && player.isOnline()) {
-                player.sendMessage("§c§lDer Blaze King ist erwacht!");
+                player.sendMessage(Component.text("§c§lDer Blaze King ist erwacht!"));
                 player.playSound(player.getLocation(), Sound.ENTITY_BLAZE_AMBIENT, 2.0f, 0.5f);
             }
         }
@@ -602,7 +606,7 @@ public class EventManager {
                     throwBlocks(enderman, event);
                 }
             }
-        }.runTaskTimer(plugin, 0L, 1L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 1L);
         
         eventTasks.put(event.getArenaId() + "_abilities", abilityTask);
         
@@ -610,7 +614,7 @@ public class EventManager {
         for (UUID playerId : event.getPlayers()) {
             Player player = Bukkit.getPlayer(playerId);
             if (player != null && player.isOnline()) {
-                player.sendMessage("§5§lDer Enderman Lord ist erwacht!");
+                player.sendMessage(Component.text("§5§lDer Enderman Lord ist erwacht!"));
                 player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_AMBIENT, 2.0f, 0.5f);
             }
         }
@@ -627,7 +631,7 @@ public class EventManager {
             Player player = Bukkit.getPlayer(playerId);
             if (player != null && player.isOnline() && player.getLocation().distance(loc) <= 5.0) {
                 player.damage(8.0, boss);
-                player.sendMessage("§cDer Boss hat den Boden geschlagen!");
+                player.sendMessage(Component.text("§cDer Boss hat den Boden geschlagen!"));
                 player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1.0f, 1.0f);
             }
         }
@@ -670,7 +674,7 @@ public class EventManager {
         for (UUID playerId : event.getPlayers()) {
             Player player = Bukkit.getPlayer(playerId);
             if (player != null && player.isOnline()) {
-                player.sendMessage("§7Der Boss beschwört Minions!");
+                player.sendMessage(Component.text("§7Der Boss beschwört Minions!"));
                 player.playSound(player.getLocation(), Sound.ENTITY_ZOMBIE_AMBIENT, 1.0f, 1.0f);
             }
         }
@@ -682,7 +686,7 @@ public class EventManager {
             Player player = Bukkit.getPlayer(playerId);
             if (player != null && player.isOnline() && player.getLocation().distance(boss.getLocation()) <= 10.0) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.MINING_FATIGUE, 200, 2));
-                player.sendMessage("§cDer Elder Guardian hat dir Mining Fatigue verursacht!");
+                player.sendMessage(Component.text("§cDer Elder Guardian hat dir Mining Fatigue verursacht!"));
                 player.playSound(player.getLocation(), Sound.ENTITY_ELDER_GUARDIAN_CURSE, 1.0f, 1.0f);
             }
         }
@@ -705,7 +709,7 @@ public class EventManager {
             Player player = Bukkit.getPlayer(playerId);
             if (player != null && player.isOnline() && player.getLocation().distance(loc) <= 5.0) {
                 player.damage(6.0, boss);
-                player.sendMessage("§bDer Elder Guardian hat dich mit Wasser getroffen!");
+                player.sendMessage(Component.text("§bDer Elder Guardian hat dich mit Wasser getroffen!"));
                 player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_SPLASH, 1.0f, 1.0f);
             }
         }
@@ -750,7 +754,7 @@ public class EventManager {
             if (player != null && player.isOnline() && player.getLocation().distance(loc) <= 8.0) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 100, 1));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 100, 1));
-                player.sendMessage("§6Der Ravager brüllt dich an!");
+                player.sendMessage(Component.text("§6Der Ravager brüllt dich an!"));
                 player.playSound(player.getLocation(), Sound.ENTITY_RAVAGER_ROAR, 2.0f, 0.5f);
             }
         }
@@ -812,7 +816,7 @@ public class EventManager {
         for (UUID playerId : event.getPlayers()) {
             Player player = Bukkit.getPlayer(playerId);
             if (player != null && player.isOnline()) {
-                player.sendMessage("§8Der Phantom King beschwört Phantoms!");
+                player.sendMessage(Component.text("§8Der Phantom King beschwört Phantoms!"));
                 player.playSound(player.getLocation(), Sound.ENTITY_PHANTOM_AMBIENT, 1.0f, 1.0f);
             }
         }
@@ -845,7 +849,7 @@ public class EventManager {
             if (player != null && player.isOnline() && player.getLocation().distance(loc) <= 7.0) {
                 player.damage(5.0, boss);
                 player.setFireTicks(60);
-                player.sendMessage("§cDu bist im Feuersturm gefangen!");
+                player.sendMessage(Component.text("§cDu bist im Feuersturm gefangen!"));
                 player.playSound(player.getLocation(), Sound.ENTITY_BLAZE_SHOOT, 1.0f, 1.0f);
             }
         }
@@ -870,7 +874,7 @@ public class EventManager {
         for (UUID playerId : event.getPlayers()) {
             Player player = Bukkit.getPlayer(playerId);
             if (player != null && player.isOnline()) {
-                player.sendMessage("§cDer Blaze King schießt explosive Feuerbälle!");
+                player.sendMessage(Component.text("§cDer Blaze King schießt explosive Feuerbälle!"));
                 player.playSound(player.getLocation(), Sound.ENTITY_BLAZE_SHOOT, 1.0f, 1.0f);
             }
         }
@@ -935,7 +939,7 @@ public class EventManager {
         for (UUID playerId : event.getPlayers()) {
             Player player = Bukkit.getPlayer(playerId);
             if (player != null && player.isOnline()) {
-                player.sendMessage("§5Der Enderman Lord beschwört Endermen!");
+                player.sendMessage(Component.text("§5Der Enderman Lord beschwört Endermen!"));
                 player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_AMBIENT, 1.0f, 1.0f);
             }
         }
@@ -956,7 +960,7 @@ public class EventManager {
                 fallingBlock.setHurtEntities(true);
                 fallingBlock.setDropItem(false);
                 
-                player.sendMessage("§5Der Enderman Lord wirft Blöcke auf dich!");
+                player.sendMessage(Component.text("§5Der Enderman Lord wirft Blöcke auf dich!"));
                 player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_SCREAM, 1.0f, 1.0f);
             }
         }
@@ -973,12 +977,12 @@ public class EventManager {
                 List<EventReward> rewards = event.getReward();
                 double totalReward = rewards.stream().mapToDouble(EventReward::getAmount).sum();
                 // Give money through economy manager
-                if (plugin.getEconomyManager() != null) {
-                    plugin.getEconomyManager().giveMoney(player, totalReward);
+                if (SkyblockPlugin.getEconomyManager() != null) {
+                    SkyblockPlugin.getEconomyManager().giveMoney(player, totalReward);
                 }
-                // plugin.getEconomyManager().giveMoney(player, totalReward);
+                // SkyblockPlugin.getEconomyManager().giveMoney(player, totalReward);
                 
-                player.sendMessage("§a§lEvent gewonnen!");
+                player.sendMessage(Component.text("§a§lEvent gewonnen!"));
                 player.sendMessage("§eBelohnung: §f" + totalReward + " coins");
                 player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
                 
@@ -990,7 +994,7 @@ public class EventManager {
                 
             } else {
                 // Defeat message
-                player.sendMessage("§c§lEvent verloren!");
+                player.sendMessage(Component.text("§c§lEvent verloren!"));
                 player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
             }
             
@@ -1051,42 +1055,42 @@ public class EventManager {
             case "ender_dragon" -> {
                 player.getInventory().addItem(new org.bukkit.inventory.ItemStack(Material.DRAGON_EGG));
                 player.getInventory().addItem(new org.bukkit.inventory.ItemStack(Material.ELYTRA));
-                player.sendMessage("§5§lDu hast ein Drachenei und Elytra erhalten!");
+                player.sendMessage(Component.text("§5§lDu hast ein Drachenei und Elytra erhalten!"));
             }
             case "wither" -> {
                 player.getInventory().addItem(new org.bukkit.inventory.ItemStack(Material.NETHER_STAR, 2));
                 player.getInventory().addItem(new org.bukkit.inventory.ItemStack(Material.WITHER_SKELETON_SKULL));
-                player.sendMessage("§8§lDu hast Nether Stars und einen Wither-Skull erhalten!");
+                player.sendMessage(Component.text("§8§lDu hast Nether Stars und einen Wither-Skull erhalten!"));
             }
             case "custom_boss" -> {
                 player.getInventory().addItem(new org.bukkit.inventory.ItemStack(Material.TOTEM_OF_UNDYING));
                 player.getInventory().addItem(new org.bukkit.inventory.ItemStack(Material.DIAMOND, 5));
-                player.sendMessage("§2§lDu hast ein Totem der Unsterblichkeit und Diamanten erhalten!");
+                player.sendMessage(Component.text("§2§lDu hast ein Totem der Unsterblichkeit und Diamanten erhalten!"));
             }
             case "elder_guardian" -> {
                 player.getInventory().addItem(new org.bukkit.inventory.ItemStack(Material.PRISMARINE_SHARD, 10));
                 player.getInventory().addItem(new org.bukkit.inventory.ItemStack(Material.SPONGE, 3));
-                player.sendMessage("§b§lDu hast Prismarin-Splitter und Schwämme erhalten!");
+                player.sendMessage(Component.text("§b§lDu hast Prismarin-Splitter und Schwämme erhalten!"));
             }
             case "ravager" -> {
                 player.getInventory().addItem(new org.bukkit.inventory.ItemStack(Material.IRON_AXE));
                 player.getInventory().addItem(new org.bukkit.inventory.ItemStack(Material.EMERALD, 8));
-                player.sendMessage("§6§lDu hast eine Eisen-Axt und Smaragde erhalten!");
+                player.sendMessage(Component.text("§6§lDu hast eine Eisen-Axt und Smaragde erhalten!"));
             }
             case "phantom_king" -> {
                 player.getInventory().addItem(new org.bukkit.inventory.ItemStack(Material.PHANTOM_MEMBRANE, 5));
                 player.getInventory().addItem(new org.bukkit.inventory.ItemStack(Material.FEATHER, 10));
-                player.sendMessage("§8§lDu hast Phantom-Membranen und Federn erhalten!");
+                player.sendMessage(Component.text("§8§lDu hast Phantom-Membranen und Federn erhalten!"));
             }
             case "blaze_king" -> {
                 player.getInventory().addItem(new org.bukkit.inventory.ItemStack(Material.BLAZE_POWDER, 10));
                 player.getInventory().addItem(new org.bukkit.inventory.ItemStack(Material.FIRE_CHARGE, 5));
-                player.sendMessage("§c§lDu hast Blaze-Pulver und Feuerkugeln erhalten!");
+                player.sendMessage(Component.text("§c§lDu hast Blaze-Pulver und Feuerkugeln erhalten!"));
             }
             case "enderman_lord" -> {
                 player.getInventory().addItem(new org.bukkit.inventory.ItemStack(Material.ENDER_PEARL, 8));
                 player.getInventory().addItem(new org.bukkit.inventory.ItemStack(Material.ENDER_EYE, 3));
-                player.sendMessage("§5§lDu hast Ender-Perlen und Ender-Augen erhalten!");
+                player.sendMessage(Component.text("§5§lDu hast Ender-Perlen und Ender-Augen erhalten!"));
             }
         }
     }

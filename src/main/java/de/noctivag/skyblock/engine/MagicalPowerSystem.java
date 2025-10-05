@@ -1,5 +1,9 @@
 package de.noctivag.skyblock.engine;
 
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+
 import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
@@ -28,7 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class MagicalPowerSystem {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerAccessoryProfile> playerProfiles = new ConcurrentHashMap<>();
     private final Map<UUID, Set<AccessoryEffect>> activeEffects = new ConcurrentHashMap<>();
@@ -208,8 +212,8 @@ public class MagicalPowerSystem {
     // Power stone configurations
     private final Map<PowerStoneType, PowerStoneConfig> powerStoneConfigs = new HashMap<>();
     
-    public MagicalPowerSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public MagicalPowerSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeAccessoryDefinitions();
         initializePowerStoneConfigs();
@@ -470,7 +474,7 @@ public class MagicalPowerSystem {
                     applyEffectsToPlayer(player, effects);
                 }
             }
-        }.runTaskTimer(plugin, 0, 20); // Every second
+        }.runTaskTimer(SkyblockPlugin, 0, 20); // Every second
     }
     
     /**

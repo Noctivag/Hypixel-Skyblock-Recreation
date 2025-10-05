@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.items;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.CorePlatform;
 import de.noctivag.skyblock.core.PlayerProfile;
 import org.bukkit.Material;
@@ -11,6 +15,7 @@ import net.kyori.adventure.text.Component;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Reforge Stone System - Hypixel Skyblock Style
@@ -24,14 +29,14 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Reforge Stone Trading
  */
 public class ReforgeStoneSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CorePlatform corePlatform;
     private final ReforgeSystem reforgeSystem;
     private final Map<String, ReforgeStone> reforgeStones = new HashMap<>();
     private final Map<UUID, Map<String, Integer>> playerReforgeStones = new ConcurrentHashMap<>();
     
-    public ReforgeStoneSystem(SkyblockPlugin plugin, CorePlatform corePlatform, ReforgeSystem reforgeSystem) {
-        this.plugin = plugin;
+    public ReforgeStoneSystem(SkyblockPlugin SkyblockPlugin, CorePlatform corePlatform, ReforgeSystem reforgeSystem) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.corePlatform = corePlatform;
         this.reforgeSystem = reforgeSystem;
         initializeReforgeStones();
@@ -133,7 +138,7 @@ public class ReforgeStoneSystem {
     public boolean useReforgeStone(Player player, ItemStack item, String stoneId) {
         ReforgeStone stone = reforgeStones.get(stoneId);
         if (stone == null) {
-            player.sendMessage("§cReforge stone not found!");
+            player.sendMessage(Component.text("§cReforge stone not found!"));
             return false;
         }
         
@@ -158,13 +163,13 @@ public class ReforgeStoneSystem {
         if (success) {
             // Remove stone from inventory
             removeReforgeStone(player, stoneId);
-            player.sendMessage("§a§lREFORGE SUCCESSFUL!");
+            player.sendMessage(Component.text("§a§lREFORGE SUCCESSFUL!"));
             player.sendMessage("§7Used: §e" + stone.getName());
             player.sendMessage("§7Cost: §6" + stone.getCost() + " coins");
         } else {
             // Return coins on failure
             profile.addCoins(stone.getCost());
-            player.sendMessage("§c§lREFORGE FAILED!");
+            player.sendMessage(Component.text("§c§lREFORGE FAILED!"));
             player.sendMessage("§7Used: §e" + stone.getName());
             player.sendMessage("§7Coins returned: §6" + stone.getCost());
         }
@@ -175,13 +180,13 @@ public class ReforgeStoneSystem {
     public boolean craftReforgeStone(Player player, String stoneId) {
         ReforgeStone stone = reforgeStones.get(stoneId);
         if (stone == null) {
-            player.sendMessage("§cReforge stone not found!");
+            player.sendMessage(Component.text("§cReforge stone not found!"));
             return false;
         }
         
         // Check if player has all required materials
         if (!hasCraftingMaterials(player, stone)) {
-            player.sendMessage("§cYou don't have all required materials!");
+            player.sendMessage(Component.text("§cYou don't have all required materials!"));
             return false;
         }
         
@@ -191,7 +196,7 @@ public class ReforgeStoneSystem {
         // Give stone to player
         player.getInventory().addItem(stone.createStoneItem());
         
-        player.sendMessage("§a§lREFORGE STONE CRAFTED!");
+        player.sendMessage(Component.text("§a§lREFORGE STONE CRAFTED!"));
         player.sendMessage("§7Stone: §e" + stone.getName());
         
         return true;
@@ -381,7 +386,7 @@ public class ReforgeStoneSystem {
             List<Component> lore = new ArrayList<>();
             lore.add(Component.text("§7Reforge Stone"));
             lore.add(Component.text(""));
-            lore.addAll(stone.getDescription().stream().map(Component::text).toList());
+            lore.addAll(stone.getDescription().stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             lore.add(Component.text(""));
             lore.add(Component.text("§7Cost: §6" + stone.getCost() + " coins"));
             lore.add(Component.text("§7Success Rate: §a" + (int)(stone.getSuccessRate() * 100) + "%"));

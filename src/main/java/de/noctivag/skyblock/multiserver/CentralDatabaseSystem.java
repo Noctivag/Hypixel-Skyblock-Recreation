@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.multiserver;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.entity.Player;
 
@@ -21,7 +25,7 @@ import java.util.logging.Level;
  */
 public class CentralDatabaseSystem {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     
     // In-Memory Cache für schnelle Zugriffe
@@ -32,8 +36,8 @@ public class CentralDatabaseSystem {
     private final Map<UUID, Long> lastSyncTime = new ConcurrentHashMap<>();
     private final long SYNC_INTERVAL = 30000; // 30 Sekunden
     
-    public CentralDatabaseSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public CentralDatabaseSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         startPeriodicSync();
     }
@@ -54,13 +58,13 @@ public class CentralDatabaseSystem {
                 PlayerData data = loadPlayerDataFromDatabase(playerId);
                 if (data != null) {
                     playerDataCache.put(playerId, data);
-                    lastSyncTime.put(playerId, System.currentTimeMillis());
+                    lastSyncTime.put(playerId, java.lang.System.currentTimeMillis());
                 }
                 
                 return data;
                 
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Error loading player data for " + playerId, e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Error loading player data for " + playerId, e);
                 return null;
             }
         });
@@ -74,13 +78,13 @@ public class CentralDatabaseSystem {
             try {
                 // Aktualisiere Cache
                 playerDataCache.put(playerId, data);
-                lastSyncTime.put(playerId, System.currentTimeMillis());
+                lastSyncTime.put(playerId, java.lang.System.currentTimeMillis());
                 
                 // Speichere in Datenbank
                 return savePlayerDataToDatabase(playerId, data);
                 
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Error saving player data for " + playerId, e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Error saving player data for " + playerId, e);
                 return false;
             }
         });
@@ -101,7 +105,7 @@ public class CentralDatabaseSystem {
                     // Aktualisiere Server-Information
                     data.setCurrentServer(toServer);
                     data.setLastServer(fromServer);
-                    data.setLastSeen(System.currentTimeMillis());
+                    data.setLastSeen(java.lang.System.currentTimeMillis());
                     
                     // Speichere aktualisierte Daten
                     return savePlayerDataToDatabase(playerId, data);
@@ -110,7 +114,7 @@ public class CentralDatabaseSystem {
                 return false;
                 
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Error syncing player data for " + playerId, e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Error syncing player data for " + playerId, e);
                 return false;
             }
         });
@@ -135,7 +139,7 @@ public class CentralDatabaseSystem {
                 return data;
                 
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Error loading server data for " + serverId, e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Error loading server data for " + serverId, e);
                 return null;
             }
         });
@@ -151,7 +155,7 @@ public class CentralDatabaseSystem {
                 return saveServerDataToDatabase(serverId, data);
                 
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Error saving server data for " + serverId, e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Error saving server data for " + serverId, e);
                 return false;
             }
         });
@@ -164,7 +168,7 @@ public class CentralDatabaseSystem {
         Thread.ofVirtual().start(() -> {
             try {
                 Thread.sleep(20L * 60 * 50); // Initial delay: 1 minute = 60,000 ms
-                while (plugin.isEnabled()) {
+                while (SkyblockPlugin.isEnabled()) {
                     try {
                         syncAllPlayerData();
                         syncAllServerData();
@@ -173,7 +177,7 @@ public class CentralDatabaseSystem {
                         Thread.currentThread().interrupt();
                         break;
                     } catch (Exception e) {
-                        plugin.getLogger().log(Level.WARNING, "Error in periodic sync", e);
+                        SkyblockPlugin.getLogger().log(Level.WARNING, "Error in periodic sync", e);
                     }
                 }
             } catch (InterruptedException e) {
@@ -190,7 +194,7 @@ public class CentralDatabaseSystem {
             UUID playerId = entry.getKey();
             if (needsSync(playerId)) {
                 savePlayerDataToDatabase(playerId, entry.getValue());
-                lastSyncTime.put(playerId, System.currentTimeMillis());
+                lastSyncTime.put(playerId, java.lang.System.currentTimeMillis());
             }
         }
     }
@@ -209,7 +213,7 @@ public class CentralDatabaseSystem {
      */
     private boolean needsSync(UUID playerId) {
         Long lastSync = lastSyncTime.get(playerId);
-        return lastSync == null || (System.currentTimeMillis() - lastSync) > SYNC_INTERVAL;
+        return lastSync == null || (java.lang.System.currentTimeMillis() - lastSync) > SYNC_INTERVAL;
     }
     
     /**
@@ -219,7 +223,7 @@ public class CentralDatabaseSystem {
         // In echter Implementierung würde hier die Datenbank abgefragt
         PlayerData data = new PlayerData(playerId);
         data.setCurrentServer("hub");
-        data.setLastSeen(System.currentTimeMillis());
+        data.setLastSeen(java.lang.System.currentTimeMillis());
         return data;
     }
     
@@ -228,7 +232,7 @@ public class CentralDatabaseSystem {
      */
     private boolean savePlayerDataToDatabase(UUID playerId, PlayerData data) {
         // In echter Implementierung würde hier in die Datenbank geschrieben
-        plugin.getLogger().info("Saving player data for " + playerId + " to central database");
+        SkyblockPlugin.getLogger().info("Saving player data for " + playerId + " to central database");
         return true;
     }
     
@@ -239,7 +243,7 @@ public class CentralDatabaseSystem {
         // In echter Implementierung würde hier die Datenbank abgefragt
         ServerData data = new ServerData(serverId);
         data.setPlayerCount(0);
-        data.setLastUpdate(System.currentTimeMillis());
+        data.setLastUpdate(java.lang.System.currentTimeMillis());
         return data;
     }
     
@@ -248,7 +252,7 @@ public class CentralDatabaseSystem {
      */
     private boolean saveServerDataToDatabase(String serverId, ServerData data) {
         // In echter Implementierung würde hier in die Datenbank geschrieben
-        plugin.getLogger().info("Saving server data for " + serverId + " to central database");
+        SkyblockPlugin.getLogger().info("Saving server data for " + serverId + " to central database");
         return true;
     }
     
@@ -270,7 +274,7 @@ public class CentralDatabaseSystem {
         playerDataCache.clear();
         serverDataCache.clear();
         lastSyncTime.clear();
-        plugin.getLogger().info("Central database cache cleared");
+        SkyblockPlugin.getLogger().info("Central database cache cleared");
     }
     
     // Missing method for MultiServerCommands

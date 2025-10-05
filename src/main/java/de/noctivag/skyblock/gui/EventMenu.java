@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.events.EventManager;
 import org.bukkit.Material;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -9,20 +12,20 @@ import net.kyori.adventure.text.Component;
 import java.util.Arrays;
 
 public class EventMenu extends CustomGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final EventManager eventManager;
 
     public EventMenu() {
         super("§c§lEvent Menü", 4);
-        this.plugin = null;
+        this.SkyblockPlugin = null;
         this.eventManager = null;
         initializeItems();
     }
 
-    public EventMenu(SkyblockPlugin plugin) {
+    public EventMenu(SkyblockPlugin SkyblockPlugin) {
         super("§c§lEvent Menü", 4);
-        this.plugin = plugin;
-        this.eventManager = (EventManager) plugin.getEventManager(); // Cast from Object to EventManager
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.eventManager = (EventManager) SkyblockPlugin.getEventManager(); // Cast from Object to EventManager
         initializeItems();
     }
 
@@ -112,7 +115,7 @@ public class EventMenu extends CustomGUI {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         meta.displayName(Component.text(name));
-        meta.lore(Arrays.stream(lore).map(Component::text).toList());
+        meta.lore(java.util.Arrays.stream(lore).map(Component::text).collect(java.util.stream.Collectors.toList()));
         item.setItemMeta(meta);
         getInventory().setItem(slot, item);
     }

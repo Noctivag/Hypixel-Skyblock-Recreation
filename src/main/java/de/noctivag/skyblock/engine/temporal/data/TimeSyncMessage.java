@@ -66,14 +66,14 @@ public class TimeSyncMessage {
      * Check if message is recent (within last 10 seconds)
      */
     public boolean isRecent() {
-        return (System.currentTimeMillis() - timestamp) < 10000L;
+        return (java.lang.System.currentTimeMillis() - timestamp) < 10000L;
     }
     
     /**
      * Get time difference from current time
      */
     public long getTimeDifference() {
-        return System.currentTimeMillis() - timestamp;
+        return java.lang.System.currentTimeMillis() - timestamp;
     }
     
     /**

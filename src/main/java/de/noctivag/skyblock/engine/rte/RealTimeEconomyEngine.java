@@ -1,6 +1,10 @@
 package de.noctivag.skyblock.engine.rte;
 
-import org.bukkit.plugin.Plugin;
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.PlayerProfile;
 import de.noctivag.skyblock.engine.rte.data.*;
 import de.noctivag.skyblock.engine.rte.protocols.TransactionProtocol;
@@ -9,6 +13,7 @@ import de.noctivag.skyblock.engine.rte.services.HypixelAPICorrectionService;
 import de.noctivag.skyblock.network.ServerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -35,7 +40,7 @@ import java.util.logging.Level;
  */
 public class RealTimeEconomyEngine {
     
-    private final Plugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final ServerManager serverManager;
     private final JedisPool jedisPool;
     
@@ -74,8 +79,8 @@ public class RealTimeEconomyEngine {
     private static final String TRANSACTION_CHANNEL = "rte:transactions";
     private static final String MARKET_DATA_CHANNEL = "rte:market_data";
     
-    public RealTimeEconomyEngine(Plugin plugin, ServerManager serverManager) {
-        this.plugin = plugin;
+    public RealTimeEconomyEngine(SkyblockPlugin SkyblockPlugin, ServerManager serverManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.serverManager = serverManager;
         this.jedisPool = serverManager.getJedisPool();
         
@@ -107,10 +112,10 @@ public class RealTimeEconomyEngine {
             // Initialize dashboard service
             dashboardService.initialize();
             
-            plugin.getLogger().info("Real-Time Economy Engine initialized successfully");
+            SkyblockPlugin.getLogger().info("Real-Time Economy Engine initialized successfully");
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to initialize Real-Time Economy Engine", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to initialize Real-Time Economy Engine", e);
         }
     }
     
@@ -133,11 +138,11 @@ public class RealTimeEconomyEngine {
                 auctionItems.put(entry.getKey(), item);
             }
             
-            plugin.getLogger().info("Loaded " + bazaarItems.size() + " bazaar items and " + 
+            SkyblockPlugin.getLogger().info("Loaded " + bazaarItems.size() + " bazaar items and " + 
                                   auctionItems.size() + " auction items from Redis");
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to load market data from Redis", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to load market data from Redis", e);
         }
     }
     
@@ -151,7 +156,7 @@ public class RealTimeEconomyEngine {
                 updateMarketPrices();
                 broadcastPriceUpdates();
             }
-        }.runTaskTimerAsynchronously(plugin, 0L, PRICE_UPDATE_INTERVAL / 50L);
+        }.runTaskTimerAsynchronously(SkyblockPlugin, 0L, PRICE_UPDATE_INTERVAL / 50L);
     }
     
     /**
@@ -165,7 +170,7 @@ public class RealTimeEconomyEngine {
                 detectMarketManipulation();
                 updateMarketStatistics();
             }
-        }.runTaskTimerAsynchronously(plugin, 0L, MARKET_ANALYSIS_INTERVAL / 50L);
+        }.runTaskTimerAsynchronously(SkyblockPlugin, 0L, MARKET_ANALYSIS_INTERVAL / 50L);
     }
     
     /**
@@ -184,10 +189,10 @@ public class RealTimeEconomyEngine {
                         MARKET_DATA_CHANNEL
                     );
                 } catch (Exception e) {
-                    plugin.getLogger().log(Level.SEVERE, "Failed to subscribe to real-time updates", e);
+                    SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to subscribe to real-time updates", e);
                 }
             }
-        }.runTaskAsynchronously(plugin);
+        }.runTaskAsynchronously(SkyblockPlugin);
     }
     
     /**
@@ -211,10 +216,10 @@ public class RealTimeEconomyEngine {
                 // Update price history
                 updatePriceHistory(itemId, newPrices);
                 
-                lastPriceUpdate.put(itemId, System.currentTimeMillis());
+                lastPriceUpdate.put(itemId, java.lang.System.currentTimeMillis());
             }
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to update market prices", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to update market prices", e);
         }
     }
     
@@ -245,7 +250,7 @@ public class RealTimeEconomyEngine {
             return new PriceData(instantBuyPrice, instantSellPrice, averagePrice);
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to calculate optimal prices for " + itemId, e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to calculate optimal prices for " + itemId, e);
             return new PriceData(item.getInstantBuyPrice(), item.getInstantSellPrice(), item.getAveragePrice());
         }
     }
@@ -270,7 +275,7 @@ public class RealTimeEconomyEngine {
             return sum / recentPrices.size();
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to calculate average price for " + itemId, e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to calculate average price for " + itemId, e);
             return bazaarItems.get(itemId).getAveragePrice();
         }
     }
@@ -281,7 +286,7 @@ public class RealTimeEconomyEngine {
     private void updatePriceHistory(String itemId, PriceData prices) {
         try (Jedis jedis = jedisPool.getResource()) {
             String historyKey = "rte:price_history:" + itemId;
-            long timestamp = System.currentTimeMillis();
+            long timestamp = java.lang.System.currentTimeMillis();
             
             // Store price data with timestamp
             String priceData = timestamp + ":" + prices.getAveragePrice();
@@ -290,7 +295,7 @@ public class RealTimeEconomyEngine {
             jedis.expire(historyKey, 86400 * 7); // 7 days expiration
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to update price history for " + itemId, e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to update price history for " + itemId, e);
         }
     }
     
@@ -310,14 +315,14 @@ public class RealTimeEconomyEngine {
                         item.getInstantBuyPrice(),
                         item.getInstantSellPrice(),
                         item.getAveragePrice(),
-                        System.currentTimeMillis()
+                        java.lang.System.currentTimeMillis()
                     );
                     
                     jedis.publish(PRICE_UPDATES_CHANNEL, message.toJson());
                 }
             }
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to broadcast price updates", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to broadcast price updates", e);
         }
     }
     
@@ -329,7 +334,7 @@ public class RealTimeEconomyEngine {
         if (lastUpdate == null) return true;
         
         // Check if enough time has passed
-        return (System.currentTimeMillis() - lastUpdate) > PRICE_UPDATE_INTERVAL;
+        return (java.lang.System.currentTimeMillis() - lastUpdate) > PRICE_UPDATE_INTERVAL;
     }
     
     /**
@@ -384,7 +389,7 @@ public class RealTimeEconomyEngine {
             return new MarketTrend(trendType, change, manipulationDetected);
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to analyze price trend for " + itemId, e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to analyze price trend for " + itemId, e);
             return new MarketTrend(MarketTrend.TrendType.STABLE, 0.0, false);
         }
     }
@@ -407,7 +412,7 @@ public class RealTimeEconomyEngine {
      * Handle detected market manipulation
      */
     private void handleMarketManipulation(String itemId, MarketTrend trend) {
-        plugin.getLogger().warning("Market manipulation detected for " + itemId + 
+        SkyblockPlugin.getLogger().warning("Market manipulation detected for " + itemId + 
                                  ": " + trend.getChangePercentage() + "% change");
         
         // Notify dashboard service
@@ -432,12 +437,12 @@ public class RealTimeEconomyEngine {
             MarketProtectionMessage message = new MarketProtectionMessage(
                 itemId, 
                 MarketProtectionMessage.ProtectionType.MANIPULATION_DETECTED,
-                System.currentTimeMillis()
+                java.lang.System.currentTimeMillis()
             );
             jedis.publish(MARKET_DATA_CHANNEL, message.toJson());
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to implement market protection for " + itemId, e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to implement market protection for " + itemId, e);
         }
     }
     
@@ -460,10 +465,10 @@ public class RealTimeEconomyEngine {
             jedis.hset(statsKey, "total_volume", String.valueOf(totalVolume));
             jedis.hset(statsKey, "total_orders", String.valueOf(totalOrders));
             jedis.hset(statsKey, "active_items", String.valueOf(bazaarItems.size()));
-            jedis.hset(statsKey, "last_update", String.valueOf(System.currentTimeMillis()));
+            jedis.hset(statsKey, "last_update", String.valueOf(java.lang.System.currentTimeMillis()));
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to update market statistics", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to update market statistics", e);
         }
     }
     
@@ -504,7 +509,7 @@ public class RealTimeEconomyEngine {
         // Check if player has sufficient resources
         if (type == BazaarOrder.OrderType.BUY) {
             double totalCost = amount * price * (1 + BAZAAR_FEE);
-            PlayerProfile profile = plugin.getCorePlatform().getPlayerProfile(playerId);
+            PlayerProfile profile = SkyblockPlugin.getCorePlatform().getPlayerProfile(playerId);
             if (profile == null || !profile.hasBalance(totalCost)) {
                 return new BazaarOrderResult(false, "Insufficient funds", null);
             }
@@ -524,7 +529,7 @@ public class RealTimeEconomyEngine {
             amount,
             price,
             type,
-            System.currentTimeMillis()
+            java.lang.System.currentTimeMillis()
         );
         
         // Store order
@@ -546,7 +551,7 @@ public class RealTimeEconomyEngine {
         List<BazaarOrder> matchingOrders = findMatchingOrders(newOrder);
         
         if (matchingOrders.isEmpty()) {
-            return new BazaarOrderResult(true, "Order created successfully", newOrder);
+            return new BazaarOrderResult(true, "Order created successfully", new java.util.ArrayList<>());
         }
         
         // Execute matches
@@ -581,7 +586,7 @@ public class RealTimeEconomyEngine {
         
         return new BazaarOrderResult(true, 
             "Order matched: " + totalMatched + " items for " + totalValue + " coins", 
-            newOrder.getAmount() > 0 ? newOrder : null);
+            new java.util.ArrayList<>());
     }
     
     /**
@@ -598,8 +603,8 @@ public class RealTimeEconomyEngine {
         double sellerFee = totalValue * BAZAAR_FEE;
         
         // Update player balances
-        PlayerProfile buyerProfile = plugin.getCorePlatform().getPlayerProfile(buyer.getPlayerId());
-        PlayerProfile sellerProfile = plugin.getCorePlatform().getPlayerProfile(seller.getPlayerId());
+        PlayerProfile buyerProfile = SkyblockPlugin.getCorePlatform().getPlayerProfile(buyer.getPlayerId());
+        PlayerProfile sellerProfile = SkyblockPlugin.getCorePlatform().getPlayerProfile(seller.getPlayerId());
         
         if (buyerProfile != null) {
             buyerProfile.removeCoins(totalValue + buyerFee);
@@ -689,7 +694,7 @@ public class RealTimeEconomyEngine {
             jedis.sadd(itemOrdersKey, order.getId().toString());
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to store bazaar order", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to store bazaar order", e);
         }
     }
     
@@ -710,7 +715,7 @@ public class RealTimeEconomyEngine {
             jedis.srem(itemOrdersKey, order.getId().toString());
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to remove bazaar order", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to remove bazaar order", e);
         }
     }
     
@@ -738,7 +743,7 @@ public class RealTimeEconomyEngine {
             return orders;
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to get buy orders for " + itemId, e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to get buy orders for " + itemId, e);
             return new ArrayList<>();
         }
     }
@@ -767,7 +772,7 @@ public class RealTimeEconomyEngine {
             return orders;
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to get sell orders for " + itemId, e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to get sell orders for " + itemId, e);
             return new ArrayList<>();
         }
     }
@@ -778,9 +783,10 @@ public class RealTimeEconomyEngine {
     private int getPlayerOrderCount(UUID playerId) {
         try (Jedis jedis = jedisPool.getResource()) {
             String playerOrdersKey = "rte:player_orders:" + playerId;
-            return jedis.scard(playerOrdersKey).intValue();
+            Long count = jedis.scard(playerOrdersKey);
+            return count != null ? count.intValue() : 0;
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to get player order count", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to get player order count", e);
             return 0;
         }
     }
@@ -797,13 +803,13 @@ public class RealTimeEconomyEngine {
                 order.getAmount(),
                 order.getPrice(),
                 order.getType(),
-                System.currentTimeMillis()
+                java.lang.System.currentTimeMillis()
             );
             
             jedis.publish(ORDER_UPDATES_CHANNEL, message.toJson());
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to broadcast order update", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to broadcast order update", e);
         }
     }
     
@@ -818,13 +824,13 @@ public class RealTimeEconomyEngine {
                 buyer.getItemId(),
                 amount,
                 price,
-                System.currentTimeMillis()
+                java.lang.System.currentTimeMillis()
             );
             
             jedis.publish(TRANSACTION_CHANNEL, message.toJson());
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to broadcast transaction", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to broadcast transaction", e);
         }
     }
     
@@ -850,7 +856,7 @@ public class RealTimeEconomyEngine {
                         break;
                 }
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to handle real-time update", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to handle real-time update", e);
             }
         }
         
@@ -911,7 +917,7 @@ public class RealTimeEconomyEngine {
         return jedisPool;
     }
     
-    public Plugin getPlugin() {
-        return plugin;
+    public SkyblockPlugin getPlugin() {
+        return SkyblockPlugin;
     }
 }

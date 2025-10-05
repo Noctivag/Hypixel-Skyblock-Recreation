@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.sacks;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import org.bukkit.entity.Player;

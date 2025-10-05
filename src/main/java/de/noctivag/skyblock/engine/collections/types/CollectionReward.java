@@ -1,5 +1,7 @@
 package de.noctivag.skyblock.engine.collections.types;
 
+import de.noctivag.skyblock.engine.collections.CollectionRewardType;
+
 /**
  * Collection Reward
  * 

@@ -1,9 +1,12 @@
 package de.noctivag.skyblock.core.architecture;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-// import de.noctivag.skyblock.Plugin; // Unused import
+// import de.noctivag.skyblock.SkyblockPlugin; // Unused import
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
-import org.bukkit.plugin.java.JavaPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,7 +25,7 @@ import java.util.concurrent.CompletableFuture;
  */
 public class RefactoredArchitecture {
     
-    private final JavaSkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     
     // Core Services
@@ -39,14 +42,14 @@ public class RefactoredArchitecture {
     private boolean initialized = false;
     private final Map<String, CompletableFuture<Void>> initializationTasks = new ConcurrentHashMap<>();
     
-    public RefactoredArchitecture(JavaSkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public RefactoredArchitecture(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
         // Initialize core services
         this.serviceLocator = new ServiceLocator();
         this.eventBus = new EventBus();
-        this.lifecycleManager = new PluginLifecycleManager(plugin, eventBus);
+        this.lifecycleManager = new PluginLifecycleManager(SkyblockPlugin, eventBus);
         
         // Register core services
         registerCoreServices();
@@ -60,7 +63,7 @@ public class RefactoredArchitecture {
             return CompletableFuture.completedFuture(null);
         }
         
-        plugin.getLogger().info("Initializing Refactored Architecture...");
+        SkyblockPlugin.getLogger().info("Initializing Refactored Architecture...");
         
         return lifecycleManager.initialize()
             .thenCompose(v -> initializeInfrastructure())
@@ -69,10 +72,10 @@ public class RefactoredArchitecture {
             .thenCompose(v -> initializeIntegrationSystems())
             .thenRun(() -> {
                 initialized = true;
-                plugin.getLogger().info("Refactored Architecture initialized successfully!");
+                SkyblockPlugin.getLogger().info("Refactored Architecture initialized successfully!");
             })
             .exceptionally(throwable -> {
-                plugin.getLogger().severe("Failed to initialize Refactored Architecture: " + throwable.getMessage());
+                SkyblockPlugin.getLogger().severe("Failed to initialize Refactored Architecture: " + throwable.getMessage());
                 throwable.printStackTrace();
                 return null;
             });
@@ -82,7 +85,7 @@ public class RefactoredArchitecture {
      * Initialize infrastructure layer
      */
     private CompletableFuture<Void> initializeInfrastructure() {
-        plugin.getLogger().info("Initializing Infrastructure Layer...");
+        SkyblockPlugin.getLogger().info("Initializing Infrastructure Layer...");
         
         List<CompletableFuture<Void>> tasks = Arrays.asList(
             initializeConfigSystem(),
@@ -98,7 +101,7 @@ public class RefactoredArchitecture {
      * Initialize core services
      */
     private CompletableFuture<Void> initializeCoreServices() {
-        plugin.getLogger().info("Initializing Core Services...");
+        SkyblockPlugin.getLogger().info("Initializing Core Services...");
         
         List<CompletableFuture<Void>> tasks = Arrays.asList(
             initializePlayerManager(),
@@ -114,7 +117,7 @@ public class RefactoredArchitecture {
      * Initialize feature systems
      */
     private CompletableFuture<Void> initializeFeatureSystems() {
-        plugin.getLogger().info("Initializing Feature Systems...");
+        SkyblockPlugin.getLogger().info("Initializing Feature Systems...");
         
         List<CompletableFuture<Void>> tasks = Arrays.asList(
             initializeSkyblockSystem(),
@@ -131,7 +134,7 @@ public class RefactoredArchitecture {
      * Initialize integration systems
      */
     private CompletableFuture<Void> initializeIntegrationSystems() {
-        plugin.getLogger().info("Initializing Integration Systems...");
+        SkyblockPlugin.getLogger().info("Initializing Integration Systems...");
         
         List<CompletableFuture<Void>> tasks = Arrays.asList(
             initializeMultiServerSystem(),
@@ -145,28 +148,28 @@ public class RefactoredArchitecture {
     private CompletableFuture<Void> initializeConfigSystem() {
         return CompletableFuture.runAsync(() -> {
             // Initialize configuration system
-            plugin.getLogger().info("Config System initialized");
+            SkyblockPlugin.getLogger().info("Config System initialized");
         });
     }
     
     private CompletableFuture<Void> initializeDatabaseSystem() {
         return CompletableFuture.runAsync(() -> {
             // Database system already initialized
-            plugin.getLogger().info("Database System initialized");
+            SkyblockPlugin.getLogger().info("Database System initialized");
         });
     }
     
     private CompletableFuture<Void> initializeLoggingSystem() {
         return CompletableFuture.runAsync(() -> {
             // Initialize logging system
-            plugin.getLogger().info("Logging System initialized");
+            SkyblockPlugin.getLogger().info("Logging System initialized");
         });
     }
     
     private CompletableFuture<Void> initializePerformanceSystem() {
         return CompletableFuture.runAsync(() -> {
             // Initialize performance monitoring
-            plugin.getLogger().info("Performance System initialized");
+            SkyblockPlugin.getLogger().info("Performance System initialized");
         });
     }
     
@@ -174,28 +177,28 @@ public class RefactoredArchitecture {
     private CompletableFuture<Void> initializePlayerManager() {
         return CompletableFuture.runAsync(() -> {
             // Initialize player management
-            plugin.getLogger().info("Player Manager initialized");
+            SkyblockPlugin.getLogger().info("Player Manager initialized");
         });
     }
     
     private CompletableFuture<Void> initializeWorldManager() {
         return CompletableFuture.runAsync(() -> {
             // Initialize world management
-            plugin.getLogger().info("World Manager initialized");
+            SkyblockPlugin.getLogger().info("World Manager initialized");
         });
     }
     
     private CompletableFuture<Void> initializeEventManager() {
         return CompletableFuture.runAsync(() -> {
             // Initialize event management
-            plugin.getLogger().info("Event Manager initialized");
+            SkyblockPlugin.getLogger().info("Event Manager initialized");
         });
     }
     
     private CompletableFuture<Void> initializeCommandManager() {
         return CompletableFuture.runAsync(() -> {
             // Initialize command management
-            plugin.getLogger().info("Command Manager initialized");
+            SkyblockPlugin.getLogger().info("Command Manager initialized");
         });
     }
     
@@ -203,35 +206,35 @@ public class RefactoredArchitecture {
     private CompletableFuture<Void> initializeSkyblockSystem() {
         return CompletableFuture.runAsync(() -> {
             // Initialize skyblock system
-            plugin.getLogger().info("Skyblock System initialized");
+            SkyblockPlugin.getLogger().info("Skyblock System initialized");
         });
     }
     
     private CompletableFuture<Void> initializeCombatSystem() {
         return CompletableFuture.runAsync(() -> {
             // Initialize combat system
-            plugin.getLogger().info("Combat System initialized");
+            SkyblockPlugin.getLogger().info("Combat System initialized");
         });
     }
     
     private CompletableFuture<Void> initializeEconomySystem() {
         return CompletableFuture.runAsync(() -> {
             // Initialize economy system
-            plugin.getLogger().info("Economy System initialized");
+            SkyblockPlugin.getLogger().info("Economy System initialized");
         });
     }
     
     private CompletableFuture<Void> initializeSocialSystem() {
         return CompletableFuture.runAsync(() -> {
             // Initialize social system
-            plugin.getLogger().info("Social System initialized");
+            SkyblockPlugin.getLogger().info("Social System initialized");
         });
     }
     
     private CompletableFuture<Void> initializeCosmeticsSystem() {
         return CompletableFuture.runAsync(() -> {
             // Initialize cosmetics system
-            plugin.getLogger().info("Cosmetics System initialized");
+            SkyblockPlugin.getLogger().info("Cosmetics System initialized");
         });
     }
     
@@ -239,14 +242,14 @@ public class RefactoredArchitecture {
     private CompletableFuture<Void> initializeMultiServerSystem() {
         return CompletableFuture.runAsync(() -> {
             // Initialize multi-server system
-            plugin.getLogger().info("Multi-Server System initialized");
+            SkyblockPlugin.getLogger().info("Multi-Server System initialized");
         });
     }
     
     private CompletableFuture<Void> initializeExternalIntegrations() {
         return CompletableFuture.runAsync(() -> {
             // Initialize external integrations
-            plugin.getLogger().info("External Integrations initialized");
+            SkyblockPlugin.getLogger().info("External Integrations initialized");
         });
     }
     
@@ -340,12 +343,12 @@ public class RefactoredArchitecture {
             return CompletableFuture.completedFuture(null);
         }
         
-        plugin.getLogger().info("Shutting down Refactored Architecture...");
+        SkyblockPlugin.getLogger().info("Shutting down Refactored Architecture...");
         
         return lifecycleManager.shutdown()
             .thenRun(() -> {
                 initialized = false;
-                plugin.getLogger().info("Refactored Architecture shutdown complete");
+                SkyblockPlugin.getLogger().info("Refactored Architecture shutdown complete");
             });
     }
 }

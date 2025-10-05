@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.skyblock;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -19,13 +23,13 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MiningSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<Location, BlockData> blockRegeneration = new ConcurrentHashMap<>();
     private final Map<Location, Thread> regenerationTasks = new ConcurrentHashMap<>();
     private final Map<String, MiningArea> miningAreas = new HashMap<>();
     
-    public MiningSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public MiningSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         initializeMiningAreas();
         startBlockRegenerationTimer();
     }
@@ -157,7 +161,7 @@ public class MiningSystem implements Listener {
         // Check if player has required level to break this block
         if (!canPlayerBreakBlock(player, block, area)) {
             event.setCancelled(true);
-            player.sendMessage("§cYou need a higher mining level to break this block!");
+            player.sendMessage(Component.text("§cYou need a higher mining level to break this block!"));
             return;
         }
         
@@ -172,7 +176,7 @@ public class MiningSystem implements Listener {
         giveMiningXP(player, block, area);
         
         // Add to collection
-        plugin.getSkyblockManager().addCollection(player, block.getType(), 1);
+        SkyblockPlugin.getSkyblockManager().addCollection(player, block.getType(), 1);
         
         // Give block drops
         giveBlockDrops(player, block, area);
@@ -199,7 +203,7 @@ public class MiningSystem implements Listener {
         // Check if player has required level to place this block
         if (!canPlayerPlaceBlock(player, block, area)) {
             event.setCancelled(true);
-            player.sendMessage("§cYou need a higher mining level to place this block!");
+            player.sendMessage(Component.text("§cYou need a higher mining level to place this block!"));
             return;
         }
         
@@ -213,7 +217,7 @@ public class MiningSystem implements Listener {
     
     private boolean canPlayerBreakBlock(Player player, Block block, MiningArea area) {
         // Get player's mining level
-        int playerLevel = plugin.getSkyblockManager().getSkills(player.getUniqueId())
+        int playerLevel = SkyblockPlugin.getSkyblockManager().getSkills(player.getUniqueId())
             .getLevel(SkyblockManager.SkyblockSkill.MINING);
         
         // Get required level for this block
@@ -224,7 +228,7 @@ public class MiningSystem implements Listener {
     
     private boolean canPlayerPlaceBlock(Player player, Block block, MiningArea area) {
         // Get player's mining level
-        int playerLevel = plugin.getSkyblockManager().getSkills(player.getUniqueId())
+        int playerLevel = SkyblockPlugin.getSkyblockManager().getSkills(player.getUniqueId())
             .getLevel(SkyblockManager.SkyblockSkill.MINING);
         
         // Get required level for this block
@@ -238,11 +242,11 @@ public class MiningSystem implements Listener {
         double xp = area.getXPAmount(block.getType());
         
         // Add mining XP
-        plugin.getSkyblockManager().addSkillXP(player, SkyblockManager.SkyblockSkill.MINING, xp);
+        SkyblockPlugin.getSkyblockManager().addSkillXP(player, SkyblockManager.SkyblockSkill.MINING, xp);
         
         // Add foraging XP for certain blocks
         if (block.getType().name().contains("LOG") || block.getType().name().contains("LEAVES")) {
-            plugin.getSkyblockManager().addSkillXP(player, SkyblockManager.SkyblockSkill.FORAGING, xp);
+            SkyblockPlugin.getSkyblockManager().addSkillXP(player, SkyblockManager.SkyblockSkill.FORAGING, xp);
         }
     }
     
@@ -335,7 +339,7 @@ public class MiningSystem implements Listener {
     
     private void startBlockRegenerationTimer() {
         Thread.ofVirtual().start(() -> {
-            while (plugin.isEnabled()) {
+            while (SkyblockPlugin.isEnabled()) {
                 try {
                     // Check for expired regeneration tasks
                     List<Location> expiredLocations = new ArrayList<>();

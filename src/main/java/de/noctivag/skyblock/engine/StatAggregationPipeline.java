@@ -1,5 +1,9 @@
 package de.noctivag.skyblock.engine;
 
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+
 import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import de.noctivag.skyblock.features.stats.types.PrimaryStat;
@@ -32,17 +36,17 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class StatAggregationPipeline {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final StatCalculationService statCalculationService;
     private final ReforgeMatrixManager reforgeMatrixManager;
     private final AccessoryManager accessoryManager;
     private final Map<UUID, PlayerStatAggregation> playerAggregations = new ConcurrentHashMap<>();
     
-    public StatAggregationPipeline(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager,
+    public StatAggregationPipeline(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager,
                                  StatCalculationService statCalculationService, ReforgeMatrixManager reforgeMatrixManager,
                                  AccessoryManager accessoryManager) {
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         this.statCalculationService = statCalculationService;
         this.reforgeMatrixManager = reforgeMatrixManager;

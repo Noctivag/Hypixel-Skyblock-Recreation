@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.furniture;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,6 +16,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CompletableFuture;
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 
 /**
  * Advanced Furniture System for Hypixel Skyblock-style furniture
@@ -19,15 +25,15 @@ import java.util.concurrent.CompletableFuture;
  */
 public class AdvancedFurnitureSystem {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerFurnitureData> playerFurnitureData = new ConcurrentHashMap<>();
     private final Map<String, FurnitureType> furnitureTypes = new HashMap<>();
     private final Map<UUID, List<FurnitureItem>> placedFurniture = new ConcurrentHashMap<>();
     private final Map<UUID, FurnitureMode> playerFurnitureMode = new ConcurrentHashMap<>();
     
-    public AdvancedFurnitureSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedFurnitureSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeFurnitureTypes();
         startFurnitureTask();
@@ -267,7 +273,7 @@ public class AdvancedFurnitureSystem {
         // Use virtual thread for Folia compatibility
         Thread.ofVirtual().start(() -> {
             try {
-                while (plugin.isEnabled()) {
+                while (SkyblockPlugin.isEnabled()) {
                     updatePlacedFurniture();
                     Thread.sleep(1000); // Every second = 1000 ms
                 }
@@ -561,7 +567,7 @@ public class AdvancedFurnitureSystem {
                 playerFurnitureData.put(playerId, data);
             }
         } catch (Exception e) {
-            plugin.getLogger().warning("Failed to load furniture data for player " + playerId + ": " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Failed to load furniture data for player " + playerId + ": " + e.getMessage());
         }
     }
     

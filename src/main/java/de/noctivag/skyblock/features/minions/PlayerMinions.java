@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.minions;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.features.minions.types.CompleteMinionType;
@@ -106,7 +107,7 @@ public class PlayerMinions {
      * Record minion collection
      */
     public void recordCollection(CompleteMinionType minionType, int amount) {
-        lastCollectionTime.put(minionType, System.currentTimeMillis());
+        lastCollectionTime.put(minionType, java.lang.System.currentTimeMillis());
         totalProduction.put(minionType, totalProduction.getOrDefault(minionType, 0) + amount);
     }
 

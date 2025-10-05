@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.listeners;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.gui.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,10 +14,10 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.InventoryView;
 
 public class UltimateGUIListener implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public UltimateGUIListener(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public UltimateGUIListener(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     @EventHandler
@@ -75,71 +79,71 @@ public class UltimateGUIListener implements Listener {
         
         switch (slot) {
             // Core Features (10-18)
-            case 10 -> new ProfileGUI(plugin, player).openGUI(player);
-            case 11 -> new EnhancedDailyRewardGUI(plugin, player).openGUI(player);
-            case 12 -> new EnhancedAchievementGUI(plugin, player).openGUI(player);
-            case 13 -> new EnhancedCosmeticsGUI(plugin, player).openGUI(player);
-            case 14 -> new KitShopGUI(plugin, player).openGUI(player);
-            case 15 -> new WarpGUI(plugin, player).openGUI(player);
-            case 16 -> new TeleportGUI(plugin, player).openGUI(player);
-            case 17 -> new JoinMessageGUI(plugin, player).openGUI(player);
-            case 18 -> new BasicCommandsGUI(plugin).openGUI(player);
+            case 10 -> new ProfileGUI(SkyblockPlugin, player).openGUI(player);
+            case 11 -> new EnhancedDailyRewardGUI(SkyblockPlugin, player).openGUI(player);
+            case 12 -> new EnhancedAchievementGUI(SkyblockPlugin, player).openGUI(player);
+            case 13 -> new EnhancedCosmeticsGUI(SkyblockPlugin, player).openGUI(player);
+            case 14 -> new KitShopGUI(SkyblockPlugin, player).openGUI(player);
+            case 15 -> new WarpGUI(SkyblockPlugin, player).openGUI(player);
+            case 16 -> new TeleportGUI(SkyblockPlugin, player).openGUI(player);
+            case 17 -> new JoinMessageGUI(SkyblockPlugin, player).openGUI(player);
+            case 18 -> new BasicCommandsGUI(SkyblockPlugin).openGUI(player);
             
             // Combat & Events (19-27)
-            case 19 -> new UltimateEventGUI(plugin, player).openGUI(player);
-            case 20 -> new PvPArenaGUI(plugin, player).openGUI(player);
-            case 21 -> new MobArenaGUI(plugin, player).openGUI(player);
-            case 22 -> new DuelSystemGUI(plugin, player).openGUI(player);
-            case 23 -> new TournamentGUI(plugin, player).openGUI(player);
-            case 24 -> new BattlePassGUI(plugin, player).openGUI(player);
-            case 25 -> new QuestGUI(plugin, player).openGUI(player);
-            case 26 -> new StatisticsGUI(plugin, player).openGUI(player);
-            case 27 -> new LeaderboardGUI(plugin, player).openGUI(player);
+            case 19 -> new UltimateEventGUI(SkyblockPlugin, player).openGUI(player);
+            case 20 -> new PvPArenaGUI(SkyblockPlugin, player).openGUI(player);
+            case 21 -> new MobArenaGUI(SkyblockPlugin, player).openGUI(player);
+            case 22 -> new DuelSystemGUI(SkyblockPlugin, player).openGUI(player);
+            case 23 -> new TournamentGUI(SkyblockPlugin, player).openGUI(player);
+            case 24 -> new BattlePassGUI(SkyblockPlugin, player).openGUI(player);
+            case 25 -> new QuestGUI(SkyblockPlugin, player).openGUI(player);
+            case 26 -> new StatisticsGUI(SkyblockPlugin, player).openGUI(player);
+            case 27 -> new LeaderboardGUI(SkyblockPlugin, player).openGUI(player);
             
             // Social & Economy (28-36)
-            case 28 -> new PartyGUI(plugin, player).openGUI(player);
-            case 29 -> new FriendsGUI(plugin).openGUI(player);
-            case 30 -> new GuildSystemGUI(plugin, player).openGUI(player);
-            case 31 -> new ChatChannelsGUI(plugin, player).openGUI(player);
-            case 32 -> new EconomyGUI(plugin, player).openGUI(player);
-            case 33 -> new ShopGUI(plugin, player).openGUI(player);
-            case 34 -> new AuctionHouseGUI(plugin).openAuctionHouseGUI(player);
-            case 35 -> new BankGUI(plugin).openBankGUI(player);
-            case 36 -> new JobsGUI(plugin, player).openGUI(player);
+            case 28 -> new PartyGUI(SkyblockPlugin, player).openGUI(player);
+            case 29 -> new FriendsGUI(SkyblockPlugin, player).openGUI(player);
+            case 30 -> new GuildSystemGUI(SkyblockPlugin, player).openGUI(player);
+            case 31 -> new ChatChannelsGUI(SkyblockPlugin, player).openGUI(player);
+            case 32 -> new EconomyGUI(SkyblockPlugin, player).openGUI(player);
+            case 33 -> new ShopGUI(SkyblockPlugin, player).openGUI(player);
+            case 34 -> new AuctionHouseGUI(SkyblockPlugin).openAuctionHouseGUI(player);
+            case 35 -> new BankGUI(SkyblockPlugin).openBankGUI(player);
+            case 36 -> new JobsGUI(SkyblockPlugin, player).openGUI(player);
             
             // New Systems (37-43)
-            case 37 -> new PotatoBookGUI(plugin, player).openGUI(player);
-            case 38 -> new RecombobulatorGUI(plugin, player).openGUI(player);
-            case 39 -> new DungeonStarGUI(plugin, player).open(player);
-            case 40 -> new PetItemGUI(plugin, player).openGUI(player);
-            case 41 -> new ArmorAbilityGUI(plugin, player).openGUI(player);
-            case 42 -> new WeaponAbilityGUI(plugin, player).openGUI(player);
-            case 43 -> new NPCManagementGUI(plugin, player).openGUI(player);
+            case 37 -> new PotatoBookGUI(SkyblockPlugin, player).openGUI(player);
+            case 38 -> new RecombobulatorGUI(SkyblockPlugin, player).openGUI(player);
+            case 39 -> new DungeonStarGUI(SkyblockPlugin, player).open(player);
+            case 40 -> new PetItemGUI(SkyblockPlugin, player).openGUI(player);
+            case 41 -> new ArmorAbilityGUI(SkyblockPlugin, player).openGUI(player);
+            case 42 -> new WeaponAbilityGUI(SkyblockPlugin, player).openGUI(player);
+            case 43 -> new NPCManagementGUI(SkyblockPlugin, player).openGUI(player);
             
             // Core Hypixel SkyBlock Features (44-46)
             case 44 -> {
                 // Booster Cookie
-                if (plugin.getEconomyManager().getBalance(player) >= 1000) {
-                    plugin.getEconomyManager().withdrawMoney(player, 1000);
-                    player.getInventory().addItem((org.bukkit.inventory.ItemStack) plugin.createBoosterCookie());
-                    player.sendMessage("§aBooster Cookie gekauft!");
+                if (SkyblockPlugin.getEconomyManager().getBalance(player) >= 1000) {
+                    SkyblockPlugin.getEconomyManager().withdrawMoney(player, 1000);
+                    player.getInventory().addItem((org.bukkit.inventory.ItemStack) SkyblockPlugin.createBoosterCookie());
+                    player.sendMessage(Component.text("§aBooster Cookie gekauft!"));
                 } else {
-                    player.sendMessage("§cDu brauchst mindestens 1000 Coins für einen Booster Cookie!");
+                    player.sendMessage(Component.text("§cDu brauchst mindestens 1000 Coins für einen Booster Cookie!"));
                 }
             }
-            case 45 -> plugin.openRecipeBook(player);
-            case 46 -> plugin.openCalendar(player);
+            case 45 -> SkyblockPlugin.openRecipeBook(player);
+            case 46 -> SkyblockPlugin.openCalendar(player);
             
             // Utility & Admin (47-48)
-            case 47 -> new SettingsGUI(plugin).openGUI(player);
-            case 48 -> new AdminMenu(plugin, player).open(player);
+            case 47 -> new SettingsGUI(SkyblockPlugin).openGUI(player);
+            case 48 -> new AdminMenu(SkyblockPlugin, player).open(player);
             
             // Navigation & Info (49-53)
-            case 49 -> new EventScheduleGUI(plugin, player).openGUI(player);
-            case 50 -> new ServerInfoGUI(plugin).openServerInfoGUI(player);
-            case 51 -> new QuickActionsGUI(plugin, player).openGUI(player);
+            case 49 -> new EventScheduleGUI(SkyblockPlugin, player).openGUI(player);
+            case 50 -> new ServerInfoGUI(SkyblockPlugin).openServerInfoGUI(player);
+            case 51 -> new QuickActionsGUI(SkyblockPlugin, player).openGUI(player);
             case 52 -> player.closeInventory();
-            case 53 -> new HelpGUI(plugin).openHelpGUI(player);
+            case 53 -> new HelpGUI(SkyblockPlugin).openHelpGUI(player);
         }
     }
 
@@ -150,47 +154,47 @@ public class UltimateGUIListener implements Listener {
         switch (slot) {
             // Category buttons (10-14)
             case 10 -> {
-                UltimateEventGUI gui = new UltimateEventGUI(plugin, player);
+                UltimateEventGUI gui = new UltimateEventGUI(SkyblockPlugin, player);
                 gui.setCategory("dragon");
                 gui.openGUI(player);
             }
             case 11 -> {
-                UltimateEventGUI gui = new UltimateEventGUI(plugin, player);
+                UltimateEventGUI gui = new UltimateEventGUI(SkyblockPlugin, player);
                 gui.setCategory("undead");
                 gui.openGUI(player);
             }
             case 12 -> {
-                UltimateEventGUI gui = new UltimateEventGUI(plugin, player);
+                UltimateEventGUI gui = new UltimateEventGUI(SkyblockPlugin, player);
                 gui.setCategory("elemental");
                 gui.openGUI(player);
             }
             case 13 -> {
-                UltimateEventGUI gui = new UltimateEventGUI(plugin, player);
+                UltimateEventGUI gui = new UltimateEventGUI(SkyblockPlugin, player);
                 gui.setCategory("monster");
                 gui.openGUI(player);
             }
             case 14 -> {
-                UltimateEventGUI gui = new UltimateEventGUI(plugin, player);
+                UltimateEventGUI gui = new UltimateEventGUI(SkyblockPlugin, player);
                 gui.setCategory("all");
                 gui.openGUI(player);
             }
             case 15 -> {
-                UltimateEventGUI gui = new UltimateEventGUI(plugin, player);
+                UltimateEventGUI gui = new UltimateEventGUI(SkyblockPlugin, player);
                 gui.setCategory("dark");
                 gui.openGUI(player);
             }
             case 16 -> {
-                UltimateEventGUI gui = new UltimateEventGUI(plugin, player);
+                UltimateEventGUI gui = new UltimateEventGUI(SkyblockPlugin, player);
                 gui.setCategory("celestial");
                 gui.openGUI(player);
             }
             case 17 -> {
-                UltimateEventGUI gui = new UltimateEventGUI(plugin, player);
+                UltimateEventGUI gui = new UltimateEventGUI(SkyblockPlugin, player);
                 gui.setCategory("mechanical");
                 gui.openGUI(player);
             }
             case 18 -> {
-                UltimateEventGUI gui = new UltimateEventGUI(plugin, player);
+                UltimateEventGUI gui = new UltimateEventGUI(SkyblockPlugin, player);
                 gui.setCategory("nature");
                 gui.openGUI(player);
             }
@@ -200,17 +204,17 @@ public class UltimateGUIListener implements Listener {
                 // Get event ID from slot
                 String eventId = getEventIdFromSlot(slot);
                 if (eventId != null) {
-                    plugin.joinEvent(player, eventId);
+                    SkyblockPlugin.joinEvent(player, eventId);
                 }
             }
             
             // Info buttons (28-32)
-            case 28 -> new EventScheduleGUI(plugin, player).openGUI(player);
-            case 30 -> new EventStatisticsGUI(plugin, player).openGUI(player);
-            case 32 -> new EventRewardsGUI(plugin, player).openGUI(player);
+            case 28 -> new EventScheduleGUI(SkyblockPlugin, player).openGUI(player);
+            case 30 -> new EventStatisticsGUI(SkyblockPlugin, player).openGUI(player);
+            case 32 -> new EventRewardsGUI(SkyblockPlugin, player).openGUI(player);
             
             // Navigation (45-49)
-            case 45 -> new UltimateMainMenu(plugin, player).open(player);
+            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open(player);
             case 49 -> player.closeInventory();
         }
     }
@@ -222,43 +226,43 @@ public class UltimateGUIListener implements Listener {
         switch (slot) {
             // Category buttons (10-16)
             case 10 -> {
-                EnhancedAchievementGUI gui = new EnhancedAchievementGUI(plugin, player);
+                EnhancedAchievementGUI gui = new EnhancedAchievementGUI(SkyblockPlugin, player);
                 gui.setCategory("events");
                 gui.openGUI(player);
             }
             case 11 -> {
-                EnhancedAchievementGUI gui = new EnhancedAchievementGUI(plugin, player);
+                EnhancedAchievementGUI gui = new EnhancedAchievementGUI(SkyblockPlugin, player);
                 gui.setCategory("economy");
                 gui.openGUI(player);
             }
             case 12 -> {
-                EnhancedAchievementGUI gui = new EnhancedAchievementGUI(plugin, player);
+                EnhancedAchievementGUI gui = new EnhancedAchievementGUI(SkyblockPlugin, player);
                 gui.setCategory("cosmetics");
                 gui.openGUI(player);
             }
             case 13 -> {
-                EnhancedAchievementGUI gui = new EnhancedAchievementGUI(plugin, player);
+                EnhancedAchievementGUI gui = new EnhancedAchievementGUI(SkyblockPlugin, player);
                 gui.setCategory("social");
                 gui.openGUI(player);
             }
             case 14 -> {
-                EnhancedAchievementGUI gui = new EnhancedAchievementGUI(plugin, player);
+                EnhancedAchievementGUI gui = new EnhancedAchievementGUI(SkyblockPlugin, player);
                 gui.setCategory("combat");
                 gui.openGUI(player);
             }
             case 15 -> {
-                EnhancedAchievementGUI gui = new EnhancedAchievementGUI(plugin, player);
+                EnhancedAchievementGUI gui = new EnhancedAchievementGUI(SkyblockPlugin, player);
                 gui.setCategory("exploration");
                 gui.openGUI(player);
             }
             case 16 -> {
-                EnhancedAchievementGUI gui = new EnhancedAchievementGUI(plugin, player);
+                EnhancedAchievementGUI gui = new EnhancedAchievementGUI(SkyblockPlugin, player);
                 gui.setCategory("all");
                 gui.openGUI(player);
             }
             
             // Navigation (45-49)
-            case 45 -> new UltimateMainMenu(plugin, player).open(player);
+            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open(player);
             case 49 -> player.closeInventory();
         }
     }
@@ -270,16 +274,16 @@ public class UltimateGUIListener implements Listener {
         switch (slot) {
             // Claim button (30)
             case 30 -> {
-                if (plugin.canClaimReward(player)) {
-                    plugin.claimReward(player);
-                    new EnhancedDailyRewardGUI(plugin, player).openGUI(player); // Refresh
+                if (SkyblockPlugin.canClaimReward(player)) {
+                    SkyblockPlugin.claimReward(player);
+                    new EnhancedDailyRewardGUI(SkyblockPlugin, player).openGUI(player); // Refresh
                 } else {
-                    player.sendMessage("§cDu hast deine tägliche Belohnung bereits erhalten!");
+                    player.sendMessage(Component.text("§cDu hast deine tägliche Belohnung bereits erhalten!"));
                 }
             }
             
             // Navigation (45-49)
-            case 45 -> new UltimateMainMenu(plugin, player).open(player);
+            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open(player);
             case 49 -> player.closeInventory();
         }
     }
@@ -291,41 +295,41 @@ public class UltimateGUIListener implements Listener {
         switch (slot) {
             // Category buttons (10-14)
             case 10 -> {
-                EnhancedCosmeticsGUI gui = new EnhancedCosmeticsGUI(plugin, player);
+                EnhancedCosmeticsGUI gui = new EnhancedCosmeticsGUI(SkyblockPlugin, player);
                 gui.setCategory("particles");
                 gui.openGUI(player);
             }
             case 11 -> {
-                EnhancedCosmeticsGUI gui = new EnhancedCosmeticsGUI(plugin, player);
+                EnhancedCosmeticsGUI gui = new EnhancedCosmeticsGUI(SkyblockPlugin, player);
                 gui.setCategory("wings");
                 gui.openGUI(player);
             }
             case 12 -> {
-                EnhancedCosmeticsGUI gui = new EnhancedCosmeticsGUI(plugin, player);
+                EnhancedCosmeticsGUI gui = new EnhancedCosmeticsGUI(SkyblockPlugin, player);
                 gui.setCategory("halos");
                 gui.openGUI(player);
             }
             case 13 -> {
-                EnhancedCosmeticsGUI gui = new EnhancedCosmeticsGUI(plugin, player);
+                EnhancedCosmeticsGUI gui = new EnhancedCosmeticsGUI(SkyblockPlugin, player);
                 gui.setCategory("trails");
                 gui.openGUI(player);
             }
             case 14 -> {
-                EnhancedCosmeticsGUI gui = new EnhancedCosmeticsGUI(plugin, player);
+                EnhancedCosmeticsGUI gui = new EnhancedCosmeticsGUI(SkyblockPlugin, player);
                 gui.setCategory("sounds");
                 gui.openGUI(player);
             }
             
             // Action buttons (28-32)
             case 28 -> {
-                plugin.deactivateAllCosmetics(player);
-                player.sendMessage("§aAlle Cosmetics deaktiviert!");
+                SkyblockPlugin.deactivateAllCosmetics(player);
+                player.sendMessage(Component.text("§aAlle Cosmetics deaktiviert!"));
             }
-            case 30 -> new MyCosmeticsGUI(plugin, player).openGUI(player);
-            case 32 -> new CosmeticShopGUI(plugin, player).openGUI(player);
+            case 30 -> new MyCosmeticsGUI(SkyblockPlugin, player).openGUI(player);
+            case 32 -> new CosmeticShopGUI(SkyblockPlugin, player).openGUI(player);
             
             // Navigation (45-49)
-            case 45 -> new UltimateMainMenu(plugin, player).open(player);
+            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open(player);
             case 49 -> player.closeInventory();
         }
     }
@@ -394,19 +398,19 @@ public class UltimateGUIListener implements Listener {
         switch (slot) {
             // Create Hot Potato Book
             case 11 -> {
-                if (plugin.getEconomyManager().getBalance(player) >= 100) {
-                    plugin.getEconomyManager().withdrawMoney(player, 100);
-                    player.getInventory().addItem((org.bukkit.inventory.ItemStack) plugin.createHotPotatoBook());
-                    player.sendMessage("§aHot Potato Book erstellt!");
+                if (SkyblockPlugin.getEconomyManager().getBalance(player) >= 100) {
+                    SkyblockPlugin.getEconomyManager().withdrawMoney(player, 100);
+                    player.getInventory().addItem((org.bukkit.inventory.ItemStack) SkyblockPlugin.createHotPotatoBook());
+                    player.sendMessage(Component.text("§aHot Potato Book erstellt!"));
                 } else {
-                    player.sendMessage("§cDu hast nicht genug Geld! (Benötigt: 100 coins)");
+                    player.sendMessage(Component.text("§cDu hast nicht genug Geld! (Benötigt: 100 coins)"));
                 }
             }
             
             // Navigation
-            case 45 -> new UltimateMainMenu(plugin, player).open(player);
+            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open(player);
             case 49 -> player.closeInventory();
-            case 51 -> new PotatoBookGUI(plugin, player).openGUI(player); // Refresh
+            case 51 -> new PotatoBookGUI(SkyblockPlugin, player).openGUI(player); // Refresh
         }
     }
 
@@ -417,19 +421,19 @@ public class UltimateGUIListener implements Listener {
         switch (slot) {
             // Create Recombobulator
             case 11 -> {
-                if (plugin.getEconomyManager().getBalance(player) >= 1000) {
-                    plugin.getEconomyManager().withdrawMoney(player, 1000);
-                    player.getInventory().addItem((org.bukkit.inventory.ItemStack) plugin.createRecombobulator3000());
-                    player.sendMessage("§aRecombobulator 3000 erstellt!");
+                if (SkyblockPlugin.getEconomyManager().getBalance(player) >= 1000) {
+                    SkyblockPlugin.getEconomyManager().withdrawMoney(player, 1000);
+                    player.getInventory().addItem((org.bukkit.inventory.ItemStack) SkyblockPlugin.createRecombobulator3000());
+                    player.sendMessage(Component.text("§aRecombobulator 3000 erstellt!"));
                 } else {
-                    player.sendMessage("§cDu hast nicht genug Geld! (Benötigt: 1,000 coins)");
+                    player.sendMessage(Component.text("§cDu hast nicht genug Geld! (Benötigt: 1,000 coins)"));
                 }
             }
             
             // Navigation
-            case 45 -> new UltimateMainMenu(plugin, player).open(player);
+            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open(player);
             case 49 -> player.closeInventory();
-            case 51 -> new RecombobulatorGUI(plugin, player).open(player); // Refresh
+            case 51 -> new RecombobulatorGUI(SkyblockPlugin, player).open(player); // Refresh
         }
     }
 
@@ -440,19 +444,19 @@ public class UltimateGUIListener implements Listener {
         switch (slot) {
             // Create Dungeon Star
             case 15 -> {
-                if (plugin.getEconomyManager().getBalance(player) >= 100) {
-                    plugin.getEconomyManager().withdrawMoney(player, 100);
-                    player.getInventory().addItem((org.bukkit.inventory.ItemStack) plugin.createDungeonStar(1));
-                    player.sendMessage("§aDungeon Star erstellt!");
+                if (SkyblockPlugin.getEconomyManager().getBalance(player) >= 100) {
+                    SkyblockPlugin.getEconomyManager().withdrawMoney(player, 100);
+                    player.getInventory().addItem((org.bukkit.inventory.ItemStack) SkyblockPlugin.createDungeonStar(1));
+                    player.sendMessage(Component.text("§aDungeon Star erstellt!"));
                 } else {
-                    player.sendMessage("§cDu hast nicht genug Geld! (Benötigt: 100 coins)");
+                    player.sendMessage(Component.text("§cDu hast nicht genug Geld! (Benötigt: 100 coins)"));
                 }
             }
             
             // Navigation
-            case 45 -> new UltimateMainMenu(plugin, player).open(player);
+            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open(player);
             case 49 -> player.closeInventory();
-            case 51 -> new DungeonStarGUI(plugin, player).open(player); // Refresh
+            case 51 -> new DungeonStarGUI(SkyblockPlugin, player).open(player); // Refresh
         }
     }
 
@@ -464,13 +468,13 @@ public class UltimateGUIListener implements Listener {
             // Create Pet Item
             case 15 -> {
                 // Open pet item creation menu
-                player.sendMessage("§aPet Item Erstellung geöffnet!");
+                player.sendMessage(Component.text("§aPet Item Erstellung geöffnet!"));
             }
             
             // Navigation
-            case 45 -> new UltimateMainMenu(plugin, player).open(player);
+            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open(player);
             case 49 -> player.closeInventory();
-            case 51 -> new PetItemGUI(plugin, player).openGUI(player); // Refresh
+            case 51 -> new PetItemGUI(SkyblockPlugin, player).openGUI(player); // Refresh
         }
     }
 
@@ -480,9 +484,9 @@ public class UltimateGUIListener implements Listener {
         
         switch (slot) {
             // Navigation
-            case 45 -> new UltimateMainMenu(plugin, player).open(player);
+            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open(player);
             case 49 -> player.closeInventory();
-            case 51 -> new ArmorAbilityGUI(plugin, player).openGUI(player); // Refresh
+            case 51 -> new ArmorAbilityGUI(SkyblockPlugin, player).openGUI(player); // Refresh
         }
     }
 
@@ -492,9 +496,9 @@ public class UltimateGUIListener implements Listener {
         
         switch (slot) {
             // Navigation
-            case 45 -> new UltimateMainMenu(plugin, player).open(player);
+            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open(player);
             case 49 -> player.closeInventory();
-            case 51 -> new WeaponAbilityGUI(plugin, player).openGUI(player); // Refresh
+            case 51 -> new WeaponAbilityGUI(SkyblockPlugin, player).openGUI(player); // Refresh
         }
     }
 }

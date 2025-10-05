@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.combat;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -41,7 +42,7 @@ public class PlayerCombat {
         this.combatLevel = 1;
         this.combatXP = 0.0;
         this.totalXP = 0.0;
-        this.lastActivity = System.currentTimeMillis();
+        this.lastActivity = java.lang.System.currentTimeMillis();
         
         // Initialize statistics
         this.totalKills = 0;
@@ -64,7 +65,7 @@ public class PlayerCombat {
     public void addXP(double xpAmount) {
         this.combatXP += xpAmount;
         this.totalXP += xpAmount;
-        this.lastActivity = System.currentTimeMillis();
+        this.lastActivity = java.lang.System.currentTimeMillis();
         
         // Check for level up
         int newLevel = calculateLevel(combatXP);
@@ -263,7 +264,7 @@ public class PlayerCombat {
         this.combatLevel = 1;
         this.combatXP = 0.0;
         this.totalXP = 0.0;
-        this.lastActivity = System.currentTimeMillis();
+        this.lastActivity = java.lang.System.currentTimeMillis();
         
         this.totalKills = 0;
         this.totalDeaths = 0;

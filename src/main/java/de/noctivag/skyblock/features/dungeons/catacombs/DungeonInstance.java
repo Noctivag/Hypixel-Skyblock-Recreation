@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.dungeons.catacombs;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.features.dungeons.classes.DungeonClassType;
@@ -51,7 +52,7 @@ public class DungeonInstance {
      */
     public void start() {
         this.state = DungeonState.ACTIVE;
-        this.startTime = System.currentTimeMillis();
+        this.startTime = java.lang.System.currentTimeMillis();
         
         // Teleport players to dungeon
         teleportPlayers();
@@ -65,7 +66,7 @@ public class DungeonInstance {
      */
     public void complete(boolean success) {
         this.state = success ? DungeonState.COMPLETED : DungeonState.FAILED;
-        this.endTime = System.currentTimeMillis();
+        this.endTime = java.lang.System.currentTimeMillis();
     }
     
     /**
@@ -80,7 +81,7 @@ public class DungeonInstance {
      */
     public long getElapsedTime() {
         if (startTime == 0) return 0;
-        long end = endTime == 0 ? System.currentTimeMillis() : endTime;
+        long end = endTime == 0 ? java.lang.System.currentTimeMillis() : endTime;
         return (end - startTime) / 1000;
     }
     

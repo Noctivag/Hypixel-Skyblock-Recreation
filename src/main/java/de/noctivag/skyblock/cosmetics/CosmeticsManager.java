@@ -1,19 +1,25 @@
 package de.noctivag.skyblock.cosmetics;
+
+import java.util.UUID;
+import net.kyori.adventure.text.Component;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import net.kyori.adventure.text.Component;
 
 public class CosmeticsManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, PlayerCosmetics> playerCosmetics = new HashMap<>();
     
-    public CosmeticsManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public CosmeticsManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
     
     public PlayerCosmetics getPlayerCosmetics(UUID playerId) {
@@ -22,7 +28,7 @@ public class CosmeticsManager {
     
     public void openCosmeticsGUI(Player player) {
         // Basic cosmetics GUI implementation
-        player.sendMessage("§aCosmetics GUI opened!");
+        player.sendMessage(Component.text("§aCosmetics GUI opened!"));
     }
     
     public void cleanup() {
@@ -96,7 +102,7 @@ public class CosmeticsManager {
         // Set sound effect for player
     }
     
-    public void setPlayerParticleShape(Player player, de.noctivag.plugin.cosmetics.ParticleShape shape) {
+    public void setPlayerParticleShape(Player player, de.noctivag.skyblock.cosmetics.ParticleShape shape) {
         // Set particle shape for player
     }
     

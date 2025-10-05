@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.menu;
+import net.kyori.adventure.text.Component;
 
 import de.noctivag.skyblock.core.api.Service;
 import de.noctivag.skyblock.core.api.SystemStatus;
@@ -78,7 +79,7 @@ public class SkyblockMenuSystem implements Service {
     public void openMainMenu(Player player) {
         MenuConfig menuConfig = menuConfigs.get("main_menu");
         if (menuConfig == null) {
-            player.sendMessage("§cMenu not found!");
+            player.sendMessage(Component.text("§cMenu not found!"));
             return;
         }
         
@@ -92,7 +93,7 @@ public class SkyblockMenuSystem implements Service {
     public void openProfileMenu(Player player) {
         MenuConfig menuConfig = menuConfigs.get("profile_menu");
         if (menuConfig == null) {
-            player.sendMessage("§cProfile menu not found!");
+            player.sendMessage(Component.text("§cProfile menu not found!"));
             return;
         }
         
@@ -106,7 +107,7 @@ public class SkyblockMenuSystem implements Service {
     public void openWeaponsMenu(Player player) {
         MenuConfig menuConfig = menuConfigs.get("weapons_menu");
         if (menuConfig == null) {
-            player.sendMessage("§cWeapons menu not found!");
+            player.sendMessage(Component.text("§cWeapons menu not found!"));
             return;
         }
         
@@ -120,7 +121,7 @@ public class SkyblockMenuSystem implements Service {
     public void openSwordsMenu(Player player) {
         MenuConfig menuConfig = menuConfigs.get("swords_menu");
         if (menuConfig == null) {
-            player.sendMessage("§cSwords menu not found!");
+            player.sendMessage(Component.text("§cSwords menu not found!"));
             return;
         }
         

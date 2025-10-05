@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.core.events;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,18 +14,18 @@ import java.util.function.Consumer;
 
 /**
  * Event bus for decoupled system communication.
- * Implements pub/sub pattern for plugin-wide events.
+ * Implements pub/sub pattern for SkyblockPlugin-wide events.
  */
 public class EventBus {
     
-    private final JavaSkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Logger logger;
     private final Map<Class<?>, List<Consumer<?>>> subscribers = new ConcurrentHashMap<>();
     private final Map<String, Object> eventData = new ConcurrentHashMap<>();
     
-    public EventBus(JavaSkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.logger = plugin.getLogger();
+    public EventBus(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.logger = SkyblockPlugin.getLogger();
     }
     
     /**
@@ -81,7 +84,7 @@ public class EventBus {
      * @param <T> the event type
      */
     public <T> void publishAsync(T event) {
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> publish(event));
+        SkyblockPlugin.getServer().getScheduler().runTaskAsynchronously(SkyblockPlugin, () -> publish(event));
     }
     
     /**

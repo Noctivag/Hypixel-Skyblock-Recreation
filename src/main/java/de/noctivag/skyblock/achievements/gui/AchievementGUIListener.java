@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.achievements.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.achievements.Achievement;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.Player;
@@ -12,12 +15,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+import net.kyori.adventure.text.Component;
 
 public class AchievementGUIListener implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public AchievementGUIListener(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public AchievementGUIListener(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     @EventHandler
@@ -36,17 +40,17 @@ public class AchievementGUIListener implements Listener {
 
             // Filter handling
             if (display.contains("Filter: Alle")) {
-                player.sendMessage("§7Filter gesetzt: §fAlle");
-                new AchievementGUI(plugin).openMainGUI(player);
+                player.sendMessage(Component.text("§7Filter gesetzt: §fAlle"));
+                new AchievementGUI(SkyblockPlugin).openMainGUI(player);
                 return;
             }
             if (display.contains("Filter: Freigeschaltet") || display.contains("Filter: §a")) {
-                player.sendMessage("§7Filter gesetzt: §aFreigeschaltet");
+                player.sendMessage(Component.text("§7Filter gesetzt: §aFreigeschaltet"));
                 // Open each category as needed filtered later; here user should click a category next
                 return;
             }
             if (display.contains("Filter: Nicht freigeschaltet") || display.contains("Filter: §7")) {
-                player.sendMessage("§7Filter gesetzt: §7Nicht freigeschaltet");
+                player.sendMessage(Component.text("§7Filter gesetzt: §7Nicht freigeschaltet"));
                 return;
             }
 
@@ -60,7 +64,7 @@ public class AchievementGUIListener implements Listener {
             for (String cat : categories) {
                 String formatted = formatCategoryName(cat);
                 if (display.contains(formatted)) {
-                    new AchievementGUI(plugin).openCategoryGUI(player, cat);
+                    new AchievementGUI(SkyblockPlugin).openCategoryGUI(player, cat);
                     return;
                 }
             }
@@ -77,7 +81,7 @@ public class AchievementGUIListener implements Listener {
 
             // Back button
             if (display.toLowerCase().contains("zurück") || display.toLowerCase().contains("« zurück")) {
-                new AchievementGUI(plugin).openMainGUI(player);
+                new AchievementGUI(SkyblockPlugin).openMainGUI(player);
                 return;
             }
 
@@ -88,7 +92,7 @@ public class AchievementGUIListener implements Listener {
             for (Achievement a : Achievement.values()) {
                 if (a.getDisplayName().equalsIgnoreCase(cleaned) || a.getDisplayName().contains(cleaned)) {
                     // TODO: Implement proper AchievementManager interface
-                    // boolean unlocked = ((AchievementManager) plugin.getAchievementManager()).hasAchievement(player, a);
+                    // boolean unlocked = ((AchievementManager) SkyblockPlugin.getAchievementManager()).hasAchievement(player, a);
                     boolean unlocked = false; // Placeholder
                     player.sendMessage("§e" + a.getDisplayName() + " - " + (unlocked ? "§aFreigeschaltet" : "§cNicht freigeschaltet"));
                     return;

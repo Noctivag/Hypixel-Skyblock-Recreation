@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,27 +18,27 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public abstract class CustomGUI {
-    protected final SkyblockPlugin plugin;
+    protected final SkyblockPlugin SkyblockPlugin;
     protected final String title;
     protected final int size;
     protected Inventory inventory;
 
-    public CustomGUI(SkyblockPlugin plugin, String title, int size) {
-        this.plugin = plugin;
+    public CustomGUI(SkyblockPlugin SkyblockPlugin, String title, int size) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.title = title;
         this.size = size;
         this.inventory = Bukkit.createInventory(null, size, title);
     }
 
     public CustomGUI(String title, int size) {
-        this.plugin = null;
+        this.SkyblockPlugin = null;
         this.title = title;
         this.size = size;
         this.inventory = Bukkit.createInventory(null, size, title);
     }
 
     public CustomGUI(int size, TextComponent title) {
-        this.plugin = null;
+        this.SkyblockPlugin = null;
         this.title = title.content();
         this.size = size;
         this.inventory = Bukkit.createInventory(null, size, title);
@@ -81,7 +84,7 @@ public abstract class CustomGUI {
         if (meta != null) {
             meta.displayName(Component.text(displayName));
             if (lore != null && lore.length > 0) {
-                meta.lore(Arrays.stream(lore).map(Component::text).collect(Collectors.toList()));
+                meta.lore(java.util.Arrays.stream(lore).map(Component::text).collect(java.util.stream.Collectors.toList()));
             }
             item.setItemMeta(meta);
         }
@@ -121,7 +124,7 @@ public abstract class CustomGUI {
         if (meta != null) {
             meta.displayName(Component.text(displayName));
             if (lore != null && lore.length > 0) {
-                meta.lore(Arrays.stream(lore).map(Component::text).collect(Collectors.toList()));
+                meta.lore(java.util.Arrays.stream(lore).map(Component::text).collect(java.util.stream.Collectors.toList()));
             }
             item.setItemMeta(meta);
         }
@@ -147,7 +150,7 @@ public abstract class CustomGUI {
         if (meta != null) {
             meta.displayName(Component.text(displayName));
             if (lore != null && lore.length > 0) {
-                meta.lore(Arrays.stream(lore).map(Component::text).collect(Collectors.toList()));
+                meta.lore(java.util.Arrays.stream(lore).map(Component::text).collect(java.util.stream.Collectors.toList()));
             }
             item.setItemMeta(meta);
         }

@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.sacks;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -18,15 +23,15 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AdvancedSacksSystem {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerSackData> playerSackData = new ConcurrentHashMap<>();
     private final Map<String, SackType> sackTypes = new HashMap<>();
     private final Map<UUID, List<SackItem>> playerSacks = new ConcurrentHashMap<>();
     private final Map<UUID, Boolean> autoCollectionEnabled = new ConcurrentHashMap<>();
     
-    public AdvancedSacksSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedSacksSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeSackTypes();
         startSackTask();
@@ -348,7 +353,7 @@ public class AdvancedSacksSystem {
             public void run() {
                 updateAutoCollection();
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Every second
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Every second
     }
     
     /**
@@ -503,7 +508,7 @@ public class AdvancedSacksSystem {
         ItemMeta meta = item.getItemMeta();
         
         if (meta != null) {
-            meta.setDisplayName("§6" + sack.getName());
+            meta.displayName(Component.text("§6" + sack.getName()));
             List<String> lore = new ArrayList<>(sack.getDescription());
             lore.add("");
             lore.add("§7Category: " + sack.getCategory().getDisplayName());
@@ -514,7 +519,7 @@ public class AdvancedSacksSystem {
             lore.add("§7and manage your items!");
             lore.add("");
             lore.add("§8An automatic collection sack");
-            meta.setLore(lore);
+            meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             
             item.setItemMeta(meta);
         }

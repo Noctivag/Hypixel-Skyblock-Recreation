@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.items;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.CorePlatform;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -16,6 +20,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.kyori.adventure.text.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Reforge Anvil System - Special block for reforging items
@@ -29,18 +34,18 @@ import java.util.*;
  * - Reforge success rates
  */
 public class ReforgeAnvilSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CorePlatform corePlatform;
     private final ReforgeStoneSystem reforgeStoneSystem;
     private final Map<UUID, ReforgeHistory> playerReforgeHistory = new HashMap<>();
     private final Map<UUID, ReforgePreview> activePreviews = new HashMap<>();
     
-    public ReforgeAnvilSystem(SkyblockPlugin plugin, CorePlatform corePlatform, ReforgeStoneSystem reforgeStoneSystem) {
-        this.plugin = plugin;
+    public ReforgeAnvilSystem(SkyblockPlugin SkyblockPlugin, CorePlatform corePlatform, ReforgeStoneSystem reforgeStoneSystem) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.corePlatform = corePlatform;
         this.reforgeStoneSystem = reforgeStoneSystem;
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     @EventHandler
@@ -66,7 +71,7 @@ public class ReforgeAnvilSystem implements Listener {
     }
     
     public void openReforgeGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§e§lReforge Anvil");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§e§lReforge Anvil"));
         
         // Add reforge stone categories
         addGUIItem(gui, 10, Material.DIAMOND_SWORD, "§c§lWeapon Stones", 
@@ -99,7 +104,7 @@ public class ReforgeAnvilSystem implements Listener {
             Arrays.asList("§7Close the reforge anvil", "", "§eClick to close"));
         
         player.openInventory(gui);
-        player.sendMessage("§aReforge Anvil opened!");
+        player.sendMessage(Component.text("§aReforge Anvil opened!"));
     }
     
     public void openReforgeStoneGUI(Player player, ReforgeStoneSystem.ReforgeCategory category) {
@@ -125,7 +130,7 @@ public class ReforgeAnvilSystem implements Listener {
     }
     
     public void openReforgePreviewGUI(Player player, ItemStack item, ReforgeStoneSystem.ReforgeStone stone) {
-        Inventory gui = Bukkit.createInventory(null, 27, "§e§lReforge Preview");
+        Inventory gui = Bukkit.createInventory(null, 27, Component.text("§e§lReforge Preview"));
         
         // Show original item
         addGUIItem(gui, 10, item.getType(), "§7Original Item", 
@@ -159,7 +164,7 @@ public class ReforgeAnvilSystem implements Listener {
     }
     
     public void openReforgeHistoryGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§e§lReforge History");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§e§lReforge History"));
         
         ReforgeHistory history = playerReforgeHistory.get(player.getUniqueId());
         if (history == null) {
@@ -202,8 +207,8 @@ public class ReforgeAnvilSystem implements Listener {
         double cost = 1000.0; // Base cost for reforging
         
         // Check if player has enough coins
-        if (plugin.getEconomyManager() != null) {
-            double playerBalance = plugin.getEconomyManager().getBalance(player);
+        if (SkyblockPlugin.getEconomyManager() != null) {
+            double playerBalance = SkyblockPlugin.getEconomyManager().getBalance(player);
             if (playerBalance < cost) {
                 player.sendMessage("§cDu hast nicht genug Coins! Benötigt: " + cost + ", Hast: " + playerBalance);
                 return false;
@@ -229,8 +234,8 @@ public class ReforgeAnvilSystem implements Listener {
         boolean success = Math.random() < successRate;
         
         // Consume coins through economy manager
-        if (plugin.getEconomyManager() != null) {
-            plugin.getEconomyManager().withdrawMoney(player, cost);
+        if (SkyblockPlugin.getEconomyManager() != null) {
+            SkyblockPlugin.getEconomyManager().withdrawMoney(player, cost);
             player.sendMessage("§e" + cost + " Coins wurden für das Reforge verwendet.");
         }
         // profile.removeCoins(stone.getCost());
@@ -246,12 +251,12 @@ public class ReforgeAnvilSystem implements Listener {
             // Replace item in inventory
             replaceItemInInventory(player, item, reforgedItem);
             
-            player.sendMessage("§a§lREFORGE SUCCESSFUL!");
+            player.sendMessage(Component.text("§a§lREFORGE SUCCESSFUL!"));
             player.sendMessage("§7Item: §e" + item.getType().name());
             player.sendMessage("§7Stone: " + stone.getDisplayName());
             player.sendMessage("§7Cost: §6" + stone.getCost() + " coins");
         } else {
-            player.sendMessage("§c§lREFORGE FAILED!");
+            player.sendMessage(Component.text("§c§lREFORGE FAILED!"));
             player.sendMessage("§7Item: §e" + item.getType().name());
             player.sendMessage("§7Stone: " + stone.getDisplayName());
             player.sendMessage("§7Cost: §6" + stone.getCost() + " coins (consumed)");

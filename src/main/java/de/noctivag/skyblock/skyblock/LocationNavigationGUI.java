@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.skyblock;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -13,6 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.kyori.adventure.text.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Location Navigation GUI - Vollständige Location-Navigation
@@ -26,13 +30,13 @@ import java.util.*;
  */
 public class LocationNavigationGUI implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final SkyBlockLocationSystem locationSystem;
     
-    public LocationNavigationGUI(SkyblockPlugin plugin, SkyBlockLocationSystem locationSystem) {
-        this.plugin = plugin;
+    public LocationNavigationGUI(SkyblockPlugin SkyblockPlugin, SkyBlockLocationSystem locationSystem) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.locationSystem = locationSystem;
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     @EventHandler
@@ -61,7 +65,7 @@ public class LocationNavigationGUI implements Listener {
         // Handle location-specific clicks
         if (slot >= 0 && slot < 45) {
             // This would handle teleportation to specific locations
-            player.sendMessage("§aTeleportation to location would be implemented here!");
+            player.sendMessage(Component.text("§aTeleportation to location would be implemented here!"));
         }
     }
     
@@ -84,7 +88,7 @@ public class LocationNavigationGUI implements Listener {
         addGUIItem(gui, 53, Material.BOOK, "§b§lStatistics", "§7View location statistics.");
         
         player.openInventory(gui);
-        player.sendMessage("§aLocation Navigation GUI geöffnet!");
+        player.sendMessage(Component.text("§aLocation Navigation GUI geöffnet!"));
     }
     
     public void openFarmingLocationsGUI(Player player) {

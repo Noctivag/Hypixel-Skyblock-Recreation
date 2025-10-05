@@ -57,7 +57,7 @@ public class SkillStatistics {
         double xpEfficiency = Math.min(totalXP / 1000000.0, 1.0); // Cap at 1M XP
         
         // Activity efficiency (recent activity = higher efficiency)
-        long timeSinceActivity = System.currentTimeMillis() - lastActivity;
+        long timeSinceActivity = java.lang.System.currentTimeMillis() - lastActivity;
         double activityEfficiency = Math.max(0.5, 1.0 - (timeSinceActivity / 86400000.0)); // Decay over 24 hours
         
         return (levelEfficiency + xpEfficiency + activityEfficiency) / 3.0;

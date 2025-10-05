@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.commands;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.gui.FeatureToggleGUI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -9,10 +13,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class FeatureCommand implements CommandExecutor {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public FeatureCommand(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public FeatureCommand(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     @Override
@@ -23,12 +27,12 @@ public class FeatureCommand implements CommandExecutor {
         }
 
         Player player = (Player) sender;
-        if (!player.hasPermission("plugin.admin")) {
-            player.sendMessage("§cDazu hast du keine Berechtigung!");
+        if (!player.hasPermission("SkyblockPlugin.admin")) {
+            player.sendMessage(Component.text("§cDazu hast du keine Berechtigung!"));
             return true;
         }
 
-        new FeatureToggleGUI(plugin).openGUI(player);
+        new FeatureToggleGUI(SkyblockPlugin).openGUI(player);
         return true;
     }
 }

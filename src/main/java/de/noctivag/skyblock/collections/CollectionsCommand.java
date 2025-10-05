@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.collections;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -29,7 +32,7 @@ public class CollectionsCommand implements CommandExecutor, TabCompleter {
     
     private final CollectionsSystem collectionsSystem;
     
-    public CollectionsCommand(SkyblockPlugin plugin, CollectionsSystem collectionsSystem) {
+    public CollectionsCommand(SkyblockPlugin SkyblockPlugin, CollectionsSystem collectionsSystem) {
         this.collectionsSystem = collectionsSystem;
     }
     

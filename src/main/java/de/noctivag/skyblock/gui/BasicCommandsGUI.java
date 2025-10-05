@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,16 +12,18 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 
 /**
  * Basic Commands GUI - Grundlegende Befehle
  */
 public class BasicCommandsGUI {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     
-    public BasicCommandsGUI(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public BasicCommandsGUI(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
     
     public void openGUI(Player player) {
@@ -26,7 +31,7 @@ public class BasicCommandsGUI {
     }
     
     public void openBasicCommandsGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lBasic Commands");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lBasic Commands"));
         
         // Teleportation Commands
         setItem(gui, 10, Material.GRASS_BLOCK, "§a§lSpawn",
@@ -182,8 +187,8 @@ public class BasicCommandsGUI {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(name);
-            meta.setLore(Arrays.asList(lore));
+            meta.displayName(Component.text(name));
+            meta.lore(Arrays.asList(lore).stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         gui.setItem(slot, item);

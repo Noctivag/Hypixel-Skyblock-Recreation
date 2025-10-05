@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.events;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -10,7 +13,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class EventScheduler {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final EventManager eventManager;
     private final Map<String, Thread> scheduledEvents = new ConcurrentHashMap<>();
     private final Map<String, Long> eventCooldowns = new ConcurrentHashMap<>();
@@ -28,8 +31,8 @@ public class EventScheduler {
         "enderman_lord", 70
     );
     
-    public EventScheduler(SkyblockPlugin plugin, EventManager eventManager) {
-        this.plugin = plugin;
+    public EventScheduler(SkyblockPlugin SkyblockPlugin, EventManager eventManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.eventManager = eventManager;
         startScheduler();
     }
@@ -47,7 +50,7 @@ public class EventScheduler {
     private void scheduleEvent(String eventId, int intervalMinutes) {
         Thread eventThread = Thread.ofVirtual().start(() -> {
             try {
-                while (plugin.isEnabled()) {
+                while (SkyblockPlugin.isEnabled()) {
                     // Check if event is already active
                     if (eventManager.getEvent(eventId).isActive()) {
                         Thread.sleep(intervalMinutes * 60 * 1000L); // Wait for interval
@@ -59,7 +62,7 @@ public class EventScheduler {
                     
                     // Wait 5 minutes then start the event
                     Thread.sleep(5 * 60 * 1000L); // 5 minutes = 300,000 ms
-                    if (plugin.isEnabled()) {
+                    if (SkyblockPlugin.isEnabled()) {
                         startScheduledEvent(eventId);
                     }
                     
@@ -91,7 +94,7 @@ public class EventScheduler {
             Thread.ofVirtual().start(() -> {
                 try {
                     Thread.sleep(60 * 1000L); // 1 minute = 60,000 ms
-                    if (plugin.isEnabled()) {
+                    if (SkyblockPlugin.isEnabled()) {
                         announceUpcomingEvent(eventId, minutes - 1);
                     }
                 } catch (InterruptedException e) {
@@ -124,7 +127,7 @@ public class EventScheduler {
         // Daily event summary - use virtual thread for Folia compatibility
         Thread.ofVirtual().start(() -> {
             try {
-                while (plugin.isEnabled()) {
+                while (SkyblockPlugin.isEnabled()) {
                     announceDailySummary();
                     Thread.sleep(24 * 60 * 60 * 1000L); // Every 24 hours = 86,400,000 ms
                 }
@@ -136,7 +139,7 @@ public class EventScheduler {
         // Hourly event reminders - use virtual thread for Folia compatibility
         Thread.ofVirtual().start(() -> {
             try {
-                while (plugin.isEnabled()) {
+                while (SkyblockPlugin.isEnabled()) {
                     announceNextEvents();
                     Thread.sleep(60 * 60 * 1000L); // Every hour = 3,600,000 ms
                 }
@@ -168,7 +171,7 @@ public class EventScheduler {
             String eventName = getEventDisplayName(eventId);
             
             // Calculate time until next event
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long lastEvent = eventCooldowns.getOrDefault(eventId, 0L);
             long timeUntilNext = (lastEvent + (interval * 60 * 1000L)) - currentTime;
             
@@ -194,13 +197,13 @@ public class EventScheduler {
     }
     
     public void updateEventCooldown(String eventId) {
-        eventCooldowns.put(eventId, System.currentTimeMillis());
+        eventCooldowns.put(eventId, java.lang.System.currentTimeMillis());
     }
     
     public long getTimeUntilNextEvent(String eventId) {
         int interval = EVENT_SCHEDULES.getOrDefault(eventId, 60);
         long lastEvent = eventCooldowns.getOrDefault(eventId, 0L);
-        long timeUntilNext = (lastEvent + (interval * 60 * 1000L)) - System.currentTimeMillis();
+        long timeUntilNext = (lastEvent + (interval * 60 * 1000L)) - java.lang.System.currentTimeMillis();
         return Math.max(0, timeUntilNext);
     }
     

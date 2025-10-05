@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.events.types;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.features.events.EventReward;
@@ -20,7 +21,7 @@ public class PlayerEventParticipation {
     public PlayerEventParticipation(UUID playerId, String eventId) {
         this.playerId = playerId;
         this.eventId = eventId;
-        this.startTime = System.currentTimeMillis();
+        this.startTime = java.lang.System.currentTimeMillis();
         this.endTime = 0;
         this.score = 0;
         this.rank = 0;
@@ -82,7 +83,7 @@ public class PlayerEventParticipation {
 
     public long getDuration() {
         if (endTime == 0) {
-            return System.currentTimeMillis() - startTime;
+            return java.lang.System.currentTimeMillis() - startTime;
         }
         return endTime - startTime;
     }

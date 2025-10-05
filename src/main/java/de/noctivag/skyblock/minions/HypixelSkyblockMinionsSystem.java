@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.minions;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -17,24 +21,25 @@ import net.kyori.adventure.text.Component;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Hypixel Skyblock Minions System - All Hypixel Skyblock Minions
  */
 public class HypixelSkyblockMinionsSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerMinionData> playerMinionData = new ConcurrentHashMap<>();
     private final Map<MinionCategory, List<HypixelMinion>> minionsByCategory = new HashMap<>();
     private final Map<UUID, BukkitTask> minionTasks = new ConcurrentHashMap<>();
     
-    public HypixelSkyblockMinionsSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public HypixelSkyblockMinionsSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeAllMinions();
         startMinionUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeAllMinions() {
@@ -273,7 +278,7 @@ public class HypixelSkyblockMinionsSystem implements Listener {
                     minionData.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L * 60L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L * 60L);
     }
     
     @EventHandler
@@ -294,7 +299,7 @@ public class HypixelSkyblockMinionsSystem implements Listener {
     }
     
     public void openMinionsGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lHypixel Skyblock Minions");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lHypixel Skyblock Minions"));
         
         addGUIItem(gui, 10, Material.STONE, "§7§lMining Minions", "§7View all mining minions");
         addGUIItem(gui, 11, Material.WHEAT, "§a§lFarming Minions", "§7View all farming minions");
@@ -303,7 +308,7 @@ public class HypixelSkyblockMinionsSystem implements Listener {
         addGUIItem(gui, 14, Material.IRON_SWORD, "§c§lCombat Minions", "§7View all combat minions");
         
         player.openInventory(gui);
-        player.sendMessage("§aHypixel Skyblock Minions GUI geöffnet!");
+        player.sendMessage(Component.text("§aHypixel Skyblock Minions GUI geöffnet!"));
     }
     
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String description) {
@@ -404,11 +409,11 @@ public class HypixelSkyblockMinionsSystem implements Listener {
         
         public PlayerMinionData(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void setMinionLevel(String minionId, int level) {

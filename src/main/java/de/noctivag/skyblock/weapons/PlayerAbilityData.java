@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.weapons;
+import java.util.UUID;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,7 +24,7 @@ public class PlayerAbilityData {
         Long cooldownEnd = cooldowns.get(abilityId);
         if (cooldownEnd == null) return false;
         
-        if (System.currentTimeMillis() >= cooldownEnd) {
+        if (java.lang.System.currentTimeMillis() >= cooldownEnd) {
             cooldowns.remove(abilityId);
             return false;
         }
@@ -35,12 +36,12 @@ public class PlayerAbilityData {
         Long cooldownEnd = cooldowns.get(abilityId);
         if (cooldownEnd == null) return 0;
         
-        long remaining = (cooldownEnd - System.currentTimeMillis()) / 1000;
+        long remaining = (cooldownEnd - java.lang.System.currentTimeMillis()) / 1000;
         return Math.max(0, remaining);
     }
     
     public void setCooldown(String abilityId, int seconds) {
-        long cooldownEnd = System.currentTimeMillis() + (seconds * 1000L);
+        long cooldownEnd = java.lang.System.currentTimeMillis() + (seconds * 1000L);
         cooldowns.put(abilityId, cooldownEnd);
     }
     

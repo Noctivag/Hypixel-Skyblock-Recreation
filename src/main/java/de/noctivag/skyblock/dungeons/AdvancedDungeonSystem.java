@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.dungeons;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -17,6 +21,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Advanced Dungeon System - Hypixel Skyblock Style
@@ -24,18 +29,18 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AdvancedDungeonSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerDungeonData> playerDungeonData = new ConcurrentHashMap<>();
     private final Map<UUID, DungeonParty> activeParties = new ConcurrentHashMap<>();
     private final Map<UUID, DungeonInstance> activeInstances = new ConcurrentHashMap<>();
     
-    public AdvancedDungeonSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedDungeonSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
         startDungeonUpdateTask();
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void startDungeonUpdateTask() {
@@ -45,7 +50,7 @@ public class AdvancedDungeonSystem implements Listener {
                 updateActiveInstances();
                 updateActiveParties();
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L);
     }
     
     private void updateActiveInstances() {
@@ -124,7 +129,7 @@ public class AdvancedDungeonSystem implements Listener {
         addGUIItem(gui, 53, Material.ARROW, "§7§lNext Page", "§7Go to next page.");
         
         player.openInventory(gui);
-        player.sendMessage("§aDungeon GUI opened!");
+        player.sendMessage(Component.text("§aDungeon GUI opened!"));
     }
     
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String description) {
@@ -268,7 +273,7 @@ public class AdvancedDungeonSystem implements Listener {
         public DungeonInstance(UUID playerId, DungeonFloor floor) {
             this.playerId = playerId;
             this.floor = floor;
-            this.startTime = System.currentTimeMillis();
+            this.startTime = java.lang.System.currentTimeMillis();
             this.active = true;
         }
         

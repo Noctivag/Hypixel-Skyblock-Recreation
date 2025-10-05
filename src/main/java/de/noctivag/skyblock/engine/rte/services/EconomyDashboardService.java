@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.engine.rte.services;
+import java.util.UUID;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -169,7 +170,7 @@ public class EconomyDashboardService {
                     itemData.getInstantSellPrice(),
                     itemData.getAveragePrice(),
                     itemData.getTotalVolume(),
-                    System.currentTimeMillis()
+                    java.lang.System.currentTimeMillis()
                 );
                 
                 economicMetrics.put(itemId, metric);
@@ -251,7 +252,7 @@ public class EconomyDashboardService {
             type,
             message,
             level,
-            System.currentTimeMillis()
+            java.lang.System.currentTimeMillis()
         );
         
         marketAlerts.put(alertId, alert);

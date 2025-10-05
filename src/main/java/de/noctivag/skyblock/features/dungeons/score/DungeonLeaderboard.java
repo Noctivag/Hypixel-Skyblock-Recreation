@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.dungeons.score;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.features.dungeons.catacombs.DungeonResult;
@@ -30,7 +31,7 @@ public class DungeonLeaderboard {
                 result.getScore(),
                 result.getTimeSpent(),
                 result.getScoreRating(),
-                System.currentTimeMillis()
+                java.lang.System.currentTimeMillis()
             );
             
             // Add to player's scores

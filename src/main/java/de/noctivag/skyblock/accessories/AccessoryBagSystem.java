@@ -1,4 +1,8 @@
 package de.noctivag.skyblock.accessories;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
@@ -11,11 +15,13 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 
 /**
  * AccessoryBagSystem - Hypixel SkyBlock Accessory Bag Implementation
@@ -29,21 +35,21 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AccessoryBagSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, AccessoryBag> playerBags = new ConcurrentHashMap<>();
     private final Map<String, AccessoryConfig> accessoryConfigs = new HashMap<>();
     private final Map<String, List<String>> accessoryLines = new HashMap<>();
     
-    public AccessoryBagSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AccessoryBagSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
         initializeAccessoryConfigs();
         initializeAccessoryLines();
         
         // Register events after initialization is complete - execute directly for Folia compatibility
-        Bukkit.getPluginManager().registerEvents(AccessoryBagSystem.this, plugin);
+        Bukkit.getPluginManager().registerEvents(AccessoryBagSystem.this, SkyblockPlugin);
         startUpdateTask();
     }
     
@@ -194,7 +200,7 @@ public class AccessoryBagSystem implements Listener {
         addGUIItem(gui, 53, Material.NETHER_STAR, "§6§lMagical Power: §e" + calculateMagicalPower(bag.getActiveAccessories()));
         
         player.openInventory(gui);
-        player.sendMessage("§aAccessory Bag opened!");
+        player.sendMessage(Component.text("§aAccessory Bag opened!"));
     }
     
     private void addAccessoryItem(Inventory gui, int slot, AccessoryConfig config) {
@@ -374,7 +380,7 @@ public class AccessoryBagSystem implements Listener {
                     bag.updateEffects();
                 }
             }
-        }.runTaskTimer(plugin, 20L, 20L); // Every second
+        }.runTaskTimer(SkyblockPlugin, 20L, 20L); // Every second
     }
     
     public AccessoryBag getPlayerBag(UUID playerId) {

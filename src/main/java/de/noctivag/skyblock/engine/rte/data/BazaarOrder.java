@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.engine.rte.data;
+import java.util.UUID;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

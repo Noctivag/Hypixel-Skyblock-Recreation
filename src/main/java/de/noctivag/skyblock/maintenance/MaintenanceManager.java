@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.maintenance;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -21,7 +25,7 @@ import java.util.*;
  */
 public class MaintenanceManager {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final BrokenRedirectDetector brokenRedirectDetector;
     private final OrphanedSystemDetector orphanedSystemDetector;
     private final UnusedResourceDetector unusedResourceDetector;
@@ -33,14 +37,14 @@ public class MaintenanceManager {
     private long lastMaintenanceRun = 0;
     private final Map<String, Long> maintenanceHistory = new HashMap<>();
     
-    public MaintenanceManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.brokenRedirectDetector = new BrokenRedirectDetector(plugin);
-        this.orphanedSystemDetector = new OrphanedSystemDetector(plugin);
-        this.unusedResourceDetector = new UnusedResourceDetector(plugin);
-        this.statisticsSystem = new PluginStatisticsSystem(plugin);
-        this.searchSystem = new AdvancedSearchSystem(plugin);
-        this.documentationGenerator = new SystemDocumentationGenerator(plugin);
+    public MaintenanceManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.brokenRedirectDetector = new BrokenRedirectDetector(SkyblockPlugin);
+        this.orphanedSystemDetector = new OrphanedSystemDetector(SkyblockPlugin);
+        this.unusedResourceDetector = new UnusedResourceDetector(SkyblockPlugin);
+        this.statisticsSystem = new PluginStatisticsSystem(SkyblockPlugin);
+        this.searchSystem = new AdvancedSearchSystem(SkyblockPlugin);
+        this.documentationGenerator = new SystemDocumentationGenerator(SkyblockPlugin);
         
         startMaintenanceScheduler();
     }
@@ -53,7 +57,7 @@ public class MaintenanceManager {
         Thread.ofVirtual().start(() -> {
             try {
                 Thread.sleep(20L * 60 * 60 * 6 * 50); // Initial delay: 6 hours = 21,600,000 ms
-                while (plugin.isEnabled()) {
+                while (SkyblockPlugin.isEnabled()) {
                     if (!maintenanceMode) {
                         runScheduledMaintenance();
                     }
@@ -68,7 +72,7 @@ public class MaintenanceManager {
         Thread.ofVirtual().start(() -> {
             try {
                 Thread.sleep(20L * 60 * 60 * 50); // Initial delay: 1 hour = 3,600,000 ms
-                while (plugin.isEnabled()) {
+                while (SkyblockPlugin.isEnabled()) {
                     statisticsSystem.generateAllStatistics();
                     Thread.sleep(20L * 60 * 60 * 50); // Every 1 hour = 3,600,000 ms
                 }
@@ -82,7 +86,7 @@ public class MaintenanceManager {
      * Führt geplante Wartung durch
      */
     public void runScheduledMaintenance() {
-        plugin.getLogger().info("§e[Maintenance] Starting scheduled maintenance...");
+        SkyblockPlugin.getLogger().info("§e[Maintenance] Starting scheduled maintenance...");
         
         // Run all maintenance checks
         brokenRedirectDetector.performFullCheck();
@@ -93,17 +97,17 @@ public class MaintenanceManager {
         statisticsSystem.generateAllStatistics();
         
         // Update maintenance history
-        lastMaintenanceRun = System.currentTimeMillis();
+        lastMaintenanceRun = java.lang.System.currentTimeMillis();
         maintenanceHistory.put("scheduled", lastMaintenanceRun);
         
-        plugin.getLogger().info("§a[Maintenance] Scheduled maintenance completed!");
+        SkyblockPlugin.getLogger().info("§a[Maintenance] Scheduled maintenance completed!");
     }
     
     /**
      * Führt vollständige Wartung durch
      */
     public void runFullMaintenance() {
-        plugin.getLogger().info("§e[Maintenance] Starting full maintenance...");
+        SkyblockPlugin.getLogger().info("§e[Maintenance] Starting full maintenance...");
         
         maintenanceMode = true;
         
@@ -120,10 +124,10 @@ public class MaintenanceManager {
             documentationGenerator.generateAllDocumentation();
             
             // Update maintenance history
-            lastMaintenanceRun = System.currentTimeMillis();
+            lastMaintenanceRun = java.lang.System.currentTimeMillis();
             maintenanceHistory.put("full", lastMaintenanceRun);
             
-            plugin.getLogger().info("§a[Maintenance] Full maintenance completed!");
+            SkyblockPlugin.getLogger().info("§a[Maintenance] Full maintenance completed!");
             
         } finally {
             maintenanceMode = false;
@@ -134,7 +138,7 @@ public class MaintenanceManager {
      * Führt Auto-Fix durch
      */
     public void runAutoFix() {
-        plugin.getLogger().info("§e[Maintenance] Starting auto-fix...");
+        SkyblockPlugin.getLogger().info("§e[Maintenance] Starting auto-fix...");
         
         int totalFixed = 0;
         
@@ -151,69 +155,69 @@ public class MaintenanceManager {
         totalFixed += unusedResourceDetector.getStatistics().get("total");
         
         // Update maintenance history
-        maintenanceHistory.put("auto_fix", System.currentTimeMillis());
+        maintenanceHistory.put("auto_fix", java.lang.System.currentTimeMillis());
         
-        plugin.getLogger().info("§a[Maintenance] Auto-fix completed! Fixed " + totalFixed + " issues.");
+        SkyblockPlugin.getLogger().info("§a[Maintenance] Auto-fix completed! Fixed " + totalFixed + " issues.");
     }
     
     /**
      * Generiert einen Wartungsbericht
      */
     public void generateMaintenanceReport() {
-        plugin.getLogger().info("§6=== MAINTENANCE REPORT ===");
+        SkyblockPlugin.getLogger().info("§6=== MAINTENANCE REPORT ===");
         
         // System status
-        plugin.getLogger().info("§eSystem Status:");
-        plugin.getLogger().info("  §7Maintenance Mode: §a" + (maintenanceMode ? "Active" : "Inactive"));
-        plugin.getLogger().info("  §7Last Maintenance: §a" + formatTimestamp(lastMaintenanceRun));
-        plugin.getLogger().info("  §7Server Uptime: §a" + formatUptime(System.currentTimeMillis() - statisticsSystem.getPerformanceMetrics().get("startup_time")));
+        SkyblockPlugin.getLogger().info("§eSystem Status:");
+        SkyblockPlugin.getLogger().info("  §7Maintenance Mode: §a" + (maintenanceMode ? "Active" : "Inactive"));
+        SkyblockPlugin.getLogger().info("  §7Last Maintenance: §a" + formatTimestamp(lastMaintenanceRun));
+        SkyblockPlugin.getLogger().info("  §7Server Uptime: §a" + formatUptime(java.lang.System.currentTimeMillis() - statisticsSystem.getPerformanceMetrics().get("startup_time")));
         
         // Broken redirects
         Map<String, Integer> brokenRedirects = brokenRedirectDetector.getStatistics();
-        plugin.getLogger().info("§eBroken Redirects:");
-        plugin.getLogger().info("  §7Total Issues: §a" + brokenRedirects.get("total"));
-        plugin.getLogger().info("  §7Command Redirects: §a" + brokenRedirects.get("command_redirects"));
-        plugin.getLogger().info("  §7GUI Links: §a" + brokenRedirects.get("gui_links"));
-        plugin.getLogger().info("  §7Warps: §a" + brokenRedirects.get("warps"));
-        plugin.getLogger().info("  §7Permissions: §a" + brokenRedirects.get("permissions"));
+        SkyblockPlugin.getLogger().info("§eBroken Redirects:");
+        SkyblockPlugin.getLogger().info("  §7Total Issues: §a" + brokenRedirects.get("total"));
+        SkyblockPlugin.getLogger().info("  §7Command Redirects: §a" + brokenRedirects.get("command_redirects"));
+        SkyblockPlugin.getLogger().info("  §7GUI Links: §a" + brokenRedirects.get("gui_links"));
+        SkyblockPlugin.getLogger().info("  §7Warps: §a" + brokenRedirects.get("warps"));
+        SkyblockPlugin.getLogger().info("  §7Permissions: §a" + brokenRedirects.get("permissions"));
         
         // Orphaned systems
         Map<String, Integer> orphanedSystems = orphanedSystemDetector.getStatistics();
-        plugin.getLogger().info("§eOrphaned Systems:");
-        plugin.getLogger().info("  §7Total Items: §a" + orphanedSystems.get("total"));
-        plugin.getLogger().info("  §7Orphaned Systems: §a" + orphanedSystems.get("orphaned_systems"));
-        plugin.getLogger().info("  §7Orphaned Database Entries: §a" + orphanedSystems.get("orphaned_database_entries"));
-        plugin.getLogger().info("  §7Orphaned Commands: §a" + orphanedSystems.get("orphaned_commands"));
-        plugin.getLogger().info("  §7Orphaned Permissions: §a" + orphanedSystems.get("orphaned_permissions"));
-        plugin.getLogger().info("  §7Orphaned Configs: §a" + orphanedSystems.get("orphaned_configs"));
+        SkyblockPlugin.getLogger().info("§eOrphaned Systems:");
+        SkyblockPlugin.getLogger().info("  §7Total Items: §a" + orphanedSystems.get("total"));
+        SkyblockPlugin.getLogger().info("  §7Orphaned Systems: §a" + orphanedSystems.get("orphaned_systems"));
+        SkyblockPlugin.getLogger().info("  §7Orphaned Database Entries: §a" + orphanedSystems.get("orphaned_database_entries"));
+        SkyblockPlugin.getLogger().info("  §7Orphaned Commands: §a" + orphanedSystems.get("orphaned_commands"));
+        SkyblockPlugin.getLogger().info("  §7Orphaned Permissions: §a" + orphanedSystems.get("orphaned_permissions"));
+        SkyblockPlugin.getLogger().info("  §7Orphaned Configs: §a" + orphanedSystems.get("orphaned_configs"));
         
         // Unused resources
         Map<String, Integer> unusedResources = unusedResourceDetector.getStatistics();
-        plugin.getLogger().info("§eUnused Resources:");
-        plugin.getLogger().info("  §7Total Resources: §a" + unusedResources.get("total"));
-        plugin.getLogger().info("  §7Unused Configs: §a" + unusedResources.get("unused_configs"));
-        plugin.getLogger().info("  §7Unused Database Tables: §a" + unusedResources.get("unused_database_tables"));
-        plugin.getLogger().info("  §7Unused Permissions: §a" + unusedResources.get("unused_permissions"));
-        plugin.getLogger().info("  §7Unused Commands: §a" + unusedResources.get("unused_commands"));
-        plugin.getLogger().info("  §7Unused Files: §a" + unusedResources.get("unused_files"));
-        plugin.getLogger().info("  §7Unused Classes: §a" + unusedResources.get("unused_classes"));
+        SkyblockPlugin.getLogger().info("§eUnused Resources:");
+        SkyblockPlugin.getLogger().info("  §7Total Resources: §a" + unusedResources.get("total"));
+        SkyblockPlugin.getLogger().info("  §7Unused Configs: §a" + unusedResources.get("unused_configs"));
+        SkyblockPlugin.getLogger().info("  §7Unused Database Tables: §a" + unusedResources.get("unused_database_tables"));
+        SkyblockPlugin.getLogger().info("  §7Unused Permissions: §a" + unusedResources.get("unused_permissions"));
+        SkyblockPlugin.getLogger().info("  §7Unused Commands: §a" + unusedResources.get("unused_commands"));
+        SkyblockPlugin.getLogger().info("  §7Unused Files: §a" + unusedResources.get("unused_files"));
+        SkyblockPlugin.getLogger().info("  §7Unused Classes: §a" + unusedResources.get("unused_classes"));
         
         // Statistics
         Map<String, Object> stats = statisticsSystem.getAllStatistics();
-        plugin.getLogger().info("§eSystem Statistics:");
-        plugin.getLogger().info("  §7Online Players: §a" + stats.get("online_players"));
-        plugin.getLogger().info("  §7Total Players: §a" + stats.get("total_players"));
-        plugin.getLogger().info("  §7Memory Usage: §a" + String.format("%.1f", stats.get("memory_usage_percent")) + "%");
-        plugin.getLogger().info("  §7TPS: §a" + statisticsSystem.getPerformanceMetrics().get("tps"));
+        SkyblockPlugin.getLogger().info("§eSystem Statistics:");
+        SkyblockPlugin.getLogger().info("  §7Online Players: §a" + stats.get("online_players"));
+        SkyblockPlugin.getLogger().info("  §7Total Players: §a" + stats.get("total_players"));
+        SkyblockPlugin.getLogger().info("  §7Memory Usage: §a" + String.format("%.1f", stats.get("memory_usage_percent")) + "%");
+        SkyblockPlugin.getLogger().info("  §7TPS: §a" + statisticsSystem.getPerformanceMetrics().get("tps"));
         
         // Search index
         Map<String, Integer> searchStats = searchSystem.getIndexStatistics();
-        plugin.getLogger().info("§eSearch Index:");
-        plugin.getLogger().info("  §7Total Entries: §a" + searchStats.get("total_entries"));
-        plugin.getLogger().info("  §7Categories: §a" + searchStats.get("total_categories"));
-        plugin.getLogger().info("  §7Tags: §a" + searchStats.get("total_tags"));
+        SkyblockPlugin.getLogger().info("§eSearch Index:");
+        SkyblockPlugin.getLogger().info("  §7Total Entries: §a" + searchStats.get("total_entries"));
+        SkyblockPlugin.getLogger().info("  §7Categories: §a" + searchStats.get("total_categories"));
+        SkyblockPlugin.getLogger().info("  §7Tags: §a" + searchStats.get("total_tags"));
         
-        plugin.getLogger().info("§6==========================");
+        SkyblockPlugin.getLogger().info("§6==========================");
     }
     
     /**
@@ -222,14 +226,14 @@ public class MaintenanceManager {
     public void openMaintenanceGUI(Player player) {
         // This would open a GUI with all maintenance tools
         // For now, we'll just send a message
-        player.sendMessage("§6§lMaintenance Manager");
-        player.sendMessage("§7Available Tools:");
-        player.sendMessage("§e• Broken Redirect Detector");
-        player.sendMessage("§e• Orphaned System Detector");
-        player.sendMessage("§e• Unused Resource Detector");
-        player.sendMessage("§e• Plugin Statistics System");
-        player.sendMessage("§e• Advanced Search System");
-        player.sendMessage("§e• System Documentation Generator");
+        player.sendMessage(Component.text("§6§lMaintenance Manager"));
+        player.sendMessage(Component.text("§7Available Tools:"));
+        player.sendMessage(Component.text("§e• Broken Redirect Detector"));
+        player.sendMessage(Component.text("§e• Orphaned System Detector"));
+        player.sendMessage(Component.text("§e• Unused Resource Detector"));
+        player.sendMessage(Component.text("§e• SkyblockPlugin Statistics System"));
+        player.sendMessage(Component.text("§e• Advanced Search System"));
+        player.sendMessage(Component.text("§e• System Documentation Generator"));
     }
     
     /**
@@ -282,7 +286,7 @@ public class MaintenanceManager {
         ItemMeta meta = item.getItemMeta();
         
         if (meta != null) {
-            meta.setDisplayName("§6§lMaintenance Manager");
+            meta.displayName(Component.text("§6§lMaintenance Manager"));
             
             List<String> lore = new ArrayList<>();
             lore.add("§7Maintenance Status: §a" + (maintenanceMode ? "Active" : "Inactive"));
@@ -292,14 +296,14 @@ public class MaintenanceManager {
             lore.add("§e• Broken Redirect Detector");
             lore.add("§e• Orphaned System Detector");
             lore.add("§e• Unused Resource Detector");
-            lore.add("§e• Plugin Statistics System");
+            lore.add("§e• SkyblockPlugin Statistics System");
             lore.add("§e• Advanced Search System");
             lore.add("§e• System Documentation Generator");
             lore.add("");
             lore.add("§eClick to open maintenance GUI");
             lore.add("§eRight-click to run full maintenance");
             
-            meta.setLore(lore);
+            meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         
@@ -314,7 +318,7 @@ public class MaintenanceManager {
             return "Never";
         }
         
-        long diff = System.currentTimeMillis() - timestamp;
+        long diff = java.lang.System.currentTimeMillis() - timestamp;
         if (diff < 60000) { // Less than 1 minute
             return "Just now";
         } else if (diff < 3600000) { // Less than 1 hour

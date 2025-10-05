@@ -1,6 +1,7 @@
 package de.noctivag.skyblock.engine.collections.types;
 
 import java.util.Arrays;
+import de.noctivag.skyblock.engine.collections.CollectionRewardType;
 
 /**
  * Collection Milestone

@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.engine.progression;
+import java.util.UUID;
 
 import de.noctivag.skyblock.engine.progression.types.HypixelSkillType;
 import de.noctivag.skyblock.engine.progression.types.SkillLevelData;
@@ -36,7 +37,7 @@ public class HypixelPlayerSkills {
         for (HypixelSkillType skillType : HypixelSkillType.values()) {
             skills.put(skillType, new SkillProgress(skillType, 0.0));
             totalExperience.put(skillType, 0.0);
-            lastActivity.put(skillType, System.currentTimeMillis());
+            lastActivity.put(skillType, java.lang.System.currentTimeMillis());
         }
     }
     
@@ -58,7 +59,7 @@ public class HypixelPlayerSkills {
         // Add experience
         progress.addExperience(adjustedExperience);
         totalExperience.put(skillType, totalExperience.get(skillType) + adjustedExperience);
-        lastActivity.put(skillType, System.currentTimeMillis());
+        lastActivity.put(skillType, java.lang.System.currentTimeMillis());
         
         return true;
     }
@@ -214,7 +215,9 @@ public class HypixelPlayerSkills {
      * Get skill statistics
      */
     public SkillStatistics getSkillStatistics() {
-        return new SkillStatistics(this);
+        // Create a general skill statistics object
+        // This would need to be expanded to include all skill data
+        return new SkillStatistics("Overall", getTotalSkillLevel(), getTotalExperience());
     }
     
     /**

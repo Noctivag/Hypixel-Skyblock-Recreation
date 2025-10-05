@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.performance;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 
 import java.sql.Connection;
@@ -23,16 +27,16 @@ import java.util.logging.Level;
  * - Performance monitoring
  */
 public class AsyncDatabaseManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultithreadingManager multithreadingManager;
     private final MultiServerDatabaseManager databaseManager;
     
     // Connection pool for async operations
     private final ConcurrentHashMap<String, Connection> connectionPool = new ConcurrentHashMap<>();
     
-    public AsyncDatabaseManager(SkyblockPlugin plugin, MultithreadingManager multithreadingManager, 
+    public AsyncDatabaseManager(SkyblockPlugin SkyblockPlugin, MultithreadingManager multithreadingManager, 
                                MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.multithreadingManager = multithreadingManager;
         this.databaseManager = databaseManager;
     }
@@ -51,7 +55,7 @@ public class AsyncDatabaseManager {
                 }
                 return statement.executeUpdate();
             } catch (SQLException e) {
-                plugin.getLogger().log(Level.SEVERE, "Async database update failed", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Async database update failed", e);
                 throw new RuntimeException(e);
             }
         });
@@ -72,7 +76,7 @@ public class AsyncDatabaseManager {
                 }
                 return statement.executeQuery();
             } catch (SQLException e) {
-                plugin.getLogger().log(Level.SEVERE, "Async database query failed", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Async database query failed", e);
                 throw new RuntimeException(e);
             }
         });
@@ -95,7 +99,7 @@ public class AsyncDatabaseManager {
                 }
                 return statement.executeBatch();
             } catch (SQLException e) {
-                plugin.getLogger().log(Level.SEVERE, "Async batch update failed", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Async batch update failed", e);
                 throw new RuntimeException(e);
             }
         });
@@ -115,7 +119,7 @@ public class AsyncDatabaseManager {
                 int rowsAffected = executeUpdateAsync(sql, uuid, name, coins, level, experience).get();
                 return rowsAffected > 0;
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to save player data async", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to save player data async", e);
                 return false;
             }
         });
@@ -140,7 +144,7 @@ public class AsyncDatabaseManager {
                     );
                 }
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to load player data async", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to load player data async", e);
             }
             
             return null;
@@ -166,7 +170,7 @@ public class AsyncDatabaseManager {
             try {
                 return executeBatchUpdateAsync(sql, batchParams).get();
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to batch save player data async", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to batch save player data async", e);
                 throw new RuntimeException(e);
             }
         });
@@ -180,7 +184,7 @@ public class AsyncDatabaseManager {
             try {
                 return databaseManager.getConnection().get();
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to get database connection", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to get database connection", e);
                 throw new RuntimeException(e);
             }
         });
@@ -196,7 +200,7 @@ public class AsyncDatabaseManager {
                     connection.close();
                 }
             } catch (SQLException e) {
-                plugin.getLogger().log(Level.WARNING, "Failed to close database connection", e);
+                SkyblockPlugin.getLogger().log(Level.WARNING, "Failed to close database connection", e);
             }
         }
         connectionPool.clear();

@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.collections;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -14,6 +17,7 @@ import net.kyori.adventure.text.Component;
 
 import java.util.*;
 import de.noctivag.skyblock.collections.PlayerCollections;
+import java.util.stream.Collectors;
 
 
 // Collection Reward Class
@@ -45,17 +49,17 @@ class CollectionReward {
  */
 public class CollectionsGUI implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CollectionsSystem collectionsSystem;
     
-    public CollectionsGUI(SkyblockPlugin plugin, CollectionsSystem collectionsSystem) {
-        this.plugin = plugin;
+    public CollectionsGUI(SkyblockPlugin SkyblockPlugin, CollectionsSystem collectionsSystem) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.collectionsSystem = collectionsSystem;
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
-    public Plugin getPlugin() { return plugin; }
+    public SkyblockPlugin getPlugin() { return SkyblockPlugin; }
     
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
@@ -112,7 +116,7 @@ public class CollectionsGUI implements Listener {
         addGUIItem(gui, 53, Material.BOOK, "§b§lStatistics", "§7View collection statistics.");
         
         player.openInventory(gui);
-        player.sendMessage("§aCollections GUI geöffnet!");
+        player.sendMessage(Component.text("§aCollections GUI geöffnet!"));
     }
     
     public void openCategoryGUI(Player player, String category) {
@@ -266,7 +270,7 @@ public class CollectionsGUI implements Listener {
     }
     
     private void addCollectionItem(Inventory gui, int slot, CollectionsSystem.CollectionType collectionType, Player player) {
-        CollectionsSystem.CollectionConfig config = ((de.noctivag.plugin.collections.CollectionsSystem) plugin.getCollectionsSystem()).getCollectionConfig(collectionType);
+        CollectionsSystem.CollectionConfig config = ((de.noctivag.skyblock.collections.CollectionsSystem) SkyblockPlugin.getCollectionsSystem()).getCollectionConfig(collectionType);
         if (config == null) return;
         
         ItemStack item = new ItemStack(config.getMaterial());

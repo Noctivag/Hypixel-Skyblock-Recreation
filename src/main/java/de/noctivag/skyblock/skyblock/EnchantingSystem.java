@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.skyblock;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -11,18 +16,18 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.*;
 
 public class EnchantingSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, Map<CustomEnchantment, Integer>> playerEnchantments = new HashMap<>();
     private final Map<UUID, Integer> playerEnchantingLevel = new HashMap<>();
     
-    public EnchantingSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public EnchantingSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         initializeEnchantingData();
     }
     
     private void initializeEnchantingData() {
         // Initialize enchanting data for all players
-        for (Player player : plugin.getServer().getOnlinePlayers()) {
+        for (Player player : SkyblockPlugin.getServer().getOnlinePlayers()) {
             initializePlayerEnchantingData(player.getUniqueId());
         }
     }
@@ -46,7 +51,7 @@ public class EnchantingSystem {
         
         if (newLevel > currentLevel) {
             playerEnchantingLevel.put(playerId, newLevel);
-            player.sendMessage("§a§lENCHANTING LEVEL UP!");
+            player.sendMessage(Component.text("§a§lENCHANTING LEVEL UP!"));
             player.sendMessage("§7Enchanting Level: §e" + currentLevel + " §7→ §a" + newLevel);
             
             // Give level up rewards
@@ -63,7 +68,7 @@ public class EnchantingSystem {
     private void giveEnchantingLevelRewards(Player player, int level) {
         // Give rewards based on enchanting level
         if (level % 5 == 0) {
-            plugin.getEconomyManager().giveMoney(player, level * 50);
+            SkyblockPlugin.getEconomyManager().giveMoney(player, level * 50);
             player.getInventory().addItem(new ItemStack(Material.EXPERIENCE_BOTTLE, level));
         }
     }
@@ -83,20 +88,20 @@ public class EnchantingSystem {
         
         // Check if player has enough coins
         double cost = enchantment.getCost() * level;
-        if (!plugin.getEconomyManager().hasBalance(player, cost)) {
-            player.sendMessage("§cYou don't have enough coins! Cost: " + plugin.getEconomyManager().formatMoney(cost));
+        if (!SkyblockPlugin.getEconomyManager().hasBalance(player, cost)) {
+            player.sendMessage("§cYou don't have enough coins! Cost: " + SkyblockPlugin.getEconomyManager().formatMoney(cost));
             return;
         }
         
         // Apply enchantment
-        if (!plugin.getEconomyManager().withdrawMoney(player, cost)) {
+        if (!SkyblockPlugin.getEconomyManager().withdrawMoney(player, cost)) {
             return;
         }
         applyCustomEnchantment(item, enchantment, level);
         
-        player.sendMessage("§a§lITEM ENCHANTED!");
+        player.sendMessage(Component.text("§a§lITEM ENCHANTED!"));
         player.sendMessage("§7Enchantment: §e" + enchantment.getName() + " " + level);
-        player.sendMessage("§7Cost: §6" + plugin.getEconomyManager().formatMoney(cost));
+        player.sendMessage("§7Cost: §6" + SkyblockPlugin.getEconomyManager().formatMoney(cost));
     }
     
     private void applyCustomEnchantment(ItemStack item, CustomEnchantment enchantment, int level) {

@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.economy;
+
+import java.util.UUID;
+import net.kyori.adventure.text.Component;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.entity.Player;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -13,24 +18,25 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import net.kyori.adventure.text.Component;
 
 @SuppressWarnings("unused")
 public class EconomyManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, Double> balances = new HashMap<>();
     private final File file;
     private FileConfiguration config;
     private final DecimalFormat df = new DecimalFormat("#,##0.00");
 
-    public EconomyManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.file = new File(plugin.getDataFolder(), "economy.yml");
+    public EconomyManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.file = new File(SkyblockPlugin.getDataFolder(), "economy.yml");
         loadBalances();
     }
 
     private void loadBalances() {
         if (!file.exists()) {
-            plugin.saveResource("economy.yml", false);
+            SkyblockPlugin.saveResource("economy.yml", false);
         }
         config = YamlConfiguration.loadConfiguration(file);
         if (config.contains("balances")) {
@@ -40,7 +46,7 @@ public class EconomyManager {
                     double bal = config.getDouble("balances." + key, 0.0);
                     balances.put(uuid, bal);
                 } catch (IllegalArgumentException e) {
-                    plugin.getLogger().warning("Ungültige UUID in economy.yml: " + key);
+                    SkyblockPlugin.getLogger().warning("Ungültige UUID in economy.yml: " + key);
                 }
             }
         }
@@ -54,7 +60,7 @@ public class EconomyManager {
         try {
             config.save(file);
         } catch (IOException ex) {
-            plugin.getLogger().severe("Konnte economy.yml nicht speichern: " + ex.getMessage());
+            SkyblockPlugin.getLogger().severe("Konnte economy.yml nicht speichern: " + ex.getMessage());
         }
     }
 
@@ -70,7 +76,7 @@ public class EconomyManager {
 
         // Notify player
         // TODO: Implement proper MessageManager interface
-        // player.sendMessage(((MessageManager) plugin.getMessageManager()).getMessage("economy.balance", formatMoney(amount)));
+        // player.sendMessage(((MessageManager) SkyblockPlugin.getMessageManager()).getMessage("economy.balance", formatMoney(amount)));
         player.sendMessage("§7Balance: " + formatMoney(amount));
     }
 
@@ -84,8 +90,8 @@ public class EconomyManager {
 
     public boolean hasCostExemption(Player player) {
         // TODO: Implement proper RankManager and ConfigManager interfaces
-        // String rank = ((RankManager) plugin.getRankManager()).getPlayerRank(player);
-        // return ((ConfigManager) plugin.getConfigManager()).getConfig().getStringList("economy.exempt-ranks").contains(rank);
+        // String rank = ((RankManager) SkyblockPlugin.getRankManager()).getPlayerRank(player);
+        // return ((ConfigManager) SkyblockPlugin.getConfigManager()).getConfig().getStringList("economy.exempt-ranks").contains(rank);
         return false; // Placeholder - no exemption
     }
 
@@ -93,20 +99,20 @@ public class EconomyManager {
     public boolean withdrawMoney(Player player, double amount) {
         if (amount <= 0) {
             // TODO: Implement proper MessageManager interface
-            // player.sendMessage(((MessageManager) plugin.getMessageManager()).getMessage("economy.invalid-amount"));
-            player.sendMessage("§cInvalid amount!");
+            // player.sendMessage(((MessageManager) SkyblockPlugin.getMessageManager()).getMessage("economy.invalid-amount"));
+            player.sendMessage(Component.text("§cInvalid amount!"));
             return false;
         }
         
         // Check for rank-based exemption
         if (hasCostExemption(player)) {
-            player.sendMessage("§a§lVIP §7Du hast keine Kosten aufgrund deines Rangs!");
+            player.sendMessage(Component.text("§a§lVIP §7Du hast keine Kosten aufgrund deines Rangs!"));
             return true;
         }
 
         if (!hasBalance(player, amount)) {
             // TODO: Implement proper MessageManager interface
-            // player.sendMessage(((MessageManager) plugin.getMessageManager()).getMessage("economy.not-enough", formatMoney(amount)));
+            // player.sendMessage(((MessageManager) SkyblockPlugin.getMessageManager()).getMessage("economy.not-enough", formatMoney(amount)));
             player.sendMessage("§cNot enough money! Need: " + formatMoney(amount));
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
             return false;
@@ -117,13 +123,13 @@ public class EconomyManager {
 
         // Log to DB if available
         try {
-            if (plugin.getDatabaseManager() != null && plugin.getDatabaseManager().isConnected()) {
-                plugin.getDatabaseManager().saveEconomyTransaction(player.getUniqueId().toString(), "withdraw", amount, newBalance, "Internal withdrawal");
+            if (SkyblockPlugin.getDatabaseManager() != null && SkyblockPlugin.getDatabaseManager().isConnected()) {
+                SkyblockPlugin.getDatabaseManager().saveEconomyTransaction(player.getUniqueId().toString(), "withdraw", amount, newBalance, "Internal withdrawal");
             }
         } catch (Exception ignored) {}
 
         // TODO: Implement proper MessageManager interface
-        // player.sendMessage(((MessageManager) plugin.getMessageManager()).getMessage("economy.transaction.success", formatMoney(newBalance)));
+        // player.sendMessage(((MessageManager) SkyblockPlugin.getMessageManager()).getMessage("economy.transaction.success", formatMoney(newBalance)));
         player.sendMessage("§aTransaction successful! New balance: " + formatMoney(newBalance));
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
         return true; // Explicitly return true to indicate success
@@ -136,13 +142,13 @@ public class EconomyManager {
 
         // Log to DB if available
         try {
-            if (plugin.getDatabaseManager() != null && plugin.getDatabaseManager().isConnected()) {
-                plugin.getDatabaseManager().saveEconomyTransaction(player.getUniqueId().toString(), "deposit", amount, newBalance, "Internal deposit");
+            if (SkyblockPlugin.getDatabaseManager() != null && SkyblockPlugin.getDatabaseManager().isConnected()) {
+                SkyblockPlugin.getDatabaseManager().saveEconomyTransaction(player.getUniqueId().toString(), "deposit", amount, newBalance, "Internal deposit");
             }
         } catch (Exception ignored) {}
 
         // TODO: Implement proper MessageManager interface
-        // player.sendMessage(((MessageManager) plugin.getMessageManager()).getMessage("economy.transaction.success", formatMoney(newBalance)));
+        // player.sendMessage(((MessageManager) SkyblockPlugin.getMessageManager()).getMessage("economy.transaction.success", formatMoney(newBalance)));
         player.sendMessage("§aTransaction successful! New balance: " + formatMoney(newBalance));
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
     }
@@ -150,14 +156,14 @@ public class EconomyManager {
     public void createAccount(Player player) {
         if (!balances.containsKey(player.getUniqueId())) {
             // TODO: Implement proper ConfigManager interface
-            // double startingBalance = ((ConfigManager) plugin.getConfigManager()).getConfig().getDouble("economy.starting-balance", 100.0);
+            // double startingBalance = ((ConfigManager) SkyblockPlugin.getConfigManager()).getConfig().getDouble("economy.starting-balance", 100.0);
             double startingBalance = 100.0; // Default starting balance
             setBalance(player, startingBalance);
 
             // Send first join message with starting balance
             if (!player.hasPlayedBefore()) {
                 // TODO: Implement proper MessageManager interface
-                // player.sendMessage(((MessageManager) plugin.getMessageManager()).getMessage("economy.first-join", formatMoney(startingBalance)));
+                // player.sendMessage(((MessageManager) SkyblockPlugin.getMessageManager()).getMessage("economy.first-join", formatMoney(startingBalance)));
                 player.sendMessage("§aWelcome! Starting balance: " + formatMoney(startingBalance));
                 player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
             }
@@ -171,7 +177,7 @@ public class EconomyManager {
     public String getCurrencyName() {
         try {
             // TODO: Implement proper ConfigManager interface
-            // return ((ConfigManager) plugin.getConfigManager()).getConfig().getString("economy.currency.name", "Coins");
+            // return ((ConfigManager) SkyblockPlugin.getConfigManager()).getConfig().getString("economy.currency.name", "Coins");
             return "Coins"; // Default currency name
         } catch (Exception e) {
             return "Coins";
@@ -198,7 +204,7 @@ public class EconomyManager {
      */
     public void resetBalance(Player player) {
         // TODO: Implement proper ConfigManager interface
-        // double startingBalance = ((ConfigManager) plugin.getConfigManager()).getConfig().getDouble("economy.starting-balance", 100.0);
+        // double startingBalance = ((ConfigManager) SkyblockPlugin.getConfigManager()).getConfig().getDouble("economy.starting-balance", 100.0);
         double startingBalance = 100.0; // Default starting balance
         setBalance(player, startingBalance);
     }

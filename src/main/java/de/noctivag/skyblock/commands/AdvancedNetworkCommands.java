@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.commands;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.network.AdvancedNetworkManager;
 import de.noctivag.skyblock.network.NetworkArchitecture;
 import org.bukkit.Bukkit;
@@ -29,11 +32,11 @@ import java.util.concurrent.CompletableFuture;
  */
 public class AdvancedNetworkCommands implements CommandExecutor, TabCompleter {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final AdvancedNetworkManager networkManager;
     
-    public AdvancedNetworkCommands(SkyblockPlugin plugin, AdvancedNetworkManager networkManager) {
-        this.plugin = plugin;
+    public AdvancedNetworkCommands(SkyblockPlugin SkyblockPlugin, AdvancedNetworkManager networkManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.networkManager = networkManager;
     }
     
@@ -140,7 +143,7 @@ public class AdvancedNetworkCommands implements CommandExecutor, TabCompleter {
             return;
         }
         
-        Map<String, de.noctivag.plugin.network.ServerCommunicationManager.ServerInfo> servers = 
+        Map<String, de.noctivag.skyblock.network.ServerCommunicationManager.ServerInfo> servers = 
             networkManager.getCommunicationManager().getConnectedServers();
         
         if (servers.isEmpty()) {
@@ -148,7 +151,7 @@ public class AdvancedNetworkCommands implements CommandExecutor, TabCompleter {
             return;
         }
         
-        for (de.noctivag.plugin.network.ServerCommunicationManager.ServerInfo server : servers.values()) {
+        for (de.noctivag.skyblock.network.ServerCommunicationManager.ServerInfo server : servers.values()) {
             String status = server.isOnline() ? "§aOnline" : "§cOffline";
             String health = String.format("%.1f%%", server.getHealth() * 100);
             String load = String.format("%.1f%%", server.getLoad() * 100);
@@ -223,7 +226,7 @@ public class AdvancedNetworkCommands implements CommandExecutor, TabCompleter {
             return;
         }
         
-        Map<String, de.noctivag.plugin.network.ServerMonitoringSystem.ServerMetrics> metrics = 
+        Map<String, de.noctivag.skyblock.network.ServerMonitoringSystem.ServerMetrics> metrics = 
             networkManager.getServerMetrics();
         
         if (metrics.isEmpty()) {
@@ -231,9 +234,9 @@ public class AdvancedNetworkCommands implements CommandExecutor, TabCompleter {
             return;
         }
         
-        for (Map.Entry<String, de.noctivag.plugin.network.ServerMonitoringSystem.ServerMetrics> entry : metrics.entrySet()) {
+        for (Map.Entry<String, de.noctivag.skyblock.network.ServerMonitoringSystem.ServerMetrics> entry : metrics.entrySet()) {
             String serverId = entry.getKey();
-            de.noctivag.plugin.network.ServerMonitoringSystem.ServerMetrics serverMetrics = entry.getValue();
+            de.noctivag.skyblock.network.ServerMonitoringSystem.ServerMetrics serverMetrics = entry.getValue();
             
             sender.sendMessage(Component.text("§e§l" + serverId + ":"));
             sender.sendMessage(Component.text("§7- Players: §e" + serverMetrics.getCurrentPlayerCount()));
@@ -255,7 +258,7 @@ public class AdvancedNetworkCommands implements CommandExecutor, TabCompleter {
             return;
         }
         
-        Map<String, de.noctivag.plugin.network.ServerMonitoringSystem.Alert> alerts = 
+        Map<String, de.noctivag.skyblock.network.ServerMonitoringSystem.Alert> alerts = 
             networkManager.getActiveAlerts();
         
         if (alerts.isEmpty()) {
@@ -263,8 +266,8 @@ public class AdvancedNetworkCommands implements CommandExecutor, TabCompleter {
             return;
         }
         
-        for (de.noctivag.plugin.network.ServerMonitoringSystem.Alert alert : alerts.values()) {
-            long timeAgo = (System.currentTimeMillis() - alert.getTimestamp()) / 1000;
+        for (de.noctivag.skyblock.network.ServerMonitoringSystem.Alert alert : alerts.values()) {
+            long timeAgo = (java.lang.System.currentTimeMillis() - alert.getTimestamp()) / 1000;
             sender.sendMessage(Component.text("§c§l" + alert.getType().name() + " §7- " + alert.getServerId()));
             sender.sendMessage(Component.text("§7Message: §e" + alert.getMessage()));
             sender.sendMessage(Component.text("§7Time: §e" + timeAgo + " seconds ago"));
@@ -281,7 +284,7 @@ public class AdvancedNetworkCommands implements CommandExecutor, TabCompleter {
         }
         
         // Load Balancing Statistiken
-        de.noctivag.plugin.network.ServerLoadBalancer.LoadBalancingStatistics lbStats = 
+        de.noctivag.skyblock.network.ServerLoadBalancer.LoadBalancingStatistics lbStats = 
             networkManager.getLoadBalancingStatistics();
         
         sender.sendMessage(Component.text("§e§lLoad Balancing:"));
@@ -301,7 +304,7 @@ public class AdvancedNetworkCommands implements CommandExecutor, TabCompleter {
         }
         
         // Transfer Statistiken
-        de.noctivag.plugin.network.AdvancedPlayerTransferSystem.TransferStatistics transferStats = 
+        de.noctivag.skyblock.network.AdvancedPlayerTransferSystem.TransferStatistics transferStats = 
             networkManager.getTransferStatistics();
         
         sender.sendMessage(Component.text(""));

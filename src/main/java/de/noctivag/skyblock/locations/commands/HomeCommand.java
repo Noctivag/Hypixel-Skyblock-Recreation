@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.locations.commands;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.locations.Home;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -9,10 +13,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class HomeCommand implements CommandExecutor {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public HomeCommand(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public HomeCommand(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     @Override
@@ -26,9 +30,9 @@ public class HomeCommand implements CommandExecutor {
 
         if (args.length == 0) {
             // Liste alle Homes auf
-            java.util.Set<String> homes = plugin.getLocationManager().getHomeNames(player);
+            java.util.Set<String> homes = SkyblockPlugin.getLocationManager().getHomeNames(player);
             if (homes.isEmpty()) {
-                player.sendMessage("§cDu hast noch keine Homes gesetzt!");
+                player.sendMessage(Component.text("§cDu hast noch keine Homes gesetzt!"));
             } else {
                 player.sendMessage("§7Deine Homes: §e" + String.join("§7, §e", homes));
             }
@@ -36,7 +40,7 @@ public class HomeCommand implements CommandExecutor {
         }
 
         String homeName = args[0].toLowerCase();
-        de.noctivag.plugin.locations.Home home = plugin.getLocationManager().getHome(player, homeName);
+        de.noctivag.skyblock.locations.Home home = SkyblockPlugin.getLocationManager().getHome(player, homeName);
 
         if (home == null) {
             player.sendMessage("§cDas Home §e" + homeName + " §cexistiert nicht!");

@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.items;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,6 +12,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 
 /**
  * CompleteItemGUI - GUI for browsing all Hypixel SkyBlock items and tools
@@ -21,19 +26,19 @@ import java.util.Arrays;
  * - Rarity information
  */
 public class CompleteItemGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final ItemAbilitySystem abilitySystem;
     
-    public CompleteItemGUI(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.abilitySystem = new ItemAbilitySystem(plugin);
+    public CompleteItemGUI(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.abilitySystem = new ItemAbilitySystem(SkyblockPlugin);
     }
     
     /**
      * Open main item GUI
      */
     public void openItemGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lHypixel SkyBlock Items & Tools");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lHypixel SkyBlock Items & Tools"));
         
         // Category buttons
         setItem(gui, 10, Material.DRAGON_EGG, "§6§lDragon Weapons", 
@@ -110,7 +115,7 @@ public class CompleteItemGUI {
      * Open dragon weapons GUI
      */
     public void openDragonWeaponsGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lDragon Weapons");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lDragon Weapons"));
         
         // Dragon weapons
         setItem(gui, 10, Material.DIAMOND_SWORD, "§6§lAspect of the Dragons", 
@@ -166,7 +171,7 @@ public class CompleteItemGUI {
      * Open dungeon weapons GUI
      */
     public void openDungeonWeaponsGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§8§lDungeon Weapons");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§8§lDungeon Weapons"));
         
         // Dungeon weapons
         setItem(gui, 10, Material.DIAMOND_SWORD, "§d§lHyperion", 
@@ -278,7 +283,7 @@ public class CompleteItemGUI {
      * Open mining tools GUI
      */
     public void openMiningToolsGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§e§lMining Tools");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§e§lMining Tools"));
         
         // Mining tools
         setItem(gui, 10, Material.DIAMOND_PICKAXE, "§b§lDiamond Pickaxe", 

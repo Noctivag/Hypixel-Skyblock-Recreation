@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.engine.progression;
+import java.util.UUID;
 
 import de.noctivag.skyblock.core.api.Service;
 import de.noctivag.skyblock.core.api.SystemStatus;
@@ -155,7 +156,9 @@ public class HypixelSkillSystem implements Service {
      */
     public SkillStatistics getSkillStatistics(UUID playerId) {
         HypixelPlayerSkills skills = getPlayerSkills(playerId);
-        return new SkillStatistics(skills);
+        // Create a general skill statistics object
+        // This would need to be expanded to include all skill data
+        return new SkillStatistics("Overall", skills.getTotalSkillLevel(), skills.getTotalExperience());
     }
     
     /**

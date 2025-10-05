@@ -1,4 +1,9 @@
 package de.noctivag.skyblock.engine;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
@@ -32,7 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class StatEngineIntegration implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final StatCalculationService statCalculationService;
     private final ReforgeMatrixManager reforgeMatrixManager;
@@ -43,20 +48,20 @@ public class StatEngineIntegration implements Listener {
     private final Map<UUID, StatCalculationService.PlayerStatProfile> playerStatProfiles = new ConcurrentHashMap<>();
     private final Map<UUID, StatAggregationPipeline.PlayerStatAggregation> playerAggregations = new ConcurrentHashMap<>();
     
-    public StatEngineIntegration(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public StatEngineIntegration(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
         // Initialize all components
-        this.statCalculationService = new StatCalculationService(plugin, databaseManager);
-        this.reforgeMatrixManager = new ReforgeMatrixManager(plugin);
-        this.accessoryManager = new AccessoryManager(plugin, databaseManager);
-        this.damageCalculator = new PreciseDamageCalculator(plugin, statCalculationService);
-        this.aggregationPipeline = new StatAggregationPipeline(plugin, databaseManager, 
+        this.statCalculationService = new StatCalculationService(SkyblockPlugin, databaseManager);
+        this.reforgeMatrixManager = new ReforgeMatrixManager(SkyblockPlugin);
+        this.accessoryManager = new AccessoryManager(SkyblockPlugin, databaseManager);
+        this.damageCalculator = new PreciseDamageCalculator(SkyblockPlugin, statCalculationService);
+        this.aggregationPipeline = new StatAggregationPipeline(SkyblockPlugin, databaseManager, 
                                                               statCalculationService, reforgeMatrixManager, accessoryManager);
         
         // Register events
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
         
         // Start update task
         startStatUpdateTask();
@@ -156,7 +161,7 @@ public class StatEngineIntegration implements Listener {
                     }
                 }
             }
-        }.runTaskTimer(plugin, 0L, 100L); // Every 5 seconds
+        }.runTaskTimer(SkyblockPlugin, 0L, 100L); // Every 5 seconds
     }
     
     /**
@@ -217,7 +222,7 @@ public class StatEngineIntegration implements Listener {
         
         // Send detailed breakdown if player has permission
         if (player.hasPermission("skyblock.stats.detailed")) {
-            player.sendMessage("§7Damage Breakdown:");
+            player.sendMessage(Component.text("§7Damage Breakdown:"));
             player.sendMessage("§7  Weapon: " + String.format("%.1f", damageResult.getWeaponDamage()));
             player.sendMessage("§7  Strength: " + String.format("%.2f", damageResult.getStrengthMultiplier()) + "x");
             if (damageResult.isCritical()) {

@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.banking;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -39,7 +40,7 @@ public class PlayerBanking {
         this.bankingLevel = 1;
         this.bankingXP = 0.0;
         this.totalXP = 0.0;
-        this.lastActivity = System.currentTimeMillis();
+        this.lastActivity = java.lang.System.currentTimeMillis();
         
         // Initialize statistics
         this.transactions = 0;
@@ -58,7 +59,7 @@ public class PlayerBanking {
     public void addXP(double xpAmount) {
         this.bankingXP += xpAmount;
         this.totalXP += xpAmount;
-        this.lastActivity = System.currentTimeMillis();
+        this.lastActivity = java.lang.System.currentTimeMillis();
         
         // Check for level up
         int newLevel = calculateLevel(bankingXP);
@@ -245,7 +246,7 @@ public class PlayerBanking {
         this.bankingLevel = 1;
         this.bankingXP = 0.0;
         this.totalXP = 0.0;
-        this.lastActivity = System.currentTimeMillis();
+        this.lastActivity = java.lang.System.currentTimeMillis();
         
         this.transactions = 0;
         this.totalDeposited = 0.0;

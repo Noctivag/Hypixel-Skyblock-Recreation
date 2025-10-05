@@ -1,8 +1,11 @@
 package de.noctivag.skyblock.core.di;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.core.api.Service;
-import org.bukkit.plugin.java.JavaPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,9 +20,9 @@ public class ServiceRegistry {
     private final ServiceLocator serviceLocator;
     private final Logger logger;
     
-    public ServiceRegistry(ServiceLocator serviceLocator, JavaSkyblockPlugin plugin) {
+    public ServiceRegistry(ServiceLocator serviceLocator, SkyblockPlugin SkyblockPlugin) {
         this.serviceLocator = serviceLocator;
-        this.logger = plugin.getLogger();
+        this.logger = SkyblockPlugin.getLogger();
     }
     
     /**
@@ -48,24 +51,24 @@ public class ServiceRegistry {
      */
     private void registerKnownServices() {
         // Core services
-        registerService("de.noctivag.plugin.infrastructure.config.ConfigService", 
-                       "de.noctivag.plugin.infrastructure.config.impl.ConfigServiceImpl");
+        registerService("de.noctivag.skyblock.infrastructure.config.ConfigService", 
+                       "de.noctivag.skyblock.infrastructure.config.impl.ConfigServiceImpl");
         
-        registerService("de.noctivag.plugin.infrastructure.database.DatabaseService", 
-                       "de.noctivag.plugin.infrastructure.database.impl.DatabaseServiceImpl");
+        registerService("de.noctivag.skyblock.infrastructure.database.DatabaseService", 
+                       "de.noctivag.skyblock.infrastructure.database.impl.DatabaseServiceImpl");
         
-        registerService("de.noctivag.plugin.infrastructure.logging.LoggingService", 
-                       "de.noctivag.plugin.infrastructure.logging.impl.LoggingServiceImpl");
+        registerService("de.noctivag.skyblock.infrastructure.logging.LoggingService", 
+                       "de.noctivag.skyblock.infrastructure.logging.impl.LoggingServiceImpl");
         
         // Feature services
-        registerService("de.noctivag.plugin.features.skyblock.SkyblockService", 
-                       "de.noctivag.plugin.features.skyblock.impl.SkyblockServiceImpl");
+        registerService("de.noctivag.skyblock.features.skyblock.SkyblockService", 
+                       "de.noctivag.skyblock.features.skyblock.impl.SkyblockServiceImpl");
         
-        registerService("de.noctivag.plugin.features.economy.EconomyService", 
-                       "de.noctivag.plugin.features.economy.impl.EconomyServiceImpl");
+        registerService("de.noctivag.skyblock.features.economy.EconomyService", 
+                       "de.noctivag.skyblock.features.economy.impl.EconomyServiceImpl");
         
-        registerService("de.noctivag.plugin.features.social.SocialService", 
-                       "de.noctivag.plugin.features.social.impl.SocialServiceImpl");
+        registerService("de.noctivag.skyblock.features.social.SocialService", 
+                       "de.noctivag.skyblock.features.social.impl.SocialServiceImpl");
         
         logger.info("Registered known services");
     }

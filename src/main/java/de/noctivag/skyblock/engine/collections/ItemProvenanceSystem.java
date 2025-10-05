@@ -1,9 +1,10 @@
 package de.noctivag.skyblock.engine.collections;
+import java.util.UUID;
 
 import de.noctivag.skyblock.core.api.Service;
 import de.noctivag.skyblock.core.api.SystemStatus;
-import de.noctivag.skyblock.engine.collections.types.CollectionSource;
-import de.noctivag.skyblock.engine.collections.types.ItemProvenance;
+import de.noctivag.skyblock.engine.collections.CollectionSource;
+import de.noctivag.skyblock.engine.collections.ItemProvenance;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -95,7 +96,7 @@ public class ItemProvenanceSystem implements Service {
                 // Set provenance information
                 container.set(PROVENANCE_KEY, PersistentDataType.STRING, "true");
                 container.set(SOURCE_KEY, PersistentDataType.STRING, source.name());
-                container.set(TIMESTAMP_KEY, PersistentDataType.LONG, System.currentTimeMillis());
+                container.set(TIMESTAMP_KEY, PersistentDataType.LONG, java.lang.System.currentTimeMillis());
                 
                 if (playerId != null) {
                     container.set(PLAYER_KEY, PersistentDataType.STRING, playerId.toString());
@@ -176,7 +177,7 @@ public class ItemProvenanceSystem implements Service {
             }
             UUID playerId = playerStr != null ? UUID.fromString(playerStr) : null;
             
-            return new ItemProvenance(source, timestamp, playerId, location);
+            return new ItemProvenance(playerId, location, source, java.time.LocalDateTime.now(), 1, "", "");
             
         } catch (Exception e) {
             System.err.println("Failed to get item provenance: " + e.getMessage());
@@ -311,7 +312,7 @@ public class ItemProvenanceSystem implements Service {
     private void logItemProvenance(ItemStack item, CollectionSource source, UUID playerId, String location) {
         if (playerId == null) return;
         
-        ItemProvenance provenance = new ItemProvenance(source, System.currentTimeMillis(), playerId, location);
+        ItemProvenance provenance = new ItemProvenance(playerId, location, source, java.time.LocalDateTime.now(), 1, "", "");
         
         playerItemHistory.computeIfAbsent(playerId, k -> new ArrayList<>()).add(provenance);
         
@@ -349,8 +350,8 @@ public class ItemProvenanceSystem implements Service {
             }
             
             // Check if timestamp is reasonable (not in the future, not too old)
-            long currentTime = System.currentTimeMillis();
-            long itemTime = provenance.getTimestamp();
+            long currentTime = java.lang.System.currentTimeMillis();
+            long itemTime = provenance.getTimestamp().atZone(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli();
             
             // Allow items from up to 1 year ago
             long oneYearAgo = currentTime - (365L * 24 * 60 * 60 * 1000);

@@ -27,7 +27,7 @@ public class MenuItemManager {
         meta.displayName(LegacyComponentSerializer.legacySection().deserialize("§6✧ Hauptmenü ✧"));
         meta.lore(Arrays.asList(
             LegacyComponentSerializer.legacySection().deserialize("§7Rechtsklick um das Hauptmenü zu öffnen"),
-            LegacyComponentSerializer.legacySection().deserialize("§eAlle Plugin-Features an einem Ort!")
+            LegacyComponentSerializer.legacySection().deserialize("§eAlle SkyblockPlugin-Features an einem Ort!")
         ));
         
         item.setItemMeta(meta);

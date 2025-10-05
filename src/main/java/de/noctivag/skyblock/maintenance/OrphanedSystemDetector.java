@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.maintenance;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -25,22 +29,22 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class OrphanedSystemDetector {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<String, List<String>> orphanedSystems = new ConcurrentHashMap<>();
     private final Map<String, List<String>> orphanedDatabaseEntries = new ConcurrentHashMap<>();
     private final Map<String, List<String>> orphanedCommands = new ConcurrentHashMap<>();
     private final Map<String, List<String>> orphanedPermissions = new ConcurrentHashMap<>();
     private final Map<String, List<String>> orphanedConfigs = new ConcurrentHashMap<>();
     
-    public OrphanedSystemDetector(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public OrphanedSystemDetector(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
     
     /**
      * Führt eine vollständige Überprüfung aller verwaisten Systeme durch
      */
     public void performFullCheck() {
-        plugin.getLogger().info("§e[Maintenance] Starting orphaned system detection...");
+        SkyblockPlugin.getLogger().info("§e[Maintenance] Starting orphaned system detection...");
         
         // Clear previous results
         orphanedSystems.clear();
@@ -67,7 +71,7 @@ public class OrphanedSystemDetector {
         // Generate report
         generateReport();
         
-        plugin.getLogger().info("§a[Maintenance] Orphaned system detection completed!");
+        SkyblockPlugin.getLogger().info("§a[Maintenance] Orphaned system detection completed!");
     }
     
     /**
@@ -92,69 +96,69 @@ public class OrphanedSystemDetector {
      */
     private void checkOrphanedGUISystems() {
         String[] guiClasses = {
-            "de.noctivag.plugin.gui.AdvancedGUISystem",
-            "de.noctivag.plugin.gui.UltimateMainMenu",
-            "de.noctivag.plugin.gui.FeatureBookGUI",
-            "de.noctivag.plugin.gui.AdminMenu",
-            "de.noctivag.plugin.gui.SettingsGUI",
-            "de.noctivag.plugin.gui.ModerationGUI",
-            "de.noctivag.plugin.gui.RestartGUI",
-            "de.noctivag.plugin.gui.QuickActionsGUI",
-            "de.noctivag.plugin.gui.ChatChannelsGUI",
-            "de.noctivag.plugin.gui.ReportsGUI",
-            "de.noctivag.plugin.gui.DiscordGUI",
-            "de.noctivag.plugin.gui.GuildSystemGUI",
-            "de.noctivag.plugin.gui.EventScheduleGUI",
-            "de.noctivag.plugin.gui.CosmeticsMenu",
-            "de.noctivag.plugin.gui.ParticleSettingsGUI",
-            "de.noctivag.plugin.gui.JoinMessagePresetsGUI",
-            "de.noctivag.plugin.gui.BankGUI",
-            "de.noctivag.plugin.gui.ShopGUI",
-            "de.noctivag.plugin.gui.StatisticsGUI",
-            "de.noctivag.plugin.gui.PartyGUI",
-            "de.noctivag.plugin.gui.RulesGUI",
-            "de.noctivag.plugin.gui.TournamentGUI",
-            "de.noctivag.plugin.gui.DuelSystemGUI",
-            "de.noctivag.plugin.gui.FriendsGUI",
-            "de.noctivag.plugin.gui.JoinMessageGUI",
-            "de.noctivag.plugin.gui.PvPArenaGUI",
-            "de.noctivag.plugin.gui.EventRewardsGUI",
-            "de.noctivag.plugin.gui.CustomGUI",
-            "de.noctivag.plugin.gui.WarpGUI",
-            "de.noctivag.plugin.gui.HelpGUI",
-            "de.noctivag.plugin.gui.SupportGUI",
-            "de.noctivag.plugin.gui.TeleportGUI",
-            "de.noctivag.plugin.gui.ServerInfoGUI",
-            "de.noctivag.plugin.gui.JobsGUI",
-            "de.noctivag.plugin.gui.LeaderboardGUI",
-            "de.noctivag.plugin.gui.EconomyGUI",
-            "de.noctivag.plugin.gui.AuctionHouseGUI",
-            "de.noctivag.plugin.gui.MobArenaGUI",
-            "de.noctivag.plugin.gui.KitShopGUI",
-            "de.noctivag.plugin.gui.WebsiteGUI",
-            "de.noctivag.plugin.gui.BattlePassGUI",
-            "de.noctivag.plugin.gui.QuestGUI",
-            "de.noctivag.plugin.gui.InfoGUI",
-            "de.noctivag.plugin.gui.MyCosmeticsGUI",
-            "de.noctivag.plugin.gui.CosmeticShopGUI",
-            "de.noctivag.plugin.gui.GadgetsGUI",
-            "de.noctivag.plugin.gui.MessagesMenu",
-            "de.noctivag.plugin.gui.EnhancedMainMenu",
-            "de.noctivag.plugin.gui.AnimatedGUI",
-            "de.noctivag.plugin.gui.UltimateEventGUI",
-            "de.noctivag.plugin.gui.UltimateGUISystem",
-            "de.noctivag.plugin.gui.CommandUsageGUI",
-            "de.noctivag.plugin.gui.FeatureToggleListener",
-            "de.noctivag.plugin.gui.PotatoBookGUI",
-            "de.noctivag.plugin.gui.RecombobulatorGUI",
-            "de.noctivag.plugin.gui.DungeonStarGUI",
-            "de.noctivag.plugin.gui.PetItemGUI",
-            "de.noctivag.plugin.gui.ArmorAbilityGUI",
-            "de.noctivag.plugin.gui.WeaponAbilityGUI",
-            "de.noctivag.plugin.gui.NPCCreationGUI",
-            "de.noctivag.plugin.gui.NPCManagementGUI",
-            "de.noctivag.plugin.gui.NPCEditGUI",
-            "de.noctivag.plugin.gui.EnhancedPetGUI"
+            "de.noctivag.skyblock.gui.AdvancedGUISystem",
+            "de.noctivag.skyblock.gui.UltimateMainMenu",
+            "de.noctivag.skyblock.gui.FeatureBookGUI",
+            "de.noctivag.skyblock.gui.AdminMenu",
+            "de.noctivag.skyblock.gui.SettingsGUI",
+            "de.noctivag.skyblock.gui.ModerationGUI",
+            "de.noctivag.skyblock.gui.RestartGUI",
+            "de.noctivag.skyblock.gui.QuickActionsGUI",
+            "de.noctivag.skyblock.gui.ChatChannelsGUI",
+            "de.noctivag.skyblock.gui.ReportsGUI",
+            "de.noctivag.skyblock.gui.DiscordGUI",
+            "de.noctivag.skyblock.gui.GuildSystemGUI",
+            "de.noctivag.skyblock.gui.EventScheduleGUI",
+            "de.noctivag.skyblock.gui.CosmeticsMenu",
+            "de.noctivag.skyblock.gui.ParticleSettingsGUI",
+            "de.noctivag.skyblock.gui.JoinMessagePresetsGUI",
+            "de.noctivag.skyblock.gui.BankGUI",
+            "de.noctivag.skyblock.gui.ShopGUI",
+            "de.noctivag.skyblock.gui.StatisticsGUI",
+            "de.noctivag.skyblock.gui.PartyGUI",
+            "de.noctivag.skyblock.gui.RulesGUI",
+            "de.noctivag.skyblock.gui.TournamentGUI",
+            "de.noctivag.skyblock.gui.DuelSystemGUI",
+            "de.noctivag.skyblock.gui.FriendsGUI",
+            "de.noctivag.skyblock.gui.JoinMessageGUI",
+            "de.noctivag.skyblock.gui.PvPArenaGUI",
+            "de.noctivag.skyblock.gui.EventRewardsGUI",
+            "de.noctivag.skyblock.gui.CustomGUI",
+            "de.noctivag.skyblock.gui.WarpGUI",
+            "de.noctivag.skyblock.gui.HelpGUI",
+            "de.noctivag.skyblock.gui.SupportGUI",
+            "de.noctivag.skyblock.gui.TeleportGUI",
+            "de.noctivag.skyblock.gui.ServerInfoGUI",
+            "de.noctivag.skyblock.gui.JobsGUI",
+            "de.noctivag.skyblock.gui.LeaderboardGUI",
+            "de.noctivag.skyblock.gui.EconomyGUI",
+            "de.noctivag.skyblock.gui.AuctionHouseGUI",
+            "de.noctivag.skyblock.gui.MobArenaGUI",
+            "de.noctivag.skyblock.gui.KitShopGUI",
+            "de.noctivag.skyblock.gui.WebsiteGUI",
+            "de.noctivag.skyblock.gui.BattlePassGUI",
+            "de.noctivag.skyblock.gui.QuestGUI",
+            "de.noctivag.skyblock.gui.InfoGUI",
+            "de.noctivag.skyblock.gui.MyCosmeticsGUI",
+            "de.noctivag.skyblock.gui.CosmeticShopGUI",
+            "de.noctivag.skyblock.gui.GadgetsGUI",
+            "de.noctivag.skyblock.gui.MessagesMenu",
+            "de.noctivag.skyblock.gui.EnhancedMainMenu",
+            "de.noctivag.skyblock.gui.AnimatedGUI",
+            "de.noctivag.skyblock.gui.UltimateEventGUI",
+            "de.noctivag.skyblock.gui.UltimateGUISystem",
+            "de.noctivag.skyblock.gui.CommandUsageGUI",
+            "de.noctivag.skyblock.gui.FeatureToggleListener",
+            "de.noctivag.skyblock.gui.PotatoBookGUI",
+            "de.noctivag.skyblock.gui.RecombobulatorGUI",
+            "de.noctivag.skyblock.gui.DungeonStarGUI",
+            "de.noctivag.skyblock.gui.PetItemGUI",
+            "de.noctivag.skyblock.gui.ArmorAbilityGUI",
+            "de.noctivag.skyblock.gui.WeaponAbilityGUI",
+            "de.noctivag.skyblock.gui.NPCCreationGUI",
+            "de.noctivag.skyblock.gui.NPCManagementGUI",
+            "de.noctivag.skyblock.gui.NPCEditGUI",
+            "de.noctivag.skyblock.gui.EnhancedPetGUI"
         };
         
         for (String className : guiClasses) {
@@ -198,14 +202,14 @@ public class OrphanedSystemDetector {
      */
     private void checkOrphanedCommandSystems() {
         String[] commandClasses = {
-            "de.noctivag.plugin.commands.AdvancedCommandSystem",
-            "de.noctivag.plugin.commands.HelpCommand",
-            "de.noctivag.plugin.commands.FeatureCommand",
-            "de.noctivag.plugin.commands.AdminCommand",
-            "de.noctivag.plugin.commands.MiningCommand",
-            "de.noctivag.plugin.commands.CollectionsCommand",
-            "de.noctivag.plugin.commands.PartyCommand",
-            "de.noctivag.plugin.commands.MobCommandSystem"
+            "de.noctivag.skyblock.commands.AdvancedCommandSystem",
+            "de.noctivag.skyblock.commands.HelpCommand",
+            "de.noctivag.skyblock.commands.FeatureCommand",
+            "de.noctivag.skyblock.commands.AdminCommand",
+            "de.noctivag.skyblock.commands.MiningCommand",
+            "de.noctivag.skyblock.commands.CollectionsCommand",
+            "de.noctivag.skyblock.commands.PartyCommand",
+            "de.noctivag.skyblock.commands.MobCommandSystem"
         };
         
         for (String className : commandClasses) {
@@ -238,13 +242,13 @@ public class OrphanedSystemDetector {
      */
     private void checkOrphanedEventSystems() {
         String[] eventClasses = {
-            "de.noctivag.plugin.events.AdvancedEventsSystem",
-            "de.noctivag.plugin.events.AdvancedEventSystem",
-            "de.noctivag.plugin.events.EventManager",
-            "de.noctivag.plugin.events.EventScheduler",
-            "de.noctivag.plugin.events.EventsSystem",
-            "de.noctivag.plugin.events.UltimateEventSystem",
-            "de.noctivag.plugin.events.Arena"
+            "de.noctivag.skyblock.events.AdvancedEventsSystem",
+            "de.noctivag.skyblock.events.AdvancedEventSystem",
+            "de.noctivag.skyblock.events.EventManager",
+            "de.noctivag.skyblock.events.EventScheduler",
+            "de.noctivag.skyblock.events.EventsSystem",
+            "de.noctivag.skyblock.events.UltimateEventSystem",
+            "de.noctivag.skyblock.events.Arena"
         };
         
         for (String className : eventClasses) {
@@ -277,10 +281,10 @@ public class OrphanedSystemDetector {
      */
     private void checkOrphanedManagerSystems() {
         String[] managerClasses = {
-            "de.noctivag.plugin.managers.RankManager",
-            "de.noctivag.plugin.managers.EventManager",
-            "de.noctivag.plugin.managers.TeleportManager",
-            "de.noctivag.plugin.managers.PartyManager"
+            "de.noctivag.skyblock.managers.RankManager",
+            "de.noctivag.skyblock.managers.EventManager",
+            "de.noctivag.skyblock.managers.TeleportManager",
+            "de.noctivag.skyblock.managers.PartyManager"
         };
         
         for (String className : managerClasses) {
@@ -292,7 +296,7 @@ public class OrphanedSystemDetector {
                 boolean hasPluginField = false;
                 
                 for (Field field : clazz.getDeclaredFields()) {
-                    if (field.getType().getSimpleName().equals("Plugin")) {
+                    if (field.getType().getSimpleName().equals("SkyblockPlugin")) {
                         hasPluginField = true;
                         break;
                     }
@@ -303,7 +307,7 @@ public class OrphanedSystemDetector {
                 }
                 
                 if (!hasPluginField) {
-                    addOrphanedSystem("manager_no_plugin_field", className, "Manager class has no plugin field");
+                    addOrphanedSystem("manager_no_plugin_field", className, "Manager class has no SkyblockPlugin field");
                 }
                 
             } catch (ClassNotFoundException e) {
@@ -338,7 +342,7 @@ public class OrphanedSystemDetector {
         // This would need to be implemented based on your database structure
         // For now, we'll check config files
         
-        File playersFile = new File(plugin.getDataFolder(), "players.yml");
+        File playersFile = new File(SkyblockPlugin.getDataFolder(), "players.yml");
         if (playersFile.exists()) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(playersFile);
             
@@ -363,7 +367,7 @@ public class OrphanedSystemDetector {
      * Überprüft verwaiste Insel-Daten
      */
     private void checkOrphanedIslandData() {
-        File islandsFile = new File(plugin.getDataFolder(), "islands.yml");
+        File islandsFile = new File(SkyblockPlugin.getDataFolder(), "islands.yml");
         if (islandsFile.exists()) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(islandsFile);
             
@@ -389,7 +393,7 @@ public class OrphanedSystemDetector {
      * Überprüft verwaiste Gilden-Daten
      */
     private void checkOrphanedGuildData() {
-        File guildsFile = new File(plugin.getDataFolder(), "guilds.yml");
+        File guildsFile = new File(SkyblockPlugin.getDataFolder(), "guilds.yml");
         if (guildsFile.exists()) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(guildsFile);
             
@@ -415,7 +419,7 @@ public class OrphanedSystemDetector {
      * Überprüft verwaiste Auktions-Daten
      */
     private void checkOrphanedAuctionData() {
-        File auctionsFile = new File(plugin.getDataFolder(), "auctions.yml");
+        File auctionsFile = new File(SkyblockPlugin.getDataFolder(), "auctions.yml");
         if (auctionsFile.exists()) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(auctionsFile);
             
@@ -446,8 +450,8 @@ public class OrphanedSystemDetector {
      * Überprüft verwaiste Commands
      */
     private void checkOrphanedCommands() {
-        // Check plugin.yml for commands that might not be used
-        File pluginFile = new File(plugin.getDataFolder().getParentFile(), "plugin.yml");
+        // Check SkyblockPlugin.yml for commands that might not be used
+        File pluginFile = new File(SkyblockPlugin.getDataFolder().getParentFile(), "SkyblockPlugin.yml");
         if (pluginFile.exists()) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(pluginFile);
             
@@ -473,8 +477,8 @@ public class OrphanedSystemDetector {
      * Überprüft verwaiste Permissions
      */
     private void checkOrphanedPermissions() {
-        // Check plugin.yml for permissions that might not be used
-        File pluginFile = new File(plugin.getDataFolder().getParentFile(), "plugin.yml");
+        // Check SkyblockPlugin.yml for permissions that might not be used
+        File pluginFile = new File(SkyblockPlugin.getDataFolder().getParentFile(), "SkyblockPlugin.yml");
         if (pluginFile.exists()) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(pluginFile);
             
@@ -500,7 +504,7 @@ public class OrphanedSystemDetector {
      * Überprüft verwaiste Config-Dateien
      */
     private void checkOrphanedConfigs() {
-        File dataFolder = plugin.getDataFolder();
+        File dataFolder = SkyblockPlugin.getDataFolder();
         if (dataFolder.exists()) {
             File[] files = dataFolder.listFiles();
             if (files != null) {
@@ -556,59 +560,59 @@ public class OrphanedSystemDetector {
      * Generiert einen Bericht über alle gefundenen verwaisten Systeme
      */
     private void generateReport() {
-        plugin.getLogger().info("§6=== ORPHANED SYSTEM DETECTION REPORT ===");
+        SkyblockPlugin.getLogger().info("§6=== ORPHANED SYSTEM DETECTION REPORT ===");
         
         // Orphaned systems
         if (!orphanedSystems.isEmpty()) {
-            plugin.getLogger().warning("§cOrphaned Systems:");
+            SkyblockPlugin.getLogger().warning("§cOrphaned Systems:");
             for (Map.Entry<String, List<String>> entry : orphanedSystems.entrySet()) {
-                plugin.getLogger().warning("  §e" + entry.getKey() + ":");
+                SkyblockPlugin.getLogger().warning("  §e" + entry.getKey() + ":");
                 for (String issue : entry.getValue()) {
-                    plugin.getLogger().warning("    §7- " + issue);
+                    SkyblockPlugin.getLogger().warning("    §7- " + issue);
                 }
             }
         }
         
         // Orphaned database entries
         if (!orphanedDatabaseEntries.isEmpty()) {
-            plugin.getLogger().warning("§cOrphaned Database Entries:");
+            SkyblockPlugin.getLogger().warning("§cOrphaned Database Entries:");
             for (Map.Entry<String, List<String>> entry : orphanedDatabaseEntries.entrySet()) {
-                plugin.getLogger().warning("  §e" + entry.getKey() + ":");
+                SkyblockPlugin.getLogger().warning("  §e" + entry.getKey() + ":");
                 for (String issue : entry.getValue()) {
-                    plugin.getLogger().warning("    §7- " + issue);
+                    SkyblockPlugin.getLogger().warning("    §7- " + issue);
                 }
             }
         }
         
         // Orphaned commands
         if (!orphanedCommands.isEmpty()) {
-            plugin.getLogger().warning("§cOrphaned Commands:");
+            SkyblockPlugin.getLogger().warning("§cOrphaned Commands:");
             for (Map.Entry<String, List<String>> entry : orphanedCommands.entrySet()) {
-                plugin.getLogger().warning("  §e" + entry.getKey() + ":");
+                SkyblockPlugin.getLogger().warning("  §e" + entry.getKey() + ":");
                 for (String issue : entry.getValue()) {
-                    plugin.getLogger().warning("    §7- " + issue);
+                    SkyblockPlugin.getLogger().warning("    §7- " + issue);
                 }
             }
         }
         
         // Orphaned permissions
         if (!orphanedPermissions.isEmpty()) {
-            plugin.getLogger().warning("§cOrphaned Permissions:");
+            SkyblockPlugin.getLogger().warning("§cOrphaned Permissions:");
             for (Map.Entry<String, List<String>> entry : orphanedPermissions.entrySet()) {
-                plugin.getLogger().warning("  §e" + entry.getKey() + ":");
+                SkyblockPlugin.getLogger().warning("  §e" + entry.getKey() + ":");
                 for (String issue : entry.getValue()) {
-                    plugin.getLogger().warning("    §7- " + issue);
+                    SkyblockPlugin.getLogger().warning("    §7- " + issue);
                 }
             }
         }
         
         // Orphaned configs
         if (!orphanedConfigs.isEmpty()) {
-            plugin.getLogger().warning("§cOrphaned Configs:");
+            SkyblockPlugin.getLogger().warning("§cOrphaned Configs:");
             for (Map.Entry<String, List<String>> entry : orphanedConfigs.entrySet()) {
-                plugin.getLogger().warning("  §e" + entry.getKey() + ":");
+                SkyblockPlugin.getLogger().warning("  §e" + entry.getKey() + ":");
                 for (String issue : entry.getValue()) {
-                    plugin.getLogger().warning("    §7- " + issue);
+                    SkyblockPlugin.getLogger().warning("    §7- " + issue);
                 }
             }
         }
@@ -621,19 +625,19 @@ public class OrphanedSystemDetector {
                          orphanedConfigs.values().stream().mapToInt(List::size).sum();
         
         if (totalIssues == 0) {
-            plugin.getLogger().info("§aNo orphaned systems found! System is clean.");
+            SkyblockPlugin.getLogger().info("§aNo orphaned systems found! System is clean.");
         } else {
-            plugin.getLogger().warning("§cTotal orphaned items found: " + totalIssues);
+            SkyblockPlugin.getLogger().warning("§cTotal orphaned items found: " + totalIssues);
         }
         
-        plugin.getLogger().info("§6==========================================");
+        SkyblockPlugin.getLogger().info("§6==========================================");
     }
     
     /**
      * Automatische Bereinigung von verwaisten Systemen
      */
     public void autoCleanup() {
-        plugin.getLogger().info("§e[Maintenance] Starting auto-cleanup for orphaned systems...");
+        SkyblockPlugin.getLogger().info("§e[Maintenance] Starting auto-cleanup for orphaned systems...");
         
         int cleanedItems = 0;
         
@@ -643,7 +647,7 @@ public class OrphanedSystemDetector {
         // Cleanup orphaned database entries
         cleanedItems += cleanupOrphanedDatabaseEntries();
         
-        plugin.getLogger().info("§a[Maintenance] Auto-cleanup completed! Cleaned " + cleanedItems + " items.");
+        SkyblockPlugin.getLogger().info("§a[Maintenance] Auto-cleanup completed! Cleaned " + cleanedItems + " items.");
     }
     
     /**
@@ -652,7 +656,7 @@ public class OrphanedSystemDetector {
     private int cleanupOrphanedConfigs() {
         int cleaned = 0;
         
-        File dataFolder = plugin.getDataFolder();
+        File dataFolder = SkyblockPlugin.getDataFolder();
         if (dataFolder.exists()) {
             File[] files = dataFolder.listFiles();
             if (files != null) {
@@ -662,7 +666,7 @@ public class OrphanedSystemDetector {
                         if (config.getKeys(false).isEmpty()) {
                             if (file.delete()) {
                                 cleaned++;
-                                plugin.getLogger().info("§aDeleted empty config file: " + file.getName());
+                                SkyblockPlugin.getLogger().info("§aDeleted empty config file: " + file.getName());
                             }
                         }
                     }
@@ -684,7 +688,7 @@ public class OrphanedSystemDetector {
         
         for (Map.Entry<String, List<String>> entry : orphanedDatabaseEntries.entrySet()) {
             for (String issue : entry.getValue()) {
-                plugin.getLogger().info("§eWould clean: " + issue);
+                SkyblockPlugin.getLogger().info("§eWould clean: " + issue);
                 cleaned++;
             }
         }
@@ -721,7 +725,7 @@ public class OrphanedSystemDetector {
             Map<String, Integer> stats = getStatistics();
             int totalIssues = stats.get("total");
             
-            meta.setDisplayName("§c§lOrphaned Systems Report");
+            meta.displayName(Component.text("§c§lOrphaned Systems Report"));
             
             List<String> lore = new ArrayList<>();
             lore.add("§7Total Orphaned Items: §c" + totalIssues);
@@ -734,7 +738,7 @@ public class OrphanedSystemDetector {
             lore.add("§eClick to view detailed report");
             lore.add("§eRight-click to auto-cleanup");
             
-            meta.setLore(lore);
+            meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         

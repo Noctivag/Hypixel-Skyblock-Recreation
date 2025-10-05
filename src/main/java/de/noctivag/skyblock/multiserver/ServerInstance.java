@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.multiserver;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
@@ -30,8 +31,8 @@ public class ServerInstance {
         this.type = type;
         this.status = ServerStatus.STARTING;
         this.playerCount = 0;
-        this.createdTime = System.currentTimeMillis();
-        this.lastActivity = System.currentTimeMillis();
+        this.createdTime = java.lang.System.currentTimeMillis();
+        this.lastActivity = java.lang.System.currentTimeMillis();
     }
     
     // Getters and Setters
@@ -49,7 +50,7 @@ public class ServerInstance {
     
     public void setStatus(ServerStatus status) {
         this.status = status;
-        this.lastActivity = System.currentTimeMillis();
+        this.lastActivity = java.lang.System.currentTimeMillis();
     }
     
     public int getPlayerCount() {
@@ -58,7 +59,7 @@ public class ServerInstance {
     
     public void setPlayerCount(int playerCount) {
         this.playerCount = playerCount;
-        this.lastActivity = System.currentTimeMillis();
+        this.lastActivity = java.lang.System.currentTimeMillis();
     }
     
     public long getCreatedTime() {
@@ -123,7 +124,7 @@ public class ServerInstance {
     
     public boolean needsRestart() {
         if (type.hasRestartCycle()) {
-            return System.currentTimeMillis() >= nextScheduledRestart;
+            return java.lang.System.currentTimeMillis() >= nextScheduledRestart;
         }
         return false;
     }
@@ -138,7 +139,7 @@ public class ServerInstance {
     
     public void scheduleNextRestart() {
         if (type.hasRestartCycle()) {
-            nextScheduledRestart = System.currentTimeMillis() + (type.getRestartIntervalSeconds() * 1000);
+            nextScheduledRestart = java.lang.System.currentTimeMillis() + (type.getRestartIntervalSeconds() * 1000);
         }
     }
     
@@ -150,7 +151,7 @@ public class ServerInstance {
         
         if (players.add(playerId)) {
             playerCount++;
-            lastActivity = System.currentTimeMillis();
+            lastActivity = java.lang.System.currentTimeMillis();
             return true;
         }
         return false;
@@ -159,7 +160,7 @@ public class ServerInstance {
     public boolean removePlayer(UUID playerId) {
         if (players.remove(playerId)) {
             playerCount = Math.max(0, playerCount - 1);
-            lastActivity = System.currentTimeMillis();
+            lastActivity = java.lang.System.currentTimeMillis();
             return true;
         }
         return false;

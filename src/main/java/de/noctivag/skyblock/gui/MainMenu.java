@@ -1,19 +1,22 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 @SuppressWarnings("unused")
 public class MainMenu extends CustomGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
     @SuppressWarnings("unused")
-    public MainMenu(SkyblockPlugin plugin) {
+    public MainMenu(SkyblockPlugin SkyblockPlugin) {
         super(54, Component.text("§6✧ Hauptmenü ✧"));
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     public void open(Player player) {
@@ -35,8 +38,8 @@ public class MainMenu extends CustomGUI {
 
         // Player summary (center top)
         setItem(4, createPlayerHead(player, "§e" + player.getName(),
-            "§7Level: §a" + plugin.getPlayerDataManager().getLevel(player),
-            "§7Coins: §6" + plugin.getEconomyManager().formatMoney(plugin.getEconomyManager().getBalance(player))));
+            "§7Level: §a" + SkyblockPlugin.getPlayerDataManager().getLevel(player),
+            "§7Coins: §6" + SkyblockPlugin.getEconomyManager().formatMoney(SkyblockPlugin.getEconomyManager().getBalance(player))));
 
         // Row 2: Primary navigation (slots 10,12,14,16 expected by GUIListener)
         setItem(10, createGuiItem(Material.NETHER_STAR, "§d§lKosmetik",

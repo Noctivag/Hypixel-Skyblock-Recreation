@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.npcs;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -15,7 +20,7 @@ import java.util.UUID;
  * Game NPC Class - Represents a single NPC in the game
  */
 public class GameNPC {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final String npcId;
     private final AdvancedNPCSystem.NPCType type;
     private Location location;
@@ -24,8 +29,8 @@ public class GameNPC {
     private Villager entity;
     private BukkitTask animationTask;
     
-    public GameNPC(SkyblockPlugin plugin, String npcId, AdvancedNPCSystem.NPCType type, Location location, String displayName, String customData) {
-        this.plugin = plugin;
+    public GameNPC(SkyblockPlugin SkyblockPlugin, String npcId, AdvancedNPCSystem.NPCType type, Location location, String displayName, String customData) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.npcId = npcId;
         this.type = type;
         this.location = location;
@@ -65,7 +70,7 @@ public class GameNPC {
                     entity.setRotation(entity.getLocation().getYaw() + 5, entity.getLocation().getPitch());
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L);
     }
     
     public void onPlayerInteract(Player player) {
@@ -84,12 +89,12 @@ public class GameNPC {
     }
     
     private void openShop(Player player) {
-        player.sendMessage("§aShop NPC: Opening shop interface...");
+        player.sendMessage(Component.text("§aShop NPC: Opening shop interface..."));
         // Open shop GUI
     }
     
     private void openQuest(Player player) {
-        player.sendMessage("§bQuest NPC: Opening quest interface...");
+        player.sendMessage(Component.text("§bQuest NPC: Opening quest interface..."));
         // Open quest GUI
     }
     
@@ -98,41 +103,41 @@ public class GameNPC {
     }
     
     private void openWarp(Player player) {
-        player.sendMessage("§dWarp NPC: Opening warp interface...");
+        player.sendMessage(Component.text("§dWarp NPC: Opening warp interface..."));
         // Open warp GUI
     }
     
     private void openBank(Player player) {
-        player.sendMessage("§6Bank NPC: Opening bank interface...");
+        player.sendMessage(Component.text("§6Bank NPC: Opening bank interface..."));
         // Open bank GUI
     }
     
     private void openAuction(Player player) {
-        player.sendMessage("§cAuction NPC: Opening auction house...");
+        player.sendMessage(Component.text("§cAuction NPC: Opening auction house..."));
         // Open auction GUI
     }
     
     private void openGuild(Player player) {
-        player.sendMessage("§5Guild NPC: Opening guild interface...");
+        player.sendMessage(Component.text("§5Guild NPC: Opening guild interface..."));
         // Open guild GUI
     }
     
     private void openPet(Player player) {
-        player.sendMessage("§dPet NPC: Opening pet interface...");
+        player.sendMessage(Component.text("§dPet NPC: Opening pet interface..."));
         // Open pet GUI
     }
     
     private void openCosmetic(Player player) {
-        player.sendMessage("§eCosmetic NPC: Opening cosmetics...");
+        player.sendMessage(Component.text("§eCosmetic NPC: Opening cosmetics..."));
         // Open cosmetic GUI
     }
     
     private void openAdmin(Player player) {
         if (player.hasPermission("basicsplugin.admin")) {
-            player.sendMessage("§4Admin NPC: Opening admin interface...");
+            player.sendMessage(Component.text("§4Admin NPC: Opening admin interface..."));
             // Open admin GUI
         } else {
-            player.sendMessage("§cYou don't have permission to use this NPC!");
+            player.sendMessage(Component.text("§cYou don't have permission to use this NPC!"));
         }
     }
     

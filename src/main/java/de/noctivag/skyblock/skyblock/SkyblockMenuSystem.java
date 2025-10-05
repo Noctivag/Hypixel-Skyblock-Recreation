@@ -1,6 +1,6 @@
 package de.noctivag.skyblock.skyblock;
-import org.bukkit.inventory.ItemStack;
 
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -8,8 +8,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 import net.kyori.adventure.text.Component;
 
 import java.util.*;
@@ -29,7 +29,7 @@ public class SkyblockMenuSystem implements Listener {
     private final HealthManaSystem healthManaSystem;
     private final Map<String, String> travelMap = new HashMap<>();
 
-    public SkyblockMenuSystem(SkyblockPlugin plugin, HealthManaSystem healthManaSystem) {
+    public SkyblockMenuSystem(SkyblockPlugin SkyblockPlugin, HealthManaSystem healthManaSystem) {
         this.healthManaSystem = healthManaSystem;
 
         // Initialize travel destinations mapping (display -> world name)
@@ -46,8 +46,8 @@ public class SkyblockMenuSystem implements Listener {
         travelMap.put("Dungeon Hub", "dungeon_hub");
         travelMap.put("Dragon's Nest", "dragons_nest");
 
-        // register using the plugin instance passed in
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        // register using the SkyblockPlugin instance passed in
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
 
     public void openMainMenu(Player player) {

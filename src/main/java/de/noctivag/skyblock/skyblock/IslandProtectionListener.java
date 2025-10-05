@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.skyblock;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,11 +19,11 @@ import org.bukkit.event.block.BlockPlaceEvent;
 public class IslandProtectionListener implements Listener {
     private final IslandManager islandManager;
 
-    public IslandProtectionListener(SkyblockPlugin plugin) {
-        this.islandManager = IslandManager.getInstance(plugin);
+    public IslandProtectionListener(SkyblockPlugin SkyblockPlugin) {
+        this.islandManager = IslandManager.getInstance(SkyblockPlugin);
     }
 
-    private boolean canModify(Player player, de.noctivag.plugin.skyblock.IslandManager.Island island) {
+    private boolean canModify(Player player, de.noctivag.skyblock.skyblock.IslandManager.Island island) {
         if (player.isOp() || player.hasPermission("island.bypass")) return true;
         if (island == null) return true; // not an island world
         return island.isMember(player.getUniqueId());

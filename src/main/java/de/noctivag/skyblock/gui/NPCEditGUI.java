@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.npcs.AdvancedNPCSystem;
 import de.noctivag.skyblock.npcs.HypixelStyleNPC;
 import de.noctivag.skyblock.npcs.GameNPC;
@@ -18,39 +21,39 @@ import java.util.Arrays;
 import java.util.List;
 
 public class NPCEditGUI extends CustomGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Player player;
     // Internal view that unifies GameNPC and HypixelStyleNPC for this GUI
     private final NPCView npc;
     private final AdvancedNPCSystem npcSystem;
 
     // Single public constructor that accepts either concrete NPC type and delegates to an internal view.
-    public NPCEditGUI(SkyblockPlugin plugin, Player player, Object npcObj) {
-        this(plugin, player, npcObj instanceof HypixelStyleNPC ? new NPCView((HypixelStyleNPC) npcObj)
+    public NPCEditGUI(SkyblockPlugin SkyblockPlugin, Player player, Object npcObj) {
+        this(SkyblockPlugin, player, npcObj instanceof HypixelStyleNPC ? new NPCView((HypixelStyleNPC) npcObj)
                 : npcObj instanceof GameNPC ? new NPCView((GameNPC) npcObj)
                 : throwIllegal(npcObj));
     }
 
     // Explicit overloads to help the compiler / call sites in the codebase resolve
     // directly to the correct constructor (avoids ambiguous or stale resolution).
-    public NPCEditGUI(SkyblockPlugin plugin, Player player, HypixelStyleNPC npc) {
-        this(plugin, player, new NPCView(npc));
+    public NPCEditGUI(SkyblockPlugin SkyblockPlugin, Player player, HypixelStyleNPC npc) {
+        this(SkyblockPlugin, player, new NPCView(npc));
     }
 
-    public NPCEditGUI(SkyblockPlugin plugin, Player player, GameNPC npc) {
-        this(plugin, player, new NPCView(npc));
+    public NPCEditGUI(SkyblockPlugin SkyblockPlugin, Player player, GameNPC npc) {
+        this(SkyblockPlugin, player, new NPCView(npc));
     }
 
     private static NPCView throwIllegal(Object obj) {
         throw new IllegalArgumentException("Unsupported NPC type: " + (obj == null ? "null" : obj.getClass().getName()));
     }
 
-    private NPCEditGUI(SkyblockPlugin plugin, Player player, NPCView npcView) {
+    private NPCEditGUI(SkyblockPlugin SkyblockPlugin, Player player, NPCView npcView) {
         super(54, Component.text("§6§lEdit NPC: " + npcView.getDisplayName()).color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD));
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.player = player;
         this.npc = npcView;
-        this.npcSystem = plugin.getAdvancedNPCSystem();
+        this.npcSystem = SkyblockPlugin.getAdvancedNPCSystem();
         setupItems();
     }
 
@@ -285,7 +288,7 @@ public class NPCEditGUI extends CustomGUI {
         if (meta != null) {
             meta.displayName(Component.text(name));
             if (lore.length > 0) {
-                meta.lore(Arrays.stream(lore).map(Component::text).toList());
+                meta.lore(java.util.Arrays.stream(lore).map(Component::text).collect(java.util.stream.Collectors.toList()));
             }
             item.setItemMeta(meta);
         }

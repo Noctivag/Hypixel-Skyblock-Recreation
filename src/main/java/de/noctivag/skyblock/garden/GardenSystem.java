@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.garden;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -34,7 +39,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class GardenSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerGardenData> playerGardenData = new ConcurrentHashMap<>();
     private final Map<UUID, GardenSession> activeSessions = new ConcurrentHashMap<>();
@@ -42,15 +47,15 @@ public class GardenSystem implements Listener {
     private final Map<GardenVisitor, VisitorConfig> visitorConfigs = new HashMap<>();
     private final Map<GardenUpgrade, UpgradeConfig> upgradeConfigs = new HashMap<>();
     
-    public GardenSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public GardenSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeCropConfigs();
         initializeVisitorConfigs();
         initializeUpgradeConfigs();
         startGardenUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeCropConfigs() {
@@ -180,7 +185,7 @@ public class GardenSystem implements Listener {
     }
     
     private void startGardenUpdateTask() {
-        Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+        Bukkit.getScheduler().runTaskTimer(SkyblockPlugin, () -> {
             for (GardenSession session : activeSessions.values()) {
                 updateGardenSession(session);
             }
@@ -223,7 +228,7 @@ public class GardenSystem implements Listener {
     
     public void startGardenSession(Player player) {
         if (activeSessions.containsKey(player.getUniqueId())) {
-            player.sendMessage("§cYou already have an active garden session!");
+            player.sendMessage(Component.text("§cYou already have an active garden session!"));
             return;
         }
         
@@ -231,12 +236,12 @@ public class GardenSystem implements Listener {
         GardenSession session = new GardenSession(
             player.getUniqueId(),
             data.getGardenLevel(),
-            System.currentTimeMillis()
+            java.lang.System.currentTimeMillis()
         );
         
         activeSessions.put(player.getUniqueId(), session);
         
-        player.sendMessage("§aGarden session started!");
+        player.sendMessage(Component.text("§aGarden session started!"));
         player.sendMessage("§7Garden Level: " + data.getGardenLevel());
         player.sendMessage("§7Plots Available: " + data.getPlotCount());
     }
@@ -245,7 +250,7 @@ public class GardenSystem implements Listener {
         GardenSession session = activeSessions.remove(player.getUniqueId());
         if (session != null) {
             session.setActive(false);
-            player.sendMessage("§aGarden session ended!");
+            player.sendMessage(Component.text("§aGarden session ended!"));
             player.sendMessage("§7Time in garden: " + session.getTimeElapsed() + " seconds");
         }
     }
@@ -253,32 +258,32 @@ public class GardenSystem implements Listener {
     public void plantCrop(Player player, Location location, CropType cropType) {
         GardenSession session = activeSessions.get(player.getUniqueId());
         if (session == null || !session.isActive()) {
-            player.sendMessage("§cYou must have an active garden session to plant crops!");
+            player.sendMessage(Component.text("§cYou must have an active garden session to plant crops!"));
             return;
         }
         
         CropConfig cropConfig = cropConfigs.get(cropType);
         if (cropConfig == null) {
-            player.sendMessage("§cInvalid crop type!");
+            player.sendMessage(Component.text("§cInvalid crop type!"));
             return;
         }
         
         // Find the plot for this location
         GardenPlot plot = findPlotForLocation(session, location);
         if (plot == null) {
-            player.sendMessage("§cThis location is not in your garden!");
+            player.sendMessage(Component.text("§cThis location is not in your garden!"));
             return;
         }
         
         // Find the crop plot for this location
         CropPlot cropPlot = findCropPlotForLocation(plot, location);
         if (cropPlot == null) {
-            player.sendMessage("§cThis location is not a valid crop plot!");
+            player.sendMessage(Component.text("§cThis location is not a valid crop plot!"));
             return;
         }
         
         if (cropPlot.getCropType() != null) {
-            player.sendMessage("§cThis plot already has a crop!");
+            player.sendMessage(Component.text("§cThis plot already has a crop!"));
             return;
         }
         
@@ -297,31 +302,31 @@ public class GardenSystem implements Listener {
     public void harvestCrop(Player player, Location location) {
         GardenSession session = activeSessions.get(player.getUniqueId());
         if (session == null || !session.isActive()) {
-            player.sendMessage("§cYou must have an active garden session to harvest crops!");
+            player.sendMessage(Component.text("§cYou must have an active garden session to harvest crops!"));
             return;
         }
         
         // Find the plot for this location
         GardenPlot plot = findPlotForLocation(session, location);
         if (plot == null) {
-            player.sendMessage("§cThis location is not in your garden!");
+            player.sendMessage(Component.text("§cThis location is not in your garden!"));
             return;
         }
         
         // Find the crop plot for this location
         CropPlot cropPlot = findCropPlotForLocation(plot, location);
         if (cropPlot == null) {
-            player.sendMessage("§cThis location is not a valid crop plot!");
+            player.sendMessage(Component.text("§cThis location is not a valid crop plot!"));
             return;
         }
         
         if (cropPlot.getCropType() == null) {
-            player.sendMessage("§cThis plot doesn't have a crop!");
+            player.sendMessage(Component.text("§cThis plot doesn't have a crop!"));
             return;
         }
         
         if (!cropPlot.isFullyGrown()) {
-            player.sendMessage("§cThis crop is not ready for harvest!");
+            player.sendMessage(Component.text("§cThis crop is not ready for harvest!"));
             return;
         }
         

@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.economy.data;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
@@ -19,7 +20,7 @@ public class EconomyStatistics {
         this.totalTransactions = 0;
         this.averageTransactionValue = 0.0;
         this.topPlayers = new java.util.HashMap<>();
-        this.lastUpdated = System.currentTimeMillis();
+        this.lastUpdated = java.lang.System.currentTimeMillis();
     }
 
     public long getTotalCoinsInCirculation() {

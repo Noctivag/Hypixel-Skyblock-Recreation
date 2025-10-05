@@ -1,4 +1,8 @@
 package de.noctivag.skyblock.combat;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -12,7 +16,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 
 import java.util.*;
@@ -41,18 +45,18 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Critical Hit Achievements
  */
 public class CriticalHitSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerCriticalStats> playerCriticalStats = new ConcurrentHashMap<>();
     private final Map<UUID, BukkitTask> criticalTasks = new ConcurrentHashMap<>();
 
-    public CriticalHitSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public CriticalHitSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         startCriticalUpdateTask();
 
         // Register events
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
 
     private void startCriticalUpdateTask() {
@@ -65,7 +69,7 @@ public class CriticalHitSystem implements Listener {
                     stats.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Every second
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Every second
     }
 
     @EventHandler
@@ -418,7 +422,7 @@ public class CriticalHitSystem implements Listener {
 
         public PlayerCriticalStats(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
 
             // Initialize base bonuses
             criticalChanceBonuses.put(CriticalBonusType.BASE, 0.0);
@@ -426,7 +430,7 @@ public class CriticalHitSystem implements Listener {
         }
 
         public void update() {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long timeDiff = currentTime - lastUpdate;
 
             // Update statistics every minute

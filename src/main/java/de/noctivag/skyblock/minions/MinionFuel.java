@@ -74,7 +74,7 @@ public class MinionFuel {
     
     public MinionFuel(FuelType type) {
         this.type = type;
-        this.startTime = System.currentTimeMillis();
+        this.startTime = java.lang.System.currentTimeMillis();
         this.endTime = startTime + type.getDuration();
         this.active = true;
     }
@@ -89,12 +89,12 @@ public class MinionFuel {
     public FuelType getType() { return type; }
     public long getStartTime() { return startTime; }
     public long getEndTime() { return endTime; }
-    public boolean isActive() { return active && System.currentTimeMillis() < endTime; }
-    public long getRemainingTime() { return Math.max(0, endTime - System.currentTimeMillis()); }
+    public boolean isActive() { return active && java.lang.System.currentTimeMillis() < endTime; }
+    public long getRemainingTime() { return Math.max(0, endTime - java.lang.System.currentTimeMillis()); }
     public double getSpeedMultiplier() { return type.getSpeedMultiplier(); }
     
     public boolean isExpired() {
-        return System.currentTimeMillis() >= endTime;
+        return java.lang.System.currentTimeMillis() >= endTime;
     }
     
     public String getRemainingTimeFormatted() {

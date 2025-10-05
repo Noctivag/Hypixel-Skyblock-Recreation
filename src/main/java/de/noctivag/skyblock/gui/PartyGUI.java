@@ -1,21 +1,25 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import net.kyori.adventure.text.Component;
 
 public class PartyGUI extends CustomGUI {
     private final Player player;
     
-    public PartyGUI(SkyblockPlugin plugin, Player player) {
-        super(plugin, "§a§lParty System", 54);
+    public PartyGUI(SkyblockPlugin SkyblockPlugin, Player player) {
+        super(SkyblockPlugin, "§a§lParty System", 54);
         this.player = player;
         setupItems();
     }
     
-    public PartyGUI(SkyblockPlugin plugin) {
-        super(plugin, "§a§lParty System", 54);
+    public PartyGUI(SkyblockPlugin SkyblockPlugin) {
+        super(SkyblockPlugin, "§a§lParty System", 54);
         this.player = null;
         setupItems();
     }

@@ -1,4 +1,9 @@
 package de.noctivag.skyblock.attributes;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
@@ -10,29 +15,30 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class AdvancedAttributeSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerAttributeData> playerAttributeData = new ConcurrentHashMap<>();
     private final Map<AttributeType, AttributeConfig> attributeConfigs = new HashMap<>();
     private final Map<AttributeCategory, CategoryConfig> categoryConfigs = new HashMap<>();
     
-    public AdvancedAttributeSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedAttributeSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
         initializeAttributeConfigs();
         initializeCategoryConfigs();
         startAttributeUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeAttributeConfigs() {
@@ -185,7 +191,7 @@ public class AdvancedAttributeSystem implements Listener {
             public void run() {
                 updateAllPlayerAttributeData();
             }
-        }.runTaskTimer(plugin, 0L, 20L * 60L); // Update every minute
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L * 60L); // Update every minute
     }
     
     private void updateAllPlayerAttributeData() {
@@ -212,7 +218,7 @@ public class AdvancedAttributeSystem implements Listener {
     }
     
     public void openAttributeGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§d§lAttribute System");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§d§lAttribute System"));
         
         // Add attribute categories
         addGUIItem(gui, 10, Material.DIAMOND_SWORD, "§c§lCombat", "§7View combat attributes.");
@@ -248,15 +254,15 @@ public class AdvancedAttributeSystem implements Listener {
         addGUIItem(gui, 53, Material.ARROW, "§7§lNext Page", "§7Go to next page.");
         
         player.openInventory(gui);
-        player.sendMessage("§aAttribute GUI geöffnet!");
+        player.sendMessage(Component.text("§aAttribute GUI geöffnet!"));
     }
     
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String description) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(name);
-            meta.setLore(Arrays.asList(description));
+            meta.displayName(Component.text(name));
+            meta.lore(Arrays.asList(Component.text(description)));
             item.setItemMeta(meta);
         }
         gui.setItem(slot, item);
@@ -398,11 +404,11 @@ public class AdvancedAttributeSystem implements Listener {
         
         public PlayerAttributeData(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void addAttributeLevel(AttributeType type, int amount) {

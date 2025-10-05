@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.items;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -28,17 +33,17 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Pet Accessories
  */
 public class PetItemSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerPetItems> playerPetItems = new ConcurrentHashMap<>();
     private final Map<UUID, BukkitTask> petItemTasks = new ConcurrentHashMap<>();
     
-    public PetItemSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public PetItemSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         startPetItemUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void startPetItemUpdateTask() {
@@ -50,7 +55,7 @@ public class PetItemSystem implements Listener {
                     petItems.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L);
     }
     
     @EventHandler
@@ -71,7 +76,7 @@ public class PetItemSystem implements Listener {
     }
     
     private void openPetItemGUI(Player player) {
-        player.sendMessage("§aPet Item GUI geöffnet!");
+        player.sendMessage(Component.text("§aPet Item GUI geöffnet!"));
     }
     
     public boolean applyPetItem(Player player, PetItemType itemType) {
@@ -84,7 +89,7 @@ public class PetItemSystem implements Listener {
         // Apply pet item effects
         PetItemConfig config = getPetItemConfig(itemType);
         if (config == null) {
-            player.sendMessage("§cPet Item Konfiguration nicht gefunden!");
+            player.sendMessage(Component.text("§cPet Item Konfiguration nicht gefunden!"));
             return false;
         }
         
@@ -170,7 +175,7 @@ public class PetItemSystem implements Listener {
         ItemStack item = new ItemStack(config.getMaterial());
         ItemMeta meta = item.getItemMeta();
         
-        meta.setDisplayName(config.getDisplayName());
+        meta.displayName(Component.text(config.getDisplayName()));
         List<String> lore = new ArrayList<>();
         lore.add(config.getDescription());
         lore.add("");
@@ -181,7 +186,7 @@ public class PetItemSystem implements Listener {
         lore.add("");
         lore.add("§6Right-click to use!");
         
-        meta.setLore(lore);
+        meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
         item.setItemMeta(meta);
         
         return item;
@@ -262,11 +267,11 @@ public class PetItemSystem implements Listener {
         
         public PlayerPetItems(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long timeDiff = currentTime - lastUpdate;
             
             if (timeDiff >= 60000) {

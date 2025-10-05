@@ -1,4 +1,8 @@
 package de.noctivag.skyblock.skyblock;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
@@ -15,7 +19,7 @@ import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 // import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import net.kyori.adventure.text.Component;
@@ -37,7 +41,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class HealthManaSystem implements Listener {
 
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerHealthManaData> playerData = new ConcurrentHashMap<>();
     private final Map<UUID, Thread> regenerationTasks = new ConcurrentHashMap<>();
@@ -51,13 +55,13 @@ public class HealthManaSystem implements Listener {
     private static final int DISPLAY_UPDATE_INTERVAL = 20; // ticks (1 second)
     private static final int REGEN_UPDATE_INTERVAL = 20; // ticks (1 second)
 
-    public HealthManaSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public HealthManaSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
     }
     
     public void initialize() {
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
         startGlobalUpdateTask();
     }
 
@@ -78,7 +82,7 @@ public class HealthManaSystem implements Listener {
         updatePlayerMana(player);
 
         // Send welcome message
-        player.sendMessage("§a§lSkyBlock §7- Health & Mana System loaded!");
+        player.sendMessage(Component.text("§a§lSkyBlock §7- Health & Mana System loaded!"));
     }
 
     @EventHandler
@@ -150,7 +154,7 @@ public class HealthManaSystem implements Listener {
 
     private void startGlobalUpdateTask() {
         Thread.ofVirtual().start(() -> {
-            while (plugin.isEnabled()) {
+            while (SkyblockPlugin.isEnabled()) {
                 try {
                     for (Player player : Bukkit.getOnlinePlayers()) {
                         updatePlayerHealth(player);
@@ -170,7 +174,7 @@ public class HealthManaSystem implements Listener {
 
         // Regeneration task - use virtual thread for Folia compatibility
         Thread regenThread = Thread.ofVirtual().start(() -> {
-            while (plugin.isEnabled() && player.isOnline()) {
+            while (SkyblockPlugin.isEnabled() && player.isOnline()) {
                 try {
                     regenerateHealthMana(player);
                     Thread.sleep(REGEN_UPDATE_INTERVAL * 50); // Convert ticks to ms
@@ -184,7 +188,7 @@ public class HealthManaSystem implements Listener {
 
         // Display task - use virtual thread for Folia compatibility
         Thread displayThread = Thread.ofVirtual().start(() -> {
-            while (plugin.isEnabled() && player.isOnline()) {
+            while (SkyblockPlugin.isEnabled() && player.isOnline()) {
                 try {
                     updateHealthManaDisplay(player);
                     Thread.sleep(DISPLAY_UPDATE_INTERVAL * 50); // Convert ticks to ms
@@ -603,7 +607,7 @@ public class HealthManaSystem implements Listener {
         data.setCurrentMana(data.getMaxMana() * 0.25); // Respawn with 25% mana
 
         // Send death message
-        player.sendMessage("§c§lYou died! §7Respawned with reduced health and mana.");
+        player.sendMessage(Component.text("§c§lYou died! §7Respawned with reduced health and mana."));
 
         // Could trigger respawn system here
     }
@@ -686,7 +690,7 @@ public class HealthManaSystem implements Listener {
 
         // Try file-based storage as a fallback for persistence
         try {
-            File dir = new File(plugin.getDataFolder(), "healthmana");
+            File dir = new File(SkyblockPlugin.getDataFolder(), "healthmana");
             if (!dir.exists()) dir.mkdirs();
             File f = new File(dir, playerId.toString() + ".yml");
             if (f.exists()) {
@@ -703,12 +707,12 @@ public class HealthManaSystem implements Listener {
                 data.setManaMultiplierFromSkills(cfg.getDouble("manaMultiplierFromSkills", 0.0));
                 data.setHealthRegenMultiplierFromSkills(cfg.getDouble("healthRegenMultiplierFromSkills", 0.0));
                 data.setManaRegenMultiplierFromSkills(cfg.getDouble("manaRegenMultiplierFromSkills", 0.0));
-                plugin.getLogger().fine("Loaded HealthMana data for " + playerId);
+                SkyblockPlugin.getLogger().fine("Loaded HealthMana data for " + playerId);
             } else {
                 // No file found, keep defaults
             }
         } catch (Exception ex) {
-            plugin.getLogger().warning("Failed to load HealthMana data for " + playerId + ": " + ex.getMessage());
+            SkyblockPlugin.getLogger().warning("Failed to load HealthMana data for " + playerId + ": " + ex.getMessage());
         }
 
         return data;
@@ -719,7 +723,7 @@ public class HealthManaSystem implements Listener {
         if (data == null) return;
 
         try {
-            File dir = new File(plugin.getDataFolder(), "healthmana");
+            File dir = new File(SkyblockPlugin.getDataFolder(), "healthmana");
             if (!dir.exists()) dir.mkdirs();
             File f = new File(dir, playerId.toString() + ".yml");
             YamlConfiguration cfg = new YamlConfiguration();
@@ -736,9 +740,9 @@ public class HealthManaSystem implements Listener {
             cfg.set("healthRegenMultiplierFromSkills", data.getHealthRegenMultiplierFromSkills());
             cfg.set("manaRegenMultiplierFromSkills", data.getManaRegenMultiplierFromSkills());
             cfg.save(f);
-            plugin.getLogger().fine("Saved HealthMana data for " + playerId);
+            SkyblockPlugin.getLogger().fine("Saved HealthMana data for " + playerId);
         } catch (Exception ex) {
-            plugin.getLogger().warning("Failed to save HealthMana data for " + playerId + ": " + ex.getMessage());
+            SkyblockPlugin.getLogger().warning("Failed to save HealthMana data for " + playerId + ": " + ex.getMessage());
         }
     }
 

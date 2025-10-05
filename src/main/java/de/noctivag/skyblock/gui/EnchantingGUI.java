@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.skyblock.EnchantingSystem;
 import de.noctivag.skyblock.skyblock.EnchantingSystem.CustomEnchantment;
 import org.bukkit.Material;
@@ -16,16 +19,16 @@ import net.kyori.adventure.text.format.TextDecoration;
  * Enchanting GUI - Hypixel Skyblock Style
  */
 public class EnchantingGUI extends CustomGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Player player;
     private final EnchantingSystem enchantingSystem;
     private ItemStack selectedItem;
     private CustomEnchantment selectedEnchantment;
     private int selectedLevel = 1;
     
-    public EnchantingGUI(SkyblockPlugin plugin, Player player, EnchantingSystem enchantingSystem) {
+    public EnchantingGUI(SkyblockPlugin SkyblockPlugin, Player player, EnchantingSystem enchantingSystem) {
         super(54, Component.text("§b§l⚡ ENCHANTING SYSTEM ⚡").color(NamedTextColor.AQUA).decorate(TextDecoration.BOLD));
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.player = player;
         this.enchantingSystem = enchantingSystem;
         setupItems();
@@ -77,7 +80,7 @@ public class EnchantingGUI extends CustomGUI {
     public void performEnchant() {
         if (canEnchant()) {
             enchantingSystem.enchantItem(player, selectedItem, selectedEnchantment, selectedLevel);
-            player.sendMessage("§a§lENCHANTMENT SUCCESSFUL!");
+            player.sendMessage(Component.text("§a§lENCHANTMENT SUCCESSFUL!"));
         }
     }
     

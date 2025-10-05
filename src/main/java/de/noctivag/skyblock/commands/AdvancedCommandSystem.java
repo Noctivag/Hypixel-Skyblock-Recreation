@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.commands;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -15,6 +19,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import net.kyori.adventure.text.Component;
 
 /**
  * Advanced Command System - Hypixel Skyblock Style
@@ -32,14 +37,14 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Command Analytics
  */
 public class AdvancedCommandSystem implements CommandExecutor, TabCompleter {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerCommands> playerCommands = new ConcurrentHashMap<>();
     private final Map<CommandType, CommandConfig> commandConfigs = new HashMap<>();
     private final Map<UUID, BukkitTask> commandTasks = new ConcurrentHashMap<>();
 
-    public AdvancedCommandSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedCommandSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeCommandConfigs();
         startCommandUpdateTask();
@@ -278,22 +283,22 @@ public class AdvancedCommandSystem implements CommandExecutor, TabCompleter {
 
         commandConfigs.put(CommandType.INFO, new CommandConfig(
             "info", "§bInfo", Material.COMPASS,
-            "§7View plugin information.",
-            CommandCategory.INFO, "basics.info", 0, Arrays.asList("§7- View info", "§7- Plugin information"),
+            "§7View SkyblockPlugin information.",
+            CommandCategory.INFO, "basics.info", 0, Arrays.asList("§7- View info", "§7- SkyblockPlugin information"),
             Arrays.asList("§7- /info", "§7- /info <info>")
         ));
 
         commandConfigs.put(CommandType.RELOAD, new CommandConfig(
             "reload", "§cReload", Material.REDSTONE,
-            "§7Reload the plugin.",
-            CommandCategory.RELOAD, "basics.reload", 0, Arrays.asList("§7- Reload plugin", "§7- Plugin reload"),
+            "§7Reload the SkyblockPlugin.",
+            CommandCategory.RELOAD, "basics.reload", 0, Arrays.asList("§7- Reload SkyblockPlugin", "§7- SkyblockPlugin reload"),
             Arrays.asList("§7- /reload", "§7- /reload <reload>")
         ));
     }
 
     private void startCommandUpdateTask() {
         Thread.ofVirtual().start(() -> {
-            while (plugin.isEnabled()) {
+            while (SkyblockPlugin.isEnabled()) {
                 try {
                     for (Map.Entry<UUID, PlayerCommands> entry : playerCommands.entrySet()) {
                         PlayerCommands commands = entry.getValue();
@@ -313,8 +318,8 @@ public class AdvancedCommandSystem implements CommandExecutor, TabCompleter {
         for (CommandType type : CommandType.values()) {
             CommandConfig config = commandConfigs.get(type);
             if (config != null) {
-                plugin.getCommand(config.getName()).setExecutor(this);
-                plugin.getCommand(config.getName()).setTabCompleter(this);
+                SkyblockPlugin.getCommand(config.getName()).setExecutor(this);
+                SkyblockPlugin.getCommand(config.getName()).setTabCompleter(this);
             }
         }
     }
@@ -339,13 +344,13 @@ public class AdvancedCommandSystem implements CommandExecutor, TabCompleter {
 
         CommandConfig config = commandConfigs.get(type);
         if (config == null) {
-            player.sendMessage("§cCommand configuration not found!");
+            player.sendMessage(Component.text("§cCommand configuration not found!"));
             return true;
         }
 
         // Check permissions
         if (!player.hasPermission(config.getPermission())) {
-            player.sendMessage("§cYou don't have permission to use this command!");
+            player.sendMessage(Component.text("§cYou don't have permission to use this command!"));
             return true;
         }
 
@@ -385,73 +390,73 @@ public class AdvancedCommandSystem implements CommandExecutor, TabCompleter {
     private void executeCommand(Player player, CommandType type, String[] args) {
         switch (type) {
             case SKILLS:
-                player.sendMessage("§aSkills command executed!");
+                player.sendMessage(Component.text("§aSkills command executed!"));
                 break;
             case COLLECTIONS:
-                player.sendMessage("§aCollections command executed!");
+                player.sendMessage(Component.text("§aCollections command executed!"));
                 break;
             case MINIONS:
-                player.sendMessage("§aMinions command executed!");
+                player.sendMessage(Component.text("§aMinions command executed!"));
                 break;
             case PETS:
-                player.sendMessage("§aPets command executed!");
+                player.sendMessage(Component.text("§aPets command executed!"));
                 break;
             case DUNGEONS:
-                player.sendMessage("§aDungeons command executed!");
+                player.sendMessage(Component.text("§aDungeons command executed!"));
                 break;
             case SLAYERS:
-                player.sendMessage("§aSlayers command executed!");
+                player.sendMessage(Component.text("§aSlayers command executed!"));
                 break;
             case GUILDS:
-                player.sendMessage("§aGuilds command executed!");
+                player.sendMessage(Component.text("§aGuilds command executed!"));
                 break;
             case AUCTION:
-                player.sendMessage("§aAuction command executed!");
+                player.sendMessage(Component.text("§aAuction command executed!"));
                 break;
             case BAZAAR:
-                player.sendMessage("§aBazaar command executed!");
+                player.sendMessage(Component.text("§aBazaar command executed!"));
                 break;
             case ISLANDS:
-                player.sendMessage("§aIslands command executed!");
+                player.sendMessage(Component.text("§aIslands command executed!"));
                 break;
             case ENCHANTING:
-                player.sendMessage("§aEnchanting command executed!");
+                player.sendMessage(Component.text("§aEnchanting command executed!"));
                 break;
             case ALCHEMY:
-                player.sendMessage("§aAlchemy command executed!");
+                player.sendMessage(Component.text("§aAlchemy command executed!"));
                 break;
             case CARPENTRY:
-                player.sendMessage("§aCarpentry command executed!");
+                player.sendMessage(Component.text("§aCarpentry command executed!"));
                 break;
             case RUNECRAFTING:
-                player.sendMessage("§aRunecrafting command executed!");
+                player.sendMessage(Component.text("§aRunecrafting command executed!"));
                 break;
             case BANKING:
-                player.sendMessage("§aBanking command executed!");
+                player.sendMessage(Component.text("§aBanking command executed!"));
                 break;
             case QUESTS:
-                player.sendMessage("§aQuests command executed!");
+                player.sendMessage(Component.text("§aQuests command executed!"));
                 break;
             case EVENTS:
-                player.sendMessage("§aEvents command executed!");
+                player.sendMessage(Component.text("§aEvents command executed!"));
                 break;
             case COSMETICS:
-                player.sendMessage("§aCosmetics command executed!");
+                player.sendMessage(Component.text("§aCosmetics command executed!"));
                 break;
             case ACHIEVEMENTS:
-                player.sendMessage("§aAchievements command executed!");
+                player.sendMessage(Component.text("§aAchievements command executed!"));
                 break;
             case LEADERBOARDS:
-                player.sendMessage("§aLeaderboards command executed!");
+                player.sendMessage(Component.text("§aLeaderboards command executed!"));
                 break;
             case API:
-                player.sendMessage("§aAPI command executed!");
+                player.sendMessage(Component.text("§aAPI command executed!"));
                 break;
             case WEB:
-                player.sendMessage("§aWeb command executed!");
+                player.sendMessage(Component.text("§aWeb command executed!"));
                 break;
             case SOCIAL:
-                player.sendMessage("§aSocial command executed!");
+                player.sendMessage(Component.text("§aSocial command executed!"));
                 break;
             case ITEMS:
                 showItemsCommand(player, args);
@@ -490,8 +495,8 @@ public class AdvancedCommandSystem implements CommandExecutor, TabCompleter {
     }
 
     private void showHelp(Player player, String[] args) {
-        player.sendMessage("§a§l=== Basics SkyblockPlugin ==");
-        player.sendMessage("§7Available commands:");
+        player.sendMessage(Component.text("§a§l=== Basics SkyblockPlugin =="));
+        player.sendMessage(Component.text("§7Available commands:"));
 
         for (CommandType type : CommandType.values()) {
             CommandConfig config = commandConfigs.get(type);
@@ -502,44 +507,44 @@ public class AdvancedCommandSystem implements CommandExecutor, TabCompleter {
     }
 
     private void showInfo(Player player, String[] args) {
-        player.sendMessage("§a§l=== Basics SkyblockPlugin ==");
-        player.sendMessage("§7Version: §a1.0.0");
-        player.sendMessage("§7Author: §aNoctivag");
-        player.sendMessage("§7Description: §aAdvanced Hypixel Skyblock Plugin");
+        player.sendMessage(Component.text("§a§l=== Basics SkyblockPlugin =="));
+        player.sendMessage(Component.text("§7Version: §a1.0.0"));
+        player.sendMessage(Component.text("§7Author: §aNoctivag"));
+        player.sendMessage(Component.text("§7Description: §aAdvanced Hypixel Skyblock SkyblockPlugin"));
         player.sendMessage("§7Features: §a" + CommandType.values().length + " commands");
     }
 
     private void showItemsCommand(Player player, String[] args) {
         if (args.length == 0) {
-            player.sendMessage("§aItems Command:");
-            player.sendMessage("§7- /items list - List all items");
-            player.sendMessage("§7- /items give <item> - Give item to player");
-            player.sendMessage("§7- /items info <item> - Show item information");
-            player.sendMessage("§7- /items gui - Open items GUI");
+            player.sendMessage(Component.text("§aItems Command:"));
+            player.sendMessage(Component.text("§7- /items list - List all items"));
+            player.sendMessage(Component.text("§7- /items give <item> - Give item to player"));
+            player.sendMessage(Component.text("§7- /items info <item> - Show item information"));
+            player.sendMessage(Component.text("§7- /items gui - Open items GUI"));
         } else if (args[0].equalsIgnoreCase("list")) {
-            player.sendMessage("§aAvailable Items:");
-            player.sendMessage("§7- Swords: Aspect of the End, Aspect of the Dragons, Midas Sword, Hyperion, Valkyrie, Scylla, Astraea");
-            player.sendMessage("§7- Bows: Runaan's Bow, Mosquito Bow, Bonemerang, Spirit Bow, Juju Shortbow");
-            player.sendMessage("§7- Tools: Drill, Tree Capitator, Golden Pickaxe, Diamond Pickaxe, Emerald Pickaxe");
-            player.sendMessage("§7- Accessories: Talisman of Power, Ring of Love, Artifact of Power, Relic of Power");
+            player.sendMessage(Component.text("§aAvailable Items:"));
+            player.sendMessage(Component.text("§7- Swords: Aspect of the End, Aspect of the Dragons, Midas Sword, Hyperion, Valkyrie, Scylla, Astraea"));
+            player.sendMessage(Component.text("§7- Bows: Runaan's Bow, Mosquito Bow, Bonemerang, Spirit Bow, Juju Shortbow"));
+            player.sendMessage(Component.text("§7- Tools: Drill, Tree Capitator, Golden Pickaxe, Diamond Pickaxe, Emerald Pickaxe"));
+            player.sendMessage(Component.text("§7- Accessories: Talisman of Power, Ring of Love, Artifact of Power, Relic of Power"));
         } else if (args[0].equalsIgnoreCase("give")) {
             if (args.length < 2) {
-                player.sendMessage("§cUsage: /items give <item>");
+                player.sendMessage(Component.text("§cUsage: /items give <item>"));
             } else {
                 player.sendMessage("§aItem " + args[1] + " given to " + player.getName() + "!");
             }
         } else if (args[0].equalsIgnoreCase("info")) {
             if (args.length < 2) {
-                player.sendMessage("§cUsage: /items info <item>");
+                player.sendMessage(Component.text("§cUsage: /items info <item>"));
             } else {
                 player.sendMessage("§aItem Information for " + args[1] + ":");
-                player.sendMessage("§7- Type: Weapon");
-                player.sendMessage("§7- Rarity: Legendary");
-                player.sendMessage("§7- Damage: 100");
-                player.sendMessage("§7- Abilities: Special abilities");
+                player.sendMessage(Component.text("§7- Type: Weapon"));
+                player.sendMessage(Component.text("§7- Rarity: Legendary"));
+                player.sendMessage(Component.text("§7- Damage: 100"));
+                player.sendMessage(Component.text("§7- Abilities: Special abilities"));
             }
         } else if (args[0].equalsIgnoreCase("gui")) {
-            player.sendMessage("§aOpening Items GUI...");
+            player.sendMessage(Component.text("§aOpening Items GUI..."));
         } else {
             player.sendMessage("§cUnknown subcommand: " + args[0]);
         }
@@ -547,34 +552,34 @@ public class AdvancedCommandSystem implements CommandExecutor, TabCompleter {
 
     private void showArmorCommand(Player player, String[] args) {
         if (args.length == 0) {
-            player.sendMessage("§aArmor Command:");
-            player.sendMessage("§7- /armor list - List all armor");
-            player.sendMessage("§7- /armor give <armor> - Give armor to player");
-            player.sendMessage("§7- /armor info <armor> - Show armor information");
-            player.sendMessage("§7- /armor gui - Open armor GUI");
+            player.sendMessage(Component.text("§aArmor Command:"));
+            player.sendMessage(Component.text("§7- /armor list - List all armor"));
+            player.sendMessage(Component.text("§7- /armor give <armor> - Give armor to player"));
+            player.sendMessage(Component.text("§7- /armor info <armor> - Show armor information"));
+            player.sendMessage(Component.text("§7- /armor gui - Open armor GUI"));
         } else if (args[0].equalsIgnoreCase("list")) {
-            player.sendMessage("§aAvailable Armor:");
-            player.sendMessage("§7- Dragon: Superior, Unstable, Strong, Young, Old, Protector, Wise");
-            player.sendMessage("§7- Dungeon: Shadow Assassin, Adaptive, Zombie Soldier, Skeleton Master, Bonzo, Scarf");
-            player.sendMessage("§7- Special: Goblin, Spider, Ender, Farmer, Miner, Fisher");
+            player.sendMessage(Component.text("§aAvailable Armor:"));
+            player.sendMessage(Component.text("§7- Dragon: Superior, Unstable, Strong, Young, Old, Protector, Wise"));
+            player.sendMessage(Component.text("§7- Dungeon: Shadow Assassin, Adaptive, Zombie Soldier, Skeleton Master, Bonzo, Scarf"));
+            player.sendMessage(Component.text("§7- Special: Goblin, Spider, Ender, Farmer, Miner, Fisher"));
         } else if (args[0].equalsIgnoreCase("give")) {
             if (args.length < 2) {
-                player.sendMessage("§cUsage: /armor give <armor>");
+                player.sendMessage(Component.text("§cUsage: /armor give <armor>"));
             } else {
                 player.sendMessage("§aArmor " + args[1] + " given to " + player.getName() + "!");
             }
         } else if (args[0].equalsIgnoreCase("info")) {
             if (args.length < 2) {
-                player.sendMessage("§cUsage: /armor info <armor>");
+                player.sendMessage(Component.text("§cUsage: /armor info <armor>"));
             } else {
                 player.sendMessage("§aArmor Information for " + args[1] + ":");
-                player.sendMessage("§7- Type: Armor");
-                player.sendMessage("§7- Rarity: Legendary");
-                player.sendMessage("§7- Defense: 100");
-                player.sendMessage("§7- Abilities: Special abilities");
+                player.sendMessage(Component.text("§7- Type: Armor"));
+                player.sendMessage(Component.text("§7- Rarity: Legendary"));
+                player.sendMessage(Component.text("§7- Defense: 100"));
+                player.sendMessage(Component.text("§7- Abilities: Special abilities"));
             }
         } else if (args[0].equalsIgnoreCase("gui")) {
-            player.sendMessage("§aOpening Armor GUI...");
+            player.sendMessage(Component.text("§aOpening Armor GUI..."));
         } else {
             player.sendMessage("§cUnknown subcommand: " + args[0]);
         }
@@ -582,33 +587,33 @@ public class AdvancedCommandSystem implements CommandExecutor, TabCompleter {
 
     private void showWeaponsCommand(Player player, String[] args) {
         if (args.length == 0) {
-            player.sendMessage("§aWeapons Command:");
-            player.sendMessage("§7- /weapons list - List all weapons");
-            player.sendMessage("§7- /weapons give <weapon> - Give weapon to player");
-            player.sendMessage("§7- /weapons info <weapon> - Show weapon information");
-            player.sendMessage("§7- /weapons gui - Open weapons GUI");
+            player.sendMessage(Component.text("§aWeapons Command:"));
+            player.sendMessage(Component.text("§7- /weapons list - List all weapons"));
+            player.sendMessage(Component.text("§7- /weapons give <weapon> - Give weapon to player"));
+            player.sendMessage(Component.text("§7- /weapons info <weapon> - Show weapon information"));
+            player.sendMessage(Component.text("§7- /weapons gui - Open weapons GUI"));
         } else if (args[0].equalsIgnoreCase("list")) {
-            player.sendMessage("§aAvailable Weapons:");
-            player.sendMessage("§7- Swords: Aspect of the End, Aspect of the Dragons, Midas Sword, Hyperion, Valkyrie, Scylla, Astraea");
-            player.sendMessage("§7- Bows: Runaan's Bow, Mosquito Bow, Bonemerang, Spirit Bow, Juju Shortbow");
+            player.sendMessage(Component.text("§aAvailable Weapons:"));
+            player.sendMessage(Component.text("§7- Swords: Aspect of the End, Aspect of the Dragons, Midas Sword, Hyperion, Valkyrie, Scylla, Astraea"));
+            player.sendMessage(Component.text("§7- Bows: Runaan's Bow, Mosquito Bow, Bonemerang, Spirit Bow, Juju Shortbow"));
         } else if (args[0].equalsIgnoreCase("give")) {
             if (args.length < 2) {
-                player.sendMessage("§cUsage: /weapons give <weapon>");
+                player.sendMessage(Component.text("§cUsage: /weapons give <weapon>"));
             } else {
                 player.sendMessage("§aWeapon " + args[1] + " given to " + player.getName() + "!");
             }
         } else if (args[0].equalsIgnoreCase("info")) {
             if (args.length < 2) {
-                player.sendMessage("§cUsage: /weapons info <weapon>");
+                player.sendMessage(Component.text("§cUsage: /weapons info <weapon>"));
             } else {
                 player.sendMessage("§aWeapon Information for " + args[1] + ":");
-                player.sendMessage("§7- Type: Weapon");
-                player.sendMessage("§7- Rarity: Legendary");
-                player.sendMessage("§7- Damage: 100");
-                player.sendMessage("§7- Abilities: Special abilities");
+                player.sendMessage(Component.text("§7- Type: Weapon"));
+                player.sendMessage(Component.text("§7- Rarity: Legendary"));
+                player.sendMessage(Component.text("§7- Damage: 100"));
+                player.sendMessage(Component.text("§7- Abilities: Special abilities"));
             }
         } else if (args[0].equalsIgnoreCase("gui")) {
-            player.sendMessage("§aOpening Weapons GUI...");
+            player.sendMessage(Component.text("§aOpening Weapons GUI..."));
         } else {
             player.sendMessage("§cUnknown subcommand: " + args[0]);
         }
@@ -616,20 +621,20 @@ public class AdvancedCommandSystem implements CommandExecutor, TabCompleter {
 
     private void showCreativeCommand(Player player, String[] args) {
         if (args.length == 0) {
-            player.sendMessage("§aCreative Command:");
-            player.sendMessage("§7- /creative - Open creative menu");
-            player.sendMessage("§7- /creative items - Open items creative menu");
-            player.sendMessage("§7- /creative armor - Open armor creative menu");
-            player.sendMessage("§7- /creative weapons - Open weapons creative menu");
-            player.sendMessage("§7- /creative all - Open all items creative menu");
+            player.sendMessage(Component.text("§aCreative Command:"));
+            player.sendMessage(Component.text("§7- /creative - Open creative menu"));
+            player.sendMessage(Component.text("§7- /creative items - Open items creative menu"));
+            player.sendMessage(Component.text("§7- /creative armor - Open armor creative menu"));
+            player.sendMessage(Component.text("§7- /creative weapons - Open weapons creative menu"));
+            player.sendMessage(Component.text("§7- /creative all - Open all items creative menu"));
         } else if (args[0].equalsIgnoreCase("items")) {
-            player.sendMessage("§aOpening Items Creative Menu...");
+            player.sendMessage(Component.text("§aOpening Items Creative Menu..."));
         } else if (args[0].equalsIgnoreCase("armor")) {
-            player.sendMessage("§aOpening Armor Creative Menu...");
+            player.sendMessage(Component.text("§aOpening Armor Creative Menu..."));
         } else if (args[0].equalsIgnoreCase("weapons")) {
-            player.sendMessage("§aOpening Weapons Creative Menu...");
+            player.sendMessage(Component.text("§aOpening Weapons Creative Menu..."));
         } else if (args[0].equalsIgnoreCase("all")) {
-            player.sendMessage("§aOpening All Items Creative Menu...");
+            player.sendMessage(Component.text("§aOpening All Items Creative Menu..."));
         } else {
             player.sendMessage("§cUnknown subcommand: " + args[0]);
         }
@@ -637,28 +642,28 @@ public class AdvancedCommandSystem implements CommandExecutor, TabCompleter {
 
     private void showHuntingCommand(Player player, String[] args) {
         if (args.length == 0) {
-            player.sendMessage("§aHunting Command:");
-            player.sendMessage("§7- /hunting list - List all creatures");
-            player.sendMessage("§7- /hunting hunt <creature> - Hunt a creature");
-            player.sendMessage("§7- /hunting shards - View collected shards");
-            player.sendMessage("§7- /hunting gui - Open hunting GUI");
+            player.sendMessage(Component.text("§aHunting Command:"));
+            player.sendMessage(Component.text("§7- /hunting list - List all creatures"));
+            player.sendMessage(Component.text("§7- /hunting hunt <creature> - Hunt a creature"));
+            player.sendMessage(Component.text("§7- /hunting shards - View collected shards"));
+            player.sendMessage(Component.text("§7- /hunting gui - Open hunting GUI"));
         } else if (args[0].equalsIgnoreCase("list")) {
-            player.sendMessage("§aAvailable Creatures:");
-            player.sendMessage("§7- Basic: Zombie, Skeleton, Spider, Creeper");
-            player.sendMessage("§7- Advanced: Enderman, Wither Skeleton, Dragon, Wither");
+            player.sendMessage(Component.text("§aAvailable Creatures:"));
+            player.sendMessage(Component.text("§7- Basic: Zombie, Skeleton, Spider, Creeper"));
+            player.sendMessage(Component.text("§7- Advanced: Enderman, Wither Skeleton, Dragon, Wither"));
         } else if (args[0].equalsIgnoreCase("hunt")) {
             if (args.length < 2) {
-                player.sendMessage("§cUsage: /hunting hunt <creature>");
+                player.sendMessage(Component.text("§cUsage: /hunting hunt <creature>"));
             } else {
                 player.sendMessage("§aHunting " + args[1] + "...");
             }
         } else if (args[0].equalsIgnoreCase("shards")) {
-            player.sendMessage("§aYour Collected Shards:");
-            player.sendMessage("§7- Zombie Shards: 0");
-            player.sendMessage("§7- Skeleton Shards: 0");
-            player.sendMessage("§7- Spider Shards: 0");
+            player.sendMessage(Component.text("§aYour Collected Shards:"));
+            player.sendMessage(Component.text("§7- Zombie Shards: 0"));
+            player.sendMessage(Component.text("§7- Skeleton Shards: 0"));
+            player.sendMessage(Component.text("§7- Spider Shards: 0"));
         } else if (args[0].equalsIgnoreCase("gui")) {
-            player.sendMessage("§aOpening Hunting GUI...");
+            player.sendMessage(Component.text("§aOpening Hunting GUI..."));
         } else {
             player.sendMessage("§cUnknown subcommand: " + args[0]);
         }
@@ -666,26 +671,26 @@ public class AdvancedCommandSystem implements CommandExecutor, TabCompleter {
 
     private void showBossesCommand(Player player, String[] args) {
         if (args.length == 0) {
-            player.sendMessage("§aBosses Command:");
-            player.sendMessage("§7- /bosses list - List all bosses");
-            player.sendMessage("§7- /bosses fight <boss> - Fight a boss");
-            player.sendMessage("§7- /bosses phases - View boss phases");
-            player.sendMessage("§7- /bosses gui - Open boss GUI");
+            player.sendMessage(Component.text("§aBosses Command:"));
+            player.sendMessage(Component.text("§7- /bosses list - List all bosses"));
+            player.sendMessage(Component.text("§7- /bosses fight <boss> - Fight a boss"));
+            player.sendMessage(Component.text("§7- /bosses phases - View boss phases"));
+            player.sendMessage(Component.text("§7- /bosses gui - Open boss GUI"));
         } else if (args[0].equalsIgnoreCase("list")) {
-            player.sendMessage("§aAvailable Bosses:");
-            player.sendMessage("§7- Kuudra, Ender Dragon, Wither, Sea Leviathan, Void Lord");
+            player.sendMessage(Component.text("§aAvailable Bosses:"));
+            player.sendMessage(Component.text("§7- Kuudra, Ender Dragon, Wither, Sea Leviathan, Void Lord"));
         } else if (args[0].equalsIgnoreCase("fight")) {
             if (args.length < 2) {
-                player.sendMessage("§cUsage: /bosses fight <boss>");
+                player.sendMessage(Component.text("§cUsage: /bosses fight <boss>"));
             } else {
                 player.sendMessage("§aFighting " + args[1] + "...");
             }
         } else if (args[0].equalsIgnoreCase("phases")) {
-            player.sendMessage("§aBoss Phases:");
-            player.sendMessage("§7- Kuudra: Phase 1, Phase 2, Phase 3");
-            player.sendMessage("§7- Dragon: Phase 1, Phase 2, Phase 3");
+            player.sendMessage(Component.text("§aBoss Phases:"));
+            player.sendMessage(Component.text("§7- Kuudra: Phase 1, Phase 2, Phase 3"));
+            player.sendMessage(Component.text("§7- Dragon: Phase 1, Phase 2, Phase 3"));
         } else if (args[0].equalsIgnoreCase("gui")) {
-            player.sendMessage("§aOpening Boss GUI...");
+            player.sendMessage(Component.text("§aOpening Boss GUI..."));
         } else {
             player.sendMessage("§cUnknown subcommand: " + args[0]);
         }
@@ -693,31 +698,31 @@ public class AdvancedCommandSystem implements CommandExecutor, TabCompleter {
 
     private void showAttributesCommand(Player player, String[] args) {
         if (args.length == 0) {
-            player.sendMessage("§aAttributes Command:");
-            player.sendMessage("§7- /attributes list - List all attributes");
-            player.sendMessage("§7- /attributes upgrade <attribute> - Upgrade an attribute");
-            player.sendMessage("§7- /attributes view - View your attributes");
-            player.sendMessage("§7- /attributes gui - Open attributes GUI");
+            player.sendMessage(Component.text("§aAttributes Command:"));
+            player.sendMessage(Component.text("§7- /attributes list - List all attributes"));
+            player.sendMessage(Component.text("§7- /attributes upgrade <attribute> - Upgrade an attribute"));
+            player.sendMessage(Component.text("§7- /attributes view - View your attributes"));
+            player.sendMessage(Component.text("§7- /attributes gui - Open attributes GUI"));
         } else if (args[0].equalsIgnoreCase("list")) {
-            player.sendMessage("§aAvailable Attributes:");
-            player.sendMessage("§7- Combat: Strength, Critical Damage, Critical Chance, Attack Speed");
-            player.sendMessage("§7- Defense: Health, Defense, Health Regen, Damage Reduction");
-            player.sendMessage("§7- Magic: Intelligence, Mana, Mana Regen, Magic Damage");
-            player.sendMessage("§7- Utility: Speed, Agility, Luck, Fortune");
+            player.sendMessage(Component.text("§aAvailable Attributes:"));
+            player.sendMessage(Component.text("§7- Combat: Strength, Critical Damage, Critical Chance, Attack Speed"));
+            player.sendMessage(Component.text("§7- Defense: Health, Defense, Health Regen, Damage Reduction"));
+            player.sendMessage(Component.text("§7- Magic: Intelligence, Mana, Mana Regen, Magic Damage"));
+            player.sendMessage(Component.text("§7- Utility: Speed, Agility, Luck, Fortune"));
         } else if (args[0].equalsIgnoreCase("upgrade")) {
             if (args.length < 2) {
-                player.sendMessage("§cUsage: /attributes upgrade <attribute>");
+                player.sendMessage(Component.text("§cUsage: /attributes upgrade <attribute>"));
             } else {
                 player.sendMessage("§aUpgrading " + args[1] + "...");
             }
         } else if (args[0].equalsIgnoreCase("view")) {
-            player.sendMessage("§aYour Attributes:");
-            player.sendMessage("§7- Strength: 0");
-            player.sendMessage("§7- Health: 0");
-            player.sendMessage("§7- Intelligence: 0");
-            player.sendMessage("§7- Speed: 0");
+            player.sendMessage(Component.text("§aYour Attributes:"));
+            player.sendMessage(Component.text("§7- Strength: 0"));
+            player.sendMessage(Component.text("§7- Health: 0"));
+            player.sendMessage(Component.text("§7- Intelligence: 0"));
+            player.sendMessage(Component.text("§7- Speed: 0"));
         } else if (args[0].equalsIgnoreCase("gui")) {
-            player.sendMessage("§aOpening Attributes GUI...");
+            player.sendMessage(Component.text("§aOpening Attributes GUI..."));
         } else {
             player.sendMessage("§cUnknown subcommand: " + args[0]);
         }
@@ -725,36 +730,36 @@ public class AdvancedCommandSystem implements CommandExecutor, TabCompleter {
 
     private void showSacksCommand(Player player, String[] args) {
         if (args.length == 0) {
-            player.sendMessage("§aSacks Command:");
-            player.sendMessage("§7- /sacks list - List all sacks");
-            player.sendMessage("§7- /sacks give <sack> - Give sack to player");
-            player.sendMessage("§7- /sacks info <sack> - Show sack information");
-            player.sendMessage("§7- /sacks gui - Open sacks GUI");
+            player.sendMessage(Component.text("§aSacks Command:"));
+            player.sendMessage(Component.text("§7- /sacks list - List all sacks"));
+            player.sendMessage(Component.text("§7- /sacks give <sack> - Give sack to player"));
+            player.sendMessage(Component.text("§7- /sacks info <sack> - Show sack information"));
+            player.sendMessage(Component.text("§7- /sacks gui - Open sacks GUI"));
         } else if (args[0].equalsIgnoreCase("list")) {
-            player.sendMessage("§aAvailable Sacks:");
-            player.sendMessage("§7- Farming: Wheat Sack, Carrot Sack, Potato Sack");
-            player.sendMessage("§7- Mining: Cobblestone Sack, Coal Sack, Iron Sack, Gold Sack, Diamond Sack");
-            player.sendMessage("§7- Combat: Rotten Flesh Sack, Bone Sack, String Sack");
-            player.sendMessage("§7- Foraging: Oak Log Sack, Birch Log Sack, Spruce Log Sack, Jungle Log Sack, Acacia Log Sack, Dark Oak Log Sack");
-            player.sendMessage("§7- Fishing: Fish Sack, Salmon Sack, Tropical Fish Sack, Pufferfish Sack");
+            player.sendMessage(Component.text("§aAvailable Sacks:"));
+            player.sendMessage(Component.text("§7- Farming: Wheat Sack, Carrot Sack, Potato Sack"));
+            player.sendMessage(Component.text("§7- Mining: Cobblestone Sack, Coal Sack, Iron Sack, Gold Sack, Diamond Sack"));
+            player.sendMessage(Component.text("§7- Combat: Rotten Flesh Sack, Bone Sack, String Sack"));
+            player.sendMessage(Component.text("§7- Foraging: Oak Log Sack, Birch Log Sack, Spruce Log Sack, Jungle Log Sack, Acacia Log Sack, Dark Oak Log Sack"));
+            player.sendMessage(Component.text("§7- Fishing: Fish Sack, Salmon Sack, Tropical Fish Sack, Pufferfish Sack"));
         } else if (args[0].equalsIgnoreCase("give")) {
             if (args.length < 2) {
-                player.sendMessage("§cUsage: /sacks give <sack>");
+                player.sendMessage(Component.text("§cUsage: /sacks give <sack>"));
             } else {
                 player.sendMessage("§aSack " + args[1] + " given to " + player.getName() + "!");
             }
         } else if (args[0].equalsIgnoreCase("info")) {
             if (args.length < 2) {
-                player.sendMessage("§cUsage: /sacks info <sack>");
+                player.sendMessage(Component.text("§cUsage: /sacks info <sack>"));
             } else {
                 player.sendMessage("§aSack Information for " + args[1] + ":");
-                player.sendMessage("§7- Type: Storage");
-                player.sendMessage("§7- Rarity: Common");
-                player.sendMessage("§7- Capacity: 1000");
-                player.sendMessage("§7- Features: Auto-Collection");
+                player.sendMessage(Component.text("§7- Type: Storage"));
+                player.sendMessage(Component.text("§7- Rarity: Common"));
+                player.sendMessage(Component.text("§7- Capacity: 1000"));
+                player.sendMessage(Component.text("§7- Features: Auto-Collection"));
             }
         } else if (args[0].equalsIgnoreCase("gui")) {
-            player.sendMessage("§aOpening Sacks GUI...");
+            player.sendMessage(Component.text("§aOpening Sacks GUI..."));
         } else {
             player.sendMessage("§cUnknown subcommand: " + args[0]);
         }
@@ -763,13 +768,13 @@ public class AdvancedCommandSystem implements CommandExecutor, TabCompleter {
 
     private void reloadPlugin(Player player, String[] args) {
         if (!player.hasPermission("basics.reload")) {
-            player.sendMessage("§cYou don't have permission to reload the plugin!");
+            player.sendMessage(Component.text("§cYou don't have permission to reload the SkyblockPlugin!"));
             return;
         }
 
-        player.sendMessage("§aReloading plugin...");
+        player.sendMessage(Component.text("§aReloading SkyblockPlugin..."));
         // Reload logic here
-        player.sendMessage("§aPlugin reloaded successfully!");
+        player.sendMessage(Component.text("§aPlugin reloaded successfully!"));
     }
 
     private CommandType getCommandType(String commandName) {
@@ -898,11 +903,11 @@ public class AdvancedCommandSystem implements CommandExecutor, TabCompleter {
 
         public PlayerCommands(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
 
         public void update() {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long timeDiff = currentTime - lastUpdate;
 
             if (timeDiff >= 60000) {
@@ -925,18 +930,18 @@ public class AdvancedCommandSystem implements CommandExecutor, TabCompleter {
         }
 
         public void setCooldown(CommandType type, int seconds) {
-            commandCooldowns.put(type, System.currentTimeMillis() + (seconds * 1000L));
+            commandCooldowns.put(type, java.lang.System.currentTimeMillis() + (seconds * 1000L));
         }
 
         public boolean isOnCooldown(CommandType type) {
             Long cooldown = commandCooldowns.get(type);
-            return cooldown != null && cooldown > System.currentTimeMillis();
+            return cooldown != null && cooldown > java.lang.System.currentTimeMillis();
         }
 
         public long getCooldownRemaining(CommandType type) {
             Long cooldown = commandCooldowns.get(type);
             if (cooldown == null) return 0;
-            long remaining = cooldown - System.currentTimeMillis();
+            long remaining = cooldown - java.lang.System.currentTimeMillis();
             return Math.max(0, remaining / 1000);
         }
 

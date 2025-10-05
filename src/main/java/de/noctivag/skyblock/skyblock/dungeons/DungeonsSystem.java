@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.skyblock.dungeons;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -21,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DungeonsSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, DungeonRun> activeRuns = new ConcurrentHashMap<>();
     private final Map<String, Dungeon> dungeons = new HashMap<>();
     
@@ -167,7 +172,7 @@ public class DungeonsSystem implements Listener {
             this.runId = runId;
             this.dungeon = dungeon;
             this.players = players;
-            this.startTime = System.currentTimeMillis();
+            this.startTime = java.lang.System.currentTimeMillis();
             this.completedRooms = new ConcurrentHashMap<>();
             this.playerKills = new ConcurrentHashMap<>();
             this.playerDeaths = new ConcurrentHashMap<>();
@@ -191,7 +196,7 @@ public class DungeonsSystem implements Listener {
         public DungeonScore getScore() { return score; }
         
         public long getDuration() {
-            return System.currentTimeMillis() - startTime;
+            return java.lang.System.currentTimeMillis() - startTime;
         }
         
         public boolean isCompleted() {
@@ -236,9 +241,9 @@ public class DungeonsSystem implements Listener {
         }
     }
     
-    public DungeonsSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    public DungeonsSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        SkyblockPlugin.getServer().getPluginManager().registerEvents(this, SkyblockPlugin);
         initializeDungeons();
     }
     
@@ -313,13 +318,13 @@ public class DungeonsSystem implements Listener {
     public boolean startDungeonRun(Player player, String dungeonId) {
         Dungeon dungeon = dungeons.get(dungeonId);
         if (dungeon == null) {
-            player.sendMessage("§cDungeon nicht gefunden!");
+            player.sendMessage(Component.text("§cDungeon nicht gefunden!"));
             return false;
         }
         
         // Prüfe ob bereits eine Run aktiv ist
         if (activeRuns.containsKey(player.getUniqueId())) {
-            player.sendMessage("§cDu hast bereits eine aktive Dungeon-Run!");
+            player.sendMessage(Component.text("§cDu hast bereits eine aktive Dungeon-Run!"));
             return false;
         }
         
@@ -332,7 +337,7 @@ public class DungeonsSystem implements Listener {
         DungeonRun run = new DungeonRun(runId, dungeon, players);
         activeRuns.put(player.getUniqueId(), run);
         
-        player.sendMessage("§a§lDUNGEON RUN GESTARTET!");
+        player.sendMessage(Component.text("§a§lDUNGEON RUN GESTARTET!"));
         player.sendMessage("§e" + dungeon.getName());
         player.sendMessage("§7" + dungeon.getDescription());
         player.sendMessage("§7Spieler: " + players.size() + "/" + dungeon.getMaxPlayers());
@@ -395,9 +400,9 @@ public class DungeonsSystem implements Listener {
         run.getScore().setTime(run.getDuration());
         run.getScore().calculateTotalScore();
         
-        Player player = plugin.getServer().getPlayer(playerId);
+        Player player = SkyblockPlugin.getServer().getPlayer(playerId);
         if (player != null) {
-            player.sendMessage("§6§lDUNGEON RUN ABGESCHLOSSEN!");
+            player.sendMessage(Component.text("§6§lDUNGEON RUN ABGESCHLOSSEN!"));
             player.sendMessage("§e" + run.getDungeon().getName());
             player.sendMessage("§7Zeit: " + formatTime(run.getDuration()));
             player.sendMessage("§7Kills: " + run.getScore().getKills());

@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.commands;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.maintenance.MaintenanceManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -18,12 +22,12 @@ import java.util.List;
  */
 public class MaintenanceCommand implements CommandExecutor, TabCompleter {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MaintenanceManager maintenanceManager;
     
-    public MaintenanceCommand(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.maintenanceManager = (de.noctivag.plugin.maintenance.MaintenanceManager) plugin.getMaintenanceManager();
+    public MaintenanceCommand(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.maintenanceManager = (de.noctivag.skyblock.maintenance.MaintenanceManager) SkyblockPlugin.getMaintenanceManager();
     }
     
     @Override
@@ -152,12 +156,12 @@ public class MaintenanceCommand implements CommandExecutor, TabCompleter {
     }
     
     private void openMaintenanceGUI(Player player) {
-        player.sendMessage("§e[Maintenance] Öffne Wartungs-GUI...");
+        player.sendMessage(Component.text("§e[Maintenance] Öffne Wartungs-GUI..."));
         
         // Open maintenance GUI
         maintenanceManager.openMaintenanceGUI(player);
         
-        player.sendMessage("§a[Maintenance] Wartungs-GUI geöffnet!");
+        player.sendMessage(Component.text("§a[Maintenance] Wartungs-GUI geöffnet!"));
     }
     
     private void toggleMaintenanceMode(CommandSender sender) {
@@ -176,7 +180,7 @@ public class MaintenanceCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage("§7/maintenance check §8- Führt Wartungsprüfung durch");
         sender.sendMessage("§7/maintenance fix §8- Führt Auto-Fix durch");
         sender.sendMessage("§7/maintenance report §8- Generiert Wartungsbericht");
-        sender.sendMessage("§7/maintenance stats §8- Zeigt Plugin-Statistiken");
+        sender.sendMessage("§7/maintenance stats §8- Zeigt SkyblockPlugin-Statistiken");
         sender.sendMessage("§7/maintenance search <query> §8- Führt Suche durch");
         sender.sendMessage("§7/maintenance docs §8- Generiert Dokumentation");
         sender.sendMessage("§7/maintenance gui §8- Öffnet Wartungs-GUI");

@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.performance;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -9,7 +12,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * PerformanceMonitor - Überwacht Plugin-Performance
+ * PerformanceMonitor - Überwacht SkyblockPlugin-Performance
  * 
  * Features:
  * - TPS-Monitoring
@@ -18,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Automatische Optimierungen
  */
 public class PerformanceMonitor {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     
     // Performance-Metriken
     private final Map<String, PerformanceMetric> metrics = new ConcurrentHashMap<>();
@@ -35,8 +38,8 @@ public class PerformanceMonitor {
     private boolean autoOptimizationEnabled = true;
     private int optimizationLevel = 0; // 0-3
     
-    public PerformanceMonitor(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public PerformanceMonitor(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         startMonitoring();
     }
     
@@ -52,13 +55,13 @@ public class PerformanceMonitor {
                 monitorMemory();
                 checkPerformanceThresholds();
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Jede Sekunde
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Jede Sekunde
         
         // Detailliertes Monitoring
         Thread.ofVirtual().start(() -> {
             try {
                 Thread.sleep(6000L * 50); // Initial delay: 5 minutes = 300,000 ms
-                while (plugin.isEnabled()) {
+                while (SkyblockPlugin.isEnabled()) {
                     generatePerformanceReport();
                     Thread.sleep(6000L * 50); // Every 5 minutes = 300,000 ms
                 }
@@ -114,19 +117,19 @@ public class PerformanceMonitor {
         
         // TPS-Check
         if (avgTPS < CRITICAL_TPS) {
-            plugin.getLogger().severe("CRITICAL TPS: " + avgTPS + " - Auto-optimization triggered!");
+            SkyblockPlugin.getLogger().severe("CRITICAL TPS: " + avgTPS + " - Auto-optimization triggered!");
             triggerAutoOptimization(3); // Höchste Optimierungsstufe
         } else if (avgTPS < WARNING_TPS) {
-            plugin.getLogger().warning("LOW TPS: " + avgTPS + " - Auto-optimization triggered!");
+            SkyblockPlugin.getLogger().warning("LOW TPS: " + avgTPS + " - Auto-optimization triggered!");
             triggerAutoOptimization(2);
         }
         
         // Memory-Check
         if (currentMemory > CRITICAL_MEMORY) {
-            plugin.getLogger().severe("CRITICAL MEMORY: " + formatBytes(currentMemory) + " - Auto-optimization triggered!");
+            SkyblockPlugin.getLogger().severe("CRITICAL MEMORY: " + formatBytes(currentMemory) + " - Auto-optimization triggered!");
             triggerAutoOptimization(3);
         } else if (currentMemory > WARNING_MEMORY) {
-            plugin.getLogger().warning("HIGH MEMORY: " + formatBytes(currentMemory) + " - Auto-optimization triggered!");
+            SkyblockPlugin.getLogger().warning("HIGH MEMORY: " + formatBytes(currentMemory) + " - Auto-optimization triggered!");
             triggerAutoOptimization(1);
         }
     }
@@ -154,7 +157,7 @@ public class PerformanceMonitor {
                 break;
         }
         
-        plugin.getLogger().info("Auto-optimization level " + level + " applied");
+        SkyblockPlugin.getLogger().info("Auto-optimization level " + level + " applied");
     }
     
     /**
@@ -162,10 +165,10 @@ public class PerformanceMonitor {
      */
     private void optimizeLevel1() {
         // Cache-Cleanup
-        // plugin.getCacheManager().clear(); // CacheManager not implemented yet
+        // SkyblockPlugin.getCacheManager().clear(); // CacheManager not implemented yet
         System.gc(); // Garbage Collection
         
-        plugin.getLogger().info("Level 1 optimization: Cache cleanup completed");
+        SkyblockPlugin.getLogger().info("Level 1 optimization: Cache cleanup completed");
     }
     
     /**
@@ -175,7 +178,7 @@ public class PerformanceMonitor {
         // Reduziere Task-Intervalle
         // Könnte Task-Intervalle dynamisch anpassen
         
-        plugin.getLogger().info("Level 2 optimization: Task reduction applied");
+        SkyblockPlugin.getLogger().info("Level 2 optimization: Task reduction applied");
     }
     
     /**
@@ -186,7 +189,7 @@ public class PerformanceMonitor {
         // Reduziere GUI-Updates
         // Pausiere Background-Tasks
         
-        plugin.getLogger().info("Level 3 optimization: Emergency mode activated");
+        SkyblockPlugin.getLogger().info("Level 3 optimization: Emergency mode activated");
     }
     
     /**
@@ -206,15 +209,15 @@ public class PerformanceMonitor {
         report.put("average_memory", getAverageMemoryUsage());
         report.put("memory_percentage", getMemoryPercentage());
         
-        // Plugin-Metriken
+        // SkyblockPlugin-Metriken
         report.put("online_players", Bukkit.getOnlinePlayers().size());
         report.put("optimization_level", optimizationLevel);
         
         // Logge Report
-        plugin.getLogger().info("=== PERFORMANCE REPORT ===");
+        SkyblockPlugin.getLogger().info("=== PERFORMANCE REPORT ===");
         report.forEach((key, value) -> 
-            plugin.getLogger().info(key + ": " + value));
-        plugin.getLogger().info("=========================");
+            SkyblockPlugin.getLogger().info(key + ": " + value));
+        SkyblockPlugin.getLogger().info("=========================");
     }
     
     /**

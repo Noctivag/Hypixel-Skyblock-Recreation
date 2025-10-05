@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.taming;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -38,7 +39,7 @@ public class PlayerTaming {
         this.tamingLevel = 1;
         this.tamingXP = 0.0;
         this.totalXP = 0.0;
-        this.lastActivity = System.currentTimeMillis();
+        this.lastActivity = java.lang.System.currentTimeMillis();
         
         // Initialize statistics
         this.animalsTamed = 0;
@@ -55,7 +56,7 @@ public class PlayerTaming {
     public void addXP(double xpAmount) {
         this.tamingXP += xpAmount;
         this.totalXP += xpAmount;
-        this.lastActivity = System.currentTimeMillis();
+        this.lastActivity = java.lang.System.currentTimeMillis();
         
         // Check for level up
         int newLevel = calculateLevel(tamingXP);
@@ -210,7 +211,7 @@ public class PlayerTaming {
         this.tamingLevel = 1;
         this.tamingXP = 0.0;
         this.totalXP = 0.0;
-        this.lastActivity = System.currentTimeMillis();
+        this.lastActivity = java.lang.System.currentTimeMillis();
         
         this.animalsTamed = 0;
         this.successfulTames = 0;

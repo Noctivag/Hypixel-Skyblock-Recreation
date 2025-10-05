@@ -1,6 +1,10 @@
 package de.noctivag.skyblock.collectibles;
 
-import de.noctivag.skyblock.Plugin;
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
@@ -24,19 +28,19 @@ import net.kyori.adventure.text.format.NamedTextColor;
  * Fairy Souls System - Hypixel Skyblock Style
  */
 public class FairySoulsSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerFairySouls> playerFairySouls = new ConcurrentHashMap<>();
     private final Map<FairySoulType, FairySoulConfig> fairySoulConfigs = new HashMap<>();
 
-    public FairySoulsSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public FairySoulsSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeFairySoulConfigs();
         startFairySoulUpdateTask();
 
         // Register events
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
 
     private void initializeFairySoulConfigs() {
@@ -230,7 +234,7 @@ public class FairySoulsSystem implements Listener {
                     fairySouls.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Every second
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Every second
     }
 
     @EventHandler
@@ -261,7 +265,7 @@ public class FairySoulsSystem implements Listener {
 
         // Check if player already has this fairy soul
         if (playerFairySouls.hasFairySoul(fairySoulType)) {
-            player.sendMessage("§cDu hast diese Fairy Soul bereits gesammelt!");
+            player.sendMessage(Component.text("§cDu hast diese Fairy Soul bereits gesammelt!"));
             return;
         }
 
@@ -495,11 +499,11 @@ public class FairySoulsSystem implements Listener {
 
         public PlayerFairySouls(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
 
         public void update() {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long timeDiff = currentTime - lastUpdate;
 
             // Update statistics every minute

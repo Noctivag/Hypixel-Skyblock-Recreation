@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.network;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -28,7 +32,7 @@ import java.util.logging.Level;
  */
 public class IslandServerManager {
 
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final ServerManager serverManager;
     private final JedisPool jedisPool;
@@ -41,10 +45,10 @@ public class IslandServerManager {
     private final int islandSize;
     private final int islandSpacing;
 
-    public IslandServerManager(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager,
+    public IslandServerManager(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager,
                               ServerManager serverManager, JedisPool jedisPool,
                               int maxIslandsPerServer, int islandSize, int islandSpacing) {
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         this.serverManager = serverManager;
         this.jedisPool = jedisPool;
@@ -95,8 +99,8 @@ public class IslandServerManager {
             return true;
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to create island: " + e.getMessage());
-            plugin.getLogger().log(Level.SEVERE, "Exception while creating island for player " + player.getUniqueId(), e);
+            SkyblockPlugin.getLogger().severe("Failed to create island: " + e.getMessage());
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Exception while creating island for player " + player.getUniqueId(), e);
             return false;
         }
     }
@@ -131,7 +135,7 @@ public class IslandServerManager {
             serverId,
             spawnLocation,
             islandSize,
-            System.currentTimeMillis(),
+            java.lang.System.currentTimeMillis(),
             new ArrayList<>(),
             new HashMap<>(),
             true
@@ -139,7 +143,7 @@ public class IslandServerManager {
     }
 
     private String generateIslandId() {
-        return "island_" + System.currentTimeMillis() + "_" + (int)(Math.random() * 10000);
+        return "island_" + java.lang.System.currentTimeMillis() + "_" + (int)(Math.random() * 10000);
     }
 
     private Location calculateIslandSpawn(String serverId) {
@@ -182,7 +186,7 @@ public class IslandServerManager {
             jedis.sadd("islands:owner:" + island.getOwnerId(), island.getId());
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to store island data: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to store island data: " + e.getMessage());
         }
     }
 
@@ -193,7 +197,7 @@ public class IslandServerManager {
             notification.put("ownerId", island.getOwnerId().toString());
             notification.put("type", island.getType().name());
             notification.put("serverId", island.getServerId());
-            notification.put("timestamp", String.valueOf(System.currentTimeMillis()));
+            notification.put("timestamp", String.valueOf(java.lang.System.currentTimeMillis()));
 
             jedis.hset("island_created:" + island.getId(), notification);
             jedis.expire("island_created:" + island.getId(), 300); // 5 minutes
@@ -202,7 +206,7 @@ public class IslandServerManager {
             jedis.publish("island_events", "created:" + island.getId());
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to notify island creation: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to notify island creation: " + e.getMessage());
         }
     }
 
@@ -225,7 +229,7 @@ public class IslandServerManager {
                                                NetworkArchitecture.TransferReason.ISLAND_ACCESS);
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to transfer player to island: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to transfer player to island: " + e.getMessage());
             return false;
         }
     }
@@ -265,7 +269,7 @@ public class IslandServerManager {
             return false;
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to add island member: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to add island member: " + e.getMessage());
             return false;
         }
     }
@@ -286,7 +290,7 @@ public class IslandServerManager {
             return false;
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to remove island member: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to remove island member: " + e.getMessage());
             return false;
         }
     }
@@ -307,7 +311,7 @@ public class IslandServerManager {
             }
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to update island data: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to update island data: " + e.getMessage());
         }
     }
 
@@ -317,7 +321,7 @@ public class IslandServerManager {
             public void run() {
                 syncIslandsFromNetwork();
             }
-        }.runTaskTimerAsynchronously(plugin, 0L, 200L); // Every 10 seconds
+        }.runTaskTimerAsynchronously(SkyblockPlugin, 0L, 200L); // Every 10 seconds
     }
 
     private void syncIslandsFromNetwork() {
@@ -340,7 +344,7 @@ public class IslandServerManager {
             }
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to sync islands from network: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to sync islands from network: " + e.getMessage());
         }
     }
 

@@ -34,7 +34,7 @@ public class BazaarOrderResult {
             this.sellOrder = sellOrder;
             this.amount = amount;
             this.price = price;
-            this.timestamp = System.currentTimeMillis();
+            this.timestamp = java.lang.System.currentTimeMillis();
         }
         
         // Getters

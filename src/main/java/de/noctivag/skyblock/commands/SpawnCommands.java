@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.commands;
+import net.kyori.adventure.text.Component;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -9,10 +13,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class SpawnCommands implements CommandExecutor {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public SpawnCommands(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public SpawnCommands(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     @Override
@@ -20,22 +24,22 @@ public class SpawnCommands implements CommandExecutor {
         String name = command.getName().toLowerCase();
         if (name.equals("setspawn")) {
             if (!(sender instanceof Player player)) { sender.sendMessage("Players only"); return true; }
-            if (!player.hasPermission("basicsplugin.setspawn")) { player.sendMessage("§cKeine Berechtigung."); return true; }
+            if (!player.hasPermission("basicsplugin.setspawn")) { player.sendMessage(Component.text("§cKeine Berechtigung.")); return true; }
             // TODO: Implement proper TeleportManager interface
-            // ((TeleportManager) plugin.getTeleportManager()).setSpawn(player.getLocation());
-            player.sendMessage("§aSpawn gesetzt.");
+            // ((TeleportManager) SkyblockPlugin.getTeleportManager()).setSpawn(player.getLocation());
+            player.sendMessage(Component.text("§aSpawn gesetzt."));
             return true;
         }
 
         if (name.equals("spawn")) {
             if (!(sender instanceof Player player)) { sender.sendMessage("Players only"); return true; }
             // TODO: Implement proper TeleportManager interface
-            // Location spawn = ((TeleportManager) plugin.getTeleportManager()).getSpawn();
+            // Location spawn = ((TeleportManager) SkyblockPlugin.getTeleportManager()).getSpawn();
             Location spawn = null; // Placeholder
-            if (spawn == null) { player.sendMessage("§cSpawn nicht gesetzt."); return true; }
-            // ((TeleportManager) plugin.getTeleportManager()).setLastLocation(player, player.getLocation());
+            if (spawn == null) { player.sendMessage(Component.text("§cSpawn nicht gesetzt.")); return true; }
+            // ((TeleportManager) SkyblockPlugin.getTeleportManager()).setLastLocation(player, player.getLocation());
             player.teleport(spawn);
-            player.sendMessage("§aTeleportiere zum Spawn.");
+            player.sendMessage(Component.text("§aTeleportiere zum Spawn."));
             return true;
         }
         return true;

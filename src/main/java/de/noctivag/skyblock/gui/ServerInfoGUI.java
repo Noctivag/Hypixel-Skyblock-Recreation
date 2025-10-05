@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,20 +12,22 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 
 /**
  * Server Info GUI - Server-Informationen und Status
  */
 public class ServerInfoGUI {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public ServerInfoGUI(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public ServerInfoGUI(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     public void openServerInfoGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lServer Info");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lServer Info"));
         
         // Server Status
         setItem(gui, 10, Material.GREEN_WOOL, "§a§lServer Status",
@@ -65,12 +70,12 @@ public class ServerInfoGUI {
             "",
             "§eKlicke zum Öffnen");
 
-        // Plugin Information
+        // SkyblockPlugin Information
         setItem(gui, 19, Material.NETHER_STAR, "§d§lPlugin Information",
             "§7Plugin-Informationen",
-            "§7• Plugin Name: §aBasics Plugin",
-            "§7• Plugin Version: §a1.0.0",
-            "§7• Plugin Status: §aActive",
+            "§7• SkyblockPlugin Name: §aBasics SkyblockPlugin",
+            "§7• SkyblockPlugin Version: §a1.0.0",
+            "§7• SkyblockPlugin Status: §aActive",
             "",
             "§eKlicke zum Öffnen");
             
@@ -159,7 +164,7 @@ public class ServerInfoGUI {
     }
     
     private String getUptime() {
-        long uptime = System.currentTimeMillis() - 0L; // Simplified placeholder for uptime
+        long uptime = java.lang.System.currentTimeMillis() - 0L; // Simplified placeholder for uptime
         return formatTime(uptime);
     }
     
@@ -265,8 +270,8 @@ public class ServerInfoGUI {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(name);
-            meta.setLore(Arrays.asList(lore));
+            meta.displayName(Component.text(name));
+            meta.lore(Arrays.asList(lore).stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         gui.setItem(slot, item);

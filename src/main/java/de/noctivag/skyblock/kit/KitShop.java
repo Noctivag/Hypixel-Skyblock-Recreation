@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.kit;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -11,11 +14,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.*;
 
 public class KitShop {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<String, KitInfo> kitShopItems;
 
-    public KitShop(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public KitShop(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.kitShopItems = new HashMap<>();
         initializeKits();
     }

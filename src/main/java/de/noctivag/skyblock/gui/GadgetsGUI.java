@@ -1,17 +1,20 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 public class GadgetsGUI extends CustomGUI {
-	private final SkyblockPlugin plugin;
+	private final SkyblockPlugin SkyblockPlugin;
 
-	public GadgetsGUI(SkyblockPlugin plugin) {
+	public GadgetsGUI(SkyblockPlugin SkyblockPlugin) {
 		super(27, Component.text("§a§lGadgets"));
-		this.plugin = plugin;
+		this.SkyblockPlugin = SkyblockPlugin;
 	}
 
 	public void open(Player player) {

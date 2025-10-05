@@ -1,6 +1,10 @@
 package de.noctivag.skyblock.items;
 
-import de.noctivag.skyblock.Plugin;
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.api.Service;
 import de.noctivag.skyblock.core.api.SystemStatus;
 import org.bukkit.entity.Player;
@@ -12,6 +16,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * RecombobulatorSystem - Complete recombobulator system for Hypixel Skyblock
@@ -25,15 +30,15 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class RecombobulatorSystem implements Service {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, PlayerRecombobulatorData> playerData = new ConcurrentHashMap<>();
     private final Map<ItemRarity, ItemRarity> rarityProgression = new HashMap<>();
     private final Map<ItemRarity, Integer> recombobulatorCosts = new HashMap<>();
     
     private SystemStatus status = SystemStatus.UNINITIALIZED;
     
-    public RecombobulatorSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public RecombobulatorSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
     
     @Override
@@ -48,7 +53,7 @@ public class RecombobulatorSystem implements Service {
             initializeCosts();
             
             status = SystemStatus.ENABLED;
-            plugin.getLogger().info("§a[RecombobulatorSystem] Initialized recombobulator system");
+            SkyblockPlugin.getLogger().info("§a[RecombobulatorSystem] Initialized recombobulator system");
         });
     }
     
@@ -116,19 +121,19 @@ public class RecombobulatorSystem implements Service {
      */
     public boolean recombobulateItem(Player player, ItemStack item) {
         if (item == null || item.getType().isAir()) {
-            player.sendMessage("§cYou must hold an item to recombobulate!");
+            player.sendMessage(Component.text("§cYou must hold an item to recombobulate!"));
             return false;
         }
         
         ItemRarity currentRarity = getItemRarity(item);
         if (currentRarity == null) {
-            player.sendMessage("§cThis item cannot be recombobulated!");
+            player.sendMessage(Component.text("§cThis item cannot be recombobulated!"));
             return false;
         }
         
         ItemRarity nextRarity = rarityProgression.get(currentRarity);
         if (nextRarity == null) {
-            player.sendMessage("§cThis item is already at maximum rarity!");
+            player.sendMessage(Component.text("§cThis item is already at maximum rarity!"));
             return false;
         }
         
@@ -142,7 +147,7 @@ public class RecombobulatorSystem implements Service {
         
         // Check if player has recombobulator
         if (!hasRecombobulator(player)) {
-            player.sendMessage("§cYou need a Recombobulator 3000 to recombobulate items!");
+            player.sendMessage(Component.text("§cYou need a Recombobulator 3000 to recombobulate items!"));
             return false;
         }
         
@@ -162,7 +167,7 @@ public class RecombobulatorSystem implements Service {
             playerRecombobulatorData.addSuccessfulRecombobulation();
             
         } else {
-            player.sendMessage("§c§lFAILED! §cThe recombobulation failed and the item was destroyed!");
+            player.sendMessage(Component.text("§c§lFAILED! §cThe recombobulation failed and the item was destroyed!"));
             item.setAmount(0); // Destroy the item
         }
         
@@ -406,7 +411,7 @@ public class RecombobulatorSystem implements Service {
         public void setLastRecombobulation(long lastRecombobulation) { this.lastRecombobulation = lastRecombobulation; }
         public void addSuccessfulRecombobulation() { 
             this.recombobulationsUsed++;
-            this.lastRecombobulation = System.currentTimeMillis();
+            this.lastRecombobulation = java.lang.System.currentTimeMillis();
         }
     }
     

@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.pets;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -17,24 +21,25 @@ import net.kyori.adventure.text.Component;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Hypixel Skyblock Pets System - All Hypixel Skyblock Pets
  */
 public class HypixelSkyblockPetsSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerPetData> playerPetData = new ConcurrentHashMap<>();
     private final Map<PetCategory, List<HypixelPet>> petsByCategory = new HashMap<>();
     private final Map<UUID, BukkitTask> petTasks = new ConcurrentHashMap<>();
     
-    public HypixelSkyblockPetsSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public HypixelSkyblockPetsSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeAllPets();
         startPetUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeAllPets() {
@@ -480,7 +485,7 @@ public class HypixelSkyblockPetsSystem implements Listener {
                     petData.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L * 60L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L * 60L);
     }
     
     @EventHandler
@@ -501,7 +506,7 @@ public class HypixelSkyblockPetsSystem implements Listener {
     }
     
     public void openPetsGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lHypixel Skyblock Pets");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lHypixel Skyblock Pets"));
         
         addGUIItem(gui, 10, Material.IRON_SWORD, "§c§lCombat Pets", "§7View all combat pets");
         addGUIItem(gui, 11, Material.STONE, "§7§lMining Pets", "§7View all mining pets");
@@ -511,7 +516,7 @@ public class HypixelSkyblockPetsSystem implements Listener {
         addGUIItem(gui, 15, Material.DRAGON_EGG, "§d§lSpecial Pets", "§7View all special pets");
         
         player.openInventory(gui);
-        player.sendMessage("§aHypixel Skyblock Pets GUI geöffnet!");
+        player.sendMessage(Component.text("§aHypixel Skyblock Pets GUI geöffnet!"));
     }
     
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String description) {
@@ -616,11 +621,11 @@ public class HypixelSkyblockPetsSystem implements Listener {
         
         public PlayerPetData(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void addPet(String petId, int amount) {

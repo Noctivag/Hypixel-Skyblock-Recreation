@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -12,11 +15,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.Arrays;
 
 public class FeatureToggleGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private static final Component GUI_TITLE = Component.text("§6§lFeature-Einstellungen");
 
-    public FeatureToggleGUI(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public FeatureToggleGUI(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     public void openGUI(Player player) {
@@ -24,28 +27,28 @@ public class FeatureToggleGUI {
 
         // Scoreboard-Einstellungen
         inv.setItem(10, createToggleItem("Scoreboard - Rang",
-            plugin.getConfigManager().isScoreboardFeatureEnabled("show-rank"),
+            SkyblockPlugin.getConfigManager().isScoreboardFeatureEnabled("show-rank"),
             Material.NAME_TAG));
 
         inv.setItem(11, createToggleItem("Scoreboard - Geld",
-            plugin.getConfigManager().isScoreboardFeatureEnabled("show-money"),
+            SkyblockPlugin.getConfigManager().isScoreboardFeatureEnabled("show-money"),
             Material.GOLD_INGOT));
 
         inv.setItem(12, createToggleItem("Scoreboard - Online-Spieler",
-            plugin.getConfigManager().isScoreboardFeatureEnabled("show-online-players"),
+            SkyblockPlugin.getConfigManager().isScoreboardFeatureEnabled("show-online-players"),
             Material.PLAYER_HEAD));
 
         inv.setItem(13, createToggleItem("Scoreboard - TPS",
-            plugin.getConfigManager().isScoreboardFeatureEnabled("show-tps"),
+            SkyblockPlugin.getConfigManager().isScoreboardFeatureEnabled("show-tps"),
             Material.CLOCK));
 
         inv.setItem(14, createToggleItem("Scoreboard - Website",
-            plugin.getConfigManager().isScoreboardFeatureEnabled("show-website"),
+            SkyblockPlugin.getConfigManager().isScoreboardFeatureEnabled("show-website"),
             Material.BOOK));
 
         // Kit-System
         inv.setItem(15, createToggleItem("Kit-System",
-            plugin.getConfigManager().isFeatureEnabled("kits"),
+            SkyblockPlugin.getConfigManager().isFeatureEnabled("kits"),
             Material.CHEST));
 
         // Weitere Features können hier hinzugefügt werden
@@ -76,7 +79,7 @@ public class FeatureToggleGUI {
         if (meta != null) {
             meta.displayName(Component.text(name));
             if (lore.length > 0) {
-                meta.lore(Arrays.stream(lore).map(Component::text).toList());
+                meta.lore(java.util.Arrays.stream(lore).map(Component::text).collect(java.util.stream.Collectors.toList()));
             }
             item.setItemMeta(meta);
         }

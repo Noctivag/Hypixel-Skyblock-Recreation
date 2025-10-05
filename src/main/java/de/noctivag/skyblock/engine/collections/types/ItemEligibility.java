@@ -1,6 +1,7 @@
 package de.noctivag.skyblock.engine.collections.types;
 
 import org.bukkit.inventory.ItemStack;
+import de.noctivag.skyblock.engine.collections.ItemProvenance;
 
 /**
  * Item Eligibility Information

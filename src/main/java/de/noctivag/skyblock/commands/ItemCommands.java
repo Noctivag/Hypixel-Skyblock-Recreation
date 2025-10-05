@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.commands;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.items.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -13,6 +16,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 
 /**
  * ItemCommands - Commands for managing Hypixel SkyBlock items and tools
@@ -26,14 +31,14 @@ import java.util.*;
  * - /items info <item> - Show item information
  */
 public class ItemCommands implements CommandExecutor, TabCompleter {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final CompleteItemGUI itemGUI;
     private final ItemAbilitySystem abilitySystem;
     
-    public ItemCommands(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.itemGUI = new CompleteItemGUI(plugin);
-        this.abilitySystem = new ItemAbilitySystem(plugin);
+    public ItemCommands(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.itemGUI = new CompleteItemGUI(SkyblockPlugin);
+        this.abilitySystem = new ItemAbilitySystem(SkyblockPlugin);
     }
     
     @Override
@@ -71,7 +76,7 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
                 handleHelpCommand(player);
                 break;
             default:
-                player.sendMessage("§cUnknown subcommand! Use /items help for help.");
+                player.sendMessage(Component.text("§cUnknown subcommand! Use /items help for help."));
                 break;
         }
         
@@ -96,12 +101,12 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
                 break;
             case "slayer":
             case "slayerweapons":
-                player.sendMessage("§7Opening Slayer Weapons GUI...");
+                player.sendMessage(Component.text("§7Opening Slayer Weapons GUI..."));
                 // Implement slayer weapons GUI
-                if (plugin.getSlayerSystem() != null) {
-                    plugin.getSlayerSystem().openSlayerWeaponsGUI(player);
+                if (SkyblockPlugin.getSlayerSystem() != null) {
+                    SkyblockPlugin.getSlayerSystem().openSlayerWeaponsGUI(player);
                 } else {
-                    player.sendMessage("§cSlayer-System ist nicht verfügbar!");
+                    player.sendMessage(Component.text("§cSlayer-System ist nicht verfügbar!"));
                 }
                 break;
             case "mining":
@@ -110,54 +115,54 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
                 break;
             case "fishing":
             case "fishingrods":
-                player.sendMessage("§7Opening Fishing Rods GUI...");
+                player.sendMessage(Component.text("§7Opening Fishing Rods GUI..."));
                 // Implement fishing rods GUI
-                if (plugin.getFishingSystem() != null) {
-                    ((de.noctivag.plugin.fishing.FishingSystem) plugin.getFishingSystem()).openFishingRodsGUI(player);
+                if (SkyblockPlugin.getFishingSystem() != null) {
+                    ((de.noctivag.skyblock.fishing.FishingSystem) SkyblockPlugin.getFishingSystem()).openFishingRodsGUI(player);
                 } else {
-                    player.sendMessage("§cFishing-System ist nicht verfügbar!");
+                    player.sendMessage(Component.text("§cFishing-System ist nicht verfügbar!"));
                 }
                 break;
             case "magic":
             case "magicweapons":
-                player.sendMessage("§7Opening Magic Weapons GUI...");
+                player.sendMessage(Component.text("§7Opening Magic Weapons GUI..."));
                 // Implement magic weapons GUI
-                if (plugin.getMagicSystem() != null) {
-                    ((de.noctivag.plugin.magic.MagicSystem) plugin.getMagicSystem()).openMagicWeaponsGUI(player);
+                if (SkyblockPlugin.getMagicSystem() != null) {
+                    ((de.noctivag.skyblock.magic.MagicSystem) SkyblockPlugin.getMagicSystem()).openMagicWeaponsGUI(player);
                 } else {
-                    player.sendMessage("§cMagic-System ist nicht verfügbar!");
+                    player.sendMessage(Component.text("§cMagic-System ist nicht verfügbar!"));
                 }
                 break;
             case "bows":
             case "crossbows":
-                player.sendMessage("§7Opening Bows & Crossbows GUI...");
+                player.sendMessage(Component.text("§7Opening Bows & Crossbows GUI..."));
                 // Implement bows GUI
-                if (plugin.getCombatSystem() != null) {
-                    plugin.getCombatSystem().openBowsGUI(player);
+                if (SkyblockPlugin.getCombatSystem() != null) {
+                    SkyblockPlugin.getCombatSystem().openBowsGUI(player);
                 } else {
-                    player.sendMessage("§cCombat-System ist nicht verfügbar!");
+                    player.sendMessage(Component.text("§cCombat-System ist nicht verfügbar!"));
                 }
                 break;
             case "special":
             case "specialitems":
-                player.sendMessage("§7Opening Special Items GUI...");
+                player.sendMessage(Component.text("§7Opening Special Items GUI..."));
                 // Implement special items GUI
-                if (plugin.getItemsSystem() != null) {
-                    plugin.getItemsSystem().openSpecialItemsGUI(player);
+                if (SkyblockPlugin.getItemsSystem() != null) {
+                    SkyblockPlugin.getItemsSystem().openSpecialItemsGUI(player);
                 } else {
-                    player.sendMessage("§cItems-System ist nicht verfügbar!");
+                    player.sendMessage(Component.text("§cItems-System ist nicht verfügbar!"));
                 }
                 break;
             default:
-                player.sendMessage("§cUnknown category! Available categories:");
-                player.sendMessage("§7- dragon, dungeon, slayer, mining, fishing, magic, bows, special");
+                player.sendMessage(Component.text("§cUnknown category! Available categories:"));
+                player.sendMessage(Component.text("§7- dragon, dungeon, slayer, mining, fishing, magic, bows, special"));
                 break;
         }
     }
     
     private void handleGiveCommand(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage("§cUsage: /items give <item> [amount]");
+            player.sendMessage(Component.text("§cUsage: /items give <item> [amount]"));
             return;
         }
         
@@ -168,11 +173,11 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
             try {
                 amount = Integer.parseInt(args[2]);
                 if (amount < 1 || amount > 64) {
-                    player.sendMessage("§cAmount must be between 1 and 64!");
+                    player.sendMessage(Component.text("§cAmount must be between 1 and 64!"));
                     return;
                 }
             } catch (NumberFormatException e) {
-                player.sendMessage("§cInvalid amount! Must be a number.");
+                player.sendMessage(Component.text("§cInvalid amount! Must be a number."));
                 return;
             }
         }
@@ -189,7 +194,7 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
         
         if (itemType == null) {
             player.sendMessage("§cUnknown item: " + itemName);
-            player.sendMessage("§7Use /items list to see all available items.");
+            player.sendMessage(Component.text("§7Use /items list to see all available items."));
             return;
         }
         
@@ -205,7 +210,7 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
     
     private void handleAbilityCommand(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage("§cUsage: /items ability <item>");
+            player.sendMessage(Component.text("§cUsage: /items ability <item>"));
             return;
         }
         
@@ -223,14 +228,14 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
         
         if (itemType == null) {
             player.sendMessage("§cUnknown item: " + itemName);
-            player.sendMessage("§7Use /items list to see all available items.");
+            player.sendMessage(Component.text("§7Use /items list to see all available items."));
             return;
         }
         
         // Check if player has the item
         ItemStack heldItem = player.getInventory().getItemInMainHand();
         if (heldItem == null || heldItem.getType() == Material.AIR) {
-            player.sendMessage("§cYou must be holding the item to activate its ability!");
+            player.sendMessage(Component.text("§cYou must be holding the item to activate its ability!"));
             return;
         }
         
@@ -241,18 +246,18 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
     private void handleListCommand(Player player, String[] args) {
         if (args.length == 1) {
             // List all categories
-            player.sendMessage("§6§l=== Hypixel SkyBlock Items & Tools ===");
-            player.sendMessage("§7Categories:");
-            player.sendMessage("§6• Dragon Weapons (3 items)");
-            player.sendMessage("§8• Dungeon Weapons (11 items)");
-            player.sendMessage("§0• Slayer Weapons (7 items)");
-            player.sendMessage("§e• Mining Tools (10 items)");
-            player.sendMessage("§b• Fishing Rods (6 items)");
-            player.sendMessage("§d• Magic Weapons (8 items)");
-            player.sendMessage("§c• Bows & Crossbows (5 items)");
-            player.sendMessage("§5• Special Items (8 items)");
+            player.sendMessage(Component.text("§6§l=== Hypixel SkyBlock Items & Tools ==="));
+            player.sendMessage(Component.text("§7Categories:"));
+            player.sendMessage(Component.text("§6• Dragon Weapons (3 items)"));
+            player.sendMessage(Component.text("§8• Dungeon Weapons (11 items)"));
+            player.sendMessage(Component.text("§0• Slayer Weapons (7 items)"));
+            player.sendMessage(Component.text("§e• Mining Tools (10 items)"));
+            player.sendMessage(Component.text("§b• Fishing Rods (6 items)"));
+            player.sendMessage(Component.text("§d• Magic Weapons (8 items)"));
+            player.sendMessage(Component.text("§c• Bows & Crossbows (5 items)"));
+            player.sendMessage(Component.text("§5• Special Items (8 items)"));
             player.sendMessage("");
-            player.sendMessage("§7Use /items list <category> to see items in a category.");
+            player.sendMessage(Component.text("§7Use /items list <category> to see items in a category."));
             return;
         }
         
@@ -294,7 +299,7 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
                 break;
             default:
                 player.sendMessage("§cUnknown category: " + category);
-                player.sendMessage("§7Available categories: dragon, dungeon, slayer, mining, fishing, magic, bows, special");
+                player.sendMessage(Component.text("§7Available categories: dragon, dungeon, slayer, mining, fishing, magic, bows, special"));
                 return;
         }
         
@@ -310,12 +315,12 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
         }
         
         player.sendMessage("");
-        player.sendMessage("§7Use /items info <item> to see detailed information.");
+        player.sendMessage(Component.text("§7Use /items info <item> to see detailed information."));
     }
     
     private void handleInfoCommand(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage("§cUsage: /items info <item>");
+            player.sendMessage(Component.text("§cUsage: /items info <item>"));
             return;
         }
         
@@ -333,7 +338,7 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
         
         if (itemType == null) {
             player.sendMessage("§cUnknown item: " + itemName);
-            player.sendMessage("§7Use /items list to see all available items.");
+            player.sendMessage(Component.text("§7Use /items list to see all available items."));
             return;
         }
         
@@ -351,16 +356,16 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
     }
     
     private void handleHelpCommand(Player player) {
-        player.sendMessage("§6§l=== Item Commands Help ===");
-        player.sendMessage("§7/item - Open the main item GUI");
-        player.sendMessage("§7/items gui [category] - Open specific category GUI");
-        player.sendMessage("§7/items give <item> [amount] - Give item to player");
-        player.sendMessage("§7/items ability <item> - Activate item ability");
-        player.sendMessage("§7/items list [category] - List all items in category");
-        player.sendMessage("§7/items info <item> - Show item information");
-        player.sendMessage("§7/items help - Show this help message");
+        player.sendMessage(Component.text("§6§l=== Item Commands Help ==="));
+        player.sendMessage(Component.text("§7/item - Open the main item GUI"));
+        player.sendMessage(Component.text("§7/items gui [category] - Open specific category GUI"));
+        player.sendMessage(Component.text("§7/items give <item> [amount] - Give item to player"));
+        player.sendMessage(Component.text("§7/items ability <item> - Activate item ability"));
+        player.sendMessage(Component.text("§7/items list [category] - List all items in category"));
+        player.sendMessage(Component.text("§7/items info <item> - Show item information"));
+        player.sendMessage(Component.text("§7/items help - Show this help message"));
         player.sendMessage("");
-        player.sendMessage("§7Categories: dragon, dungeon, slayer, mining, fishing, magic, bows, special");
+        player.sendMessage(Component.text("§7Categories: dragon, dungeon, slayer, mining, fishing, magic, bows, special"));
     }
     
     private ItemStack createItemFromType(ItemType itemType, int amount) {

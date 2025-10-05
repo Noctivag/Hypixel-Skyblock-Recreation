@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.items;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Bukkit;
@@ -17,6 +21,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Gemstone System - Hypixel Skyblock Style
@@ -43,20 +48,20 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Gemstone Cutscenes
  */
 public class GemstoneSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerGemstones> playerGemstones = new ConcurrentHashMap<>();
     private final Map<GemstoneType, GemstoneConfig> gemstoneConfigs = new HashMap<>();
     private final Map<UUID, BukkitTask> gemstoneTasks = new ConcurrentHashMap<>();
 
-    public GemstoneSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public GemstoneSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeGemstoneConfigs();
         startGemstoneUpdateTask();
 
         // Register events
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
 
     private void initializeGemstoneConfigs() {
@@ -322,7 +327,7 @@ public class GemstoneSystem implements Listener {
                     gemstones.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Every second
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Every second
     }
 
     @EventHandler
@@ -338,7 +343,7 @@ public class GemstoneSystem implements Listener {
 
     private void openGemstoneGUI(Player player) {
         // This would open a custom GUI for gemstones
-        player.sendMessage("§aGemstone GUI geöffnet!");
+        player.sendMessage(Component.text("§aGemstone GUI geöffnet!"));
     }
 
     public boolean upgradeGemstone(Player player, GemstoneType currentGemstone, GemstoneType targetGemstone) {
@@ -346,13 +351,13 @@ public class GemstoneSystem implements Listener {
         GemstoneConfig targetConfig = gemstoneConfigs.get(targetGemstone);
 
         if (currentConfig == null || targetConfig == null) {
-            player.sendMessage("§cGemstone nicht gefunden!");
+            player.sendMessage(Component.text("§cGemstone nicht gefunden!"));
             return false;
         }
 
         // Check if upgrade is valid
         if (!isValidUpgrade(currentGemstone, targetGemstone)) {
-            player.sendMessage("§cUngültiges Upgrade!");
+            player.sendMessage(Component.text("§cUngültiges Upgrade!"));
             return false;
         }
 
@@ -364,7 +369,7 @@ public class GemstoneSystem implements Listener {
 
         // Check success rate
         if (Math.random() > targetConfig.getSuccessRate()) {
-            player.sendMessage("§cUpgrade fehlgeschlagen! Materialien wurden verbraucht.");
+            player.sendMessage(Component.text("§cUpgrade fehlgeschlagen! Materialien wurden verbraucht."));
             consumeUpgradeMaterials(player, targetConfig);
             return false;
         }
@@ -625,11 +630,11 @@ public class GemstoneSystem implements Listener {
 
         public PlayerGemstones(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
 
         public void update() {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long timeDiff = currentTime - lastUpdate;
 
             // Update statistics every minute

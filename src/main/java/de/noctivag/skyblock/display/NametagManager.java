@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.display;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -16,27 +20,27 @@ import java.util.UUID;
 
 @SuppressWarnings("unused")
 public class NametagManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, String> playerStatus;
     private final Map<String, Team> teams;
 
-    public NametagManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public NametagManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.playerStatus = new HashMap<>();
         this.teams = new HashMap<>();
     }
 
     public void updateNametag(Player player) {
         // TODO: Implement proper PrefixMap and NickMap interfaces
-        // String prefix = ((Map<String, String>) plugin.getPrefixMap()).getOrDefault(player.getName(), "");
-        // String nickname = ((Map<String, String>) plugin.getNickMap()).getOrDefault(player.getName(), player.getName());
+        // String prefix = ((Map<String, String>) SkyblockPlugin.getPrefixMap()).getOrDefault(player.getName(), "");
+        // String nickname = ((Map<String, String>) SkyblockPlugin.getNickMap()).getOrDefault(player.getName(), player.getName());
         String prefix = "";
         String nickname = player.getName();
         String status = playerStatus.getOrDefault(player.getUniqueId(), "");
 
         // Create unique team name for player
         String teamName = "nt_" + player.getUniqueId().toString().substring(0, 8);
-        Scoreboard scoreboard = plugin.getServer().getScoreboardManager().getMainScoreboard();
+        Scoreboard scoreboard = SkyblockPlugin.getServer().getScoreboardManager().getMainScoreboard();
 
         // Remove old team if exists
         Team oldTeam = teams.remove(teamName);

@@ -1,5 +1,9 @@
 package de.noctivag.skyblock.engine;
 
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+
 import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import de.noctivag.skyblock.features.stats.types.PrimaryStat;
@@ -34,7 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class StatCalculationService {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final ReforgeMatrixManager reforgeMatrixManager;
     private final AccessoryManager accessoryManager;
@@ -46,11 +50,11 @@ public class StatCalculationService {
     private static final int CACHE_DURATION_TICKS = 20; // 1 second
     private static final int ASYNC_UPDATE_INTERVAL = 5; // 5 ticks = 0.25 seconds
     
-    public StatCalculationService(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public StatCalculationService(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
-        this.reforgeMatrixManager = new ReforgeMatrixManager(plugin);
-        this.accessoryManager = new AccessoryManager(plugin, databaseManager);
+        this.reforgeMatrixManager = new ReforgeMatrixManager(SkyblockPlugin);
+        this.accessoryManager = new AccessoryManager(SkyblockPlugin, databaseManager);
         startAsyncUpdateTask();
     }
     
@@ -360,12 +364,12 @@ public class StatCalculationService {
                                 updateTasks.remove(playerId);
                             });
                         }
-                    }.runTaskAsynchronously(plugin);
+                    }.runTaskAsynchronously(SkyblockPlugin);
                     
                     updateTasks.put(playerId, task);
                 }
             }
-        }.runTaskTimer(plugin, 0, ASYNC_UPDATE_INTERVAL);
+        }.runTaskTimer(SkyblockPlugin, 0, ASYNC_UPDATE_INTERVAL);
     }
     
     /**
@@ -383,7 +387,7 @@ public class StatCalculationService {
         
         public PlayerStatProfile(UUID playerId) {
             this.playerId = playerId;
-            this.calculationTime = System.currentTimeMillis();
+            this.calculationTime = java.lang.System.currentTimeMillis();
             initializeBaseStats();
         }
         
@@ -445,7 +449,7 @@ public class StatCalculationService {
         }
         
         public boolean isExpired() {
-            return System.currentTimeMillis() - calculationTime > CACHE_DURATION_TICKS * 50; // 1 second
+            return java.lang.System.currentTimeMillis() - calculationTime > CACHE_DURATION_TICKS * 50; // 1 second
         }
         
         // Getters

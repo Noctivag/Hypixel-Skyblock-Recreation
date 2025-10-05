@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.alchemy;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -17,6 +21,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Advanced Alchemy System - Hypixel Skyblock Style
@@ -24,20 +29,20 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AdvancedAlchemySystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerAlchemyData> playerAlchemyData = new ConcurrentHashMap<>();
     private final Map<PotionType, PotionConfig> potionConfigs = new HashMap<>();
     private final Map<AlchemyLocation, AlchemyConfig> alchemyConfigs = new HashMap<>();
     
-    public AdvancedAlchemySystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedAlchemySystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
         initializePotionConfigs();
         initializeAlchemyConfigs();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializePotionConfigs() {
@@ -274,7 +279,7 @@ public class AdvancedAlchemySystem implements Listener {
         addGUIItem(gui, 53, Material.ARROW, "§7§lNext Page", "§7Go to next page.");
         
         player.openInventory(gui);
-        player.sendMessage("§aAlchemy GUI opened!");
+        player.sendMessage(Component.text("§aAlchemy GUI opened!"));
     }
     
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String description) {

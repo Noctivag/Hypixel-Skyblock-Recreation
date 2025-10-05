@@ -1,6 +1,9 @@
 package de.noctivag.skyblock.engine;
 
 import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.features.stats.types.PrimaryStat;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -25,11 +28,11 @@ import java.util.concurrent.CompletableFuture;
  */
 public class PreciseDamageCalculator {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final StatCalculationService statCalculationService;
     
-    public PreciseDamageCalculator(SkyblockPlugin plugin, StatCalculationService statCalculationService) {
-        this.plugin = plugin;
+    public PreciseDamageCalculator(SkyblockPlugin SkyblockPlugin, StatCalculationService statCalculationService) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.statCalculationService = statCalculationService;
     }
     

@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.npcs;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -14,10 +18,10 @@ import org.bukkit.event.HandlerList;
  * NPC Event System - Custom events for NPC interactions
  */
 public class NPCEventSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     
-    public NPCEventSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public NPCEventSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
     
     public void callNPCClickEvent(Player player, String npcId, String npcType) {

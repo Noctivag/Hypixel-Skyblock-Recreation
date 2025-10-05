@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.engine.dialog.types;
+import java.util.UUID;
 
 import java.util.UUID;
 import java.util.Objects;

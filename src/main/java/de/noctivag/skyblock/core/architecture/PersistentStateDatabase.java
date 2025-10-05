@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.core.architecture;
+import java.util.UUID;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -151,7 +152,7 @@ public class PersistentStateDatabase {
                 statement.setInt(9, progression.getTamingLevel());
                 statement.setInt(10, progression.getCarpentryLevel());
                 statement.setInt(11, progression.getRunecraftingLevel());
-                statement.setTimestamp(12, new Timestamp(System.currentTimeMillis()));
+                statement.setTimestamp(12, new Timestamp(java.lang.System.currentTimeMillis()));
                 
                 statement.executeUpdate();
                 
@@ -228,7 +229,7 @@ public class PersistentStateDatabase {
                 
                 statement.setString(1, playerId.toString());
                 statement.setString(2, inventoryData);
-                statement.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
+                statement.setTimestamp(3, new Timestamp(java.lang.System.currentTimeMillis()));
                 
                 statement.executeUpdate();
                 
@@ -290,7 +291,7 @@ public class PersistentStateDatabase {
                 statement.setString(1, playerId.toString());
                 statement.setString(2, collectionType);
                 statement.setString(3, collectionData);
-                statement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
+                statement.setTimestamp(4, new Timestamp(java.lang.System.currentTimeMillis()));
                 
                 statement.executeUpdate();
                 
@@ -352,7 +353,7 @@ public class PersistentStateDatabase {
                 
                 statement.setString(1, guildId);
                 statement.setString(2, guildData);
-                statement.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
+                statement.setTimestamp(3, new Timestamp(java.lang.System.currentTimeMillis()));
                 
                 statement.executeUpdate();
                 
@@ -416,7 +417,7 @@ public class PersistentStateDatabase {
                 statement.setString(2, transactionType);
                 statement.setString(3, transactionData);
                 statement.setDouble(4, amount);
-                statement.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
+                statement.setTimestamp(5, new Timestamp(java.lang.System.currentTimeMillis()));
                 
                 statement.executeUpdate();
                 
@@ -477,7 +478,7 @@ public class PersistentStateDatabase {
         HikariConfig config = new HikariConfig();
         
         // Database URL from configuration or default
-        String databaseUrl = System.getProperty("skyblock.database.url", DEFAULT_DATABASE_URL);
+        String databaseUrl = java.lang.System.getProperty("skyblock.database.url", DEFAULT_DATABASE_URL);
         
         if (databaseUrl.startsWith("jdbc:sqlite:")) {
             config.setJdbcUrl(databaseUrl);
@@ -485,13 +486,13 @@ public class PersistentStateDatabase {
         } else if (databaseUrl.startsWith("jdbc:mysql:")) {
             config.setJdbcUrl(databaseUrl);
             config.setDriverClassName("com.mysql.cj.jdbc.Driver");
-            config.setUsername(System.getProperty("skyblock.database.username", "skyblock"));
-            config.setPassword(System.getProperty("skyblock.database.password", ""));
+            config.setUsername(java.lang.System.getProperty("skyblock.database.username", "skyblock"));
+            config.setPassword(java.lang.System.getProperty("skyblock.database.password", ""));
         } else if (databaseUrl.startsWith("jdbc:mariadb:")) {
             config.setJdbcUrl(databaseUrl);
             config.setDriverClassName("org.mariadb.jdbc.Driver");
-            config.setUsername(System.getProperty("skyblock.database.username", "skyblock"));
-            config.setPassword(System.getProperty("skyblock.database.password", ""));
+            config.setUsername(java.lang.System.getProperty("skyblock.database.username", "skyblock"));
+            config.setPassword(java.lang.System.getProperty("skyblock.database.password", ""));
         }
         
         config.setMaximumPoolSize(CONNECTION_POOL_SIZE);

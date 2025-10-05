@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.pets.PetSystem;
 import de.noctivag.skyblock.pets.Pet;
 import de.noctivag.skyblock.pets.PetManagementSystem;
@@ -13,12 +16,13 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Pet Management GUI - Hypixel Skyblock Style
  */
 public class PetManagementGUI extends CustomGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Player player;
     private final PetSystem petSystem;
     private final PetManagementSystem petManagementSystem;
@@ -26,9 +30,9 @@ public class PetManagementGUI extends CustomGUI {
     private int currentPage = 0;
     private final int itemsPerPage = 28;
     
-    public PetManagementGUI(SkyblockPlugin plugin, Player player, PetSystem petSystem, PetManagementSystem petManagementSystem) {
+    public PetManagementGUI(SkyblockPlugin SkyblockPlugin, Player player, PetSystem petSystem, PetManagementSystem petManagementSystem) {
         super(54, Component.text("§d§l⚡ PET MANAGEMENT ⚡").color(NamedTextColor.LIGHT_PURPLE).decorate(TextDecoration.BOLD));
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.player = player;
         this.petSystem = petSystem;
         this.petManagementSystem = petManagementSystem;
@@ -357,14 +361,14 @@ public class PetManagementGUI extends CustomGUI {
     public void feedPet() {
         if (selectedPet != null) {
             // This would open a food selection GUI
-            player.sendMessage("§eSelect food from your inventory to feed your pet!");
+            player.sendMessage(Component.text("§eSelect food from your inventory to feed your pet!"));
         }
     }
     
     public void upgradePet() {
         if (selectedPet != null) {
             // This would open an upgrade selection GUI
-            player.sendMessage("§eSelect an upgrade type to upgrade your pet!");
+            player.sendMessage(Component.text("§eSelect an upgrade type to upgrade your pet!"));
         }
     }
     

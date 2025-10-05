@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.items;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -17,24 +21,25 @@ import net.kyori.adventure.text.Component;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Advanced Hypixel Skyblock Items System - More Specialized Items
  */
 public class AdvancedHypixelItemsSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerAdvancedItemData> playerAdvancedItemData = new ConcurrentHashMap<>();
     private final Map<AdvancedItemCategory, List<AdvancedHypixelItem>> advancedItemsByCategory = new HashMap<>();
     private final Map<UUID, BukkitTask> advancedItemTasks = new ConcurrentHashMap<>();
     
-    public AdvancedHypixelItemsSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedHypixelItemsSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeAdvancedItems();
         startAdvancedItemUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeAdvancedItems() {
@@ -204,7 +209,7 @@ public class AdvancedHypixelItemsSystem implements Listener {
                     itemData.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L * 60L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L * 60L);
     }
     
     @EventHandler
@@ -225,7 +230,7 @@ public class AdvancedHypixelItemsSystem implements Listener {
     }
     
     public void openAdvancedItemsGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§5§lAdvanced Hypixel Items");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§5§lAdvanced Hypixel Items"));
         
         addGUIItem(gui, 10, Material.STICK, "§9§lDungeon Items", "§7View all dungeon items");
         addGUIItem(gui, 11, Material.IRON_SWORD, "§c§lSlayer Items", "§7View all slayer items");
@@ -235,7 +240,7 @@ public class AdvancedHypixelItemsSystem implements Listener {
         addGUIItem(gui, 15, Material.DIAMOND_AXE, "§2§lForaging Items", "§7View all foraging items");
         
         player.openInventory(gui);
-        player.sendMessage("§aAdvanced Hypixel Items GUI geöffnet!");
+        player.sendMessage(Component.text("§aAdvanced Hypixel Items GUI geöffnet!"));
     }
     
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String description) {
@@ -345,11 +350,11 @@ public class AdvancedHypixelItemsSystem implements Listener {
         
         public PlayerAdvancedItemData(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void addAdvancedItem(String itemId, int amount) {

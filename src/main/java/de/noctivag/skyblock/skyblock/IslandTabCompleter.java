@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.skyblock;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -16,10 +20,10 @@ import java.util.stream.Collectors;
 
 public class IslandTabCompleter implements TabCompleter {
     private static final List<String> SUBS = List.of("create","visit","home","members","invite","kick","transfer","delete","info","help");
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public IslandTabCompleter(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public IslandTabCompleter(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
 
     @Override
@@ -34,7 +38,7 @@ public class IslandTabCompleter implements TabCompleter {
             String partial = args[1].toLowerCase();
 
             // Use IslandManager for owner/member queries when available
-            IslandManager islandManager = IslandManager.getInstance(plugin);
+            IslandManager islandManager = IslandManager.getInstance(SkyblockPlugin);
 
             switch (sub) {
                 case "visit": {

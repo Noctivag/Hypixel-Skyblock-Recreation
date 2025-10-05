@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.accessories;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -19,15 +24,15 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AdvancedAccessorySystem {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerAccessoryData> playerAccessoryData = new ConcurrentHashMap<>();
     private final Map<String, AccessoryType> accessoryTypes = new HashMap<>();
     private final Map<UUID, List<AccessoryItem>> playerAccessories = new ConcurrentHashMap<>();
     private final Map<UUID, List<AccessoryEffect>> activeAccessoryEffects = new ConcurrentHashMap<>();
     
-    public AdvancedAccessorySystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedAccessorySystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeAccessoryTypes();
         startAccessoryTask();
@@ -334,7 +339,7 @@ public class AdvancedAccessorySystem {
             public void run() {
                 updateActiveAccessoryEffects();
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Every second
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Every second
     }
     
     /**
@@ -489,7 +494,7 @@ public class AdvancedAccessorySystem {
         ItemMeta meta = item.getItemMeta();
         
         if (meta != null) {
-            meta.setDisplayName(accessory.getRarity().getColor() + accessory.getName());
+            meta.displayName(Component.text(accessory.getRarity().getColor() + accessory.getName()));
             List<String> lore = new ArrayList<>(accessory.getEffects());
             lore.add("");
             lore.add("§7Rarity: " + accessory.getRarity().getDisplayName());
@@ -501,7 +506,7 @@ public class AdvancedAccessorySystem {
             lore.add("§7and gain its magical effects!");
             lore.add("");
             lore.add("§8A magical accessory");
-            meta.setLore(lore);
+            meta.lore(lore.stream().map(Component::text).collect(java.util.stream.Collectors.toList()));
             
             item.setItemMeta(meta);
         }
@@ -688,7 +693,7 @@ public class AdvancedAccessorySystem {
                 playerAccessoryData.put(playerId, data);
             }
         } catch (Exception e) {
-            plugin.getLogger().warning("Failed to load accessory data for player " + playerId + ": " + e.getMessage());
+            SkyblockPlugin.getLogger().warning("Failed to load accessory data for player " + playerId + ": " + e.getMessage());
         }
     }
     

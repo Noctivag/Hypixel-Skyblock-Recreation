@@ -1,4 +1,8 @@
 package de.noctivag.skyblock.minions;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
@@ -10,11 +14,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import net.kyori.adventure.text.Component;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Minion Management System - Erweiterte Minion-Verwaltung
@@ -29,21 +34,21 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class MinionManagementSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final AdvancedMinionSystem minionSystem;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, MinionPlacement> minionPlacements = new ConcurrentHashMap<>();
     private final Map<UUID, MinionStatistics> minionStats = new ConcurrentHashMap<>();
     
-    public MinionManagementSystem(SkyblockPlugin plugin, AdvancedMinionSystem minionSystem, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public MinionManagementSystem(SkyblockPlugin SkyblockPlugin, AdvancedMinionSystem minionSystem, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.minionSystem = minionSystem;
         this.databaseManager = databaseManager;
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
-    public Plugin getPlugin() { return plugin; }
+    public SkyblockPlugin getPlugin() { return SkyblockPlugin; }
     public MultiServerDatabaseManager getDatabaseManager() { return databaseManager; }
     
     @EventHandler
@@ -280,7 +285,7 @@ public class MinionManagementSystem implements Listener {
             this.x = x;
             this.y = y;
             this.z = z;
-            this.placedAt = System.currentTimeMillis();
+            this.placedAt = java.lang.System.currentTimeMillis();
         }
         
         public String getMinionId() { return minionId; }

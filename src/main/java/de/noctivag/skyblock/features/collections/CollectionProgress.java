@@ -24,7 +24,7 @@ public class CollectionProgress {
         this.type = type;
         this.totalItems = 0;
         this.level = 0;
-        this.lastUpdateTime = System.currentTimeMillis();
+        this.lastUpdateTime = java.lang.System.currentTimeMillis();
     }
     
     /**
@@ -32,7 +32,7 @@ public class CollectionProgress {
      */
     public void addItems(long amount) {
         this.totalItems += amount;
-        this.lastUpdateTime = System.currentTimeMillis();
+        this.lastUpdateTime = java.lang.System.currentTimeMillis();
         
         // Check if level increased
         int newLevel = calculateLevel();
@@ -97,7 +97,7 @@ public class CollectionProgress {
     public double getEfficiency() {
         if (lastUpdateTime == 0) return 0.0;
         
-        long timeElapsed = System.currentTimeMillis() - lastUpdateTime;
+        long timeElapsed = java.lang.System.currentTimeMillis() - lastUpdateTime;
         double hoursElapsed = timeElapsed / (1000.0 * 60 * 60);
         
         return hoursElapsed > 0 ? totalItems / hoursElapsed : 0.0;

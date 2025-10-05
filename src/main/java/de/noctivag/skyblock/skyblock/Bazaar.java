@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.skyblock;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -10,12 +15,12 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Bazaar {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<Material, BazaarItem> items = new ConcurrentHashMap<>();
     private final Map<UUID, Map<Material, Integer>> playerOrders = new ConcurrentHashMap<>();
     
-    public Bazaar(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public Bazaar(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         initializeBazaarItems();
         startPriceUpdateTimer();
     }
@@ -161,7 +166,7 @@ public class Bazaar {
                     item.updatePrices();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20 * 60 * 5L); // Update every 5 minutes
+        }.runTaskTimer(SkyblockPlugin, 0L, 20 * 60 * 5L); // Update every 5 minutes
     }
     
     public boolean buyItem(Player player, Material material, int amount) {
@@ -169,18 +174,18 @@ public class Bazaar {
         if (item == null) return false;
         
         double totalCost = item.getBuyPrice() * amount;
-        if (!plugin.getEconomyManager().hasBalance(player, totalCost)) return false;
+        if (!SkyblockPlugin.getEconomyManager().hasBalance(player, totalCost)) return false;
         
-        plugin.getEconomyManager().withdrawMoney(player, totalCost);
+        SkyblockPlugin.getEconomyManager().withdrawMoney(player, totalCost);
         player.getInventory().addItem(new ItemStack(material, amount));
         
         // Update supply/demand
         item.addBuyOrder(amount);
         
-        player.sendMessage("§a§lITEM PURCHASED!");
+        player.sendMessage(Component.text("§a§lITEM PURCHASED!"));
         player.sendMessage("§7Item: §e" + material.name());
         player.sendMessage("§7Amount: §e" + amount);
-        player.sendMessage("§7Total Cost: §6" + plugin.getEconomyManager().formatMoney(totalCost));
+        player.sendMessage("§7Total Cost: §6" + SkyblockPlugin.getEconomyManager().formatMoney(totalCost));
         
         return true;
     }
@@ -192,7 +197,7 @@ public class Bazaar {
         if (!player.getInventory().contains(material, amount)) return false;
         
         double totalEarnings = item.getSellPrice() * amount;
-        plugin.getEconomyManager().giveMoney(player, totalEarnings);
+        SkyblockPlugin.getEconomyManager().giveMoney(player, totalEarnings);
         
         // Remove items from inventory
         ItemStack toRemove = new ItemStack(material, amount);
@@ -201,10 +206,10 @@ public class Bazaar {
         // Update supply/demand
         item.addSellOrder(amount);
         
-        player.sendMessage("§a§lITEM SOLD!");
+        player.sendMessage(Component.text("§a§lITEM SOLD!"));
         player.sendMessage("§7Item: §e" + material.name());
         player.sendMessage("§7Amount: §e" + amount);
-        player.sendMessage("§7Total Earnings: §6" + plugin.getEconomyManager().formatMoney(totalEarnings));
+        player.sendMessage("§7Total Earnings: §6" + SkyblockPlugin.getEconomyManager().formatMoney(totalEarnings));
         
         return true;
     }
@@ -231,11 +236,11 @@ public class Bazaar {
             this.sellPrice = sellPrice;
             this.buyOrders = 0;
             this.sellOrders = 0;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void updatePrices() {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long timeDiff = currentTime - lastUpdate;
             
             // Update prices based on supply and demand

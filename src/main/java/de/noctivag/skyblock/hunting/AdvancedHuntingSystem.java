@@ -1,4 +1,9 @@
 package de.noctivag.skyblock.hunting;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
@@ -10,29 +15,30 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class AdvancedHuntingSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerHuntingData> playerHuntingData = new ConcurrentHashMap<>();
     private final Map<CreatureType, CreatureConfig> creatureConfigs = new HashMap<>();
     private final Map<ShardType, ShardConfig> shardConfigs = new HashMap<>();
     
-    public AdvancedHuntingSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedHuntingSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
         initializeCreatureConfigs();
         initializeShardConfigs();
         startHuntingUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeCreatureConfigs() {
@@ -159,7 +165,7 @@ public class AdvancedHuntingSystem implements Listener {
             public void run() {
                 updateAllPlayerHuntingData();
             }
-        }.runTaskTimer(plugin, 0L, 20L * 60L); // Update every minute
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L * 60L); // Update every minute
     }
     
     private void updateAllPlayerHuntingData() {
@@ -186,7 +192,7 @@ public class AdvancedHuntingSystem implements Listener {
     }
     
     public void openHuntingGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§a§lHunting System");
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§a§lHunting System"));
         
         // Add creature categories
         addGUIItem(gui, 10, Material.ZOMBIE_HEAD, "§2§lBasic Creatures", "§7Hunt basic creatures.");
@@ -219,15 +225,17 @@ public class AdvancedHuntingSystem implements Listener {
         addGUIItem(gui, 53, Material.ARROW, "§7§lNext Page", "§7Go to next page.");
         
         player.openInventory(gui);
-        player.sendMessage("§aHunting GUI geöffnet!");
+        player.sendMessage(Component.text("§aHunting GUI geöffnet!"));
     }
     
     private void addGUIItem(Inventory gui, int slot, Material material, String name, String description) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(name);
-            meta.setLore(Arrays.asList(description));
+            meta.displayName(Component.text(name));
+            meta.lore(Arrays.asList(description).stream()
+                .map(desc -> Component.text(desc))
+                .collect(java.util.stream.Collectors.toList()));
             item.setItemMeta(meta);
         }
         gui.setItem(slot, item);
@@ -375,11 +383,11 @@ public class AdvancedHuntingSystem implements Listener {
         
         public PlayerHuntingData(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void addCreatureKill(CreatureType type) {

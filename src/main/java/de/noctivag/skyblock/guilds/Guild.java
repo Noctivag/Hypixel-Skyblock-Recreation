@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.guilds;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -33,7 +34,7 @@ public class Guild {
         this.members = new HashSet<>();
         this.officers = new HashSet<>();
         this.settings = new HashMap<>();
-        this.createdAt = System.currentTimeMillis();
+        this.createdAt = java.lang.System.currentTimeMillis();
         this.level = 1;
         this.experience = 0.0;
         this.statistics = new HashMap<>();
@@ -54,7 +55,7 @@ public class Guild {
         this.members = new HashSet<>();
         this.officers = new HashSet<>();
         this.settings = new HashMap<>();
-        this.createdAt = System.currentTimeMillis();
+        this.createdAt = java.lang.System.currentTimeMillis();
         this.level = level;
         this.experience = experience;
         this.statistics = new HashMap<>();

@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.data;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -24,7 +28,7 @@ import java.util.logging.Level;
  * - Data Synchronization
  */
 public class DatabaseManager {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private Connection connection;
     private final String databaseType;
     private final String host;
@@ -44,11 +48,11 @@ public class DatabaseManager {
     private final int CONNECTION_TIMEOUT = 30;
     private final boolean AUTO_RECONNECT = true;
 
-    public DatabaseManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public DatabaseManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
 
         // Load database configuration
-        File configFile = new File(plugin.getDataFolder(), "database.yml");
+        File configFile = new File(SkyblockPlugin.getDataFolder(), "database.yml");
         if (!configFile.exists()) {
             createDefaultConfig(configFile);
         }
@@ -85,7 +89,7 @@ public class DatabaseManager {
 
             config.save(configFile);
         } catch (IOException e) {
-            plugin.getLogger().log(Level.SEVERE, "Could not create database config", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Could not create database config", e);
         }
     }
 
@@ -96,19 +100,19 @@ public class DatabaseManager {
             } else if (databaseType.equalsIgnoreCase("mysql")) {
                 initializeMySQL();
             } else {
-                plugin.getLogger().severe("Unsupported database type: " + databaseType);
+                SkyblockPlugin.getLogger().severe("Unsupported database type: " + databaseType);
                 return;
             }
 
             createTables();
-            plugin.getLogger().info("Database initialized successfully!");
+            SkyblockPlugin.getLogger().info("Database initialized successfully!");
         } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to initialize database", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to initialize database", e);
         }
     }
 
     private void initializeSQLite() throws SQLException {
-        File dataFolder = plugin.getDataFolder();
+        File dataFolder = SkyblockPlugin.getDataFolder();
         if (!dataFolder.exists()) {
             dataFolder.mkdirs();
         }
@@ -248,12 +252,12 @@ public class DatabaseManager {
                     // Update cache
                     String cacheKey = "player_" + uuid;
                     cache.put(cacheKey, new PlayerData(uuid, name, coins, level, experience));
-                    cacheTimestamps.put(cacheKey, System.currentTimeMillis());
+                    cacheTimestamps.put(cacheKey, java.lang.System.currentTimeMillis());
 
                     return rowsAffected > 0;
                 }
             } catch (SQLException e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to save player data", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to save player data", e);
                 return false;
             }
         });
@@ -285,14 +289,14 @@ public class DatabaseManager {
 
                             // Update cache
                             cache.put(cacheKey, data);
-                            cacheTimestamps.put(cacheKey, System.currentTimeMillis());
+                            cacheTimestamps.put(cacheKey, java.lang.System.currentTimeMillis());
 
                             return data;
                         }
                     }
                 }
             } catch (SQLException e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to load player data", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to load player data", e);
             }
 
             return null;
@@ -318,7 +322,7 @@ public class DatabaseManager {
                     return rowsAffected > 0;
                 }
             } catch (SQLException e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to save island data", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to save island data", e);
                 return false;
             }
         });
@@ -347,7 +351,7 @@ public class DatabaseManager {
                     return rowsAffected > 0;
                 }
             } catch (SQLException e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to save minion data", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to save minion data", e);
                 return false;
             }
         });
@@ -375,7 +379,7 @@ public class DatabaseManager {
                     return rowsAffected > 0;
                 }
             } catch (SQLException e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to save pet data", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to save pet data", e);
                 return false;
             }
         });
@@ -401,7 +405,7 @@ public class DatabaseManager {
                     return rowsAffected > 0;
                 }
             } catch (SQLException e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to save economy transaction", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to save economy transaction", e);
                 return false;
             }
         });
@@ -428,7 +432,7 @@ public class DatabaseManager {
                     return rowsAffected > 0;
                 }
             } catch (SQLException e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to save event data", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to save event data", e);
                 return false;
             }
         });
@@ -438,7 +442,7 @@ public class DatabaseManager {
         Long timestamp = cacheTimestamps.get(key);
         if (timestamp == null) return false;
 
-        return System.currentTimeMillis() - timestamp < CACHE_EXPIRY;
+        return java.lang.System.currentTimeMillis() - timestamp < CACHE_EXPIRY;
     }
 
     public void clearCache() {
@@ -452,7 +456,7 @@ public class DatabaseManager {
                 // Implementation for saving player skills
                 return true;
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to save player skills", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to save player skills", e);
                 return false;
             }
         });
@@ -464,7 +468,7 @@ public class DatabaseManager {
                 // Implementation for saving player collections
                 return true;
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to save player collections", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to save player collections", e);
                 return false;
             }
         });
@@ -476,7 +480,7 @@ public class DatabaseManager {
                 // Implementation for saving player slayer data
                 return true;
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to save player slayer data", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to save player slayer data", e);
                 return false;
             }
         });
@@ -488,7 +492,7 @@ public class DatabaseManager {
                 // Implementation for loading player profile
                 return null;
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to load player profile", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to load player profile", e);
                 return null;
             }
         });
@@ -500,7 +504,7 @@ public class DatabaseManager {
                 // Implementation for saving player profile
                 return true;
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to save player profile", e);
+                SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to save player profile", e);
                 return false;
             }
         });
@@ -512,7 +516,7 @@ public class DatabaseManager {
                 connection.close();
             }
         } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to close database connection", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to close database connection", e);
         }
     }
 
@@ -531,10 +535,10 @@ public class DatabaseManager {
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
-                plugin.getLogger().log(Level.INFO, "Database connection closed successfully.");
+                SkyblockPlugin.getLogger().log(Level.INFO, "Database connection closed successfully.");
             }
         } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to close database connection.", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to close database connection.", e);
         }
         cache.clear();
         cacheTimestamps.clear();

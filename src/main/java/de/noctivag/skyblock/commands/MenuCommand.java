@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.commands;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -15,10 +18,10 @@ import net.kyori.adventure.text.Component;
 import java.util.Arrays;
 
 public class MenuCommand implements CommandExecutor {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     
-    public MenuCommand(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public MenuCommand(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
     }
     
     @Override
@@ -32,7 +35,7 @@ public class MenuCommand implements CommandExecutor {
         
         // Check permission
         if (!player.hasPermission("basicsplugin.menu")) {
-            player.sendMessage("§cDu hast keine Berechtigung für diesen Befehl!");
+            player.sendMessage(Component.text("§cDu hast keine Berechtigung für diesen Befehl!"));
             return true;
         }
         
@@ -95,7 +98,7 @@ public class MenuCommand implements CommandExecutor {
         }
         
         player.openInventory(menu);
-        player.sendMessage("§a§lBasicsPlugin Hauptmenü geöffnet!");
+        player.sendMessage(Component.text("§a§lBasicsPlugin Hauptmenü geöffnet!"));
     }
     
     private void addMenuItem(Inventory inventory, int slot, Material material, String name, java.util.List<String> lore) {

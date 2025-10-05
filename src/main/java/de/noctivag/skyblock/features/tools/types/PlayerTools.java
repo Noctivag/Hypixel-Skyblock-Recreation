@@ -1,4 +1,5 @@
 package de.noctivag.skyblock.features.tools.types;
+import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;

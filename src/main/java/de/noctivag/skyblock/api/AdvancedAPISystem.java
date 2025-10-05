@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.api;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -19,19 +24,19 @@ import java.util.concurrent.ConcurrentHashMap;
  * Advanced API System - Hypixel Skyblock Style
  */
 public class AdvancedAPISystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerAPI> playerAPI = new ConcurrentHashMap<>();
     private final Map<APIType, APIConfig> apiConfigs = new HashMap<>();
     private final Map<UUID, BukkitTask> apiTasks = new ConcurrentHashMap<>();
     
-    public AdvancedAPISystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedAPISystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeAPIConfigs();
         startAPIUpdateTask();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeAPIConfigs() {
@@ -59,7 +64,7 @@ public class AdvancedAPISystem implements Listener {
                     api.update();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L);
     }
     
     @EventHandler
@@ -72,7 +77,7 @@ public class AdvancedAPISystem implements Listener {
     }
     
     private void openAPIGUI(Player player) {
-        player.sendMessage("§aAPI GUI geöffnet!");
+        player.sendMessage(Component.text("§aAPI GUI geöffnet!"));
     }
     
     public PlayerAPI getPlayerAPI(UUID playerId) {
@@ -152,11 +157,11 @@ public class AdvancedAPISystem implements Listener {
         
         public PlayerAPI(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void update() {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long timeDiff = currentTime - lastUpdate;
             
             if (timeDiff >= 60000) {

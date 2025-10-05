@@ -63,7 +63,7 @@ public class DatamutexService {
             TransactionContext context = null;
             try {
                 // Create transaction context
-                context = new TransactionContext(transactionId, System.currentTimeMillis());
+                context = new TransactionContext(transactionId, java.lang.System.currentTimeMillis());
                 activeTransactions.put(transactionId, context);
                 
                 // Acquire necessary locks
@@ -135,7 +135,7 @@ public class DatamutexService {
             try {
                 for (String lockKey : lockKeys) {
                     String fullLockKey = LOCK_PREFIX + lockKey;
-                    String lockValue = context.getTransactionId() + ":" + System.currentTimeMillis();
+                    String lockValue = context.getTransactionId() + ":" + java.lang.System.currentTimeMillis();
                     
                     // Try to acquire lock with timeout
                     String result = jedis.set(fullLockKey, lockValue, SetParams.setParams().nx().ex((int)(LOCK_TIMEOUT / 1000)));
@@ -277,7 +277,7 @@ public class DatamutexService {
      * Cleanup expired transactions
      */
     private void cleanupExpiredTransactions() {
-        long now = System.currentTimeMillis();
+        long now = java.lang.System.currentTimeMillis();
         List<String> expiredTransactions = new ArrayList<>();
         
         for (Map.Entry<String, TransactionContext> entry : activeTransactions.entrySet()) {
@@ -446,7 +446,7 @@ public class DatamutexService {
             TransactionContext context = activeTransactions.get(transactionId);
             if (context != null) {
                 return new TransactionStatus(transactionId, TransactionStatus.Status.ACTIVE, 
-                                           System.currentTimeMillis() - context.getStartTime());
+                                           java.lang.System.currentTimeMillis() - context.getStartTime());
             }
             
             // Check if transaction exists in Redis

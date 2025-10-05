@@ -1,4 +1,8 @@
 package de.noctivag.skyblock.features.skyblock.impl;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.core.api.SystemStatus;
@@ -8,7 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -20,7 +24,7 @@ import java.util.logging.Logger;
  */
 public class SkyblockServiceImpl implements SkyblockService {
     
-    private final JavaSkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Logger logger;
     private final ConfigService configService;
     private final ConcurrentHashMap<UUID, SkyblockService.IslandData> islands;
@@ -30,9 +34,9 @@ public class SkyblockServiceImpl implements SkyblockService {
     private SystemStatus status = SystemStatus.UNINITIALIZED;
     private boolean enabled = false;
     
-    public SkyblockServiceImpl(JavaSkyblockPlugin plugin, ConfigService configService) {
-        this.plugin = plugin;
-        this.logger = plugin.getLogger();
+    public SkyblockServiceImpl(SkyblockPlugin SkyblockPlugin, ConfigService configService) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.logger = SkyblockPlugin.getLogger();
         this.configService = configService;
         this.islands = new ConcurrentHashMap<>();
         this.playerCoins = new ConcurrentHashMap<>();

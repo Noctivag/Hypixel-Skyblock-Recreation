@@ -1,15 +1,19 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import net.kyori.adventure.text.Component;
 
 public class DiscordGUI extends CustomGUI {
     private final Player player;
     
-    public DiscordGUI(SkyblockPlugin plugin, Player player) {
-        super(plugin, "§5§lDiscord", 54);
+    public DiscordGUI(SkyblockPlugin SkyblockPlugin, Player player) {
+        super(SkyblockPlugin, "§5§lDiscord", 54);
         this.player = player;
         setupItems();
     }

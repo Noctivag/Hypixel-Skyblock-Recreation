@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.network;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -27,7 +31,7 @@ import org.bukkit.scheduler.BukkitTask;
  */
 public class ServerCommunicationManager {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<String, ServerInfo> connectedServers = new ConcurrentHashMap<>();
     private final Map<String, Queue<NetworkMessage>> messageQueues = new ConcurrentHashMap<>();
@@ -39,8 +43,8 @@ public class ServerCommunicationManager {
     private BukkitTask messageProcessingTask;
     private BukkitTask healthCheckTask;
     
-    public ServerCommunicationManager(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public ServerCommunicationManager(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
     }
     
@@ -49,7 +53,7 @@ public class ServerCommunicationManager {
      */
     public void initialize() {
         try {
-            plugin.getLogger().info("Initializing Server Communication Manager...");
+            SkyblockPlugin.getLogger().info("Initializing Server Communication Manager...");
             
             // Starte Heartbeat-System
             startHeartbeatSystem();
@@ -64,10 +68,10 @@ public class ServerCommunicationManager {
             registerThisServer();
             
             isInitialized = true;
-            plugin.getLogger().info("Server Communication Manager initialized successfully!");
+            SkyblockPlugin.getLogger().info("Server Communication Manager initialized successfully!");
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to initialize Server Communication Manager", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to initialize Server Communication Manager", e);
         }
     }
     
@@ -76,7 +80,7 @@ public class ServerCommunicationManager {
      */
     private void startHeartbeatSystem() {
         Thread.ofVirtual().start(() -> {
-            while (plugin.isEnabled()) {
+            while (SkyblockPlugin.isEnabled()) {
                 try {
                     // Sende Heartbeat an alle Server
                     sendHeartbeat();
@@ -89,7 +93,7 @@ public class ServerCommunicationManager {
                     Thread.currentThread().interrupt();
                     break;
                 } catch (Exception e) {
-                    plugin.getLogger().log(Level.WARNING, "Error in heartbeat system", e);
+                    SkyblockPlugin.getLogger().log(Level.WARNING, "Error in heartbeat system", e);
                 }
             }
         });
@@ -100,7 +104,7 @@ public class ServerCommunicationManager {
      */
     private void startMessageProcessing() {
         Thread.ofVirtual().start(() -> {
-            while (plugin.isEnabled()) {
+            while (SkyblockPlugin.isEnabled()) {
                 try {
                     // Verarbeite wartende Nachrichten
                     processMessageQueues();
@@ -113,7 +117,7 @@ public class ServerCommunicationManager {
                     Thread.currentThread().interrupt();
                     break;
                 } catch (Exception e) {
-                    plugin.getLogger().log(Level.WARNING, "Error in message processing", e);
+                    SkyblockPlugin.getLogger().log(Level.WARNING, "Error in message processing", e);
                 }
             }
         });
@@ -124,7 +128,7 @@ public class ServerCommunicationManager {
      */
     private void startHealthMonitoring() {
         Thread.ofVirtual().start(() -> {
-            while (plugin.isEnabled()) {
+            while (SkyblockPlugin.isEnabled()) {
                 try {
                     // Überprüfe Server-Gesundheit
                     checkServerHealth();
@@ -137,7 +141,7 @@ public class ServerCommunicationManager {
                     Thread.currentThread().interrupt();
                     break;
                 } catch (Exception e) {
-                    plugin.getLogger().log(Level.WARNING, "Error in health monitoring", e);
+                    SkyblockPlugin.getLogger().log(Level.WARNING, "Error in health monitoring", e);
                 }
             }
         });
@@ -159,7 +163,7 @@ public class ServerCommunicationManager {
             tps = VALUES(tps),
             memory_usage = VALUES(memory_usage),
             cpu_usage = VALUES(cpu_usage)
-        """, thisServer.getServerId(), System.currentTimeMillis(), 
+        """, thisServer.getServerId(), java.lang.System.currentTimeMillis(), 
             Bukkit.getOnlinePlayers().size(), getServerTPS(), getMemoryUsage(), getCPUUsage());
     }
     
@@ -172,7 +176,7 @@ public class ServerCommunicationManager {
             SELECT server_id, timestamp, player_count, tps, memory_usage, cpu_usage
             FROM server_heartbeats
             WHERE timestamp > ?
-        """, System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(2))
+        """, java.lang.System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(2))
         .thenAccept(resultSet -> {
             try {
                 while (resultSet.next()) {
@@ -191,7 +195,7 @@ public class ServerCommunicationManager {
                     }
                 }
             } catch (Exception e) {
-                plugin.getLogger().log(Level.WARNING, "Error updating server status", e);
+                SkyblockPlugin.getLogger().log(Level.WARNING, "Error updating server status", e);
             }
         });
     }
@@ -238,11 +242,11 @@ public class ServerCommunicationManager {
                     handleEventNotification(message);
                     break;
                 default:
-                    plugin.getLogger().warning("Unknown message type: " + message.getType());
+                    SkyblockPlugin.getLogger().warning("Unknown message type: " + message.getType());
                     break;
             }
         } catch (Exception e) {
-            plugin.getLogger().log(Level.WARNING, "Error processing message", e);
+            SkyblockPlugin.getLogger().log(Level.WARNING, "Error processing message", e);
         }
     }
     
@@ -301,7 +305,7 @@ public class ServerCommunicationManager {
             long lastSeen = entry.getValue();
             
             // Prüfe ob Server offline ist
-            if (System.currentTimeMillis() - lastSeen > TimeUnit.MINUTES.toMillis(5)) {
+            if (java.lang.System.currentTimeMillis() - lastSeen > TimeUnit.MINUTES.toMillis(5)) {
                 markServerOffline(serverId);
             }
         }
@@ -385,10 +389,10 @@ public class ServerCommunicationManager {
      */
     public void registerServer(ServerInfo serverInfo) {
         connectedServers.put(serverInfo.getServerId(), serverInfo);
-        serverLastSeen.put(serverInfo.getServerId(), System.currentTimeMillis());
+        serverLastSeen.put(serverInfo.getServerId(), java.lang.System.currentTimeMillis());
         serverHealth.put(serverInfo.getServerId(), new ServerHealth());
         
-        plugin.getLogger().info("Registered server: " + serverInfo.getServerId());
+        SkyblockPlugin.getLogger().info("Registered server: " + serverInfo.getServerId());
     }
     
     /**
@@ -400,7 +404,7 @@ public class ServerCommunicationManager {
         serverHealth.remove(serverId);
         messageQueues.remove(serverId);
         
-        plugin.getLogger().info("Unregistered server: " + serverId);
+        SkyblockPlugin.getLogger().info("Unregistered server: " + serverId);
     }
     
     /**
@@ -410,7 +414,7 @@ public class ServerCommunicationManager {
         ServerInfo serverInfo = connectedServers.get(serverId);
         if (serverInfo != null) {
             serverInfo.setOnline(false);
-            plugin.getLogger().warning("Server marked as offline: " + serverId);
+            SkyblockPlugin.getLogger().warning("Server marked as offline: " + serverId);
         }
     }
     
@@ -428,7 +432,7 @@ public class ServerCommunicationManager {
     private ServerInfo getThisServerInfo() {
         return new ServerInfo(
             databaseManager.getServerId(),
-            plugin.getServer().getName(),
+            SkyblockPlugin.getServer().getName(),
             NetworkArchitecture.ServerType.HUB, // Wird aus Konfiguration gelesen
             "localhost", // Wird aus Konfiguration gelesen
             25565, // Wird aus Konfiguration gelesen
@@ -518,7 +522,7 @@ public class ServerCommunicationManager {
         serverHealth.clear();
         
         isInitialized = false;
-        plugin.getLogger().info("Server Communication Manager shutdown complete");
+        SkyblockPlugin.getLogger().info("Server Communication Manager shutdown complete");
     }
     
     // Getters
@@ -555,7 +559,7 @@ public class ServerCommunicationManager {
             this.memoryUsage = memoryUsage;
             this.cpuUsage = cpuUsage;
             this.isOnline = isOnline;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void updateStatus(int playerCount, double tps, double memoryUsage, double cpuUsage) {
@@ -563,7 +567,7 @@ public class ServerCommunicationManager {
             this.tps = tps;
             this.memoryUsage = memoryUsage;
             this.cpuUsage = cpuUsage;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public double getLoad() {
@@ -606,12 +610,12 @@ public class ServerCommunicationManager {
      */
     public static class ServerHealth {
         private double health = 1.0;
-        private long lastCheck = System.currentTimeMillis();
+        private long lastCheck = java.lang.System.currentTimeMillis();
         private int consecutiveFailures = 0;
         
         public void updateHealth(double newHealth) {
             this.health = newHealth;
-            this.lastCheck = System.currentTimeMillis();
+            this.lastCheck = java.lang.System.currentTimeMillis();
             
             if (newHealth < 0.5) {
                 consecutiveFailures++;
@@ -647,7 +651,7 @@ public class ServerCommunicationManager {
             this.senderId = senderId;
             this.targetId = targetId;
             this.data = data != null ? new HashMap<>(data) : new HashMap<>();
-            this.timestamp = System.currentTimeMillis();
+            this.timestamp = java.lang.System.currentTimeMillis();
         }
         
         // Getters

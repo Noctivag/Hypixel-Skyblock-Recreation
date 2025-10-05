@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.items;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -33,21 +37,21 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Item Progression
  */
 public class AdvancedItemSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerItems> playerItems = new ConcurrentHashMap<>();
     private final Map<ItemType, ItemConfig> itemConfigs = new HashMap<>();
     private final Map<UUID, BukkitTask> itemTasks = new ConcurrentHashMap<>();
 
-    public AdvancedItemSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public AdvancedItemSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeItemConfigs();
         startItemUpdateTask();
     }
 
     public void registerEvents() {
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
 
     private void initializeItemConfigs() {
@@ -262,7 +266,7 @@ public class AdvancedItemSystem implements Listener {
 
     private void startItemUpdateTask() {
         Thread.ofVirtual().start(() -> {
-            while (plugin.isEnabled()) {
+            while (SkyblockPlugin.isEnabled()) {
                 try {
                     for (Map.Entry<UUID, PlayerItems> entry : playerItems.entrySet()) {
                         PlayerItems items = entry.getValue();
@@ -287,7 +291,7 @@ public class AdvancedItemSystem implements Listener {
     }
 
     private void openItemGUI(Player player) {
-        player.sendMessage("§aItem GUI geöffnet!");
+        player.sendMessage(Component.text("§aItem GUI geöffnet!"));
     }
 
     public ItemStack createItem(ItemType type, int level) {
@@ -446,11 +450,11 @@ public class AdvancedItemSystem implements Listener {
 
         public PlayerItems(UUID playerId) {
             this.playerId = playerId;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
 
         public void update() {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = java.lang.System.currentTimeMillis();
             long timeDiff = currentTime - lastUpdate;
 
             if (timeDiff >= 60000) {
@@ -482,7 +486,7 @@ public class AdvancedItemSystem implements Listener {
     // Missing method for ItemCommands
     public void openSpecialItemsGUI(Player player) {
         // Placeholder implementation
-        player.sendMessage("§7Opening Special Items GUI...");
+        player.sendMessage(Component.text("§7Opening Special Items GUI..."));
         // TODO: Implement actual special items GUI
     }
 }

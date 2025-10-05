@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,18 +12,18 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 
 public class RanksGUI extends CustomGUI {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private Player target;
 
-    public RanksGUI(SkyblockPlugin plugin, Player target) {
+    public RanksGUI(SkyblockPlugin SkyblockPlugin, Player target) {
         super(54, Component.text("§6§lRang-Verwaltung"));
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.target = target;
     }
 
-    public RanksGUI(SkyblockPlugin plugin) {
+    public RanksGUI(SkyblockPlugin SkyblockPlugin) {
         super(54, Component.text("§6§lRang-Verwaltung"));
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.target = null;
     }
 
@@ -30,15 +33,15 @@ public class RanksGUI extends CustomGUI {
         // Header: target info or player selector
         if (target != null) {
             setItem(4, createGuiItem(Material.PLAYER_HEAD, "§eZiel: " + target.getName(),
-                "§7Aktueller Rang: §e" + plugin.getRankManager().getDisplayName(plugin.getRankManager().getPlayerRank(target))));
+                "§7Aktueller Rang: §e" + SkyblockPlugin.getRankManager().getDisplayName(SkyblockPlugin.getRankManager().getPlayerRank(target))));
         } else {
             setItem(4, createGuiItem(Material.PLAYER_HEAD, "§eSpieler auswählen",
                 "§7Klicke, um einen Spieler auszuwählen"));
         }
 
         int slot = 18;
-        for (String key : plugin.getRankManager().getAllRankKeys()) {
-            String display = plugin.getRankManager().getDisplayName(key);
+        for (String key : SkyblockPlugin.getRankManager().getAllRankKeys()) {
+            String display = SkyblockPlugin.getRankManager().getDisplayName(key);
             var lore = new ArrayList<String>();
             lore.add("§7Klicke, um diesen Rang zu setzen");
             setItem(slot, createGuiItem(Material.NAME_TAG, "§e" + display, lore.toArray(new String[0])));

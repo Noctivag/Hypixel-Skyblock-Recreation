@@ -1,4 +1,9 @@
 package de.noctivag.skyblock.skyblock.islands;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
@@ -13,7 +18,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.plugin.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,18 +36,18 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class PrivateIslandSystem implements Listener {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerIslandData> playerIslandData = new ConcurrentHashMap<>();
     private final Map<UUID, PrivateIsland> playerIslands = new ConcurrentHashMap<>();
     private final Map<String, PrivateIsland> islandWorlds = new ConcurrentHashMap<>();
     private final Map<UUID, Set<UUID>> islandVisitors = new ConcurrentHashMap<>();
     
-    public PrivateIslandSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public PrivateIslandSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     @EventHandler
@@ -108,8 +113,8 @@ public class PrivateIslandSystem implements Listener {
         // Teleport player to island
         player.teleport(spawnLocation);
         
-        player.sendMessage("§aWelcome to your private island!");
-        player.sendMessage("§7Use §e/island §7to manage your island.");
+        player.sendMessage(Component.text("§aWelcome to your private island!"));
+        player.sendMessage(Component.text("§7Use §e/island §7to manage your island."));
     }
     
     public void teleportToIsland(Player player) {
@@ -117,7 +122,7 @@ public class PrivateIslandSystem implements Listener {
         PrivateIsland island = playerIslands.get(playerId);
         
         if (island == null) {
-            player.sendMessage("§cYou don't have an island! Creating one now...");
+            player.sendMessage(Component.text("§cYou don't have an island! Creating one now..."));
             createIsland(player);
             return;
         }
@@ -129,7 +134,7 @@ public class PrivateIslandSystem implements Listener {
         }
         
         player.teleport(spawnLocation);
-        player.sendMessage("§aTeleported to your private island!");
+        player.sendMessage(Component.text("§aTeleported to your private island!"));
     }
     
     public void visitIsland(Player visitor, String targetPlayerName) {
@@ -176,7 +181,7 @@ public class PrivateIslandSystem implements Listener {
         PrivateIsland island = playerIslands.get(playerId);
         
         if (island == null) {
-            player.sendMessage("§cYou don't have an island!");
+            player.sendMessage(Component.text("§cYou don't have an island!"));
             return;
         }
         
@@ -186,7 +191,7 @@ public class PrivateIslandSystem implements Listener {
         
         // Check if expansion is already purchased
         if (island.hasExpansion(expansion)) {
-            player.sendMessage("§cYou already have this expansion!");
+            player.sendMessage(Component.text("§cYou already have this expansion!"));
             return;
         }
         
@@ -204,14 +209,14 @@ public class PrivateIslandSystem implements Listener {
         PrivateIsland island = playerIslands.get(playerId);
         
         if (island == null) {
-            player.sendMessage("§cYou don't have an island!");
+            player.sendMessage(Component.text("§cYou don't have an island!"));
             return;
         }
         
         // Confirm reset
-        player.sendMessage("§cAre you sure you want to reset your island?");
-        player.sendMessage("§7This will delete all your builds and items!");
-        player.sendMessage("§7Type §e/island confirm §7to confirm the reset.");
+        player.sendMessage(Component.text("§cAre you sure you want to reset your island?"));
+        player.sendMessage(Component.text("§7This will delete all your builds and items!"));
+        player.sendMessage(Component.text("§7Type §e/island confirm §7to confirm the reset."));
         
         // This would implement a confirmation system
     }
@@ -221,7 +226,7 @@ public class PrivateIslandSystem implements Listener {
         PrivateIsland island = playerIslands.get(playerId);
         
         if (island == null) {
-            player.sendMessage("§cYou don't have an island!");
+            player.sendMessage(Component.text("§cYou don't have an island!"));
             return;
         }
         
@@ -234,7 +239,7 @@ public class PrivateIslandSystem implements Listener {
         // Regenerate island
         generateIsland(island);
         
-        player.sendMessage("§aYour island has been reset!");
+        player.sendMessage(Component.text("§aYour island has been reset!"));
     }
     
     private World createIslandWorld(String worldName) {
@@ -419,7 +424,7 @@ public class PrivateIslandSystem implements Listener {
         if (visitors == null || !visitors.contains(player.getUniqueId())) {
             if (!island.isPublic()) {
                 event.setCancelled(true);
-                player.sendMessage("§cYou don't have permission to visit this island!");
+                player.sendMessage(Component.text("§cYou don't have permission to visit this island!"));
             }
         }
     }
@@ -499,7 +504,7 @@ public class PrivateIslandSystem implements Listener {
             this.world = world;
             this.expansions = new HashSet<>();
             this.isPublic = false;
-            this.creationTime = System.currentTimeMillis();
+            this.creationTime = java.lang.System.currentTimeMillis();
         }
         
         public void addExpansion(IslandExpansion expansion) {

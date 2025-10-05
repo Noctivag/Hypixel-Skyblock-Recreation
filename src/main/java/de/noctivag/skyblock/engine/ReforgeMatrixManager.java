@@ -1,6 +1,9 @@
 package de.noctivag.skyblock.engine;
 
 import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.features.stats.types.PrimaryStat;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -30,14 +33,14 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ReforgeMatrixManager {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final File reforgeMatrixFile;
     private final Map<String, ReforgeMatrix> reforgeMatrices = new ConcurrentHashMap<>();
     private final JSONParser jsonParser = new JSONParser();
     
-    public ReforgeMatrixManager(SkyblockPlugin plugin) {
-        this.plugin = plugin;
-        this.reforgeMatrixFile = new File(plugin.getDataFolder(), "reforge_matrix.json");
+    public ReforgeMatrixManager(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
+        this.reforgeMatrixFile = new File(SkyblockPlugin.getDataFolder(), "reforge_matrix.json");
         initializeReforgeMatrix();
     }
     
@@ -57,7 +60,7 @@ public class ReforgeMatrixManager {
      */
     private void createDefaultReforgeMatrix() {
         try {
-            plugin.getDataFolder().mkdirs();
+            SkyblockPlugin.getDataFolder().mkdirs();
             
             JSONObject reforgeMatrix = new JSONObject();
             
@@ -259,7 +262,7 @@ public class ReforgeMatrixManager {
             }
             
         } catch (IOException e) {
-            plugin.getLogger().severe("Failed to create default reforge matrix: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to create default reforge matrix: " + e.getMessage());
         }
     }
     
@@ -308,7 +311,7 @@ public class ReforgeMatrixManager {
             }
             
         } catch (IOException | ParseException e) {
-            plugin.getLogger().severe("Failed to load reforge matrix: " + e.getMessage());
+            SkyblockPlugin.getLogger().severe("Failed to load reforge matrix: " + e.getMessage());
         }
     }
     

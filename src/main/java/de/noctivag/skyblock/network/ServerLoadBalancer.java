@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.network;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -25,7 +29,7 @@ import java.util.logging.Level;
  */
 public class ServerLoadBalancer {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final ServerCommunicationManager communicationManager;
     
@@ -39,9 +43,9 @@ public class ServerLoadBalancer {
     private final double loadThreshold = 0.8;
     private final long metricsUpdateInterval = 5000; // 5 Sekunden
     
-    public ServerLoadBalancer(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager,
+    public ServerLoadBalancer(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager,
                              ServerCommunicationManager communicationManager) {
-        this.plugin = plugin;
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         this.communicationManager = communicationManager;
         
@@ -89,14 +93,14 @@ public class ServerLoadBalancer {
                 updateServerLoad(bestServer.getServerId(), 1);
                 
                 // Logge Auswahl
-                plugin.getLogger().info("Selected server " + bestServer.getServerId() + 
+                SkyblockPlugin.getLogger().info("Selected server " + bestServer.getServerId() + 
                     " for " + serverType.name() + " using " + strategy.getName() + " strategy");
             }
             
             future.complete(bestServer);
             
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Error finding best server", e);
+            SkyblockPlugin.getLogger().log(Level.SEVERE, "Error finding best server", e);
             future.complete(null);
         }
         
@@ -200,7 +204,7 @@ public class ServerLoadBalancer {
      * Fordert einen neuen Server an
      */
     private void requestNewServer(NetworkArchitecture.ServerType serverType) {
-        plugin.getLogger().info("Requesting new server for type: " + serverType.name());
+        SkyblockPlugin.getLogger().info("Requesting new server for type: " + serverType.name());
         
         // Hier würde man einen neuen Server starten
         // In einer echten Implementierung würde dies über eine Cloud-API oder Container-Orchestrierung erfolgen
@@ -301,7 +305,7 @@ public class ServerLoadBalancer {
             this.cpuUsage = cpuUsage;
             this.load = load;
             this.health = health;
-            this.lastUpdate = System.currentTimeMillis();
+            this.lastUpdate = java.lang.System.currentTimeMillis();
         }
         
         public void updateLoad(int loadChange) {
@@ -332,7 +336,7 @@ public class ServerLoadBalancer {
             this.requestId = UUID.randomUUID().toString();
             this.reason = reason;
             this.parameters = parameters != null ? new HashMap<>(parameters) : new HashMap<>();
-            this.timestamp = System.currentTimeMillis();
+            this.timestamp = java.lang.System.currentTimeMillis();
         }
         
         // Getters

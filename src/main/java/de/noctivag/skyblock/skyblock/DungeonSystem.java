@@ -1,7 +1,12 @@
 package de.noctivag.skyblock.skyblock;
+import net.kyori.adventure.text.Component;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,13 +17,13 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DungeonSystem {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, DungeonParty> parties = new ConcurrentHashMap<>();
     private final Map<UUID, DungeonRun> activeRuns = new ConcurrentHashMap<>();
     private final Map<UUID, DungeonClass> playerClasses = new ConcurrentHashMap<>();
     
-    public DungeonSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public DungeonSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         initializeDungeonWorlds();
     }
     
@@ -26,9 +31,9 @@ public class DungeonSystem {
         // Create dungeon worlds
         World dungeonWorld = Bukkit.getWorld("skyblock_dungeons");
         if (dungeonWorld == null) {
-            plugin.getLogger().info("Dungeon world not found, it will be created by WorldManager");
+            SkyblockPlugin.getLogger().info("Dungeon world not found, it will be created by WorldManager");
         } else {
-            plugin.getLogger().info("Dungeon world loaded successfully");
+            SkyblockPlugin.getLogger().info("Dungeon world loaded successfully");
         }
     }
     
@@ -72,18 +77,18 @@ public class DungeonSystem {
     public void acceptInvitation(Player player) {
         DungeonParty party = getPlayerParty(player.getUniqueId());
         if (party == null) {
-            player.sendMessage("§cYou don't have any pending invitations!");
+            player.sendMessage(Component.text("§cYou don't have any pending invitations!"));
             return;
         }
         
         if (!party.hasInvitation(player.getUniqueId())) {
-            player.sendMessage("§cYou don't have any pending invitations!");
+            player.sendMessage(Component.text("§cYou don't have any pending invitations!"));
             return;
         }
         
         party.acceptInvitation(player.getUniqueId());
         
-        player.sendMessage("§a§lJOINED PARTY!");
+        player.sendMessage(Component.text("§a§lJOINED PARTY!"));
         player.sendMessage("§7Party Leader: §e" + Bukkit.getPlayer(party.getLeader()).getName());
         
         // Notify party members
@@ -136,7 +141,7 @@ public class DungeonSystem {
     public void selectClass(Player player, DungeonClass dungeonClass) {
         playerClasses.put(player.getUniqueId(), dungeonClass);
         
-        player.sendMessage("§a§lCLASS SELECTED!");
+        player.sendMessage(Component.text("§a§lCLASS SELECTED!"));
         player.sendMessage("§7Class: §e" + dungeonClass.getName());
         player.sendMessage("§7Description: §7" + dungeonClass.getDescription());
         
@@ -307,7 +312,7 @@ public class DungeonSystem {
             this.id = id;
             this.party = party;
             this.floor = floor;
-            this.startTime = System.currentTimeMillis();
+            this.startTime = java.lang.System.currentTimeMillis();
             this.completed = false;
             this.failed = false;
         }

@@ -1,6 +1,10 @@
 package de.noctivag.skyblock.achievements;
 
-import de.noctivag.skyblock.Plugin;
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
+
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -11,12 +15,12 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AchievementSystem {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final Map<UUID, Set<Achievement>> playerAchievements;
     private final Map<UUID, Map<Achievement, Integer>> playerProgress;
     
-    public AchievementSystem(SkyblockPlugin plugin) {
-        this.plugin = plugin;
+    public AchievementSystem(SkyblockPlugin SkyblockPlugin) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.playerAchievements = new ConcurrentHashMap<>();
         this.playerProgress = new ConcurrentHashMap<>();
     }

@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.performance;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -24,7 +27,7 @@ import java.util.logging.Level;
  */
 public class AsyncTaskScheduler {
     
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final AdvancedThreadPoolManager threadPoolManager;
     
     // Task Queues mit verschiedenen Prioritäten
@@ -55,12 +58,12 @@ public class AsyncTaskScheduler {
     // Monitoring
     private BukkitTask monitoringTask;
     
-    public AsyncTaskScheduler(SkyblockPlugin plugin, AdvancedThreadPoolManager threadPoolManager) {
-        this.plugin = plugin;
+    public AsyncTaskScheduler(SkyblockPlugin SkyblockPlugin, AdvancedThreadPoolManager threadPoolManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.threadPoolManager = threadPoolManager;
         
         startTaskMonitoring();
-        plugin.getLogger().info("Async Task Scheduler initialized");
+        SkyblockPlugin.getLogger().info("Async Task Scheduler initialized");
     }
     
     /**
@@ -109,7 +112,7 @@ public class AsyncTaskScheduler {
         
         // Prüfe ob Task bereits existiert
         if (activeTasks.containsKey(taskId)) {
-            plugin.getLogger().warning("Task with ID '" + taskId + "' is already scheduled");
+            SkyblockPlugin.getLogger().warning("Task with ID '" + taskId + "' is already scheduled");
             return CompletableFuture.completedFuture(null);
         }
         
@@ -123,7 +126,7 @@ public class AsyncTaskScheduler {
             
             // Prüfe ob alle Abhängigkeiten erfüllt sind
             if (!areDependenciesMet(dependencies)) {
-                plugin.getLogger().info("Task '" + taskId + "' queued due to unmet dependencies");
+                SkyblockPlugin.getLogger().info("Task '" + taskId + "' queued due to unmet dependencies");
                 @SuppressWarnings("unchecked")
                 CompletableFuture<T> typedFuture = (CompletableFuture<T>) taskWrapper.getFuture();
                 return typedFuture;
@@ -213,7 +216,7 @@ public class AsyncTaskScheduler {
                 
             } catch (Exception e) {
                 // Task fehlgeschlagen
-                plugin.getLogger().log(Level.WARNING, "Task '" + taskWrapper.getTaskId() + "' failed", e);
+                SkyblockPlugin.getLogger().log(Level.WARNING, "Task '" + taskWrapper.getTaskId() + "' failed", e);
                 handleTaskFailure(taskWrapper, e);
             } finally {
                 // Cleanup
@@ -235,7 +238,7 @@ public class AsyncTaskScheduler {
         future.orTimeout(taskTimeout, TimeUnit.MILLISECONDS)
             .exceptionally(throwable -> {
                 if (throwable instanceof TimeoutException) {
-                    plugin.getLogger().warning("Task '" + taskWrapper.getTaskId() + "' timed out after " + taskTimeout + "ms");
+                    SkyblockPlugin.getLogger().warning("Task '" + taskWrapper.getTaskId() + "' timed out after " + taskTimeout + "ms");
                     handleTaskTimeout(taskWrapper);
                 }
                 return null;
@@ -253,7 +256,7 @@ public class AsyncTaskScheduler {
             taskWrapper.incrementRetryCount();
             totalTasksRetried.increment();
             
-            plugin.getLogger().info("Retrying task '" + taskWrapper.getTaskId() + "' (attempt " + 
+            SkyblockPlugin.getLogger().info("Retrying task '" + taskWrapper.getTaskId() + "' (attempt " + 
                 taskWrapper.getRetryCount() + "/" + maxRetryAttempts + ")");
             
             // Warte kurz vor Retry
@@ -264,7 +267,7 @@ public class AsyncTaskScheduler {
         } else {
             // Max retries reached, fail task
             taskWrapper.completeExceptionally(e);
-            plugin.getLogger().severe("Task '" + taskWrapper.getTaskId() + "' failed after " + 
+            SkyblockPlugin.getLogger().severe("Task '" + taskWrapper.getTaskId() + "' failed after " + 
                 maxRetryAttempts + " retry attempts");
         }
     }
@@ -311,10 +314,10 @@ public class AsyncTaskScheduler {
      * Startet Task-Monitoring
      */
     private void startTaskMonitoring() {
-        monitoringTask = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
+        monitoringTask = Bukkit.getScheduler().runTaskTimerAsynchronously(SkyblockPlugin, () -> {
             // Log Task Statistics
             if (totalTasksScheduled.sum() > 0) {
-                plugin.getLogger().info("Task Scheduler Status: " + 
+                SkyblockPlugin.getLogger().info("Task Scheduler Status: " + 
                     "Active: " + activeTaskCount.get() + 
                     ", Completed: " + totalTasksCompleted.sum() + 
                     ", Failed: " + totalTasksFailed.sum() + 
@@ -365,7 +368,7 @@ public class AsyncTaskScheduler {
      * Stoppt den Scheduler
      */
     public void shutdown() {
-        plugin.getLogger().info("Shutting down Async Task Scheduler...");
+        SkyblockPlugin.getLogger().info("Shutting down Async Task Scheduler...");
         
         schedulerEnabled = false;
         
@@ -381,7 +384,7 @@ public class AsyncTaskScheduler {
         activeTasks.clear();
         taskDependencies.clear();
         
-        plugin.getLogger().info("Async Task Scheduler shutdown complete");
+        SkyblockPlugin.getLogger().info("Async Task Scheduler shutdown complete");
     }
     
     /**
@@ -421,7 +424,7 @@ public class AsyncTaskScheduler {
             this.task = task;
             this.priority = priority;
             this.future = new CompletableFuture<>();
-            this.creationTime = System.currentTimeMillis();
+            this.creationTime = java.lang.System.currentTimeMillis();
         }
         
         public void complete() {

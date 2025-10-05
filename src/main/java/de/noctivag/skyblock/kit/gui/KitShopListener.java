@@ -1,7 +1,10 @@
 package de.noctivag.skyblock.kit.gui;
+
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.kit.KitManager;
 import de.noctivag.skyblock.kit.KitShop;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
@@ -10,13 +13,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.meta.ItemMeta;
+import net.kyori.adventure.text.Component;
 
 public class KitShopListener implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final KitManager kitManager;
 
-    public KitShopListener(SkyblockPlugin plugin, KitManager kitManager) {
-        this.plugin = plugin;
+    public KitShopListener(SkyblockPlugin SkyblockPlugin, KitManager kitManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.kitManager = kitManager;
     }
 
@@ -48,7 +52,7 @@ public class KitShopListener implements Listener {
         KitShop.KitInfo kitInfo = kitManager.getKitShop().getKitInfo(kitName.toLowerCase());
 
         if (kitInfo == null) {
-            player.sendMessage("§cDieses Kit existiert nicht!");
+            player.sendMessage(Component.text("§cDieses Kit existiert nicht!"));
             return;
         }
 
@@ -61,24 +65,24 @@ public class KitShopListener implements Listener {
 
         // Prüfe VIP-Status
         if (kitName.equalsIgnoreCase("vip") && !player.hasPermission("kit.vip")) {
-            player.sendMessage("§cDieses Kit ist nur für VIP-Spieler verfügbar!");
+            player.sendMessage(Component.text("§cDieses Kit ist nur für VIP-Spieler verfügbar!"));
             return;
         }
 
         // Prüfe und ziehe Kosten ab
         if (kitInfo.getPrice() > 0) {
-            if (!plugin.getEconomyManager().hasBalance(player, kitInfo.getPrice())) {
+            if (!SkyblockPlugin.getEconomyManager().hasBalance(player, kitInfo.getPrice())) {
                 player.sendMessage("§cDu hast nicht genug Geld! Du benötigst " +
-                    plugin.getEconomyManager().formatMoney(kitInfo.getPrice()));
+                    SkyblockPlugin.getEconomyManager().formatMoney(kitInfo.getPrice()));
                 return;
             }
-            boolean success = plugin.getEconomyManager().withdrawMoney(player, kitInfo.getPrice());
+            boolean success = SkyblockPlugin.getEconomyManager().withdrawMoney(player, kitInfo.getPrice());
             if (!success) {
-                player.sendMessage("Transaction failed. Not enough balance.");
+                player.sendMessage(Component.text("Transaction failed. Not enough balance."));
                 return;
             }
             player.sendMessage("§7Du hast das Kit für §e" +
-                plugin.getEconomyManager().formatMoney(kitInfo.getPrice()) + " §7gekauft!");
+                SkyblockPlugin.getEconomyManager().formatMoney(kitInfo.getPrice()) + " §7gekauft!");
         }
 
         // Gebe Kit-Items
@@ -88,7 +92,7 @@ public class KitShopListener implements Listener {
         kitManager.setCooldown(player, kitName);
 
         // Aktualisiere GUI
-        new KitShopGUI(plugin).openGUI(player);
+        new KitShopGUI(SkyblockPlugin).openGUI(player);
     }
 
     private String formatTime(long seconds) {

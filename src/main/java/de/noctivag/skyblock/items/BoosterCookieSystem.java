@@ -1,7 +1,11 @@
 package de.noctivag.skyblock.items;
+
+import java.util.UUID;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.Plugin;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -26,17 +30,17 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Cookie shop integration
  */
 public class BoosterCookieSystem implements Listener {
-    private final SkyblockPlugin plugin;
+    private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerCookieData> playerCookieData = new ConcurrentHashMap<>();
     private final Map<CookieEffect, CookieEffectConfig> cookieEffects = new HashMap<>();
     
-    public BoosterCookieSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public BoosterCookieSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
+        this.SkyblockPlugin = SkyblockPlugin;
         this.databaseManager = databaseManager;
         initializeCookieEffects();
         
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
     private void initializeCookieEffects() {
@@ -136,7 +140,7 @@ public class BoosterCookieSystem implements Listener {
         
         // Check if player already has active cookie
         if (cookieData.hasActiveCookie()) {
-            player.sendMessage("§cDu hast bereits einen aktiven Booster Cookie!");
+            player.sendMessage(Component.text("§cDu hast bereits einen aktiven Booster Cookie!"));
             return;
         }
         
@@ -153,14 +157,14 @@ public class BoosterCookieSystem implements Listener {
         
         // Set cookie active for 4 days (Hypixel SkyBlock standard)
         cookieData.setCookieActive(true);
-        cookieData.setCookieExpiry(System.currentTimeMillis() + (4 * 24 * 60 * 60 * 1000L));
+        cookieData.setCookieExpiry(java.lang.System.currentTimeMillis() + (4 * 24 * 60 * 60 * 1000L));
         
         // Save to database
         savePlayerCookieData(player.getUniqueId(), cookieData);
         
         // Send success message
-        player.sendMessage("§a§lBooster Cookie aktiviert!");
-        player.sendMessage("§7Du erhältst für 4 Tage:");
+        player.sendMessage(Component.text("§a§lBooster Cookie aktiviert!"));
+        player.sendMessage(Component.text("§7Du erhältst für 4 Tage:"));
         for (CookieEffect effect : CookieEffect.values()) {
             CookieEffectConfig config = cookieEffects.get(effect);
             player.sendMessage("§7• " + config.getDescription());
@@ -183,43 +187,43 @@ public class BoosterCookieSystem implements Listener {
         switch (effect) {
             case MINING_SPEED_BOOST:
                 // Apply mining speed boost - placeholder
-                player.sendMessage("§aMining Speed Boost activated!");
+                player.sendMessage(Component.text("§aMining Speed Boost activated!"));
                 break;
             case COMBAT_BOOST:
                 // Apply combat damage boost - placeholder
-                player.sendMessage("§cCombat Boost activated!");
+                player.sendMessage(Component.text("§cCombat Boost activated!"));
                 break;
             case FARMING_BOOST:
                 // Apply farming XP boost - placeholder
-                player.sendMessage("§aFarming Boost activated!");
+                player.sendMessage(Component.text("§aFarming Boost activated!"));
                 break;
             case FORAGING_BOOST:
                 // Apply foraging XP boost - placeholder
-                player.sendMessage("§2Foraging Boost activated!");
+                player.sendMessage(Component.text("§2Foraging Boost activated!"));
                 break;
             case FISHING_BOOST:
                 // Apply fishing XP boost - placeholder
-                player.sendMessage("§bFishing Boost activated!");
+                player.sendMessage(Component.text("§bFishing Boost activated!"));
                 break;
             case MAGIC_FIND_BOOST:
                 // Apply magic find boost - placeholder
-                player.sendMessage("§dMagic Find Boost activated!");
+                player.sendMessage(Component.text("§dMagic Find Boost activated!"));
                 break;
             case PET_LUCK_BOOST:
                 // Apply pet luck boost - placeholder
-                player.sendMessage("§6Pet Luck Boost activated!");
+                player.sendMessage(Component.text("§6Pet Luck Boost activated!"));
                 break;
             case ISLAND_SIZE_BOOST:
                 // Apply island size boost - placeholder
-                player.sendMessage("§eIsland Size Boost activated!");
+                player.sendMessage(Component.text("§eIsland Size Boost activated!"));
                 break;
             case MINION_SPEED_BOOST:
                 // Apply minion speed boost - placeholder
-                player.sendMessage("§9Minion Speed Boost activated!");
+                player.sendMessage(Component.text("§9Minion Speed Boost activated!"));
                 break;
             case COLLECTION_BOOST:
                 // Apply collection XP boost - placeholder
-                player.sendMessage("§fCollection Boost activated!");
+                player.sendMessage(Component.text("§fCollection Boost activated!"));
                 break;
         }
     }
@@ -241,22 +245,22 @@ public class BoosterCookieSystem implements Listener {
                     cookieData.setCookieActive(false);
                     savePlayerCookieData(player.getUniqueId(), cookieData);
                     
-                    player.sendMessage("§c§lDein Booster Cookie ist abgelaufen!");
+                    player.sendMessage(Component.text("§c§lDein Booster Cookie ist abgelaufen!"));
                     cancel();
                     return;
                 }
                 
                 // Send reminder every hour
                 if (cookieData.shouldSendReminder()) {
-                    long remainingTime = cookieData.getCookieExpiry() - System.currentTimeMillis();
+                    long remainingTime = cookieData.getCookieExpiry() - java.lang.System.currentTimeMillis();
                     long hours = remainingTime / (60 * 60 * 1000);
                     long minutes = (remainingTime % (60 * 60 * 1000)) / (60 * 1000);
                     
                     player.sendMessage("§e§lBooster Cookie: §7Noch " + hours + "h " + minutes + "m aktiv");
-                    cookieData.setLastReminder(System.currentTimeMillis());
+                    cookieData.setLastReminder(java.lang.System.currentTimeMillis());
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L * 60L); // Check every minute
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L * 60L); // Check every minute
     }
     
     private void removeCookieEffects(Player player) {
@@ -270,34 +274,34 @@ public class BoosterCookieSystem implements Listener {
         // In a full implementation, these would integrate with the respective systems
         switch (effect) {
             case MINING_SPEED_BOOST:
-                player.sendMessage("§7Mining Speed Boost expired!");
+                player.sendMessage(Component.text("§7Mining Speed Boost expired!"));
                 break;
             case COMBAT_BOOST:
-                player.sendMessage("§7Combat Boost expired!");
+                player.sendMessage(Component.text("§7Combat Boost expired!"));
                 break;
             case FARMING_BOOST:
-                player.sendMessage("§7Farming Boost expired!");
+                player.sendMessage(Component.text("§7Farming Boost expired!"));
                 break;
             case FORAGING_BOOST:
-                player.sendMessage("§7Foraging Boost expired!");
+                player.sendMessage(Component.text("§7Foraging Boost expired!"));
                 break;
             case FISHING_BOOST:
-                player.sendMessage("§7Fishing Boost expired!");
+                player.sendMessage(Component.text("§7Fishing Boost expired!"));
                 break;
             case MAGIC_FIND_BOOST:
-                player.sendMessage("§7Magic Find Boost expired!");
+                player.sendMessage(Component.text("§7Magic Find Boost expired!"));
                 break;
             case PET_LUCK_BOOST:
-                player.sendMessage("§7Pet Luck Boost expired!");
+                player.sendMessage(Component.text("§7Pet Luck Boost expired!"));
                 break;
             case ISLAND_SIZE_BOOST:
-                player.sendMessage("§7Island Size Boost expired!");
+                player.sendMessage(Component.text("§7Island Size Boost expired!"));
                 break;
             case MINION_SPEED_BOOST:
-                player.sendMessage("§7Minion Speed Boost expired!");
+                player.sendMessage(Component.text("§7Minion Speed Boost expired!"));
                 break;
             case COLLECTION_BOOST:
-                player.sendMessage("§7Collection Boost expired!");
+                player.sendMessage(Component.text("§7Collection Boost expired!"));
                 break;
         }
     }
@@ -387,8 +391,8 @@ public class BoosterCookieSystem implements Listener {
         
         public boolean hasActiveCookie() { return cookieActive && !isCookieExpired(); }
         public boolean isCookieActive() { return cookieActive; }
-        public boolean isCookieExpired() { return System.currentTimeMillis() > cookieExpiry; }
-        public boolean shouldSendReminder() { return System.currentTimeMillis() - lastReminder > 3600000; } // 1 hour
+        public boolean isCookieExpired() { return java.lang.System.currentTimeMillis() > cookieExpiry; }
+        public boolean shouldSendReminder() { return java.lang.System.currentTimeMillis() - lastReminder > 3600000; } // 1 hour
         
         public void setCookieActive(boolean active) { this.cookieActive = active; }
         public void setCookieExpiry(long expiry) { this.cookieExpiry = expiry; }
