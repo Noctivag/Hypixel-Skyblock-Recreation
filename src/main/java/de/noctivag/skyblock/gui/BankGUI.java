@@ -26,6 +26,10 @@ public class BankGUI {
         this.SkyblockPlugin = SkyblockPlugin;
     }
     
+    public void open(Player player) {
+        openBankGUI(player);
+    }
+    
     public void openBankGUI(Player player) {
         Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lBank"));
         

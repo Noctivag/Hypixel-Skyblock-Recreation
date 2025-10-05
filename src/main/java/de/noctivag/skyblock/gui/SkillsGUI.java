@@ -33,6 +33,10 @@ public class SkillsGUI implements Listener {
         Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
+    public void open(Player player) {
+        openSkillsGUI(player);
+    }
+    
     public void openSkillsGUI(Player player) {
         Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lSkills"));
         

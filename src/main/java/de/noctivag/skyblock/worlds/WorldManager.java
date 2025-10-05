@@ -54,6 +54,7 @@ public class WorldManager {
     private final Map<String, WorldConfig> worldConfigs = new HashMap<>();
     private final Map<String, World> managedWorlds = new HashMap<>();
     private boolean isInitialized = false;
+    private FoliaWorldCreator foliaWorldCreator;
     
     // Rolling-Restart-System für öffentliche Welten
     private final Map<String, String> liveWorldAliases = new ConcurrentHashMap<>();
@@ -67,6 +68,9 @@ public class WorldManager {
         if (!privateIslandsContainer.exists()) {
             privateIslandsContainer.mkdirs();
         }
+        
+        // Initialize Folia-compatible world creator
+        this.foliaWorldCreator = new FoliaWorldCreator(SkyblockPlugin);
         
         initializeWorldConfigs();
     }
@@ -153,55 +157,64 @@ public class WorldManager {
     }
 
     /**
-     * Initialisiert alle Welten
+     * Prüft ob der Server Folia verwendet
+     */
+    private boolean isFoliaServer() {
+        try {
+            Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Initialisiert alle Welten (Folia-kompatibel)
      */
     public CompletableFuture<Boolean> initializeAllWorlds() {
         CompletableFuture<Boolean> future = new CompletableFuture<>();
 
         SkyblockPlugin.getLogger().info("Initializing all worlds...");
 
+        // Prüfe ob Folia läuft
+        if (isFoliaServer()) {
+            SkyblockPlugin.getLogger().info("Folia detected - Legacy world initialization disabled");
+            SkyblockPlugin.getLogger().info("Worlds will be handled by Rolling-Restart system");
+            future.complete(true);
+            return future;
+        }
+
         Thread.ofVirtual().start(() -> {
             try {
-                final int[] successCount = {0};
-                int totalCount = worldConfigs.size();
-
-                for (Map.Entry<String, WorldConfig> entry : worldConfigs.entrySet()) {
-                    String worldName = entry.getKey();
-                    WorldConfig config = entry.getValue();
-
-                    try {
-                        // World creation/load - execute directly on current thread for Folia compatibility
-                        World world = initializeWorld(worldName, config);
-
-                        if (world != null) {
-                            managedWorlds.put(worldName, world);
-                            successCount[0]++;
-                            SkyblockPlugin.getLogger().info("Successfully initialized world: " + worldName);
-                        } else {
-                            SkyblockPlugin.getLogger().warning("Failed to initialize world: " + worldName);
-                        }
-
-                    } catch (Exception e) {
-                        SkyblockPlugin.getLogger().log(java.util.logging.Level.SEVERE, "Error initializing world: " + worldName, e);
+                // Use Folia-compatible world creator
+                foliaWorldCreator.createOrLoadAllWorlds();
+                
+                // Load all successfully created worlds into managed worlds
+                for (String worldName : worldConfigs.keySet()) {
+                    World world = Bukkit.getWorld(worldName);
+                    if (world != null) {
+                        managedWorlds.put(worldName, world);
+                        SkyblockPlugin.getLogger().info("Successfully loaded world: " + worldName);
                     }
                 }
 
-                // Folia compatibility: Mark as initialized even if no worlds were created
-                // since world creation is not supported on Folia servers
+                // Mark as initialized
                 isInitialized = true;
-
-                // Complete the future directly for Folia compatibility
-                if (successCount[0] > 0) {
-                    SkyblockPlugin.getLogger().info("World initialization completed: " + successCount[0] + "/" + totalCount + " worlds ready");
+                
+                int successCount = managedWorlds.size();
+                int totalCount = worldConfigs.size();
+                
+                if (successCount > 0) {
+                    SkyblockPlugin.getLogger().info("World initialization completed: " + successCount + "/" + totalCount + " worlds ready");
                 } else {
-                    SkyblockPlugin.getLogger().warning("World initialization completed: 0/" + totalCount + " worlds ready (Folia compatibility - worlds must be created manually)");
+                    SkyblockPlugin.getLogger().warning("World initialization completed: 0/" + totalCount + " worlds ready");
                 }
+                
                 future.complete(true);
 
             } catch (Exception e) {
                 SkyblockPlugin.getLogger().log(java.util.logging.Level.SEVERE, "Critical error during world initialization", e);
-                // Folia compatibility: Mark as initialized even if there was an error
-                // to prevent infinite loops
+                // Mark as initialized even if there was an error to prevent infinite loops
                 isInitialized = true;
                 future.complete(true);
             }
@@ -264,11 +277,23 @@ public class WorldManager {
      */
     private World createNewWorld(String worldName, WorldConfig config) {
         try {
-            // Folia compatibility: World creation is not supported on Folia servers
-            // Log a warning and return null - worlds will need to be created manually
-            SkyblockPlugin.getLogger().warning("World creation not supported on Folia: " + worldName + 
-                " - Please create this world manually if needed");
-            return null;
+            // Use Folia-compatible world creator
+            if (foliaWorldCreator != null) {
+                SkyblockPlugin.getLogger().info("Creating world using Folia-compatible creator: " + worldName);
+                return foliaWorldCreator.getWorld(worldName);
+            }
+            
+            // Fallback: Try to create world directly (may not work on Folia)
+            SkyblockPlugin.getLogger().info("Creating new world: " + worldName);
+            WorldCreator creator = new WorldCreator(worldName);
+            creator.type(config.getWorldType());
+            creator.generator(config.getGenerator());
+            
+            World world = creator.createWorld();
+            if (world != null) {
+                configureWorld(world, config);
+            }
+            return world;
 
         } catch (Exception e) {
             SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to create new world: " + worldName, e);
@@ -377,42 +402,37 @@ public class WorldManager {
     }
 
     /**
-     * Gibt eine Welt zurück oder erstellt sie falls nötig
+     * Gibt eine Welt zurück oder erstellt sie falls nötig (Folia-kompatibel)
      */
     public World getWorld(String worldName) {
-        if (!isInitialized) {
-            SkyblockPlugin.getLogger().warning("WorldManager not initialized, attempting to get world: " + worldName);
-            // Try to get world directly from Bukkit
+        // Prüfe ob Folia läuft
+        if (isFoliaServer()) {
+            // Bei Folia: Versuche nur existierende Welten zu laden
             World world = Bukkit.getWorld(worldName);
             if (world != null) {
+                managedWorlds.put(worldName, world);
                 return world;
             }
-            // If world doesn't exist, try to create it
-            WorldConfig config = worldConfigs.get(worldName);
-            if (config != null) {
-                SkyblockPlugin.getLogger().info("Creating world " + worldName + " on demand...");
-                return initializeWorld(worldName, config);
-            }
+            SkyblockPlugin.getLogger().warning("World " + worldName + " not found on Folia - will be handled by Rolling-Restart system");
             return null;
         }
 
+        // Try to get world from managed worlds first
         World world = managedWorlds.get(worldName);
         if (world != null) {
             return world;
         }
 
-        // Versuche Welt zu laden falls sie existiert
+        // Try to get world directly from Bukkit
         world = Bukkit.getWorld(worldName);
         if (world != null) {
             managedWorlds.put(worldName, world);
             return world;
         }
 
-        // Try to create world if config exists
-        WorldConfig config = worldConfigs.get(worldName);
-        if (config != null) {
-            SkyblockPlugin.getLogger().info("Creating world " + worldName + " on demand...");
-            world = initializeWorld(worldName, config);
+        // Try to create world using Folia-compatible creator
+        if (foliaWorldCreator != null) {
+            world = foliaWorldCreator.getWorld(worldName);
             if (world != null) {
                 managedWorlds.put(worldName, world);
                 return world;

@@ -39,9 +39,12 @@ public class IslandCommandImpl {
 
     public IslandCommandImpl() {
         // Obtain the SkyblockPlugin main instance via JavaPlugin helper
-        this.SkyblockPlugin = SkyblockPlugin.getPlugin(SkyblockPlugin.class);
-        this.worldManager = (de.noctivag.skyblock.worlds.WorldManager) SkyblockPlugin.getSimpleWorldManager();
-        this.islandManager = de.noctivag.skyblock.skyblock.IslandManager.getInstance(SkyblockPlugin);
+        this.SkyblockPlugin = org.bukkit.plugin.java.JavaPlugin.getPlugin(de.noctivag.skyblock.SkyblockPlugin.class);
+        if (this.SkyblockPlugin == null) {
+            throw new IllegalStateException("SkyblockPlugin instance not found");
+        }
+        this.worldManager = (de.noctivag.skyblock.worlds.WorldManager) this.SkyblockPlugin.getSimpleWorldManager();
+        this.islandManager = de.noctivag.skyblock.skyblock.IslandManager.getInstance(this.SkyblockPlugin);
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

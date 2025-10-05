@@ -70,8 +70,7 @@ public class SkyblockMainSystem implements Listener {
         skillsSystem = new AdvancedSkillsSystem(SkyblockPlugin, databaseManager, healthManaSystem);
         // collectionsSystem = new CollectionsSystem(SkyblockPlugin, databaseManager, skillsSystem);
         // Initialize CollectionsSystem with the skyblock-specific implementation that only requires the SkyblockPlugin
-        de.noctivag.skyblock.SkyblockPlugin mainPlugin = (de.noctivag.skyblock.SkyblockPlugin) SkyblockPlugin;
-        collectionsSystem = new CollectionsSystem(mainPlugin);
+        collectionsSystem = new CollectionsSystem(SkyblockPlugin);
         combatSystem = new AdvancedCombatSystem(SkyblockPlugin, databaseManager, healthManaSystem, skillsSystem);
         petSystem = new PetSystem(SkyblockPlugin, databaseManager, healthManaSystem, skillsSystem);
         menuSystem = new SkyblockMenuSystem(SkyblockPlugin, healthManaSystem);

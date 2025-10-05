@@ -26,6 +26,10 @@ public class AdminGUI {
         this.SkyblockPlugin = SkyblockPlugin;
     }
     
+    public void open(Player player) {
+        openAdminGUI(player);
+    }
+    
     public void openAdminGUI(Player player) {
         Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lAdmin Tools"));
         

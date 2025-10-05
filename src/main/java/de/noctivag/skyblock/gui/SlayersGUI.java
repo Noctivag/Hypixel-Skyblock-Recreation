@@ -26,6 +26,10 @@ public class SlayersGUI {
         this.SkyblockPlugin = SkyblockPlugin;
     }
     
+    public void open(Player player) {
+        openSlayersGUI(player);
+    }
+    
     public void openSlayersGUI(Player player) {
         Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lSlayers"));
         

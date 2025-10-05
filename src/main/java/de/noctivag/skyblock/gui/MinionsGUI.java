@@ -26,6 +26,10 @@ public class MinionsGUI {
         this.SkyblockPlugin = SkyblockPlugin;
     }
     
+    public void open(Player player) {
+        openMinionsGUI(player);
+    }
+    
     public void openMinionsGUI(Player player) {
         Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lMinions"));
         

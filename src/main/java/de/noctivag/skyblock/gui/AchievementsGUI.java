@@ -26,6 +26,10 @@ public class AchievementsGUI {
         this.SkyblockPlugin = SkyblockPlugin;
     }
     
+    public void open(Player player) {
+        openAchievementsGUI(player);
+    }
+    
     public void openAchievementsGUI(Player player) {
         Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lAchievements"));
         

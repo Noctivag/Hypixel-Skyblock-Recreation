@@ -89,8 +89,8 @@ public class TravelSystem {
             ItemMeta meta = scrollItem.getItemMeta();
             if (meta != null) {
                 meta.displayName(Component.text("§6§l" + scroll.getName()));
-                meta.lore(Arrays.stream(
-                    Component.text("§7Location: §e" + scroll.getLocation().collect(java.util.stream.Collectors.toList())),
+                meta.lore(Arrays.asList(
+                    Component.text("§7Location: §e" + scroll.getLocation()),
                     Component.text("§eClick to use")
                 ));
                 scrollItem.setItemMeta(meta);

@@ -26,6 +26,10 @@ public class CosmeticsGUI {
         this.SkyblockPlugin = SkyblockPlugin;
     }
     
+    public void open(Player player) {
+        openCosmeticsGUI(player);
+    }
+    
     public void openCosmeticsGUI(Player player) {
         Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lCosmetics"));
         

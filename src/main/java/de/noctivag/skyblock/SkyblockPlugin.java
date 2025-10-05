@@ -10,6 +10,7 @@ import de.noctivag.skyblock.items.PotatoBookSystem;
 import de.noctivag.skyblock.commands.AdvancedCommandSystem;
 import de.noctivag.skyblock.commands.MiningCommand;
 import de.noctivag.skyblock.commands.MultiServerCommands;
+import de.noctivag.skyblock.commands.HubCommand;
 import de.noctivag.skyblock.config.ConfigManager;
 import de.noctivag.skyblock.cosmetics.CosmeticsManager;
 import de.noctivag.skyblock.data.DataManager;
@@ -54,6 +55,8 @@ import de.noctivag.skyblock.skills.SkillsSystem;
 import de.noctivag.skyblock.utils.TPSUtil;
 import de.noctivag.skyblock.worlds.ThreadSafeWorldManager;
 import de.noctivag.skyblock.worlds.WorldManager;
+import de.noctivag.skyblock.worlds.RollingRestartWorldManager;
+import de.noctivag.skyblock.systems.HubSpawnSystem;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -101,6 +104,8 @@ public final class SkyblockPlugin extends JavaPlugin {
     @SuppressWarnings("unused") private AdvancedPerformanceManager performanceManager;
     @SuppressWarnings("unused") private ThreadSafeWorldManager worldManager;
     private WorldManager simpleWorldManager;
+    private RollingRestartWorldManager rollingRestartWorldManager;
+    private HubSpawnSystem hubSpawnSystem;
     private SkyblockManager skyblockManager; // legacy manager used by many subsystems
     private MiningAreaSystem miningAreaSystem;
 
@@ -158,8 +163,28 @@ public final class SkyblockPlugin extends JavaPlugin {
             worldManager = new ThreadSafeWorldManager(this);
             // simple legacy WorldManager used by older systems
             simpleWorldManager = new WorldManager(this);
-            // Initialize the simple WorldManager to prevent infinite loops
-            simpleWorldManager.initializeAllWorlds();
+            // Rolling-Restart WorldManager for public worlds
+            rollingRestartWorldManager = new RollingRestartWorldManager(this);
+            
+            // Initialize Rolling-Restart system with Hub-First-Loading
+            getLogger().info("Initializing Rolling-Restart system with Hub-First-Loading...");
+            rollingRestartWorldManager.initializeRollingRestartSystem();
+            
+            // Initialize Hub-Spawn-System - Alle Spieler spawnen im Hub
+            getLogger().info("Initializing Hub-Spawn-System - All players will spawn in Hub...");
+            hubSpawnSystem = new HubSpawnSystem(this);
+            hubSpawnSystem.setServerSpawnToHub();
+            hubSpawnSystem.disableStandardWorlds();
+            
+            // Initialize legacy worlds system as fallback
+            getLogger().info("Initializing legacy Skyblock worlds...");
+            simpleWorldManager.initializeAllWorlds().thenAccept(success -> {
+                if (success) {
+                    getLogger().info("Legacy Skyblock world initialization completed");
+                } else {
+                    getLogger().warning("Legacy Skyblock world initialization failed");
+                }
+            });
 
             // Initialize other managers
             cosmeticsManager = new CosmeticsManager(this);
@@ -250,6 +275,11 @@ public final class SkyblockPlugin extends JavaPlugin {
         try {
             getLogger().info("Disabling SkyblockPlugin systems...");
 
+            // Cancel all rolling restart tasks
+            if (rollingRestartWorldManager != null) {
+                rollingRestartWorldManager.cancelAllTasks();
+            }
+
             // Save data
             if (featureManager != null) featureManager.saveData();
             if (dataManager != null) dataManager.saveData();
@@ -293,6 +323,13 @@ public final class SkyblockPlugin extends JavaPlugin {
         if (multiServerPluginCommand != null) {
             multiServerPluginCommand.setExecutor(multiServerCommands);
             multiServerPluginCommand.setTabCompleter(multiServerCommands);
+        }
+
+        // Register Hub command for Rolling-Restart system
+        HubCommand hubCommand = new HubCommand(this);
+        PluginCommand hubPluginCommand = getCommand("hub");
+        if (hubPluginCommand != null) {
+            hubPluginCommand.setExecutor(hubCommand);
         }
     }
 
@@ -759,6 +796,14 @@ public final class SkyblockPlugin extends JavaPlugin {
 
     public ThreadSafeWorldManager getWorldManager() {
         return worldManager;
+    }
+
+    public RollingRestartWorldManager getRollingRestartWorldManager() {
+        return rollingRestartWorldManager;
+    }
+
+    public HubSpawnSystem getHubSpawnSystem() {
+        return hubSpawnSystem;
     }
 
     public Object getAdvancedMinionSystem() {

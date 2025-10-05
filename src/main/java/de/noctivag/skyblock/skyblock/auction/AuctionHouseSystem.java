@@ -444,7 +444,7 @@ public class AuctionHouseSystem implements Listener {
                 lore.add("§aShift-click to buy now!");
             }
             
-            meta.lore(lore.stream().toList());
+            meta.lore(lore.stream().map(Component::text).toList());
             item.setItemMeta(meta);
         }
         gui.setItem(slot, item);

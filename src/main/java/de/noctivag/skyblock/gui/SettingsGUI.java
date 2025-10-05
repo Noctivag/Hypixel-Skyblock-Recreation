@@ -26,6 +26,10 @@ public class SettingsGUI {
         this.SkyblockPlugin = SkyblockPlugin;
     }
     
+    public void open(Player player) {
+        openSettingsGUI(player);
+    }
+    
     public void openGUI(Player player) {
         openSettingsGUI(player);
     }

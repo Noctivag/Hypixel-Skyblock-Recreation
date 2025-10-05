@@ -19,6 +19,10 @@ public class ReforgeGUI {
         this.player = player;
     }
     
+    public void open(Player player) {
+        openGUI(player);
+    }
+    
     public void openGUI(Player player) {
         player.sendMessage(Component.text("§cReforge GUI not implemented yet!"));
     }

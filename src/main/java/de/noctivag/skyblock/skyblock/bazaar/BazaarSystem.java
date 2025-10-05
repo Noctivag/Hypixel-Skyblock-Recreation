@@ -526,7 +526,7 @@ public class BazaarSystem implements Listener {
             lore.add("§eClick to buy!");
             lore.add("§aShift-click to sell!");
             
-            meta.lore(lore.stream().toList());
+            meta.lore(lore.stream().map(Component::text).toList());
             displayItem.setItemMeta(meta);
         }
         gui.setItem(slot, displayItem);
@@ -549,7 +549,7 @@ public class BazaarSystem implements Listener {
             lore.add("");
             lore.add("§cClick to cancel order!");
             
-            meta.lore(lore.stream().toList());
+            meta.lore(lore.stream().map(Component::text).toList());
             displayItem.setItemMeta(meta);
         }
         gui.setItem(slot, displayItem);

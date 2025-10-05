@@ -427,9 +427,9 @@ public class AdvancedCombatSystem implements Listener {
         player.sendMessage(Component.text("§cYou died! You lost some coins and experience."));
         
         // Implement death penalties (coin loss, XP loss, etc.)
-        if (((de.noctivag.skyblock.SkyblockPlugin) SkyblockPlugin).getEconomyManager() != null) {
+        if (SkyblockPlugin.getEconomyManager() != null) {
             double coinLoss = Math.min(player.getLevel() * 100, 10000); // Max 10k coin loss
-            ((de.noctivag.skyblock.SkyblockPlugin) SkyblockPlugin).getEconomyManager().withdrawMoney(player, coinLoss);
+            SkyblockPlugin.getEconomyManager().withdrawMoney(player, coinLoss);
             player.sendMessage("§cDu hast " + coinLoss + " Coins durch den Tod verloren!");
         }
         

@@ -540,7 +540,7 @@ public class AccessorySystem implements Listener {
             lore.add("");
             lore.add("§eClick to add to bag!");
             
-            meta.lore(lore.stream().toList());
+            meta.lore(lore.stream().map(Component::text).toList());
             item.setItemMeta(meta);
         }
         gui.setItem(slot, item);
@@ -551,7 +551,7 @@ public class AccessorySystem implements Listener {
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
             meta.displayName(Component.text(name));
-            meta.lore(lore.stream().toList());
+            meta.lore(lore.stream().map(Component::text).toList());
             item.setItemMeta(meta);
         }
         gui.setItem(slot, item);

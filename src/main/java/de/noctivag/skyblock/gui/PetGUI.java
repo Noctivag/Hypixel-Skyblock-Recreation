@@ -26,6 +26,10 @@ public class PetGUI {
         this.SkyblockPlugin = SkyblockPlugin;
     }
     
+    public void open(Player player) {
+        openPetGUI(player);
+    }
+    
     public void openPetGUI(Player player) {
         Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lPets"));
         

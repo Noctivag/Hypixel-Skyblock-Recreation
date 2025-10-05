@@ -26,6 +26,10 @@ public class HelpGUI {
         this.SkyblockPlugin = SkyblockPlugin;
     }
     
+    public void open(Player player) {
+        openHelpGUI(player);
+    }
+    
     public void openHelpGUI(Player player) {
         Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lHelp & Support"));
         

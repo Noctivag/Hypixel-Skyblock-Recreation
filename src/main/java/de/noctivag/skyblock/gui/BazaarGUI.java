@@ -26,6 +26,10 @@ public class BazaarGUI {
         this.SkyblockPlugin = SkyblockPlugin;
     }
     
+    public void open(Player player) {
+        openBazaarGUI(player);
+    }
+    
     public void openBazaarGUI(Player player) {
         Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lBazaar"));
         

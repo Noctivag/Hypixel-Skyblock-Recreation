@@ -1,46 +1,41 @@
 package de.noctivag.skyblock.worlds.generators;
-import org.bukkit.inventory.ItemStack;
 
 import org.bukkit.Material;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.WorldInfo;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
 /**
- * Dungeon Generator - Erstellt Welten für Dungeon-Instanzen
+ * Dungeon Generator - Erstellt Dungeon-Welten
  */
 public class DungeonGenerator extends ChunkGenerator {
     
     @Override
-    public void generateSurface(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, ChunkData chunkData) {
-        // Erstelle eine leere Welt mit Bedrock-Boden
+    public void generateSurface(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunkData) {
+        // Generate bedrock layer
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                // Bedrock am Boden
                 chunkData.setBlock(x, 0, z, Material.BEDROCK);
-                
-                // Luft von Y=1 bis Y=100
-                for (int y = 1; y <= 100; y++) {
-                    chunkData.setBlock(x, y, z, Material.AIR);
+            }
+        }
+        
+        // Generate stone layers (1-10)
+        for (int y = 1; y <= 10; y++) {
+            for (int x = 0; x < 16; x++) {
+                for (int z = 0; z < 16; z++) {
+                    chunkData.setBlock(x, y, z, Material.STONE);
                 }
             }
         }
-    }
-    
-    @Override
-    public void generateBedrock(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, ChunkData chunkData) {
-        // Bedrock bereits in generateSurface gesetzt
-    }
-    
-    @Override
-    public void generateCaves(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, ChunkData chunkData) {
-        // Keine Höhlen in Dungeon-Welten
-    }
-    
-    @Override
-    public void generateNoise(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, ChunkData chunkData) {
-        // Kein Terrain in Dungeon-Welten
+        
+        // Generate air layer at y=11 (spawn level)
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                chunkData.setBlock(x, 11, z, Material.AIR);
+            }
+        }
     }
     
     @Override
@@ -55,7 +50,7 @@ public class DungeonGenerator extends ChunkGenerator {
     
     @Override
     public boolean shouldGenerateBedrock() {
-        return false;
+        return true;
     }
     
     @Override

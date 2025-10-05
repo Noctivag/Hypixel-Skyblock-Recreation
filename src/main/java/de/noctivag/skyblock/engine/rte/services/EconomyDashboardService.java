@@ -22,7 +22,7 @@ import de.noctivag.skyblock.engine.rte.data.MarketTrend;
 
 /**
  * Agile Economy Management Service (AEMS) - Real-time Economic Dashboard
- * 
+ *
  * Provides a secure web interface for real-time economic management:
  * - Live price monitoring and adjustment
  * - Drop rate configuration
@@ -30,46 +30,46 @@ import de.noctivag.skyblock.engine.rte.data.MarketTrend;
  * - Loot pool configuration
  * - Market stability controls
  * - Economic analytics and reporting
- * 
+ *
  * This enables the admin team to stabilize the economy in real-time
  * without server restarts or downtime.
  */
 public class EconomyDashboardService {
-    
+
     private static final Logger logger = Logger.getLogger(EconomyDashboardService.class.getName());
-    
+
     private final RealTimeEconomyEngine engine;
     private final Gson gson;
     private HttpServer httpServer;
-    
+
     // Dashboard configuration
     private static final int DASHBOARD_PORT = 8080;
     private static final String DASHBOARD_PATH = "/economy-dashboard";
     private static final String API_PATH = "/api";
-    
+
     // Security configuration
     private final Set<String> authorizedTokens = ConcurrentHashMap.newKeySet();
     private static final String ADMIN_TOKEN = "admin_token_2024"; // In production, use secure token generation
-    
+
     // Real-time data cache
     private final Map<String, EconomicMetric> economicMetrics = new ConcurrentHashMap<>();
     private final Map<String, MarketAlert> marketAlerts = new ConcurrentHashMap<>();
-    
+
     // Configuration management
     private final Map<String, EconomicConfig> economicConfigs = new ConcurrentHashMap<>();
-    
+
     public EconomyDashboardService(RealTimeEconomyEngine engine) {
         this.engine = engine;
         this.gson = new GsonBuilder()
             .setPrettyPrinting()
             .create();
-        
+
         // Initialize with default admin token
         authorizedTokens.add(ADMIN_TOKEN);
-        
+
         initialize();
     }
-    
+
     /**
      * Initialize the dashboard service
      */
@@ -77,28 +77,28 @@ public class EconomyDashboardService {
         try {
             // Start HTTP server
             httpServer = HttpServer.create(new InetSocketAddress(DASHBOARD_PORT), 0);
-            
+
             // Register handlers
             httpServer.createContext(DASHBOARD_PATH, new DashboardHandler());
             httpServer.createContext(API_PATH, new APIHandler());
-            
+
             // Start server
             httpServer.start();
-            
+
             logger.info("Economy Dashboard Service started on port " + DASHBOARD_PORT);
             logger.info("Dashboard URL: http://localhost:" + DASHBOARD_PORT + DASHBOARD_PATH);
-            
+
             // Initialize default configurations
             initializeDefaultConfigurations();
-            
+
             // Start real-time monitoring
             startRealTimeMonitoring();
-            
+
         } catch (Exception e) {
             logger.severe("Failed to initialize Economy Dashboard Service: " + e.getMessage());
         }
     }
-    
+
     /**
      * Initialize default economic configurations
      */
@@ -110,7 +110,7 @@ public class EconomyDashboardService {
         bazaarConfig.getSettings().put("max_orders_per_item", "1000");
         bazaarConfig.getSettings().put("price_update_interval", "1000");
         economicConfigs.put("bazaar", bazaarConfig);
-        
+
         // Auction House configuration
         EconomicConfig auctionConfig = new EconomicConfig("auction_house", new HashMap<>());
         auctionConfig.getSettings().put("auction_fee_percentage", "5.0");
@@ -118,7 +118,7 @@ public class EconomyDashboardService {
         auctionConfig.getSettings().put("max_auctions_per_player", "7");
         auctionConfig.getSettings().put("auction_duration_hours", "24");
         economicConfigs.put("auction_house", auctionConfig);
-        
+
         // Drop rates configuration
         EconomicConfig dropRatesConfig = new EconomicConfig("drop_rates", new HashMap<>());
         dropRatesConfig.getSettings().put("diamond_drop_rate", "0.1");
@@ -126,7 +126,7 @@ public class EconomyDashboardService {
         dropRatesConfig.getSettings().put("gold_drop_rate", "0.2");
         dropRatesConfig.getSettings().put("iron_drop_rate", "0.3");
         economicConfigs.put("drop_rates", dropRatesConfig);
-        
+
         // NPC prices configuration
         EconomicConfig npcPricesConfig = new EconomicConfig("npc_prices", new HashMap<>());
         npcPricesConfig.getSettings().put("diamond_npc_price", "8.0");
@@ -134,10 +134,10 @@ public class EconomyDashboardService {
         npcPricesConfig.getSettings().put("gold_npc_price", "4.0");
         npcPricesConfig.getSettings().put("iron_npc_price", "1.5");
         economicConfigs.put("npc_prices", npcPricesConfig);
-        
+
         logger.info("Initialized " + economicConfigs.size() + " economic configurations");
     }
-    
+
     /**
      * Start real-time monitoring
      */
@@ -152,7 +152,7 @@ public class EconomyDashboardService {
             }
         }, 0L, 5000L); // Update every 5 seconds
     }
-    
+
     /**
      * Update economic metrics
      */
@@ -163,7 +163,7 @@ public class EconomyDashboardService {
             for (Map.Entry<String, BazaarItemData> entry : bazaarItems.entrySet()) {
                 String itemId = entry.getKey();
                 BazaarItemData itemData = entry.getValue();
-                
+
                 EconomicMetric metric = new EconomicMetric(
                     itemId,
                     itemData.getInstantBuyPrice(),
@@ -172,27 +172,27 @@ public class EconomyDashboardService {
                     itemData.getTotalVolume(),
                     java.lang.System.currentTimeMillis()
                 );
-                
+
                 economicMetrics.put(itemId, metric);
             }
-            
+
             // Update market trends
             Map<String, MarketTrend> marketTrends = engine.getMarketTrends();
             for (Map.Entry<String, MarketTrend> entry : marketTrends.entrySet()) {
                 String itemId = entry.getKey();
                 MarketTrend trend = entry.getValue();
-                
+
                 EconomicMetric metric = economicMetrics.get(itemId);
                 if (metric != null) {
                     metric.setTrend(trend);
                 }
             }
-            
+
         } catch (Exception e) {
             logger.severe("Failed to update economic metrics: " + e.getMessage());
         }
     }
-    
+
     /**
      * Detect market anomalies
      */
@@ -200,30 +200,30 @@ public class EconomyDashboardService {
         for (Map.Entry<String, EconomicMetric> entry : economicMetrics.entrySet()) {
             String itemId = entry.getKey();
             EconomicMetric metric = entry.getValue();
-            
+
             // Detect price spikes
             if (metric.getPriceChange() > 20.0) {
-                createMarketAlert(itemId, "PRICE_SPIKE", 
-                    "Price increased by " + metric.getPriceChange() + "%", 
+                createMarketAlert(itemId, "PRICE_SPIKE",
+                    "Price increased by " + metric.getPriceChange() + "%",
                     AlertLevel.HIGH);
             }
-            
+
             // Detect price crashes
             if (metric.getPriceChange() < -20.0) {
-                createMarketAlert(itemId, "PRICE_CRASH", 
-                    "Price decreased by " + Math.abs(metric.getPriceChange()) + "%", 
+                createMarketAlert(itemId, "PRICE_CRASH",
+                    "Price decreased by " + Math.abs(metric.getPriceChange()) + "%",
                     AlertLevel.HIGH);
             }
-            
+
             // Detect unusual volume
             if (metric.getVolume() > 10000) {
-                createMarketAlert(itemId, "HIGH_VOLUME", 
-                    "Unusual trading volume: " + metric.getVolume(), 
+                createMarketAlert(itemId, "HIGH_VOLUME",
+                    "Unusual trading volume: " + metric.getVolume(),
                     AlertLevel.MEDIUM);
             }
         }
     }
-    
+
     /**
      * Generate market alerts
      */
@@ -232,15 +232,15 @@ public class EconomyDashboardService {
         for (Map.Entry<String, EconomicMetric> entry : economicMetrics.entrySet()) {
             String itemId = entry.getKey();
             EconomicMetric metric = entry.getValue();
-            
+
             if (metric.getTrend() != null && metric.getTrend().isManipulationDetected()) {
-                createMarketAlert(itemId, "MARKET_MANIPULATION", 
-                    "Potential market manipulation detected", 
+                createMarketAlert(itemId, "MARKET_MANIPULATION",
+                    "Potential market manipulation detected",
                     AlertLevel.CRITICAL);
             }
         }
     }
-    
+
     /**
      * Create market alert
      */
@@ -254,15 +254,15 @@ public class EconomyDashboardService {
             level,
             java.lang.System.currentTimeMillis()
         );
-        
+
         marketAlerts.put(alertId, alert);
-        
+
         // Log critical alerts
         if (level == AlertLevel.CRITICAL) {
             logger.severe("CRITICAL MARKET ALERT: " + message + " for " + itemId);
         }
     }
-    
+
     /**
      * Dashboard HTTP handler
      */
@@ -273,10 +273,10 @@ public class EconomyDashboardService {
                 sendUnauthorizedResponse(exchange);
                 return;
             }
-            
+
             String method = exchange.getRequestMethod();
             String path = exchange.getRequestURI().getPath();
-            
+
             if ("GET".equals(method)) {
                 if (path.equals(DASHBOARD_PATH)) {
                     serveDashboard(exchange);
@@ -290,7 +290,7 @@ public class EconomyDashboardService {
             }
         }
     }
-    
+
     /**
      * API HTTP handler
      */
@@ -301,11 +301,11 @@ public class EconomyDashboardService {
                 sendUnauthorizedResponse(exchange);
                 return;
             }
-            
+
             String method = exchange.getRequestMethod();
             String path = exchange.getRequestURI().getPath();
             String query = exchange.getRequestURI().getQuery();
-            
+
             try {
                 if ("GET".equals(method)) {
                     handleGetRequest(exchange, path, query);
@@ -321,7 +321,7 @@ public class EconomyDashboardService {
             }
         }
     }
-    
+
     /**
      * Handle GET requests
      */
@@ -330,46 +330,46 @@ public class EconomyDashboardService {
             // Get economic metrics
             JsonObject response = new JsonObject();
             response.addProperty("success", true);
-            
+
             JsonObject metrics = new JsonObject();
             for (Map.Entry<String, EconomicMetric> entry : economicMetrics.entrySet()) {
                 metrics.add(entry.getKey(), entry.getValue().toJson());
             }
             response.add("metrics", metrics);
-            
+
             sendJsonResponse(exchange, response.toString());
-            
+
         } else if (path.equals(API_PATH + "/alerts")) {
             // Get market alerts
             JsonObject response = new JsonObject();
             response.addProperty("success", true);
-            
+
             JsonObject alerts = new JsonObject();
             for (Map.Entry<String, MarketAlert> entry : marketAlerts.entrySet()) {
                 alerts.add(entry.getKey(), entry.getValue().toJson());
             }
             response.add("alerts", alerts);
-            
+
             sendJsonResponse(exchange, response.toString());
-            
+
         } else if (path.equals(API_PATH + "/config")) {
             // Get economic configurations
             JsonObject response = new JsonObject();
             response.addProperty("success", true);
-            
+
             JsonObject configs = new JsonObject();
             for (Map.Entry<String, EconomicConfig> entry : economicConfigs.entrySet()) {
                 configs.add(entry.getKey(), entry.getValue().toJson());
             }
             response.add("configs", configs);
-            
+
             sendJsonResponse(exchange, response.toString());
-            
+
         } else {
             sendNotFoundResponse(exchange);
         }
     }
-    
+
     /**
      * Handle POST requests
      */
@@ -378,52 +378,52 @@ public class EconomyDashboardService {
             // Update economic configuration
             String requestBody = readRequestBody(exchange);
             JsonObject configJson = gson.fromJson(requestBody, JsonObject.class);
-            
+
             String configType = configJson.get("type").getAsString();
             JsonObject settings = configJson.getAsJsonObject("settings");
-            
+
             EconomicConfig config = economicConfigs.get(configType);
             if (config != null) {
                 // Update settings
                 for (Map.Entry<String, com.google.gson.JsonElement> entry : settings.entrySet()) {
                     config.getSettings().put(entry.getKey(), entry.getValue().getAsString());
                 }
-                
+
                 // Apply configuration changes
                 applyConfigurationChanges(configType, config);
-                
+
                 JsonObject response = new JsonObject();
                 response.addProperty("success", true);
                 response.addProperty("message", "Configuration updated successfully");
-                
+
                 sendJsonResponse(exchange, response.toString());
             } else {
                 sendErrorResponse(exchange, 404, "Configuration type not found");
             }
-            
+
         } else if (path.equals(API_PATH + "/price/adjust")) {
             // Adjust item prices
             String requestBody = readRequestBody(exchange);
             JsonObject priceJson = gson.fromJson(requestBody, JsonObject.class);
-            
+
             String itemId = priceJson.get("itemId").getAsString();
             double sellPrice = priceJson.get("sellPrice").getAsDouble();
             double buyPrice = priceJson.get("buyPrice").getAsDouble();
-            
+
             // Update prices in real-time
             engine.getApiCorrectionService().updatePriceData(itemId, sellPrice, buyPrice, (sellPrice + buyPrice) / 2, 0);
-            
+
             JsonObject response = new JsonObject();
             response.addProperty("success", true);
             response.addProperty("message", "Prices adjusted successfully");
-            
+
             sendJsonResponse(exchange, response.toString());
-            
+
         } else {
             sendNotFoundResponse(exchange);
         }
     }
-    
+
     /**
      * Handle PUT requests
      */
@@ -432,21 +432,21 @@ public class EconomyDashboardService {
             // Dismiss market alert
             String requestBody = readRequestBody(exchange);
             JsonObject alertJson = gson.fromJson(requestBody, JsonObject.class);
-            
+
             String alertId = alertJson.get("alertId").getAsString();
             marketAlerts.remove(alertId);
-            
+
             JsonObject response = new JsonObject();
             response.addProperty("success", true);
             response.addProperty("message", "Alert dismissed");
-            
+
             sendJsonResponse(exchange, response.toString());
-            
+
         } else {
             sendNotFoundResponse(exchange);
         }
     }
-    
+
     /**
      * Apply configuration changes
      */
@@ -470,7 +470,7 @@ public class EconomyDashboardService {
                 break;
         }
     }
-    
+
     /**
      * Serve dashboard HTML
      */
@@ -478,7 +478,7 @@ public class EconomyDashboardService {
         String html = generateDashboardHTML();
         sendHtmlResponse(exchange, html);
     }
-    
+
     /**
      * Generate dashboard HTML
      */
@@ -517,18 +517,18 @@ public class EconomyDashboardService {
                         <h1>🏦 Hypixel Skyblock Economy Dashboard</h1>
                         <p>Real-time economic monitoring and management</p>
                     </div>
-                    
+
                     <div class="metrics-grid" id="metricsGrid">
                         <!-- Metrics will be loaded here -->
                     </div>
-                    
+
                     <div class="alerts-section">
                         <h2>🚨 Market Alerts</h2>
                         <div id="alertsContainer">
                             <!-- Alerts will be loaded here -->
                         </div>
                     </div>
-                    
+
                     <div class="config-section">
                         <h2>⚙️ Economic Configuration</h2>
                         <div id="configContainer">
@@ -536,26 +536,26 @@ public class EconomyDashboardService {
                         </div>
                     </div>
                 </div>
-                
+
                 <script>
                     // Auto-refresh every 5 seconds
                     setInterval(loadData, 5000);
                     loadData();
-                    
+
                     async function loadData() {
                         await loadMetrics();
                         await loadAlerts();
                         await loadConfig();
                     }
-                    
+
                     async function loadMetrics() {
                         try {
                             const response = await fetch('/api/metrics');
                             const data = await response.json();
-                            
+
                             const container = document.getElementById('metricsGrid');
                             container.innerHTML = '';
-                            
+
                             for (const [itemId, metric] of Object.entries(data.metrics)) {
                                 const card = document.createElement('div');
                                 card.className = 'metric-card';
@@ -572,15 +572,15 @@ public class EconomyDashboardService {
                             console.error('Failed to load metrics:', error);
                         }
                     }
-                    
+
                     async function loadAlerts() {
                         try {
                             const response = await fetch('/api/alerts');
                             const data = await response.json();
-                            
+
                             const container = document.getElementById('alertsContainer');
                             container.innerHTML = '';
-                            
+
                             for (const [alertId, alert] of Object.entries(data.alerts)) {
                                 const alertDiv = document.createElement('div');
                                 alertDiv.className = `alert ${alert.level.toLowerCase()}`;
@@ -594,19 +594,19 @@ public class EconomyDashboardService {
                             console.error('Failed to load alerts:', error);
                         }
                     }
-                    
+
                     async function loadConfig() {
                         try {
                             const response = await fetch('/api/config');
                             const data = await response.json();
-                            
+
                             const container = document.getElementById('configContainer');
                             container.innerHTML = '';
-                            
+
                             for (const [configType, config] of Object.entries(data.configs)) {
                                 const section = document.createElement('div');
                                 section.innerHTML = `<h3>${configType.toUpperCase()}</h3>`;
-                                
+
                                 for (const [key, value] of Object.entries(config.settings)) {
                                     const item = document.createElement('div');
                                     item.className = 'config-item';
@@ -616,20 +616,20 @@ public class EconomyDashboardService {
                                     `;
                                     section.appendChild(item);
                                 }
-                                
+
                                 const updateBtn = document.createElement('button');
                                 updateBtn.className = 'btn';
                                 updateBtn.textContent = 'Update ' + configType;
                                 updateBtn.onclick = () => updateConfig(configType);
                                 section.appendChild(updateBtn);
-                                
+
                                 container.appendChild(section);
                             }
                         } catch (error) {
                             console.error('Failed to load config:', error);
                         }
                     }
-                    
+
                     async function dismissAlert(alertId) {
                         try {
                             await fetch('/api/alert/dismiss', {
@@ -642,7 +642,7 @@ public class EconomyDashboardService {
                             console.error('Failed to dismiss alert:', error);
                         }
                     }
-                    
+
                     async function updateConfig(configType) {
                         try {
                             const settings = {};
@@ -651,13 +651,13 @@ public class EconomyDashboardService {
                                 const key = input.id.replace(`${configType}_`, '');
                                 settings[key] = input.value;
                             });
-                            
+
                             await fetch('/api/config/update', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({ type: configType, settings: settings })
                             });
-                            
+
                             alert('Configuration updated successfully!');
                         } catch (error) {
                             console.error('Failed to update config:', error);
@@ -669,7 +669,7 @@ public class EconomyDashboardService {
             </html>
             """;
     }
-    
+
     /**
      * Check if request is authorized
      */
@@ -679,7 +679,7 @@ public class EconomyDashboardService {
             String token = authHeader.substring(7);
             return authorizedTokens.contains(token);
         }
-        
+
         // Check for token in query parameters
         String query = exchange.getRequestURI().getQuery();
         if (query != null) {
@@ -691,10 +691,10 @@ public class EconomyDashboardService {
                 }
             }
         }
-        
+
         return false;
     }
-    
+
     /**
      * Read request body
      */
@@ -703,7 +703,7 @@ public class EconomyDashboardService {
             return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
         }
     }
-    
+
     /**
      * Send JSON response
      */
@@ -714,7 +714,7 @@ public class EconomyDashboardService {
             outputStream.write(json.getBytes());
         }
     }
-    
+
     /**
      * Send HTML response
      */
@@ -725,7 +725,7 @@ public class EconomyDashboardService {
             outputStream.write(html.getBytes());
         }
     }
-    
+
     /**
      * Send error response
      */
@@ -733,35 +733,35 @@ public class EconomyDashboardService {
         JsonObject response = new JsonObject();
         response.addProperty("success", false);
         response.addProperty("error", message);
-        
+
         exchange.getResponseHeaders().set("Content-Type", "application/json");
         exchange.sendResponseHeaders(code, response.toString().getBytes().length);
         try (OutputStream outputStream = exchange.getResponseBody()) {
             outputStream.write(response.toString().getBytes());
         }
     }
-    
+
     /**
      * Send unauthorized response
      */
     private void sendUnauthorizedResponse(HttpExchange exchange) throws IOException {
         sendErrorResponse(exchange, 401, "Unauthorized");
     }
-    
+
     /**
      * Send method not allowed response
      */
     private void sendMethodNotAllowedResponse(HttpExchange exchange) throws IOException {
         sendErrorResponse(exchange, 405, "Method not allowed");
     }
-    
+
     /**
      * Send not found response
      */
     private void sendNotFoundResponse(HttpExchange exchange) throws IOException {
         sendErrorResponse(exchange, 404, "Not found");
     }
-    
+
     /**
      * Serve static files
      */
@@ -769,16 +769,16 @@ public class EconomyDashboardService {
         // Serve static files (CSS, JS, images)
         sendNotFoundResponse(exchange);
     }
-    
+
     /**
      * Report market manipulation
      */
     public void reportMarketManipulation(String itemId, MarketTrend trend) {
-        createMarketAlert(itemId, "MARKET_MANIPULATION", 
-            "Market manipulation detected: " + trend.getChangePercentage() + "% change", 
+        createMarketAlert(itemId, "MARKET_MANIPULATION",
+            "Market manipulation detected: " + trend.getChangePercentage() + "% change",
             AlertLevel.CRITICAL);
     }
-    
+
     /**
      * Shutdown service
      */
@@ -788,7 +788,7 @@ public class EconomyDashboardService {
             logger.info("Economy Dashboard Service stopped");
         }
     }
-    
+
     // Data classes
     public static class EconomicMetric {
         private final String itemId;
@@ -799,8 +799,8 @@ public class EconomyDashboardService {
         private final double priceChange;
         private final long timestamp;
         private MarketTrend trend;
-        
-        public EconomicMetric(String itemId, double buyPrice, double sellPrice, 
+
+        public EconomicMetric(String itemId, double buyPrice, double sellPrice,
                             double averagePrice, int volume, long timestamp) {
             this.itemId = itemId;
             this.buyPrice = buyPrice;
@@ -810,7 +810,7 @@ public class EconomyDashboardService {
             this.priceChange = 0.0; // Will be calculated
             this.timestamp = timestamp;
         }
-        
+
         public JsonObject toJson() {
             JsonObject json = new JsonObject();
             json.addProperty("itemId", itemId);
@@ -822,7 +822,7 @@ public class EconomyDashboardService {
             json.addProperty("timestamp", timestamp);
             return json;
         }
-        
+
         // Getters and setters
         public String getItemId() { return itemId; }
         public double getBuyPrice() { return buyPrice; }
@@ -832,10 +832,10 @@ public class EconomyDashboardService {
         public double getPriceChange() { return priceChange; }
         public long getTimestamp() { return timestamp; }
         public MarketTrend getTrend() { return trend; }
-        
+
         public void setTrend(MarketTrend trend) { this.trend = trend; }
     }
-    
+
     public static class MarketAlert {
         private final String alertId;
         private final String itemId;
@@ -843,7 +843,7 @@ public class EconomyDashboardService {
         private final String message;
         private final AlertLevel level;
         private final long timestamp;
-        
+
         public MarketAlert(String alertId, String itemId, String type, String message, AlertLevel level, long timestamp) {
             this.alertId = alertId;
             this.itemId = itemId;
@@ -852,7 +852,7 @@ public class EconomyDashboardService {
             this.level = level;
             this.timestamp = timestamp;
         }
-        
+
         public JsonObject toJson() {
             JsonObject json = new JsonObject();
             json.addProperty("alertId", alertId);
@@ -863,7 +863,7 @@ public class EconomyDashboardService {
             json.addProperty("timestamp", timestamp);
             return json;
         }
-        
+
         // Getters
         public String getAlertId() { return alertId; }
         public String getItemId() { return itemId; }
@@ -872,34 +872,34 @@ public class EconomyDashboardService {
         public AlertLevel getLevel() { return level; }
         public long getTimestamp() { return timestamp; }
     }
-    
+
     public static class EconomicConfig {
         private final String type;
         private final Map<String, String> settings;
-        
+
         public EconomicConfig(String type, Map<String, String> settings) {
             this.type = type;
             this.settings = settings;
         }
-        
+
         public JsonObject toJson() {
             JsonObject json = new JsonObject();
             json.addProperty("type", type);
-            
+
             JsonObject settingsJson = new JsonObject();
             for (Map.Entry<String, String> entry : settings.entrySet()) {
                 settingsJson.addProperty(entry.getKey(), entry.getValue());
             }
             json.add("settings", settingsJson);
-            
+
             return json;
         }
-        
+
         // Getters
         public String getType() { return type; }
         public Map<String, String> getSettings() { return settings; }
     }
-    
+
     public enum AlertLevel {
         LOW, MEDIUM, HIGH, CRITICAL
     }

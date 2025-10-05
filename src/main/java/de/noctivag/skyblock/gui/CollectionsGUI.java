@@ -33,6 +33,10 @@ public class CollectionsGUI implements Listener {
         Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
     }
     
+    public void open(Player player) {
+        openCollectionsGUI(player);
+    }
+    
     public void openCollectionsGUI(Player player) {
         Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lCollections"));
         

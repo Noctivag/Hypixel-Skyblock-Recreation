@@ -310,11 +310,11 @@ public class UltimateGUISystem {
             }
             case 21 -> {
                 // Friends & Party
-                new FriendsGUI(SkyblockPlugin, player).openFriendsGUI(player);
+                new FriendsGUI(SkyblockPlugin, player).open(player);
             }
             case 23 -> {
                 // Teleportation
-                new TeleportationGUI(SkyblockPlugin, player).openTeleportationGUI(player);
+                new TeleportationGUI(SkyblockPlugin, player).open(player);
             }
             case 25 -> {
                 // Basic Commands
@@ -322,7 +322,7 @@ public class UltimateGUISystem {
             }
             case 28 -> {
                 // Messages
-                new MessagesGUI(SkyblockPlugin, player).openMessagesGUI(player);
+                new MessagesGUI(SkyblockPlugin, player).open(player);
             }
             case 30 -> {
                 // Guild System
@@ -501,7 +501,7 @@ public class UltimateGUISystem {
             }
             case 25 -> {
                 // Teleportation
-                new TeleportationGUI(SkyblockPlugin, player).openTeleportationGUI(player);
+                new TeleportationGUI(SkyblockPlugin, player).open(player);
             }
             case 28 -> {
                 // Skyblock Guide

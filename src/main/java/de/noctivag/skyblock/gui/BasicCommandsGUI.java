@@ -26,6 +26,10 @@ public class BasicCommandsGUI {
         this.SkyblockPlugin = SkyblockPlugin;
     }
     
+    public void open(Player player) {
+        openBasicCommandsGUI(player);
+    }
+    
     public void openGUI(Player player) {
         openBasicCommandsGUI(player);
     }

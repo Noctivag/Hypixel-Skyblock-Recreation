@@ -180,7 +180,7 @@ public class AccessoryIntegrationSystem {
     private AccessoryBagSystem.AccessoryConfig getAccessoryConfig(String accessoryId) {
         // This would get the config from AccessoryBagSystem
         // Return accessory stats from player's equipped accessories
-        if (((de.noctivag.skyblock.SkyblockPlugin) SkyblockPlugin).getAccessorySystem() != null) {
+        if (SkyblockPlugin.getAccessorySystem() != null) {
             // TODO: Get player from context or parameter
             return null; // Placeholder - needs player context
         }

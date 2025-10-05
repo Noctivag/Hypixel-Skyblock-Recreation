@@ -98,7 +98,7 @@ public class DatamutexService {
     /**
      * Execute operation with rollback capability
      */
-    private <T> T executeWithRollback(TransactionContext context, TransactionOperation<T> operation) {
+    private <T> T executeWithRollback(TransactionContext context, TransactionOperation<T> operation) throws Exception {
         try (Jedis jedis = jedisPool.getResource()) {
             Transaction redisTransaction = jedis.multi();
             

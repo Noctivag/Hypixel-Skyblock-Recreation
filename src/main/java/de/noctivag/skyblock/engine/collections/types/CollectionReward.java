@@ -60,6 +60,16 @@ public class CollectionReward {
             case TITLE -> String.format("§9%s Title", description);
             case ACHIEVEMENT -> String.format("§c%s Achievement", description);
             case COSMETIC -> String.format("§f%s Cosmetic", description);
+            case COINS -> String.format("§6+%d Coins", amount);
+            case EXPERIENCE -> String.format("§a+%d Experience", amount);
+            case ITEM -> String.format("§d%s x%d", description, amount);
+            case PET -> String.format("§5%s Pet", description);
+            case MINION -> String.format("§b%s Minion", description);
+            case ENCHANTMENT -> String.format("§e%s Enchantment", description);
+            case REFORGE -> String.format("§6%s Reforge", description);
+            case SKILL_POINT -> String.format("§a+%d Skill Point", amount);
+            case STAT_BOOST -> String.format("§b+%d %s", amount, description);
+            case OTHER -> String.format("§f%s", description);
         };
     }
     
@@ -78,6 +88,16 @@ public class CollectionReward {
             case TITLE -> "👑";
             case ACHIEVEMENT -> "🏆";
             case COSMETIC -> "✨";
+            case COINS -> "💰";
+            case EXPERIENCE -> "⭐";
+            case ITEM -> "🎁";
+            case PET -> "🐾";
+            case MINION -> "🤖";
+            case ENCHANTMENT -> "✨";
+            case REFORGE -> "⚒️";
+            case SKILL_POINT -> "📈";
+            case STAT_BOOST -> "⚡";
+            case OTHER -> "❓";
         };
     }
     
@@ -96,6 +116,16 @@ public class CollectionReward {
             case TITLE -> "§9"; // Blue
             case ACHIEVEMENT -> "§c"; // Red
             case COSMETIC -> "§f"; // White
+            case COINS -> "§6"; // Gold
+            case EXPERIENCE -> "§a"; // Green
+            case ITEM -> "§d"; // Light Purple
+            case PET -> "§5"; // Dark Purple
+            case MINION -> "§b"; // Aqua
+            case ENCHANTMENT -> "§e"; // Yellow
+            case REFORGE -> "§6"; // Gold
+            case SKILL_POINT -> "§a"; // Green
+            case STAT_BOOST -> "§b"; // Aqua
+            case OTHER -> "§f"; // White
         };
     }
     
@@ -191,6 +221,16 @@ public class CollectionReward {
             case TITLE -> amount * 30; // Titles are moderately valuable
             case ACHIEVEMENT -> amount * 40; // Achievements are moderately valuable
             case COSMETIC -> amount * 20; // Cosmetics are less valuable
+            case COINS -> amount; // Coins are standard
+            case EXPERIENCE -> amount * 10; // XP is valuable
+            case ITEM -> amount * 25; // Items are moderately valuable
+            case PET -> amount * 80; // Pets are very valuable
+            case MINION -> amount * 90; // Minions are very valuable
+            case ENCHANTMENT -> amount * 35; // Enchantments are moderately valuable
+            case REFORGE -> amount * 45; // Reforges are moderately valuable
+            case SKILL_POINT -> amount * 15; // Skill points are valuable
+            case STAT_BOOST -> amount * 50; // Stat boosts are valuable
+            case OTHER -> amount * 5; // Other rewards are less valuable
         };
     }
     
