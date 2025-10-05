@@ -17,6 +17,12 @@ public class PlayerProfile {
     private double coins;
     private String currentWorld;
     private boolean isOnline;
+    private AccessoryBag accessoryBag;
+    private PowerStone activePowerStone;
+    private SlayerQuest activeSlayerQuest;
+    private Map<String, Integer> slayerXP;
+    private DungeonClass dungeonClass;
+    private PetBag petBag;
     
     public PlayerProfile(UUID uuid) {
         this.uuid = uuid;
@@ -27,6 +33,12 @@ public class PlayerProfile {
         this.coins = 0.0;
         this.currentWorld = "hub_a";
         this.isOnline = false;
+        this.accessoryBag = new AccessoryBag();
+        this.activePowerStone = PowerStone.BERSERKER; // Standard Power Stone
+        this.activeSlayerQuest = null;
+        this.slayerXP = new HashMap<>();
+        this.dungeonClass = DungeonClass.ARCHER; // Standard-Klasse
+        this.petBag = new PetBag();
     }
     
     public PlayerProfile(UUID uuid, String playerName) {
@@ -102,6 +114,62 @@ public class PlayerProfile {
     
     public void setOnline(boolean online) {
         isOnline = online;
+    }
+    
+    public AccessoryBag getAccessoryBag() {
+        return accessoryBag;
+    }
+    
+    public void setAccessoryBag(AccessoryBag accessoryBag) {
+        this.accessoryBag = accessoryBag;
+    }
+    
+    public PowerStone getActivePowerStone() {
+        return activePowerStone;
+    }
+    
+    public void setActivePowerStone(PowerStone activePowerStone) {
+        this.activePowerStone = activePowerStone;
+    }
+    
+    public SlayerQuest getActiveSlayerQuest() {
+        return activeSlayerQuest;
+    }
+    
+    public void setActiveSlayerQuest(SlayerQuest activeSlayerQuest) {
+        this.activeSlayerQuest = activeSlayerQuest;
+    }
+    
+    public Map<String, Integer> getSlayerXP() {
+        return slayerXP;
+    }
+    
+    public void setSlayerXP(Map<String, Integer> slayerXP) {
+        this.slayerXP = slayerXP;
+    }
+    
+    public int getSlayerXP(String slayerType) {
+        return slayerXP.getOrDefault(slayerType, 0);
+    }
+    
+    public void addSlayerXP(String slayerType, int xp) {
+        slayerXP.put(slayerType, slayerXP.getOrDefault(slayerType, 0) + xp);
+    }
+    
+    public DungeonClass getDungeonClass() {
+        return dungeonClass;
+    }
+    
+    public void setDungeonClass(DungeonClass dungeonClass) {
+        this.dungeonClass = dungeonClass;
+    }
+    
+    public PetBag getPetBag() {
+        return petBag;
+    }
+    
+    public void setPetBag(PetBag petBag) {
+        this.petBag = petBag;
     }
     
     // Utility-Methoden

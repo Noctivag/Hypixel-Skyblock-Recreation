@@ -14,6 +14,7 @@ import de.noctivag.skyblock.commands.AdvancedCommandSystem;
 import de.noctivag.skyblock.performance.AdvancedPerformanceManager;
 import de.noctivag.skyblock.data.DatabaseManager;
 import de.noctivag.skyblock.listeners.PlayerListener;
+import de.noctivag.skyblock.events.SeaCreatureEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -47,6 +48,7 @@ public class SkyblockPluginRefactored extends JavaPlugin {
     
     // Listeners
     private PlayerListener playerListener;
+    private SeaCreatureEvent seaCreatureEvent;
     
     @Override
     public void onEnable() {
@@ -230,6 +232,12 @@ public class SkyblockPluginRefactored extends JavaPlugin {
         // PlayerListener
         playerListener = new PlayerListener(this);
         getServer().getPluginManager().registerEvents(playerListener, this);
+        
+        // SeaCreatureEvent (if custom mobs are enabled)
+        if (settingsConfig.isCustomMobsEnabled()) {
+            seaCreatureEvent = new SeaCreatureEvent(this);
+            getLogger().info("SeaCreatureEvent registered for custom mob spawning");
+        }
         
         getLogger().info("Listeners registered successfully");
     }
