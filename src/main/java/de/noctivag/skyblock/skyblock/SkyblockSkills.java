@@ -78,4 +78,17 @@ public class SkyblockSkills {
         double currentExp = getSkillExperience(skillName);
         setSkillExperience(skillName, currentExp + experience);
     }
+
+    // Placeholder methods for compatibility
+    public int getLevel(String skillName) {
+        return getSkillLevel(skillName);
+    }
+
+    public int getXP(String skillName) {
+        return (int) getSkillExperience(skillName);
+    }
+
+    public int getXPToNextLevel(String skillName) {
+        return 100; // Placeholder
+    }
 }

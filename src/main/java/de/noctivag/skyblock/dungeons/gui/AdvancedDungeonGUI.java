@@ -1,0 +1,137 @@
+package de.noctivag.skyblock.dungeons.gui;
+
+import de.noctivag.skyblock.gui.CustomGUI;
+import de.noctivag.skyblock.dungeons.DungeonManager;
+import de.noctivag.skyblock.dungeons.instances.DungeonInstance;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * Advanced Dungeon GUI - Advanced GUI for dungeon management
+ */
+public class AdvancedDungeonGUI extends CustomGUI {
+    
+    private final DungeonManager dungeonManager;
+    
+    public AdvancedDungeonGUI(Player player, DungeonManager dungeonManager) {
+        super(player, "§cAdvanced Dungeon Menu", 54);
+        this.dungeonManager = dungeonManager;
+    }
+    
+    @Override
+    protected void setupItems() {
+        // Check if player is in a dungeon
+        DungeonInstance playerInstance = dungeonManager.getPlayerDungeonInstance(player);
+        
+        if (playerInstance != null) {
+            // Show current dungeon info
+            setupCurrentDungeon(playerInstance);
+        } else {
+            // Show available dungeons
+            setupAvailableDungeons();
+        }
+        
+        // Add navigation items
+        setupNavigation();
+    }
+    
+    private void setupCurrentDungeon(DungeonInstance instance) {
+        // Current dungeon info
+        ItemStack dungeonInfoItem = new ItemStack(Material.BOOK);
+        ItemMeta dungeonInfoMeta = dungeonInfoItem.getItemMeta();
+        if (dungeonInfoMeta != null) {
+            dungeonInfoMeta.setDisplayName("§cCurrent Dungeon Information");
+            dungeonInfoMeta.setLore(Arrays.asList(
+                "§7Type: §c" + instance.getDungeonType(),
+                "§7Floor: §c" + instance.getCurrentFloor() + "/" + instance.getMaxFloors(),
+                "§7Players: §c" + instance.getPlayers().size(),
+                "§7Time: §c" + formatTime(instance.getElapsedTime()),
+                "§7Status: §a" + (instance.isActive() ? "Active" : "Inactive"),
+                "",
+                "§eClick to view details"
+            ));
+            dungeonInfoItem.setItemMeta(dungeonInfoMeta);
+        }
+        inventory.setItem(22, dungeonInfoItem);
+        
+        // Leave dungeon button
+        ItemStack leaveItem = new ItemStack(Material.BARRIER);
+        ItemMeta leaveMeta = leaveItem.getItemMeta();
+        if (leaveMeta != null) {
+            leaveMeta.setDisplayName("§cLeave Dungeon");
+            leaveMeta.setLore(Arrays.asList(
+                "§7Leave the current dungeon",
+                "§7Warning: This will forfeit all progress!",
+                "",
+                "§eClick to leave"
+            ));
+            leaveItem.setItemMeta(leaveMeta);
+        }
+        inventory.setItem(40, leaveItem);
+    }
+    
+    private void setupAvailableDungeons() {
+        // Catacombs
+        ItemStack catacombsItem = new ItemStack(Material.SKELETON_SKULL);
+        ItemMeta catacombsMeta = catacombsItem.getItemMeta();
+        if (catacombsMeta != null) {
+            catacombsMeta.setDisplayName("§cCatacombs");
+            catacombsMeta.setLore(Arrays.asList(
+                "§7Undead dungeon",
+                "§7Floors: 5",
+                "§7Difficulty: Medium",
+                "§7Recommended Level: 20+",
+                "",
+                "§eClick to enter"
+            ));
+            catacombsItem.setItemMeta(catacombsMeta);
+        }
+        inventory.setItem(20, catacombsItem);
+        
+        // M7 (placeholder)
+        ItemStack m7Item = new ItemStack(Material.WITHER_SKELETON_SKULL);
+        ItemMeta m7Meta = m7Item.getItemMeta();
+        if (m7Meta != null) {
+            m7Meta.setDisplayName("§cM7 (Coming Soon)");
+            m7Meta.setLore(Arrays.asList(
+                "§7Master Mode Floor 7",
+                "§7Floors: 7",
+                "§7Difficulty: Extreme",
+                "§7Recommended Level: 50+",
+                "",
+                "§cComing Soon"
+            ));
+            m7Item.setItemMeta(m7Meta);
+        }
+        inventory.setItem(22, m7Item);
+    }
+    
+    private void setupNavigation() {
+        // Close button
+        ItemStack closeItem = new ItemStack(Material.BARRIER);
+        ItemMeta closeMeta = closeItem.getItemMeta();
+        if (closeMeta != null) {
+            closeMeta.setDisplayName("§cClose");
+            closeItem.setItemMeta(closeMeta);
+        }
+        inventory.setItem(49, closeItem);
+    }
+    
+    private String formatTime(long milliseconds) {
+        long seconds = milliseconds / 1000;
+        long minutes = seconds / 60;
+        seconds = seconds % 60;
+        
+        if (minutes > 0) {
+            return String.format("%d:%02d", minutes, seconds);
+        } else {
+            return String.format("%ds", seconds);
+        }
+    }
+}
+

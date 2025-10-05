@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class DatabaseManager {
 
-    private final SkyblockPlugin plugin;
+    protected final SkyblockPlugin plugin;
     private final Map<UUID, PlayerData> playerDataCache = new ConcurrentHashMap<>();
 
     public DatabaseManager(SkyblockPlugin plugin) {
@@ -107,5 +107,35 @@ public class DatabaseManager {
         public void setLevel(int level) { this.level = level; }
         public double getCoins() { return coins; }
         public void setCoins(double coins) { this.coins = coins; }
+    }
+
+    // Placeholder methods for accessory data
+    public void savePlayerAccessoryData(UUID playerUuid, de.noctivag.skyblock.accessories.PlayerAccessoryData data) {
+        plugin.getLogger().info("Saving accessory data for player: " + playerUuid);
+    }
+
+    public de.noctivag.skyblock.accessories.PlayerAccessoryData loadPlayerAccessoryData(UUID playerUuid) {
+        plugin.getLogger().info("Loading accessory data for player: " + playerUuid);
+        return new de.noctivag.skyblock.accessories.PlayerAccessoryData(playerUuid);
+    }
+
+    // Placeholder methods for brewing data
+    public void savePlayerBrewingData(UUID playerUuid, de.noctivag.skyblock.brewing.PlayerBrewingData data) {
+        plugin.getLogger().info("Saving brewing data for player: " + playerUuid);
+    }
+
+    public de.noctivag.skyblock.brewing.PlayerBrewingData loadPlayerBrewingData(UUID playerUuid) {
+        plugin.getLogger().info("Loading brewing data for player: " + playerUuid);
+        return new de.noctivag.skyblock.brewing.PlayerBrewingData(playerUuid);
+    }
+
+    // Placeholder methods for database operations
+    public void executeUpdate(String sql, Object... params) {
+        plugin.getLogger().info("Executing update: " + sql);
+    }
+
+    public java.sql.ResultSet executeQuery(String sql, Object... params) {
+        plugin.getLogger().info("Executing query: " + sql);
+        return null; // Placeholder
     }
 }

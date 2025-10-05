@@ -12,6 +12,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import de.noctivag.skyblock.database.DatabaseManager;
+import de.noctivag.skyblock.worlds.WorldManager;
+
 /**
  * Main Skyblock Plugin - Folia Compatible
  * Central plugin class that manages all skyblock systems
@@ -24,6 +27,9 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
     // Core systems
     private DatabaseManager databaseManager;
     private WorldManager worldManager;
+    private de.noctivag.skyblock.mobs.MobManager mobManager;
+    private de.noctivag.skyblock.mobs.SpawningService spawningService;
+    private de.noctivag.skyblock.brewing.AdvancedBrewingSystem brewingManager;
     
     @Override
     public void onEnable() {
@@ -70,6 +76,17 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
         if (databaseManager != null) {
             databaseManager.saveAllPlayerData();
         }
+        
+                // Shutdown services
+                if (spawningService != null) {
+                    spawningService.shutdown();
+                }
+                if (mobManager != null) {
+                    mobManager.shutdown();
+                }
+                if (questSystem != null) {
+                    questSystem.shutdown();
+                }
     }
 
     public static SkyblockPlugin getInstance() {
@@ -106,6 +123,21 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
         
         // Initialize world manager
         worldManager = new WorldManager(this);
+        
+        // Initialize mob manager
+        mobManager = new de.noctivag.skyblock.mobs.MobManager(this);
+        mobManager.initialize();
+        
+                // Initialize spawning service
+                spawningService = new de.noctivag.skyblock.mobs.SpawningService(this, mobManager);
+                spawningService.initialize();
+
+        // Initialize quest system
+        questSystem = new de.noctivag.skyblock.quests.QuestSystem(this);
+        questSystem.initialize();
+
+        // Initialize brewing manager
+        brewingManager = new de.noctivag.skyblock.brewing.AdvancedBrewingSystem(this, (de.noctivag.skyblock.database.MultiServerDatabaseManager) databaseManager);
     }
 
     /**
@@ -253,4 +285,271 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
     public WorldManager getWorldManager() {
         return worldManager;
     }
+    
+    /**
+     * Get mob manager
+     */
+    public de.noctivag.skyblock.mobs.MobManager getMobManager() {
+        return mobManager;
+    }
+    
+    /**
+     * Get spawning service
+     */
+    public de.noctivag.skyblock.mobs.SpawningService getSpawningService() {
+        return spawningService;
+    }
+
+    /**
+     * Get economy manager (placeholder)
+     */
+    public de.noctivag.skyblock.economy.EconomyInterface getEconomyManager() {
+        return new de.noctivag.skyblock.economy.EconomyInterface() {
+            @Override
+            public void depositMoney(Player player, int amount) {
+                // Placeholder implementation
+                player.sendMessage("§aYou received " + amount + " coins!");
+            }
+            
+            @Override
+            public void depositMoney(Player player, double amount) {
+                // Placeholder implementation
+                player.sendMessage("§aYou received " + amount + " coins!");
+            }
+            
+            @Override
+            public double getBalance(Player player) {
+                return 1000.0; // Placeholder
+            }
+            
+            @Override
+            public void giveMoney(Player player, double amount) {
+                player.sendMessage("§aYou received " + amount + " coins!");
+            }
+            
+            @Override
+            public boolean withdrawMoney(Player player, double amount) {
+                player.sendMessage("§cYou spent " + amount + " coins!");
+                return true; // Placeholder - always successful
+            }
+            
+            @Override
+            public void setBalanceSilent(Player player, double amount) {
+                // Placeholder
+            }
+            
+            @Override
+            public void resetBalance(Player player) {
+                player.sendMessage("§eYour balance has been reset!");
+            }
+            
+            @Override
+            public boolean hasBalance(Player player, double amount) {
+                return true; // Placeholder
+            }
+            
+            @Override
+            public boolean hasCostExemption(Player player) {
+                return false; // Placeholder
+            }
+            
+            @Override
+            public String formatMoney(double amount) {
+                return String.format("%.2f coins", amount);
+            }
+        };
+    }
+
+    /**
+     * Get accessory system (placeholder)
+     */
+    public Object getAccessorySystem() {
+        return null; // Placeholder
+    }
+
+    /**
+     * Get collections system (placeholder)
+     */
+    public Object getCollectionsSystem() {
+        return null; // Placeholder
+    }
+
+    /**
+     * Get advanced armor system (placeholder)
+     */
+    public Object getAdvancedArmorSystem() {
+        return null; // Placeholder
+    }
+
+    /**
+     * Get compatibility manager (placeholder)
+     */
+    public Object getCompatibilityManager() {
+        return null; // Placeholder
+    }
+
+    /**
+     * Get slayer system (placeholder)
+     */
+    public Object getSlayerSystem() {
+        return null; // Placeholder
+    }
+
+    /**
+     * Get fishing system (placeholder)
+     */
+    public Object getFishingSystem() {
+        return null; // Placeholder
+    }
+
+    /**
+     * Get magic system (placeholder)
+     */
+    public Object getMagicSystem() {
+        return null; // Placeholder
+    }
+
+    /**
+     * Get combat system (placeholder)
+     */
+    public Object getCombatSystem() {
+        return null; // Placeholder
+    }
+
+    /**
+     * Get items system (placeholder)
+     */
+    public Object getItemsSystem() {
+        return null; // Placeholder
+    }
+
+    /**
+     * Get maintenance manager (placeholder)
+     */
+    public Object getMaintenanceManager() {
+        return null; // Placeholder
+    }
+
+    /**
+     * Get event manager (placeholder)
+     */
+    public Object getEventManager() {
+        return null; // Placeholder
+    }
+
+    // Quest System
+    private de.noctivag.skyblock.quests.QuestSystem questSystem;
+
+    /**
+     * Get quest system
+     */
+    public de.noctivag.skyblock.quests.QuestSystem getQuestSystem() {
+        return questSystem;
+    }
+
+    /**
+     * Get brewing manager
+     */
+    public de.noctivag.skyblock.brewing.AdvancedBrewingSystem getBrewingManager() {
+        return brewingManager;
+    }
+
+    /**
+     * Get cosmetics manager (placeholder)
+     */
+    public Object getCosmeticsManager() {
+        return null; // Placeholder
+    }
+
+    /**
+     * Get advanced NPC system (placeholder)
+     */
+    public Object getAdvancedNPCSystem() {
+        return null; // Placeholder
+    }
+
+    /**
+     * Get skyblock manager (placeholder)
+     */
+    public Object getSkyblockManager() {
+        return null; // Placeholder
+    }
+
+    /**
+     * Get hypixel proxy system (placeholder)
+     */
+    public Object getHypixelProxySystem() {
+        return null; // Placeholder
+    }
+
+    /**
+     * Get central database system (placeholder)
+     */
+    public Object getCentralDatabaseSystem() {
+        return null; // Placeholder
+    }
+
+    /**
+     * Get multithreading manager (placeholder)
+     */
+    public Object getMultithreadingManager() {
+        return null; // Placeholder
+    }
+
+    /**
+     * Get async system manager (placeholder)
+     */
+    public Object getAsyncSystemManager() {
+        return null; // Placeholder
+    }
+
+    /**
+     * Get async database manager (placeholder)
+     */
+    public Object getAsyncDatabaseManager() {
+        return null; // Placeholder
+    }
+
+    /**
+     * Get async config manager (placeholder)
+     */
+    public Object getAsyncConfigManager() {
+        return null; // Placeholder
+    }
+
+    /**
+     * Get advanced island system (placeholder)
+     */
+    public Object getAdvancedIslandSystem() {
+        return null; // Placeholder
+    }
+
+    /**
+     * Get booster cookie system (placeholder)
+     */
+    public Object getBoosterCookieSystem() {
+        return null; // Placeholder
+    }
+
+    /**
+     * Get recipe book system (placeholder)
+     */
+    public Object getRecipeBookSystem() {
+        return null; // Placeholder
+    }
+
+    /**
+     * Get calendar system (placeholder)
+     */
+    public Object getCalendarSystem() {
+        return null; // Placeholder
+    }
+
+    /**
+     * Get live world (placeholder)
+     */
+    public Object getLiveWorld(String worldName) {
+        return null; // Placeholder
+    }
+
 }

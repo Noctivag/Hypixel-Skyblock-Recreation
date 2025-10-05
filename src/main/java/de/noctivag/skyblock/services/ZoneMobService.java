@@ -3,7 +3,7 @@ package de.noctivag.skyblock.services;
 import de.noctivag.skyblock.SkyblockPluginRefactored;
 import de.noctivag.skyblock.enums.ZoneType;
 import de.noctivag.skyblock.mobs.ZoneMob;
-import de.noctivag.skyblock.mobs.zones.*;
+import de.noctivag.skyblock.zones.*;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;

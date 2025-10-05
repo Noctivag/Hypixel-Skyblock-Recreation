@@ -1,0 +1,80 @@
+# Spawning Configuration for Custom Mobs
+# This file controls where and how mobs spawn in different worlds and regions
+
+worlds:
+  gold_mine_a: # World name
+    regions:
+      lapis_quarry: # Region name (can be WorldGuard region or coordinate-based)
+        spawn_limit: 20 # Maximum mobs in this region
+        spawn_radius: 50 # Radius around players to spawn mobs
+        spawn_interval: 30 # Seconds between spawn attempts
+        mobs:
+          LAPIS_ZOMBIE: # Mob ID
+            amount: 15 # Number of this mob type (out of spawn_limit)
+            spawn_conditions: [] # Additional conditions (e.g., 'TIME:NIGHT')
+            min_distance: 10 # Minimum distance from players
+            max_distance: 30 # Maximum distance from players
+          ZOMBIE_VILLAGER: # Another mob in the same region
+            amount: 5
+            spawn_conditions: []
+            min_distance: 15
+            max_distance: 25
+      
+      gold_mine_entrance:
+        spawn_limit: 15
+        spawn_radius: 40
+        spawn_interval: 45
+        mobs:
+          LAPIS_ZOMBIE:
+            amount: 10
+            spawn_conditions: []
+            min_distance: 8
+            max_distance: 20
+          ZOMBIE_VILLAGER:
+            amount: 5
+            spawn_conditions: []
+            min_distance: 10
+            max_distance: 18
+
+  graveyard_a: # Another world
+    regions:
+      graveyard:
+        spawn_limit: 15
+        spawn_radius: 60
+        spawn_interval: 25
+        mobs:
+          CRYPT_GHOUL: # Crypt Ghoul with explosion ability
+            amount: 10
+            spawn_conditions: []
+            min_distance: 12
+            max_distance: 35
+          ZOMBIE_VILLAGER:
+            amount: 5
+            spawn_conditions: []
+            min_distance: 8
+            max_distance: 25
+      
+      crypt_entrance:
+        spawn_limit: 8
+        spawn_radius: 30
+        spawn_interval: 40
+        mobs:
+          CRYPT_GHOUL:
+            amount: 6
+            spawn_conditions: []
+            min_distance: 10
+            max_distance: 20
+          ZOMBIE_VILLAGER:
+            amount: 2
+            spawn_conditions: []
+            min_distance: 5
+            max_distance: 15
+
+# Global spawning settings
+global_settings:
+  enabled: true # Enable/disable all spawning
+  debug: false # Enable debug logging
+  max_mobs_per_player: 50 # Maximum total mobs per player
+  cleanup_interval: 300 # Seconds between cleanup of dead mobs
+  spawn_on_join: true # Spawn mobs when players join
+  despawn_distance: 100 # Distance at which mobs despawn from players

@@ -1,125 +1,78 @@
 package de.noctivag.skyblock.accessories;
-import org.bukkit.inventory.ItemStack;
+
+import java.util.UUID;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
- * Player's accessory data including level, experience, coins, and statistics
+ * Player accessory data storage
  */
 public class PlayerAccessoryData {
     
+    private final UUID playerUuid;
+    private final List<String> purchasedAccessories;
     private int level;
     private int experience;
     private int coins;
-    private int purchasedAccessories;
-    private int totalExperience;
     
-    public PlayerAccessoryData() {
+    public PlayerAccessoryData(UUID playerUuid) {
+        this.playerUuid = playerUuid;
+        this.purchasedAccessories = new ArrayList<>();
         this.level = 1;
         this.experience = 0;
-        this.coins = 1000;
-        this.purchasedAccessories = 0;
-        this.totalExperience = 0;
+        this.coins = 0;
     }
     
-    public PlayerAccessoryData(int level, int experience, int coins, int purchasedAccessories, int totalExperience) {
-        this.level = level;
-        this.experience = experience;
-        this.coins = coins;
-        this.purchasedAccessories = purchasedAccessories;
-        this.totalExperience = totalExperience;
+    public UUID getPlayerUuid() {
+        return playerUuid;
     }
-    
+
+    public List<String> getPurchasedAccessories() {
+        return purchasedAccessories;
+    }
+
     public int getLevel() {
         return level;
     }
-    
+
     public void setLevel(int level) {
         this.level = level;
     }
-    
+
     public int getExperience() {
         return experience;
     }
-    
+
     public void setExperience(int experience) {
         this.experience = experience;
     }
-    
+
+    public void addExperience(int amount) {
+        this.experience += amount;
+    }
+
     public int getCoins() {
         return coins;
     }
-    
+
     public void setCoins(int coins) {
         this.coins = coins;
     }
-    
-    public int getPurchasedAccessories() {
-        return purchasedAccessories;
+
+    public void addCoins(int amount) {
+        this.coins += amount;
     }
-    
-    public void setPurchasedAccessories(int purchasedAccessories) {
-        this.purchasedAccessories = purchasedAccessories;
+
+    public void removeCoins(int amount) {
+        this.coins = Math.max(0, this.coins - amount);
     }
-    
-    public int getTotalExperience() {
-        return totalExperience;
-    }
-    
-    public void setTotalExperience(int totalExperience) {
-        this.totalExperience = totalExperience;
-    }
-    
-    public void addExperience(int experience) {
-        this.experience += experience;
-        this.totalExperience += experience;
-        
-        // Check for level up
-        int requiredExp = getRequiredExperience(level + 1);
-        if (this.experience >= requiredExp) {
-            levelUp();
-        }
-    }
-    
-    public void addCoins(int coins) {
-        this.coins += coins;
-    }
-    
-    public void removeCoins(int coins) {
-        this.coins = Math.max(0, this.coins - coins);
-    }
-    
+
     public void incrementPurchasedAccessories() {
-        this.purchasedAccessories++;
+        // This method is called when a new accessory is purchased
+        // The actual accessory ID should be passed to addPurchasedAccessory
     }
-    
-    private void levelUp() {
-        this.level++;
-        this.experience = 0;
-        
-        // Add level up rewards
-        this.coins += level * 400;
-    }
-    
-    private int getRequiredExperience(int level) {
-        return level * 3000; // 3000 XP per level
-    }
-    
-    public int getExperienceToNextLevel() {
-        return getRequiredExperience(level + 1) - experience;
-    }
-    
-    public double getExperienceProgress() {
-        int requiredExp = getRequiredExperience(level + 1);
-        return (double) experience / requiredExp;
-    }
-    
-    @Override
-    public String toString() {
-        return "PlayerAccessoryData{" +
-                "level=" + level +
-                ", experience=" + experience +
-                ", coins=" + coins +
-                ", purchasedAccessories=" + purchasedAccessories +
-                ", totalExperience=" + totalExperience +
-                '}';
+
+    public int getTotalExperience() {
+        return experience;
     }
 }

@@ -1,84 +1,91 @@
 package de.noctivag.skyblock.worlds;
 
 import de.noctivag.skyblock.SkyblockPlugin;
-import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.WorldCreator;
-import org.bukkit.WorldType;
+import org.bukkit.Location;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CompletableFuture;
 
 /**
- * World Manager - Handles all world operations
- * Folia compatible implementation
+ * World Manager - Handles world operations
  */
 public class WorldManager {
-
+    
     private final SkyblockPlugin plugin;
-    private final Map<String, World> worlds = new HashMap<>();
-
+    private final Map<String, World> managedWorlds = new ConcurrentHashMap<>();
+    
     public WorldManager(SkyblockPlugin plugin) {
         this.plugin = plugin;
-        plugin.getLogger().info("World Manager initialized");
     }
-
+    
     /**
-     * Create a world
+     * Initialize the world manager
      */
-    public World createWorld(String worldName, World.Environment environment) {
-        try {
-            World world = Bukkit.getWorld(worldName);
-            if (world != null) {
-                plugin.getLogger().info("World " + worldName + " already exists");
-                return world;
-            }
-
-            WorldCreator worldCreator = new WorldCreator(worldName);
-            worldCreator.environment(environment);
-            worldCreator.type(WorldType.FLAT);
-            worldCreator.generateStructures(false);
-
-            world = worldCreator.createWorld();
-            if (world != null) {
-                worlds.put(worldName, world);
-                plugin.getLogger().info("Created world: " + worldName);
-            } else {
-                plugin.getLogger().severe("Failed to create world: " + worldName);
-            }
-
-            return world;
-        } catch (Exception e) {
-            plugin.getLogger().severe("Error creating world " + worldName + ": " + e.getMessage());
-            return null;
-        }
+    public void initialize() {
+        plugin.getLogger().info("Initializing WorldManager...");
+        // Initialize world management
+        plugin.getLogger().info("WorldManager initialized successfully!");
     }
-
+    
     /**
-     * Get a world by name
+     * Shutdown the world manager
+     */
+    public void shutdown() {
+        plugin.getLogger().info("Shutting down WorldManager...");
+        managedWorlds.clear();
+        plugin.getLogger().info("WorldManager shutdown complete!");
+    }
+    
+    /**
+     * Get managed worlds
+     */
+    public Map<String, World> getManagedWorlds() {
+        return new ConcurrentHashMap<>(managedWorlds);
+    }
+    
+    /**
+     * Add world to management
+     */
+    public void addWorld(String worldName, World world) {
+        managedWorlds.put(worldName, world);
+    }
+    
+    /**
+     * Remove world from management
+     */
+    public void removeWorld(String worldName) {
+        managedWorlds.remove(worldName);
+    }
+    
+    /**
+     * Get world by name
      */
     public World getWorld(String worldName) {
-        World world = worlds.get(worldName);
-        if (world == null) {
-            world = Bukkit.getWorld(worldName);
-            if (world != null) {
-                worlds.put(worldName, world);
-            }
-        }
-        return world;
+        return managedWorlds.get(worldName);
     }
 
     /**
-     * Check if a world exists
+     * Load private island for player
      */
-    public boolean worldExists(String worldName) {
-        return getWorld(worldName) != null;
+    public CompletableFuture<World> loadPrivateIsland(UUID playerUuid) {
+        return CompletableFuture.supplyAsync(() -> {
+            plugin.getLogger().info("Loading private island for player: " + playerUuid);
+            // Placeholder implementation
+            return null;
+        });
     }
 
     /**
-     * Get all managed worlds
+     * Unload private island for player
      */
-    public Map<String, World> getWorlds() {
-        return new HashMap<>(worlds);
+    public CompletableFuture<Boolean> unloadPrivateIsland(UUID playerUuid) {
+        return CompletableFuture.supplyAsync(() -> {
+            plugin.getLogger().info("Unloading private island for player: " + playerUuid);
+            // Placeholder implementation
+            return true;
+        });
     }
 }

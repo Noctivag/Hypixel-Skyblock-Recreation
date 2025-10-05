@@ -1,192 +1,226 @@
 package de.noctivag.skyblock.web;
-import net.kyori.adventure.text.Component;
-
-import java.util.UUID;
-import de.noctivag.skyblock.SkyblockPlugin;
-import de.noctivag.skyblock.SkyblockPlugin;
-import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.SkyblockPlugin;
-import de.noctivag.skyblock.database.MultiServerDatabaseManager;
+import de.noctivag.skyblock.core.api.Service;
+import de.noctivag.skyblock.core.api.SystemStatus;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.logging.Level;
 
 /**
- * Web Interface System - Hypixel Skyblock Style
+ * Web interface system for the skyblock plugin
  */
-public class WebInterfaceSystem implements Listener {
-    private final SkyblockPlugin SkyblockPlugin;
-    private final MultiServerDatabaseManager databaseManager;
-    private final Map<UUID, PlayerWeb> playerWeb = new ConcurrentHashMap<>();
-    private final Map<WebType, WebConfig> webConfigs = new HashMap<>();
-    private final Map<UUID, BukkitTask> webTasks = new ConcurrentHashMap<>();
+public class WebInterfaceSystem implements Service {
     
-    public WebInterfaceSystem(SkyblockPlugin SkyblockPlugin, MultiServerDatabaseManager databaseManager) {
-        this.SkyblockPlugin = SkyblockPlugin;
-        this.databaseManager = databaseManager;
-        initializeWebConfigs();
-        startWebUpdateTask();
+    private final SkyblockPlugin plugin;
+    private SystemStatus status = SystemStatus.DISABLED;
+    private final ApiSystem apiSystem;
+    private final String apiKey;
+    
+    public WebInterfaceSystem(SkyblockPlugin plugin) {
+        this.plugin = plugin;
+        this.apiSystem = new ApiSystem(plugin);
+        this.apiKey = generateApiKey();
+    }
+    
+    @Override
+    public void initialize() {
+        status = SystemStatus.INITIALIZING;
+        plugin.getLogger().info("Initializing WebInterfaceSystem...");
         
-        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
-    }
-    
-    private void initializeWebConfigs() {
-        webConfigs.put(WebType.DASHBOARD, new WebConfig(
-            "Dashboard", "§aDashboard", Material.COMPASS,
-            "§7Main dashboard for player statistics.",
-            WebCategory.DASHBOARD, 1, Arrays.asList("§7- Player stats", "§7- Progress tracking"),
-            Arrays.asList("§7- 1x Compass", "§7- 1x Web Access")
-        ));
-        
-        webConfigs.put(WebType.LEADERBOARDS, new WebConfig(
-            "Leaderboards", "§6Leaderboards", Material.ITEM_FRAME,
-            "§7View player leaderboards and rankings.",
-            WebCategory.LEADERBOARDS, 1, Arrays.asList("§7- Rankings", "§7- Competition"),
-            Arrays.asList("§7- 1x Item Frame", "§7- 1x Web Access")
-        ));
-    }
-    
-    private void startWebUpdateTask() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Map.Entry<UUID, PlayerWeb> entry : playerWeb.entrySet()) {
-                    PlayerWeb web = entry.getValue();
-                    web.update();
-                }
-            }
-        }.runTaskTimer(SkyblockPlugin, 0L, 20L);
-    }
-    
-    @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent event) {
-        Player player = event.getPlayer();
-        
-        if (event.getClickedBlock() != null && event.getClickedBlock().getType() == Material.REDSTONE_LAMP) {
-            openWebGUI(player);
-        }
-    }
-    
-    private void openWebGUI(Player player) {
-        player.sendMessage(Component.text("§aWeb Interface geöffnet!"));
-    }
-    
-    public PlayerWeb getPlayerWeb(UUID playerId) {
-        return playerWeb.computeIfAbsent(playerId, k -> new PlayerWeb(playerId));
-    }
-    
-    public WebConfig getWebConfig(WebType type) {
-        return webConfigs.get(type);
-    }
-    
-    public List<WebType> getAllWebTypes() {
-        return new ArrayList<>(webConfigs.keySet());
-    }
-    
-    public enum WebType {
-        DASHBOARD, LEADERBOARDS, STATISTICS, PROFILE, GUILD, ISLAND, AUCTION, BAZAAR
-    }
-    
-    public enum WebCategory {
-        DASHBOARD("§aDashboard", 1.0),
-        LEADERBOARDS("§6Leaderboards", 1.2),
-        STATISTICS("§bStatistics", 1.1),
-        PROFILE("§eProfile", 1.3),
-        GUILD("§dGuild", 1.4),
-        ISLAND("§cIsland", 1.5);
-
-        private final String displayName;
-        private final double multiplier;
-        
-        WebCategory(String displayName, double multiplier) {
-            this.displayName = displayName;
-            this.multiplier = multiplier;
-        }
-        
-        public String getDisplayName() { return displayName; }
-        public double getMultiplier() { return multiplier; }
-    }
-    
-    public static class WebConfig {
-        private final String name;
-        private final String displayName;
-        private final Material icon;
-        private final String description;
-        private final WebCategory category;
-        private final int maxLevel;
-        private final List<String> features;
-        private final List<String> requirements;
-        
-        public WebConfig(String name, String displayName, Material icon, String description,
-                        WebCategory category, int maxLevel, List<String> features, List<String> requirements) {
-            this.name = name;
-            this.displayName = displayName;
-            this.icon = icon;
-            this.description = description;
-            this.category = category;
-            this.maxLevel = maxLevel;
-            this.features = features;
-            this.requirements = requirements;
-        }
-        
-        public String getName() { return name; }
-        public String getDisplayName() { return displayName; }
-        public Material getIcon() { return icon; }
-        public String getDescription() { return description; }
-        public WebCategory getCategory() { return category; }
-        public int getMaxLevel() { return maxLevel; }
-        public List<String> getFeatures() { return features; }
-        public List<String> getRequirements() { return requirements; }
-    }
-    
-    public static class PlayerWeb {
-        private final UUID playerId;
-        private final Map<WebType, Integer> webLevels = new ConcurrentHashMap<>();
-        private int totalWebs = 0;
-        private long totalWebTime = 0;
-        private long lastUpdate;
-        
-        public PlayerWeb(UUID playerId) {
-            this.playerId = playerId;
-            this.lastUpdate = java.lang.System.currentTimeMillis();
-        }
-        
-        public void update() {
-            long currentTime = java.lang.System.currentTimeMillis();
-            long timeDiff = currentTime - lastUpdate;
+        try {
+            // Initialize API system
+            apiSystem.initialize();
             
-            if (timeDiff >= 60000) {
-                saveToDatabase();
-                lastUpdate = currentTime;
-            }
+            status = SystemStatus.RUNNING;
+            plugin.getLogger().info("WebInterfaceSystem initialized (simplified version)");
+        } catch (Exception e) {
+            plugin.getLogger().log(Level.SEVERE, "Failed to initialize WebInterfaceSystem", e);
+            status = SystemStatus.ERROR;
         }
+    }
+    
+    @Override
+    public void shutdown() {
+        status = SystemStatus.SHUTTING_DOWN;
+        plugin.getLogger().info("Shutting down WebInterfaceSystem...");
         
-        private void saveToDatabase() {
-            // Save web data to database
+        // Shutdown API system
+        apiSystem.shutdown();
+        
+        status = SystemStatus.DISABLED;
+        plugin.getLogger().info("WebInterfaceSystem shut down.");
+    }
+    
+    @Override
+    public SystemStatus getStatus() {
+        return status;
+    }
+    
+    @Override
+    public String getName() {
+        return "WebInterfaceSystem";
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && status == SystemStatus.DISABLED) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
         }
-        
-        public void addWeb(WebType type, int level) {
-            webLevels.put(type, level);
-            totalWebs++;
-        }
-        
-        public int getWebLevel(WebType type) {
-            return webLevels.getOrDefault(type, 0);
-        }
-        
-        public int getTotalWebs() { return totalWebs; }
-        public long getTotalWebTime() { return totalWebTime; }
-        
-        public UUID getPlayerId() { return playerId; }
-        public Map<WebType, Integer> getWebLevels() { return webLevels; }
+    }
+    
+    /**
+     * Validate API key
+     */
+    private boolean validateApiKey(String providedKey) {
+        return apiKey.equals(providedKey);
+    }
+    
+    /**
+     * Generate API key
+     */
+    private String generateApiKey() {
+        return UUID.randomUUID().toString().replace("-", "");
+    }
+    
+    /**
+     * Create main page HTML
+     */
+    private String createMainPage() {
+        return "<!DOCTYPE html>" +
+            "<html>" +
+            "<head>" +
+                "<title>Skyblock Server</title>" +
+                "<style>" +
+                    "body { font-family: Arial, sans-serif; margin: 40px; background-color: #f0f0f0; }" +
+                    ".container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }" +
+                    "h1 { color: #333; text-align: center; }" +
+                    ".stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 20px 0; }" +
+                    ".stat-card { background: #f8f9fa; padding: 15px; border-radius: 5px; text-align: center; }" +
+                    ".stat-value { font-size: 24px; font-weight: bold; color: #007bff; }" +
+                    ".stat-label { color: #666; margin-top: 5px; }" +
+                "</style>" +
+            "</head>" +
+            "<body>" +
+                "<div class=\"container\">" +
+                    "<h1>🏝️ Skyblock Server</h1>" +
+                    "<div class=\"stats\">" +
+                        "<div class=\"stat-card\">" +
+                            "<div class=\"stat-value\">" + Bukkit.getOnlinePlayers().size() + "</div>" +
+                            "<div class=\"stat-label\">Online Players</div>" +
+                        "</div>" +
+                        "<div class=\"stat-card\">" +
+                            "<div class=\"stat-value\">" + Bukkit.getMaxPlayers() + "</div>" +
+                            "<div class=\"stat-label\">Max Players</div>" +
+                        "</div>" +
+                        "<div class=\"stat-card\">" +
+                            "<div class=\"stat-value\">" + Bukkit.getServer().getVersion() + "</div>" +
+                            "<div class=\"stat-label\">Server Version</div>" +
+                        "</div>" +
+                    "</div>" +
+                    "<p style=\"text-align: center; color: #666;\">" +
+                        "Welcome to our Skyblock server! Use the API endpoints to access player data and server information." +
+                    "</p>" +
+                "</div>" +
+            "</body>" +
+            "</html>";
+    }
+    
+    /**
+     * Create player stats page HTML
+     */
+    private String createPlayerStatsPage(Player player) {
+        return "<!DOCTYPE html>" +
+            "<html>" +
+            "<head>" +
+                "<title>Player Stats - " + player.getName() + "</title>" +
+                "<style>" +
+                    "body { font-family: Arial, sans-serif; margin: 40px; background-color: #f0f0f0; }" +
+                    ".container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }" +
+                    "h1 { color: #333; text-align: center; }" +
+                    ".player-info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; }" +
+                    ".info-row { display: flex; justify-content: space-between; margin: 10px 0; }" +
+                    ".info-label { font-weight: bold; color: #333; }" +
+                    ".info-value { color: #666; }" +
+                "</style>" +
+            "</head>" +
+            "<body>" +
+                "<div class=\"container\">" +
+                    "<h1>👤 Player Stats</h1>" +
+                    "<div class=\"player-info\">" +
+                        "<div class=\"info-row\">" +
+                            "<span class=\"info-label\">Name:</span>" +
+                            "<span class=\"info-value\">" + player.getName() + "</span>" +
+                        "</div>" +
+                        "<div class=\"info-row\">" +
+                            "<span class=\"info-label\">UUID:</span>" +
+                            "<span class=\"info-value\">" + player.getUniqueId() + "</span>" +
+                        "</div>" +
+                        "<div class=\"info-row\">" +
+                            "<span class=\"info-label\">Health:</span>" +
+                            "<span class=\"info-value\">" + player.getHealth() + "/" + player.getMaxHealth() + "</span>" +
+                        "</div>" +
+                        "<div class=\"info-row\">" +
+                            "<span class=\"info-label\">Level:</span>" +
+                            "<span class=\"info-value\">" + player.getLevel() + "</span>" +
+                        "</div>" +
+                        "<div class=\"info-row\">" +
+                            "<span class=\"info-label\">Location:</span>" +
+                            "<span class=\"info-value\">" + player.getLocation().getWorld().getName() + " " + 
+                            player.getLocation().getBlockX() + ", " + player.getLocation().getBlockY() + ", " + player.getLocation().getBlockZ() + "</span>" +
+                        "</div>" +
+                    "</div>" +
+                "</div>" +
+            "</body>" +
+            "</html>";
+    }
+    
+    /**
+     * Create error page HTML
+     */
+    private String createErrorPage(String message) {
+        return "<!DOCTYPE html>" +
+            "<html>" +
+            "<head>" +
+                "<title>Error</title>" +
+                "<style>" +
+                    "body { font-family: Arial, sans-serif; margin: 40px; background-color: #f0f0f0; }" +
+                    ".container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; }" +
+                    "h1 { color: #dc3545; }" +
+                    "p { color: #666; }" +
+                "</style>" +
+            "</head>" +
+            "<body>" +
+                "<div class=\"container\">" +
+                    "<h1>❌ Error</h1>" +
+                    "<p>" + message + "</p>" +
+                "</div>" +
+            "</body>" +
+            "</html>";
+    }
+    
+    /**
+     * Get API system
+     */
+    public ApiSystem getApiSystem() {
+        return apiSystem;
+    }
+    
+    /**
+     * Get API key
+     */
+    public String getApiKey() {
+        return apiKey;
     }
 }

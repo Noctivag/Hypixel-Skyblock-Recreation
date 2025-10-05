@@ -1,125 +1,98 @@
 package de.noctivag.skyblock.brewing;
-import org.bukkit.inventory.ItemStack;
+
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 /**
- * Player's brewing data including level, experience, coins, and statistics
+ * Player brewing data storage
  */
 public class PlayerBrewingData {
     
+    private final UUID playerUuid;
     private int level;
     private int experience;
     private int coins;
     private int brewedPotions;
-    private int totalExperience;
     
-    public PlayerBrewingData() {
+    public PlayerBrewingData(UUID playerUuid) {
+        this.playerUuid = playerUuid;
         this.level = 1;
         this.experience = 0;
-        this.coins = 1000;
+        this.coins = 0;
         this.brewedPotions = 0;
-        this.totalExperience = 0;
     }
     
-    public PlayerBrewingData(int level, int experience, int coins, int brewedPotions, int totalExperience) {
-        this.level = level;
-        this.experience = experience;
-        this.coins = coins;
-        this.brewedPotions = brewedPotions;
-        this.totalExperience = totalExperience;
+    public UUID getPlayerUuid() {
+        return playerUuid;
     }
-    
+
     public int getLevel() {
         return level;
     }
-    
+
     public void setLevel(int level) {
         this.level = level;
     }
-    
+
     public int getExperience() {
         return experience;
     }
-    
+
     public void setExperience(int experience) {
         this.experience = experience;
     }
-    
+
+    public void addExperience(int amount) {
+        this.experience += amount;
+    }
+
     public int getCoins() {
         return coins;
     }
-    
+
     public void setCoins(int coins) {
         this.coins = coins;
     }
-    
+
+    public void addCoins(int amount) {
+        this.coins += amount;
+    }
+
+    public void removeCoins(int amount) {
+        this.coins = Math.max(0, this.coins - amount);
+    }
+
     public int getBrewedPotions() {
         return brewedPotions;
     }
-    
+
     public void setBrewedPotions(int brewedPotions) {
         this.brewedPotions = brewedPotions;
     }
-    
-    public int getTotalExperience() {
-        return totalExperience;
-    }
-    
-    public void setTotalExperience(int totalExperience) {
-        this.totalExperience = totalExperience;
-    }
-    
-    public void addExperience(int experience) {
-        this.experience += experience;
-        this.totalExperience += experience;
-        
-        // Check for level up
-        int requiredExp = getRequiredExperience(level + 1);
-        if (this.experience >= requiredExp) {
-            levelUp();
-        }
-    }
-    
-    public void addCoins(int coins) {
-        this.coins += coins;
-    }
-    
-    public void removeCoins(int coins) {
-        this.coins = Math.max(0, this.coins - coins);
-    }
-    
+
     public void incrementBrewedPotions() {
         this.brewedPotions++;
     }
-    
-    private void levelUp() {
-        this.level++;
-        this.experience = 0;
-        
-        // Add level up rewards
-        this.coins += level * 100;
+
+    public int getTotalExperience() {
+        return experience;
     }
-    
-    private int getRequiredExperience(int level) {
-        return level * 1000; // 1000 XP per level
-    }
-    
+
     public int getExperienceToNextLevel() {
-        return getRequiredExperience(level + 1) - experience;
+        // Simple calculation: 100 * level^2
+        return (level * level * 100) - experience;
     }
-    
+
     public double getExperienceProgress() {
-        int requiredExp = getRequiredExperience(level + 1);
-        return (double) experience / requiredExp;
+        int currentLevelExp = (level - 1) * (level - 1) * 100;
+        int nextLevelExp = level * level * 100;
+        int expInLevel = experience - currentLevelExp;
+        int expNeeded = nextLevelExp - currentLevelExp;
+        return (double) expInLevel / expNeeded;
     }
-    
-    @Override
-    public String toString() {
-        return "PlayerBrewingData{" +
-                "level=" + level +
-                ", experience=" + experience +
-                ", coins=" + coins +
-                ", brewedPotions=" + brewedPotions +
-                ", totalExperience=" + totalExperience +
-                '}';
+
+    public CompletableFuture<PlayerBrewingData> thenAccept(java.util.function.Consumer<PlayerBrewingData> action) {
+        action.accept(this);
+        return CompletableFuture.completedFuture(this);
     }
 }

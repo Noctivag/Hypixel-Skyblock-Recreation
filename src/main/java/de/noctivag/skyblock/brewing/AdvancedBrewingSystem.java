@@ -352,7 +352,7 @@ public class AdvancedBrewingSystem {
      * Get player brewing data
      */
     public PlayerBrewingData getPlayerBrewingData(UUID playerId) {
-        return playerBrewingData.computeIfAbsent(playerId, k -> new PlayerBrewingData());
+        return playerBrewingData.computeIfAbsent(playerId, k -> new PlayerBrewingData(playerId));
     }
     
     /**
@@ -409,8 +409,8 @@ public class AdvancedBrewingSystem {
         if (recipe == null) return false;
         
         // Check if player has required ingredients
-        for (Material ingredient : recipe.getIngredients()) {
-            if (!player.getInventory().contains(ingredient)) {
+        for (ItemStack ingredient : recipe.getIngredients()) {
+            if (!player.getInventory().contains(ingredient.getType())) {
                 return false;
             }
         }
@@ -435,8 +435,8 @@ public class AdvancedBrewingSystem {
         PlayerBrewingData data = getPlayerBrewingData(player.getUniqueId());
         
         // Remove ingredients
-        for (Material ingredient : recipe.getIngredients()) {
-            player.getInventory().removeItem(new ItemStack(ingredient, 1));
+        for (ItemStack ingredient : recipe.getIngredients()) {
+            player.getInventory().removeItem(new ItemStack(ingredient.getType(), 1));
         }
         
         // Remove coins
@@ -599,5 +599,85 @@ public class AdvancedBrewingSystem {
         // Clear data
         playerBrewingData.clear();
         activeBrewingStations.clear();
+    }
+
+    /**
+     * Get brewing system (for API compatibility)
+     */
+    public AdvancedBrewingSystem getBrewingSystem() {
+        return this;
+    }
+
+    /**
+     * Start brewing process
+     */
+    public boolean startBrewing(Player player, String recipeId) {
+        return canBrew(player, recipeId);
+    }
+
+    /**
+     * Complete brewing process
+     */
+    public void completeBrewing(Player player, String recipeId) {
+        // Placeholder implementation
+        player.sendMessage("§aBrewing completed!");
+    }
+
+    /**
+     * Initialize the brewing system
+     */
+    public void initialize() {
+        // Already initialized in constructor
+    }
+
+    /**
+     * Add a brewing recipe
+     */
+    public void addRecipe(BrewingRecipe recipe) {
+        brewingRecipes.put(recipe.getId(), recipe);
+    }
+
+    /**
+     * Remove a brewing recipe
+     */
+    public void removeRecipe(String recipeId) {
+        brewingRecipes.remove(recipeId);
+    }
+
+    /**
+     * Get all brewing recipes
+     */
+    public Map<String, BrewingRecipe> getRecipes() {
+        return new HashMap<>(brewingRecipes);
+    }
+
+    /**
+     * Get a specific brewing recipe
+     */
+    public BrewingRecipe getRecipe(String recipeId) {
+        return brewingRecipes.get(recipeId);
+    }
+
+    /**
+     * Check if a recipe exists
+     */
+    public boolean hasRecipe(String recipeId) {
+        return brewingRecipes.containsKey(recipeId);
+    }
+
+    /**
+     * Get recipes by ingredient
+     */
+    public List<BrewingRecipe> getRecipesByIngredient(Material ingredient) {
+        List<BrewingRecipe> matchingRecipes = new ArrayList<>();
+        for (BrewingRecipe recipe : brewingRecipes.values()) {
+            for (ItemStack item : recipe.getIngredients()) {
+                if (item.getType() == ingredient) {
+                    matchingRecipes.add(recipe);
+                    break;
+                }
+            }
+        }
+        return matchingRecipes;
     }
 }

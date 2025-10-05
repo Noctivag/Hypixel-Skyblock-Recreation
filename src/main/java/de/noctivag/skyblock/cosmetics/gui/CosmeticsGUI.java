@@ -23,4 +23,9 @@ public class CosmeticsGUI extends CustomGUI {
         // Delegate to the unified CosmeticsMenu implementation
         new CosmeticsMenu(SkyblockPlugin, cosmeticsManager).open(player);
     }
+    
+    @Override
+    public void setupItems() {
+        // Placeholder implementation
+    }
 }

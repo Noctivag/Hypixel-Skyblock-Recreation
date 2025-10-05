@@ -1,203 +1,56 @@
 package de.noctivag.skyblock.config;
 
-import de.noctivag.skyblock.SkyblockPluginRefactored;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
-/**
- * Zentrale Konfigurationsklasse für allgemeine Plugin-Einstellungen
- * Entfernt Hardcoding und zentralisiert alle Konfigurationswerte
- */
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+
 public class SettingsConfig {
-    
-    private final SkyblockPluginRefactored plugin;
+    private final SkyblockPlugin plugin;
     private FileConfiguration config;
-    
-    // Allgemeine Einstellungen
-    private boolean hubSpawnSystemEnabled;
-    private boolean rollingRestartSystemEnabled;
-    private boolean autoWorldCreationEnabled;
-    private boolean foliaCompatibilityMode;
-    
-    // Performance-Einstellungen
-    private int cacheSize;
-    private long cacheExpirationTime;
-    private boolean asyncLoadingEnabled;
-    
-    // Debug-Einstellungen
-    private boolean debugMode;
-    private boolean verboseLogging;
-    
-    // Feature-Einstellungen
-    private boolean magicalPowerEnabled;
-    private boolean bazaarEnabled;
-    private boolean slayerEnabled;
-    private boolean dungeonsEnabled;
-    private boolean customMobsEnabled;
-    
-    // Welt-Einstellungen
-    private String defaultHubWorld;
-    private int worldResetInterval;
-    private boolean autoWorldReset;
-    
-    public SettingsConfig(SkyblockPluginRefactored plugin) {
+    private File configFile;
+
+    public SettingsConfig(SkyblockPlugin plugin) {
         this.plugin = plugin;
+        loadConfig();
     }
-    
-    /**
-     * Lädt alle Konfigurationswerte aus der config.yml
-     */
-    public void load() {
-        this.config = plugin.getConfig();
-        
-        // Allgemeine Einstellungen
-        this.hubSpawnSystemEnabled = config.getBoolean("settings.hub-spawn-system.enabled", true);
-        this.rollingRestartSystemEnabled = config.getBoolean("settings.rolling-restart-system.enabled", true);
-        this.autoWorldCreationEnabled = config.getBoolean("settings.auto-world-creation.enabled", true);
-        this.foliaCompatibilityMode = config.getBoolean("settings.folia-compatibility.enabled", true);
-        
-        // Performance-Einstellungen
-        this.cacheSize = config.getInt("performance.cache.size", 1000);
-        this.cacheExpirationTime = config.getLong("performance.cache.expiration-time", 300000); // 5 Minuten
-        this.asyncLoadingEnabled = config.getBoolean("performance.async-loading.enabled", true);
-        
-        // Debug-Einstellungen
-        this.debugMode = config.getBoolean("debug.enabled", false);
-        this.verboseLogging = config.getBoolean("debug.verbose-logging", false);
-        
-        // Feature-Einstellungen
-        this.magicalPowerEnabled = config.getBoolean("features.magical-power.enabled", true);
-        this.bazaarEnabled = config.getBoolean("features.bazaar.enabled", true);
-        this.slayerEnabled = config.getBoolean("features.slayer.enabled", true);
-        this.dungeonsEnabled = config.getBoolean("features.dungeons.enabled", true);
-        this.customMobsEnabled = config.getBoolean("features.custom-mobs.enabled", true);
-        
-        // Welt-Einstellungen
-        this.defaultHubWorld = config.getString("worlds.default-hub", "hub_a");
-        this.worldResetInterval = config.getInt("worlds.reset-interval", 14400); // 4 Stunden
-        this.autoWorldReset = config.getBoolean("worlds.auto-reset.enabled", true);
-        
-        plugin.getLogger().info("Settings configuration loaded successfully");
-        
-        if (debugMode) {
-            plugin.getLogger().info("Debug mode enabled - Verbose logging: " + verboseLogging);
+
+    private void loadConfig() {
+        configFile = new File(plugin.getDataFolder(), "settings.yml");
+        if (!configFile.exists()) {
+            plugin.saveResource("settings.yml", false);
+        }
+        config = YamlConfiguration.loadConfiguration(configFile);
+    }
+
+    public FileConfiguration getConfig() {
+        return config;
+    }
+
+    public void saveConfig() {
+        try {
+            config.save(configFile);
+        } catch (IOException e) {
+            plugin.getLogger().log(Level.SEVERE, "Could not save settings config: " + e.getMessage(), e);
         }
     }
-    
-    /**
-     * Speichert die Konfiguration zurück in die Datei
-     */
-    public void save() {
-        // Allgemeine Einstellungen
-        config.set("settings.hub-spawn-system.enabled", hubSpawnSystemEnabled);
-        config.set("settings.rolling-restart-system.enabled", rollingRestartSystemEnabled);
-        config.set("settings.auto-world-creation.enabled", autoWorldCreationEnabled);
-        config.set("settings.folia-compatibility.enabled", foliaCompatibilityMode);
-        
-        // Performance-Einstellungen
-        config.set("performance.cache.size", cacheSize);
-        config.set("performance.cache.expiration-time", cacheExpirationTime);
-        config.set("performance.async-loading.enabled", asyncLoadingEnabled);
-        
-        // Debug-Einstellungen
-        config.set("debug.enabled", debugMode);
-        config.set("debug.verbose-logging", verboseLogging);
-        
-        // Welt-Einstellungen
-        config.set("worlds.default-hub", defaultHubWorld);
-        config.set("worlds.reset-interval", worldResetInterval);
-        config.set("worlds.auto-reset.enabled", autoWorldReset);
-        
-        plugin.saveConfig();
+
+    public void reloadConfig() {
+        config = YamlConfiguration.loadConfiguration(configFile);
     }
-    
-    // Getter-Methoden
-    public boolean isHubSpawnSystemEnabled() {
-        return hubSpawnSystemEnabled;
-    }
-    
-    public boolean isRollingRestartSystemEnabled() {
-        return rollingRestartSystemEnabled;
-    }
-    
-    public boolean isAutoWorldCreationEnabled() {
-        return autoWorldCreationEnabled;
-    }
-    
-    public boolean isFoliaCompatibilityMode() {
-        return foliaCompatibilityMode;
-    }
-    
+
     public int getCacheSize() {
-        return cacheSize;
+        return config.getInt("cache.size", 1000);
     }
-    
+
     public long getCacheExpirationTime() {
-        return cacheExpirationTime;
+        return config.getLong("cache.expiration", 300000); // 5 minutes
     }
-    
-    public boolean isAsyncLoadingEnabled() {
-        return asyncLoadingEnabled;
-    }
-    
-    public boolean isDebugMode() {
-        return debugMode;
-    }
-    
+
     public boolean isVerboseLogging() {
-        return verboseLogging;
-    }
-    
-    public String getDefaultHubWorld() {
-        return defaultHubWorld;
-    }
-    
-    public int getWorldResetInterval() {
-        return worldResetInterval;
-    }
-    
-    public boolean isAutoWorldReset() {
-        return autoWorldReset;
-    }
-    
-    // Feature-Getter
-    public boolean isMagicalPowerEnabled() {
-        return magicalPowerEnabled;
-    }
-    
-    public boolean isBazaarEnabled() {
-        return bazaarEnabled;
-    }
-    
-    public boolean isSlayerEnabled() {
-        return slayerEnabled;
-    }
-    
-    public boolean isDungeonsEnabled() {
-        return dungeonsEnabled;
-    }
-    
-    public boolean isCustomMobsEnabled() {
-        return customMobsEnabled;
-    }
-    
-    public boolean isRollingRestartEnabled() {
-        return rollingRestartSystemEnabled;
-    }
-    
-    // Setter-Methoden für dynamische Änderungen
-    public void setHubSpawnSystemEnabled(boolean enabled) {
-        this.hubSpawnSystemEnabled = enabled;
-    }
-    
-    public void setRollingRestartSystemEnabled(boolean enabled) {
-        this.rollingRestartSystemEnabled = enabled;
-    }
-    
-    public void setDebugMode(boolean enabled) {
-        this.debugMode = enabled;
-    }
-    
-    public void setVerboseLogging(boolean enabled) {
-        this.verboseLogging = enabled;
+        return config.getBoolean("logging.verbose", false);
     }
 }

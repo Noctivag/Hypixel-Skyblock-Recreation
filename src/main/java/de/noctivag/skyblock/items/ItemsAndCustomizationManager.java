@@ -7,6 +7,9 @@ import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.CorePlatform;
+import de.noctivag.skyblock.display.EnhancedScoreboardSystem;
+import de.noctivag.skyblock.display.GUIAnimationSystem;
+import de.noctivag.skyblock.display.IntegratedMenuSystem;
 import de.noctivag.skyblock.data.DatabaseManager;
 import de.noctivag.skyblock.skyblock.EnchantingSystem;
 import de.noctivag.skyblock.pets.PetSystem;

@@ -131,8 +131,8 @@ public class BrewingGUI {
         lore.add("§7Cost: §a" + recipe.getCost() + " coins");
         lore.add("");
         lore.add("§7Ingredients:");
-        for (Material ingredient : recipe.getIngredients()) {
-            lore.add("§7- " + ingredient.name().toLowerCase().replace("_", " "));
+        for (ItemStack ingredient : recipe.getIngredients()) {
+            lore.add("§7- " + ingredient.getType().name().toLowerCase().replace("_", " "));
         }
         lore.add("");
         

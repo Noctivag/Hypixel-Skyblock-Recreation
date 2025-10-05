@@ -23,27 +23,39 @@ public class SkyblockMenuSystem implements Service {
     private final Map<String, MenuConfig> menuConfigs = new HashMap<>();
     
     @Override
-    public CompletableFuture<Void> initialize() {
-        status = SystemStatus.ENABLED;
+    public void initialize() {
+        status = SystemStatus.RUNNING;
         initializeAllMenus();
-        return CompletableFuture.completedFuture(null);
     }
     
     @Override
-    public CompletableFuture<Void> shutdown() {
+    public void shutdown() {
         status = SystemStatus.UNINITIALIZED;
         menuConfigs.clear();
-        return CompletableFuture.completedFuture(null);
-    }
-    
-    @Override
-    public boolean isInitialized() {
-        return status == SystemStatus.ENABLED;
     }
     
     @Override
     public String getName() {
         return "SkyblockMenuSystem";
+    }
+    
+    @Override
+    public SystemStatus getStatus() {
+        return status;
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled) {
+            status = SystemStatus.RUNNING;
+        } else {
+            status = SystemStatus.UNINITIALIZED;
+        }
     }
     
     /**

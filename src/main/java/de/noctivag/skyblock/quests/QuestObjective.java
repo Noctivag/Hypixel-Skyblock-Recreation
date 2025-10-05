@@ -1,53 +1,91 @@
 package de.noctivag.skyblock.quests;
-import org.bukkit.inventory.ItemStack;
+
+import java.util.Map;
 
 /**
- * QuestObjective - Represents an objective within a quest
+ * Represents a quest objective
  */
 public class QuestObjective {
-    private final String id;
-    private final String description;
-    private final QuestObjectiveType type;
-    private final int requiredAmount;
-    private final String target;
-    private final boolean optional;
     
-    public QuestObjective(String id, String description, QuestObjectiveType type, 
-                         int requiredAmount, String target, boolean optional) {
-        this.id = id;
-        this.description = description;
+    private final ObjectiveType type;
+    private final int amount;
+    private final Map<String, Object> parameters;
+    
+    public QuestObjective(ObjectiveType type, int amount, Map<String, Object> parameters) {
         this.type = type;
-        this.requiredAmount = requiredAmount;
-        this.target = target;
-        this.optional = optional;
+        this.amount = amount;
+        this.parameters = parameters;
     }
     
-    public String getId() {
-        return id;
+    // Getters
+    public ObjectiveType getType() { return type; }
+    public int getAmount() { return amount; }
+    public Map<String, Object> getParameters() { return parameters; }
+    
+    /**
+     * Get parameter value
+     */
+    public Object getParameter(String key, Object defaultValue) {
+        return parameters.getOrDefault(key, defaultValue);
     }
     
-    public String getDescription() {
-        return description;
+    /**
+     * Get parameter as string
+     */
+    public String getParameterAsString(String key, String defaultValue) {
+        Object value = parameters.get(key);
+        return value != null ? value.toString() : defaultValue;
     }
     
-    public QuestObjectiveType getType() {
-        return type;
+    /**
+     * Get parameter as integer
+     */
+    public int getParameterAsInt(String key, int defaultValue) {
+        Object value = parameters.get(key);
+        if (value instanceof Number) {
+            return ((Number) value).intValue();
+        }
+        return defaultValue;
     }
     
-    public int getRequiredAmount() {
-        return requiredAmount;
+    /**
+     * Get parameter as double
+     */
+    public double getParameterAsDouble(String key, double defaultValue) {
+        Object value = parameters.get(key);
+        if (value instanceof Number) {
+            return ((Number) value).doubleValue();
+        }
+        return defaultValue;
     }
     
-    public String getTarget() {
-        return target;
+    /**
+     * Get parameter as boolean
+     */
+    public boolean getParameterAsBoolean(String key, boolean defaultValue) {
+        Object value = parameters.get(key);
+        if (value instanceof Boolean) {
+            return (Boolean) value;
+        }
+        return defaultValue;
     }
     
-    public boolean isOptional() {
-        return optional;
-    }
-    
-    public enum QuestObjectiveType {
-        KILL_MOB, KILL_PLAYER, COLLECT_ITEM, CRAFT_ITEM, REACH_LOCATION,
-        DELIVER_ITEM, ESCORT_NPC, SURVIVE_TIME, BUILD_STRUCTURE, USE_ITEM
+    /**
+     * Objective type enum
+     */
+    public enum ObjectiveType {
+        MINE_BLOCKS,
+        KILL_MOBS,
+        COLLECT_ITEMS,
+        CRAFT_ITEMS,
+        ENCHANT_ITEMS,
+        BREW_POTIONS,
+        FISH_ITEMS,
+        FARM_ITEMS,
+        FORAGE_ITEMS,
+        TAME_PETS,
+        COMPLETE_DUNGEONS,
+        DEFEAT_SLAYERS,
+        CUSTOM
     }
 }

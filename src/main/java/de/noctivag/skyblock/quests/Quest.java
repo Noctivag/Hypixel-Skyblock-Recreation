@@ -1,87 +1,151 @@
 package de.noctivag.skyblock.quests;
-import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Quest - Represents a quest in the game
+ * Represents a quest
  */
 public class Quest {
+    
     private final String id;
     private final String name;
     private final String description;
     private final QuestType type;
-    private final QuestDifficulty difficulty;
-    private final int level;
+    private final Difficulty difficulty;
+    private final int requiredLevel;
+    private final Map<String, Object> rewards;
     private final List<QuestObjective> objectives;
-    private final List<QuestReward> rewards;
-    private final long timeLimit;
-    private final boolean repeatable;
     
-    public Quest(String id, String name, String description, QuestType type, 
-                QuestDifficulty difficulty, int level, List<QuestObjective> objectives, 
-                List<QuestReward> rewards, long timeLimit, boolean repeatable) {
+    public Quest(String id, String name, String description, QuestType type,
+                Difficulty difficulty, int requiredLevel, Map<String, Object> rewards,
+                List<QuestObjective> objectives) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.type = type;
         this.difficulty = difficulty;
-        this.level = level;
-        this.objectives = objectives;
+        this.requiredLevel = requiredLevel;
         this.rewards = rewards;
-        this.timeLimit = timeLimit;
-        this.repeatable = repeatable;
+        this.objectives = objectives;
     }
     
-    public String getId() {
-        return id;
+    // Getters
+    public String getId() { return id; }
+    public String getName() { return name; }
+    public String getDescription() { return description; }
+    public QuestType getType() { return type; }
+    public Difficulty getDifficulty() { return difficulty; }
+    public int getRequiredLevel() { return requiredLevel; }
+    public Map<String, Object> getRewards() { return rewards; }
+    public List<QuestObjective> getObjectives() { return objectives; }
+    
+    /**
+     * Get reward value
+     */
+    public Object getReward(String key, Object defaultValue) {
+        return rewards.getOrDefault(key, defaultValue);
     }
     
-    public String getName() {
-        return name;
+    /**
+     * Get reward as string
+     */
+    public String getRewardAsString(String key, String defaultValue) {
+        Object value = rewards.get(key);
+        return value != null ? value.toString() : defaultValue;
     }
     
-    public String getDescription() {
-        return description;
+    /**
+     * Get reward as integer
+     */
+    public int getRewardAsInt(String key, int defaultValue) {
+        Object value = rewards.get(key);
+        if (value instanceof Number) {
+            return ((Number) value).intValue();
+        }
+        return defaultValue;
     }
     
-    public QuestType getType() {
-        return type;
+    /**
+     * Get reward as double
+     */
+    public double getRewardAsDouble(String key, double defaultValue) {
+        Object value = rewards.get(key);
+        if (value instanceof Number) {
+            return ((Number) value).doubleValue();
+        }
+        return defaultValue;
     }
     
-    public QuestDifficulty getDifficulty() {
-        return difficulty;
+    /**
+     * Get reward as boolean
+     */
+    public boolean getRewardAsBoolean(String key, boolean defaultValue) {
+        Object value = rewards.get(key);
+        if (value instanceof Boolean) {
+            return (Boolean) value;
+        }
+        return defaultValue;
     }
     
-    public int getLevel() {
-        return level;
+    /**
+     * Get objective by type
+     */
+    public QuestObjective getObjectiveByType(QuestObjective.ObjectiveType type) {
+        return objectives.stream()
+            .filter(obj -> obj.getType() == type)
+            .findFirst()
+            .orElse(null);
     }
     
-    public List<QuestObjective> getObjectives() {
-        return objectives;
+    /**
+     * Get objectives by type
+     */
+    public List<QuestObjective> getObjectivesByType(QuestObjective.ObjectiveType type) {
+        return objectives.stream()
+            .filter(obj -> obj.getType() == type)
+            .toList();
     }
     
-    public List<QuestReward> getRewards() {
-        return rewards;
+    /**
+     * Check if quest has objective type
+     */
+    public boolean hasObjectiveType(QuestObjective.ObjectiveType type) {
+        return objectives.stream().anyMatch(obj -> obj.getType() == type);
     }
     
-    public long getTimeLimit() {
-        return timeLimit;
+    /**
+     * Get total objectives count
+     */
+    public int getObjectivesCount() {
+        return objectives.size();
     }
     
-    public boolean isRepeatable() {
-        return repeatable;
-    }
-    
+    /**
+     * Quest type enum
+     */
     public enum QuestType {
-        KILL, COLLECT, CRAFT, EXPLORE, DELIVER, ESCORT, SURVIVE, BUILD
+        MINING,
+        COMBAT,
+        FARMING,
+        FISHING,
+        FORAGING,
+        ENCHANTING,
+        ALCHEMY,
+        TAMING,
+        DUNGEON,
+        SLAYER,
+        CUSTOM
     }
     
-    public enum QuestDifficulty {
-        EASY, MEDIUM, HARD, EXPERT, MASTER
-    }
-    
-    public enum QuestCategory {
-        MAIN, SIDE, DAILY, WEEKLY, EVENT, SPECIAL
+    /**
+     * Quest difficulty enum
+     */
+    public enum Difficulty {
+        EASY,
+        MEDIUM,
+        HARD,
+        EXPERT,
+        MASTER
     }
 }

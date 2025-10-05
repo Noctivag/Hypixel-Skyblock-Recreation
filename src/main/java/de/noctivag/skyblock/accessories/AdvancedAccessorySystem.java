@@ -374,7 +374,7 @@ public class AdvancedAccessorySystem {
      * Get player accessory data
      */
     public PlayerAccessoryData getPlayerAccessoryData(UUID playerId) {
-        return playerAccessoryData.computeIfAbsent(playerId, k -> new PlayerAccessoryData());
+        return playerAccessoryData.computeIfAbsent(playerId, k -> new PlayerAccessoryData(playerId));
     }
     
     /**
@@ -658,7 +658,7 @@ public class AdvancedAccessorySystem {
         stats.put("level", data.getLevel());
         stats.put("experience", data.getExperience());
         stats.put("coins", data.getCoins());
-        stats.put("purchased_accessories", data.getPurchasedAccessories());
+        stats.put("purchased_accessories", data.getPurchasedAccessories().size());
         stats.put("total_experience", data.getTotalExperience());
         
         return stats;
@@ -687,8 +687,8 @@ public class AdvancedAccessorySystem {
      */
     public void loadAccessoryData(UUID playerId) {
         try {
-            CompletableFuture<Object> future = databaseManager.loadPlayerAccessoryData(playerId);
-            PlayerAccessoryData data = (PlayerAccessoryData) future.get();
+            CompletableFuture<PlayerAccessoryData> future = databaseManager.loadPlayerAccessoryData(playerId);
+            PlayerAccessoryData data = future.get();
             if (data != null) {
                 playerAccessoryData.put(playerId, data);
             }
