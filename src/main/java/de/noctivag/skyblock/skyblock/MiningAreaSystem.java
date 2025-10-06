@@ -176,7 +176,7 @@ public class MiningAreaSystem implements Listener {
         giveMiningXP(player, block, area);
         
         // Add to collection
-        SkyblockPlugin.getSkyblockManager().addCollection(player, block.getType(), 1);
+        ((SkyblockManager) SkyblockPlugin.getSkyblockManager()).addCollection(player, block.getType(), 1);
         
         // Give block drops
         giveBlockDrops(player, block, area);
@@ -264,8 +264,8 @@ public class MiningAreaSystem implements Listener {
     }
     
     private int getPlayerMiningLevel(Player player) {
-        return SkyblockPlugin.getSkyblockManager().getSkills(player.getUniqueId())
-            .getLevel(SkyblockManager.SkyblockSkill.MINING);
+        return ((SkyblockManager) SkyblockPlugin.getSkyblockManager()).getSkills(player.getUniqueId())
+            .getLevel("mining");
     }
     
     private void giveMiningXP(Player player, Block block, MiningArea area) {
@@ -273,11 +273,11 @@ public class MiningAreaSystem implements Listener {
         double xp = area.getXPAmount(block.getType());
         
         // Add mining XP
-        SkyblockPlugin.getSkyblockManager().addSkillXP(player, SkyblockManager.SkyblockSkill.MINING, xp);
+        ((SkyblockManager) SkyblockPlugin.getSkyblockManager()).addSkillXP(player, SkyblockManager.SkyblockSkill.MINING, xp);
         
         // Add foraging XP for certain blocks
         if (block.getType().name().contains("LOG") || block.getType().name().contains("LEAVES")) {
-            SkyblockPlugin.getSkyblockManager().addSkillXP(player, SkyblockManager.SkyblockSkill.FORAGING, xp);
+            ((SkyblockManager) SkyblockPlugin.getSkyblockManager()).addSkillXP(player, SkyblockManager.SkyblockSkill.FORAGING, xp);
         }
     }
     
@@ -457,5 +457,29 @@ public class MiningAreaSystem implements Listener {
     public MiningArea getPlayerCurrentArea(UUID playerId) {
         String areaId = playerCurrentArea.get(playerId);
         return areaId != null ? miningAreas.get(areaId) : null;
+    }
+    
+    /**
+     * Add collection to player
+     */
+    public void addCollection(UUID playerId, String collection, int amount) {
+        // TODO: Implement collection addition
+        SkyblockPlugin.getLogger().info("Adding collection " + collection + " to player " + playerId + ": " + amount);
+    }
+    
+    /**
+     * Get player skills
+     */
+    public SkyblockSkills getSkills(UUID playerId) {
+        // TODO: Implement skills retrieval
+        return new SkyblockSkills(playerId);
+    }
+    
+    /**
+     * Add skill XP to player
+     */
+    public void addSkillXP(UUID playerId, String skill, double xp) {
+        // TODO: Implement skill XP addition
+        SkyblockPlugin.getLogger().info("Adding " + xp + " XP to skill " + skill + " for player " + playerId);
     }
 }

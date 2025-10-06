@@ -2,10 +2,9 @@ package de.noctivag.skyblock.economy;
 import net.kyori.adventure.text.Component;
 
 import de.noctivag.skyblock.SkyblockPlugin;
-import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.inventory.ItemStack;
 
-import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.CorePlatform;
 import de.noctivag.skyblock.core.PlayerProfile;
 import org.bukkit.Material;
@@ -44,7 +43,7 @@ public class EconomySystem {
     public EconomySystem(SkyblockPlugin SkyblockPlugin, CorePlatform corePlatform) {
         this.SkyblockPlugin = SkyblockPlugin;
         this.corePlatform = corePlatform;
-        this.auctionHouse = new AuctionHouse(this, SkyblockPlugin.getMultiServerDatabaseManager());
+        this.auctionHouse = new AuctionHouse(this, (MultiServerDatabaseManager) SkyblockPlugin.getDatabaseManager());
         this.bazaarSystem = new BazaarSystem(this);
         this.npcShopSystem = new NPCShopSystem(this);
         this.tradingSystem = new TradingSystem(this);

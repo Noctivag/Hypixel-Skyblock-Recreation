@@ -497,6 +497,40 @@ public class BazaarSystem {
         return sellOrders.getOrDefault(itemId, new ArrayList<>());
     }
     
+    /**
+     * Get bazaar item by ID
+     */
+    public BazaarItem getBazaarItemById(String itemId) {
+        return bazaarItems.get(itemId);
+    }
+    
+    /**
+     * Get bazaar items by category
+     */
+    public List<BazaarItem> getBazaarItemsByCategory(String category) {
+        return bazaarItems.values().stream()
+            .filter(item -> item.getCategory().equals(category))
+            .collect(java.util.stream.Collectors.toList());
+    }
+    
+    /**
+     * Get bazaar items by price range
+     */
+    public List<BazaarItem> getBazaarItemsByPriceRange(double minPrice, double maxPrice) {
+        return bazaarItems.values().stream()
+            .filter(item -> item.getBuyPrice() >= minPrice && item.getBuyPrice() <= maxPrice)
+            .collect(java.util.stream.Collectors.toList());
+    }
+    
+    /**
+     * Get bazaar items by volume
+     */
+    public List<BazaarItem> getBazaarItemsByVolume(long minVolume, long maxVolume) {
+        return bazaarItems.values().stream()
+            .filter(item -> item.getVolume() >= minVolume && item.getVolume() <= maxVolume)
+            .collect(java.util.stream.Collectors.toList());
+    }
+    
     public void instantBuy(Player player, String itemId, int amount) {
         BazaarItem bazaarItem = bazaarItems.get(itemId);
         if (bazaarItem == null) {
@@ -674,6 +708,7 @@ public class BazaarSystem {
         private final List<Integer> volumeHistory = new ArrayList<>();
         private int totalVolume = 0;
         private double totalValue = 0.0;
+        private String category = "GENERAL";
         
         public BazaarItem(String itemId, double instantBuyPrice, double instantSellPrice, double averagePrice) {
             this.itemId = itemId;
@@ -713,6 +748,9 @@ public class BazaarSystem {
         public double getInstantBuyPrice() { return instantBuyPrice; }
         public double getInstantSellPrice() { return instantSellPrice; }
         public double getAveragePrice() { return averagePrice; }
+        public String getCategory() { return category; }
+        public double getBuyPrice() { return instantBuyPrice; }
+        public double getVolume() { return totalVolume; }
         public List<Double> getPriceHistory() { return new ArrayList<>(priceHistory); }
         public List<Integer> getVolumeHistory() { return new ArrayList<>(volumeHistory); }
         public int getTotalVolume() { return totalVolume; }

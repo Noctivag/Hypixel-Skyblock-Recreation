@@ -1,6 +1,6 @@
 package de.noctivag.skyblock.commands;
 
-import de.noctivag.skyblock.SkyblockPluginRefactored;
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -15,9 +15,9 @@ import net.kyori.adventure.text.Component;
  */
 public class HubCommand implements CommandExecutor {
     
-    private final SkyblockPluginRefactored plugin;
+    private final SkyblockPlugin plugin;
     
-    public HubCommand(SkyblockPluginRefactored plugin) {
+    public HubCommand(SkyblockPlugin plugin) {
         this.plugin = plugin;
     }
     
@@ -31,19 +31,12 @@ public class HubCommand implements CommandExecutor {
         Player player = (Player) sender;
         
         // Verwende das Rolling-Restart-System um die aktuelle Hub-Instanz zu bekommen
-        if (plugin.getRollingRestartWorldManager() != null) {
-            World hub = plugin.getRollingRestartWorldManager().getLiveWorld("hub");
-            
-            if (hub != null) {
-                player.teleport(hub.getSpawnLocation());
-                player.sendMessage(Component.text("§aDu wurdest zum Hub teleportiert!"));
-                player.sendMessage(Component.text("§7Aktuelle Hub-Instanz: §e" + hub.getName()));
-                return true;
-            } else {
-                player.sendMessage(Component.text("§cDer Hub ist momentan nicht verfügbar!"));
-                return true;
-            }
-        }
+        // Object rollingRestartManager = plugin.getRollingRestartWorldManager(); // This method does not exist
+        // if (rollingRestartManager != null) {
+        //     // TODO: Implement rolling restart world manager
+        //     player.sendMessage(Component.text("§cRolling restart system not yet implemented!"));
+        //     return true;
+        // }
         
         // Fallback: Verwende den Standard-Hub
         World defaultHub = Bukkit.getWorld("hub");

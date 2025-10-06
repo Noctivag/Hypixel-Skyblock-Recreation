@@ -22,54 +22,55 @@ public class CompleteEnchantmentsSystem implements Service {
     private final Map<UUID, PlayerEnchantments> playerEnchantments = new ConcurrentHashMap<>();
     private final Map<EnchantmentCategory, List<CompleteEnchantmentType>> enchantmentsByCategory = new ConcurrentHashMap<>();
     
-    private SystemStatus status = SystemStatus.UNINITIALIZED;
+    private SystemStatus status = SystemStatus.DISABLED;
     
     @Override
-    public CompletableFuture<Void> initialize() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.INITIALIZING;
-            
-            // Initialize all enchantment categories
-            initializeEnchantmentCategories();
-            
-            // Load player data
-            loadAllPlayerEnchantments();
-            
-            status = SystemStatus.ENABLED;
-        });
-    }
-    
-    @Override
-    public CompletableFuture<Void> shutdown() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.SHUTTING_DOWN;
-            
-            // Save all player data
-            saveAllPlayerEnchantments();
-            
-            status = SystemStatus.UNINITIALIZED;
-        });
+    public void initialize() {
+        status = SystemStatus.INITIALIZING;
+        
+        // Initialize all enchantment categories
+        initializeEnchantmentCategories();
+        
+        // Load player data
+        loadAllPlayerEnchantments();
+        
+        status = SystemStatus.RUNNING;
     }
     
     @Override
-    public boolean isInitialized() {
-        return status == SystemStatus.ENABLED;
-    }
-
-    @Override
-    public int getPriority() {
-        return 50;
-    }
-
-    @Override
-    public boolean isRequired() {
-        return false;
+    public void shutdown() {
+        status = SystemStatus.SHUTTING_DOWN;
+        
+        // Save all player data
+        saveAllPlayerEnchantments();
+        
+        status = SystemStatus.DISABLED;
     }
     
     @Override
     public String getName() {
         return "CompleteEnchantmentsSystem";
     }
+    
+    @Override
+    public SystemStatus getStatus() {
+        return status;
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && status == SystemStatus.DISABLED) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
+    }
+
     
     /**
      * Initialize all enchantment categories

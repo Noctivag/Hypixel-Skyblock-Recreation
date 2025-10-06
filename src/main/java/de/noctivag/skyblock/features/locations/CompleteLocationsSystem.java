@@ -41,7 +41,7 @@ public class CompleteLocationsSystem implements System {
     }
 
     @Override
-    public CompletableFuture<Void> initialize() {
+    public void initialize() {
         status = SystemStatus.INITIALIZING;
         SkyblockPlugin.getLogger().info("Initializing Complete Locations System...");
         try {
@@ -55,18 +55,16 @@ public class CompleteLocationsSystem implements System {
             // Register event listeners if any (e.g., for location discovery, teleportation, etc.)
             // SkyblockPlugin.getServer().getPluginManager().registerEvents(new LocationListener(), SkyblockPlugin);
 
-            status = SystemStatus.INITIALIZED;
+            status = SystemStatus.RUNNING;
             SkyblockPlugin.getLogger().info("Complete Locations System initialized successfully.");
-            return CompletableFuture.completedFuture(null);
         } catch (Exception e) {
             SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to initialize Complete Locations System", e);
             status = SystemStatus.ERROR;
-            return CompletableFuture.failedFuture(e);
         }
     }
 
     @Override
-    public CompletableFuture<Void> shutdown() {
+    public void shutdown() {
         status = SystemStatus.SHUTTING_DOWN;
         SkyblockPlugin.getLogger().info("Shutting down Complete Locations System...");
         
@@ -75,38 +73,24 @@ public class CompleteLocationsSystem implements System {
             worldManager.shutdown();
         }
         
-        status = SystemStatus.SHUTDOWN;
+        status = SystemStatus.DISABLED;
         SkyblockPlugin.getLogger().info("Complete Locations System shut down.");
-        return CompletableFuture.completedFuture(null);
     }
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return status == SystemStatus.RUNNING;
     }
 
     @Override
-    public boolean isInitialized() {
-        return status == SystemStatus.INITIALIZED || status == SystemStatus.ENABLED || status == SystemStatus.DISABLED;
+    public void setEnabled(boolean enabled) {
+        if (enabled && status == SystemStatus.DISABLED) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
     }
 
-    @Override
-    public CompletableFuture<Void> enable() {
-        enabled = true;
-        status = SystemStatus.ENABLED;
-        SkyblockPlugin.getLogger().info("Complete Locations System enabled.");
-        return CompletableFuture.completedFuture(null);
-    }
-
-    @Override
-    public CompletableFuture<Void> disable() {
-        enabled = false;
-        status = SystemStatus.DISABLED;
-        SkyblockPlugin.getLogger().info("Complete Locations System disabled.");
-        return CompletableFuture.completedFuture(null);
-    }
-
-    @Override
     public void setStatus(SystemStatus newStatus) {
         this.status = newStatus;
     }

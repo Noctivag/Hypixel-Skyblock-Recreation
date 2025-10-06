@@ -37,60 +37,68 @@ public class LegendaryWeaponsSystem implements Service {
     }
     
     @Override
-    public CompletableFuture<Void> initialize() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.INITIALIZING;
-            
-            // Initialize all weapon components (placeholder - methods not implemented)
-            // statsCalculator.initialize().join();
-            // abilityManager.initialize().join();
-            // upgradeManager.initialize().join();
-            
-            // Initialize legendary weapons
-            initializeLegendaryWeapons();
-            
-            // Load player weapons from database
-            loadPlayerWeapons();
-            
-            status = SystemStatus.ENABLED;
-        });
+    public void initialize() {
+        status = SystemStatus.INITIALIZING;
+        
+        // Initialize all weapon components (placeholder - methods not implemented)
+        // statsCalculator.initialize();
+        // abilityManager.initialize();
+        // upgradeManager.initialize();
+        
+        // Initialize legendary weapons
+        initializeLegendaryWeapons();
+        
+        // Load player weapons from database
+        loadPlayerWeapons();
+        
+        status = SystemStatus.RUNNING;
     }
     
     @Override
-    public CompletableFuture<Void> shutdown() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.SHUTTING_DOWN;
-            
-            // Shutdown all weapon components (placeholder - methods not implemented)
-            // statsCalculator.shutdown().join();
-            // abilityManager.shutdown().join();
-            // upgradeManager.shutdown().join();
-            
-            // Save player weapons to database
-            savePlayerWeapons();
-            
-            status = SystemStatus.UNINITIALIZED;
-        });
-    }
-    
-    @Override
-    public boolean isInitialized() {
-        return status == SystemStatus.ENABLED;
-    }
-    
-    @Override
-    public int getPriority() {
-        return 50;
-    }
-    
-    @Override
-    public boolean isRequired() {
-        return false;
+    public void shutdown() {
+        status = SystemStatus.SHUTTING_DOWN;
+        
+        // Shutdown all weapon components (placeholder - methods not implemented)
+        // statsCalculator.shutdown();
+        // abilityManager.shutdown();
+        // upgradeManager.shutdown();
+        
+        // Save player weapons to database
+        savePlayerWeapons();
+        
+        status = SystemStatus.DISABLED;
     }
     
     @Override
     public String getName() {
         return "LegendaryWeaponsSystem";
+    }
+    
+    @Override
+    public SystemStatus getStatus() {
+        return status;
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && status == SystemStatus.DISABLED) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
+    }
+    
+    public int getPriority() {
+        return 50;
+    }
+    
+    public boolean isRequired() {
+        return false;
     }
     
     /**

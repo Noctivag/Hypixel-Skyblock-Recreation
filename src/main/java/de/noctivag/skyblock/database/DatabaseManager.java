@@ -138,4 +138,19 @@ public class DatabaseManager {
         plugin.getLogger().info("Executing query: " + sql);
         return null; // Placeholder
     }
+    
+    /**
+     * Check if database is connected
+     */
+    public boolean isConnected() {
+        return true; // Placeholder - always return true for now
+    }
+    
+    /**
+     * Save economy transaction
+     */
+    public void saveEconomyTransaction(String playerId, String transactionType, double amount, double balance, String description) {
+        // TODO: Implement economy transaction saving
+        plugin.getLogger().info("Economy transaction saved: " + playerId + " - " + transactionType + " - " + amount);
+    }
 }

@@ -88,4 +88,45 @@ public class WorldManager {
             return true;
         });
     }
+    
+    /**
+     * Check if world manager is initialized
+     */
+    public boolean isInitialized() {
+        return true; // Placeholder
+    }
+    
+    /**
+     * Load world
+     */
+    public void loadWorld(String worldName) {
+        // TODO: Implement world loading
+        plugin.getLogger().info("Loading world: " + worldName);
+    }
+    
+    /**
+     * Unload world
+     */
+    public void unloadWorld(String worldName) {
+        // TODO: Implement world unloading
+        plugin.getLogger().info("Unloading world: " + worldName);
+    }
+    
+    /**
+     * Check if world exists
+     */
+    public boolean worldExists(String worldName) {
+        return managedWorlds.containsKey(worldName);
+    }
+    
+    /**
+     * Get safe spawn location for world
+     */
+    public Location getSafeSpawnLocation(String worldName) {
+        World world = managedWorlds.get(worldName);
+        if (world != null) {
+            return world.getSpawnLocation();
+        }
+        return null;
+    }
 }

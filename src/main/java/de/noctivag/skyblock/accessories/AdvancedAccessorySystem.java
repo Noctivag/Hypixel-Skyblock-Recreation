@@ -421,30 +421,34 @@ public class AdvancedAccessorySystem {
      * Check if player can purchase an accessory
      */
     public boolean canPurchaseAccessory(Player player, String accessoryId) {
-        PlayerAccessoryData data = getPlayerAccessoryData(player.getUniqueId());
-        AccessoryType accessory = getAccessoryType(accessoryId);
-        
-        if (accessory == null) return false;
-        
-        // Check if player has enough coins
-        if (data.getCoins() < accessory.getCost()) {
-            return false;
-        }
-        
-        // Check if player has required level
-        if (data.getLevel() < getRequiredLevel(accessoryId)) {
-            return false;
-        }
-        
-        // Check if player already has this accessory
-        List<AccessoryItem> playerAccessories = this.playerAccessories.getOrDefault(player.getUniqueId(), new ArrayList<>());
-        for (AccessoryItem accessoryItem : playerAccessories) {
-            if (accessoryItem.getAccessoryType().equals(accessoryId)) {
+        try {
+            PlayerAccessoryData data = getPlayerAccessoryData(player.getUniqueId());
+            AccessoryType accessory = getAccessoryType(accessoryId);
+            
+            if (accessory == null) return false;
+                
+            // Check if player has enough coins
+            if (data.getCoins() < accessory.getCost()) {
                 return false;
             }
+            
+            // Check if player has required level
+            if (data.getLevel() < getRequiredLevel(accessoryId)) {
+                return false;
+            }
+            
+            // Check if player already has this accessory
+            List<AccessoryItem> playerAccessories = this.playerAccessories.getOrDefault(player.getUniqueId(), new ArrayList<>());
+            for (AccessoryItem accessoryItem : playerAccessories) {
+                if (accessoryItem.getAccessoryType().equals(accessoryId)) {
+                    return false;
+                }
+            }
+            
+            return true;
+        } catch (Exception e) {
+            return false;
         }
-        
-        return true;
     }
     
     /**
@@ -455,22 +459,26 @@ public class AdvancedAccessorySystem {
             return false;
         }
         
-        AccessoryType accessory = getAccessoryType(accessoryId);
-        PlayerAccessoryData data = getPlayerAccessoryData(player.getUniqueId());
-        
-        // Remove coins
-        data.removeCoins(accessory.getCost());
-        
-        // Create accessory item
-        AccessoryItem accessoryItem = new AccessoryItem(accessoryId, player.getUniqueId(), accessory.getLevel());
-        List<AccessoryItem> playerAccessories = this.playerAccessories.computeIfAbsent(player.getUniqueId(), k -> new ArrayList<>());
-        playerAccessories.add(accessoryItem);
-        
-        // Update statistics
-        data.incrementPurchasedAccessories();
-        data.addExperience(accessory.getCost() / 20);
-        
-        return true;
+        try {
+            AccessoryType accessory = getAccessoryType(accessoryId);
+            PlayerAccessoryData data = getPlayerAccessoryData(player.getUniqueId());
+            
+            // Remove coins
+            data.removeCoins(accessory.getCost());
+            
+            // Create accessory item
+            AccessoryItem accessoryItem = new AccessoryItem(accessoryId, player.getUniqueId(), accessory.getLevel());
+            List<AccessoryItem> playerAccessories = this.playerAccessories.computeIfAbsent(player.getUniqueId(), k -> new ArrayList<>());
+            playerAccessories.add(accessoryItem);
+            
+            // Update statistics
+            data.incrementPurchasedAccessories();
+            data.addExperience(accessory.getCost() / 20);
+            
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
     
     /**
@@ -604,64 +612,92 @@ public class AdvancedAccessorySystem {
      * Get player's accessory level
      */
     public int getAccessoryLevel(UUID playerId) {
-        PlayerAccessoryData data = getPlayerAccessoryData(playerId);
-        return data.getLevel();
+        try {
+            PlayerAccessoryData data = getPlayerAccessoryData(playerId);
+            return data.getLevel();
+        } catch (Exception e) {
+            return 0;
+        }
     }
     
     /**
      * Get player's accessory experience
      */
     public int getAccessoryExperience(UUID playerId) {
-        PlayerAccessoryData data = getPlayerAccessoryData(playerId);
-        return data.getExperience();
+        try {
+            PlayerAccessoryData data = getPlayerAccessoryData(playerId);
+            return data.getExperience();
+        } catch (Exception e) {
+            return 0;
+        }
     }
     
     /**
      * Add accessory experience to player
      */
     public void addAccessoryExperience(UUID playerId, int experience) {
-        PlayerAccessoryData data = getPlayerAccessoryData(playerId);
-        data.addExperience(experience);
+        try {
+            PlayerAccessoryData data = getPlayerAccessoryData(playerId);
+            data.addExperience(experience);
+        } catch (Exception e) {
+            // Ignore
+        }
     }
     
     /**
      * Get player's accessory coins
      */
     public int getAccessoryCoins(UUID playerId) {
-        PlayerAccessoryData data = getPlayerAccessoryData(playerId);
-        return data.getCoins();
+        try {
+            PlayerAccessoryData data = getPlayerAccessoryData(playerId);
+            return data.getCoins();
+        } catch (Exception e) {
+            return 0;
+        }
     }
     
     /**
      * Add accessory coins to player
      */
     public void addAccessoryCoins(UUID playerId, int coins) {
-        PlayerAccessoryData data = getPlayerAccessoryData(playerId);
-        data.addCoins(coins);
+        try {
+            PlayerAccessoryData data = getPlayerAccessoryData(playerId);
+            data.addCoins(coins);
+        } catch (Exception e) {
+            // Ignore
+        }
     }
     
     /**
      * Remove accessory coins from player
      */
     public void removeAccessoryCoins(UUID playerId, int coins) {
-        PlayerAccessoryData data = getPlayerAccessoryData(playerId);
-        data.removeCoins(coins);
+        try {
+            PlayerAccessoryData data = getPlayerAccessoryData(playerId);
+            data.removeCoins(coins);
+        } catch (Exception e) {
+            // Ignore
+        }
     }
     
     /**
      * Get player's accessory statistics
      */
     public Map<String, Integer> getAccessoryStatistics(UUID playerId) {
-        PlayerAccessoryData data = getPlayerAccessoryData(playerId);
-        Map<String, Integer> stats = new HashMap<>();
-        
-        stats.put("level", data.getLevel());
-        stats.put("experience", data.getExperience());
-        stats.put("coins", data.getCoins());
-        stats.put("purchased_accessories", data.getPurchasedAccessories().size());
-        stats.put("total_experience", data.getTotalExperience());
-        
-        return stats;
+        try {
+            PlayerAccessoryData data = getPlayerAccessoryData(playerId);
+            Map<String, Integer> stats = new HashMap<>();
+            
+            stats.put("level", data.getLevel());
+            stats.put("experience", data.getExperience());
+            stats.put("coins", data.getCoins());
+            stats.put("purchased_accessories", data.getPurchasedAccessories().size());
+            stats.put("total_experience", data.getTotalExperience());
+            
+            return stats;
+        } catch (Exception e) {
+            return new HashMap<>();
+        }
     }
     
     /**
@@ -687,8 +723,7 @@ public class AdvancedAccessorySystem {
      */
     public void loadAccessoryData(UUID playerId) {
         try {
-            CompletableFuture<PlayerAccessoryData> future = databaseManager.loadPlayerAccessoryData(playerId);
-            PlayerAccessoryData data = future.get();
+            PlayerAccessoryData data = databaseManager.loadPlayerAccessoryData(playerId);
             if (data != null) {
                 playerAccessoryData.put(playerId, data);
             }

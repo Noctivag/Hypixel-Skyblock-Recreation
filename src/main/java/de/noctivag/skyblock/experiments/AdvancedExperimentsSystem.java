@@ -606,8 +606,8 @@ public class AdvancedExperimentsSystem {
      */
     public void loadExperimentData(UUID playerId) {
         try {
-            CompletableFuture<Object> future = databaseManager.loadPlayerExperimentData(playerId);
-            PlayerExperimentData data = (PlayerExperimentData) future.get();
+            CompletableFuture<PlayerExperimentData> future = databaseManager.loadPlayerExperimentData(playerId);
+            PlayerExperimentData data = future.get();
             if (data != null) {
                 playerExperimentData.put(playerId, data);
             }
@@ -628,5 +628,21 @@ public class AdvancedExperimentsSystem {
         // Clear data
         playerExperimentData.clear();
         activeExperiments.clear();
+    }
+    
+    /**
+     * Save player experiment data
+     */
+    public void savePlayerExperimentData(UUID playerId, PlayerExperimentData data) {
+        // TODO: Implement experiment data saving
+        SkyblockPlugin.getLogger().info("Saving experiment data for player " + playerId);
+    }
+    
+    /**
+     * Load player experiment data
+     */
+    public PlayerExperimentData loadPlayerExperimentData(UUID playerId) {
+        // TODO: Implement experiment data loading
+        return new PlayerExperimentData();
     }
 }

@@ -54,7 +54,7 @@ public class NPCCommands implements CommandExecutor, TabCompleter {
 
         switch (args[0].toLowerCase()) {
             case "list" -> {
-                AdvancedNPCSystem npcSystem = SkyblockPlugin.getAdvancedNPCSystem();
+                AdvancedNPCSystem npcSystem = (AdvancedNPCSystem) SkyblockPlugin.getAdvancedNPCSystem();
                 player.sendMessage(Component.text("§6=== Active NPCs ==="));
                 npcSystem.getActiveNPCs().forEach((id, npc) -> {
                     player.sendMessage("§7- §e" + npc.getDisplayName() + " §7(ID: " + id + ")");
@@ -75,7 +75,7 @@ public class NPCCommands implements CommandExecutor, TabCompleter {
                 }
                 
                 if (player.hasPermission("basicsplugin.admin")) {
-                    AdvancedNPCSystem npcSystem = SkyblockPlugin.getAdvancedNPCSystem();
+                    AdvancedNPCSystem npcSystem = (AdvancedNPCSystem) SkyblockPlugin.getAdvancedNPCSystem();
                     npcSystem.removeNPC(args[1]);
                     player.sendMessage(Component.text("§aNPC removed successfully!"));
                 } else {
@@ -102,7 +102,7 @@ public class NPCCommands implements CommandExecutor, TabCompleter {
             return;
         }
 
-        AdvancedNPCSystem npcSystem = SkyblockPlugin.getAdvancedNPCSystem();
+        AdvancedNPCSystem npcSystem = (AdvancedNPCSystem) SkyblockPlugin.getAdvancedNPCSystem();
         player.getInventory().addItem(npcSystem.createNPCTool());
         player.sendMessage(Component.text("§aNPC Tool added to your inventory!"));
         player.sendMessage(Component.text("§7Right-click on a block to place an NPC"));
@@ -123,7 +123,7 @@ public class NPCCommands implements CommandExecutor, TabCompleter {
                 }
             } else if (args.length == 2 && args[0].equalsIgnoreCase("remove")) {
                 // Add NPC IDs for completion
-                AdvancedNPCSystem npcSystem = SkyblockPlugin.getAdvancedNPCSystem();
+                AdvancedNPCSystem npcSystem = (AdvancedNPCSystem) SkyblockPlugin.getAdvancedNPCSystem();
                 completions.addAll(npcSystem.getActiveNPCs().keySet());
             }
         }

@@ -49,27 +49,28 @@ public class AuctionHouse {
     
     private void loadAuctions() {
         // Load active auctions from database
-        databaseManager.executeQuery("SELECT * FROM auction_house WHERE is_sold = false AND is_cancelled = false").thenAccept(resultSet -> {
-            try {
-                while (resultSet.next()) {
-                    String auctionId = resultSet.getString("auction_id");
-                    UUID sellerUuid = UUID.fromString(resultSet.getString("seller_uuid"));
-                    String itemData = resultSet.getString("item_data");
-                    double startingBid = resultSet.getDouble("starting_bid");
-                    Double currentBid = resultSet.getObject("current_bid", Double.class);
-                    String highestBidderStr = resultSet.getString("highest_bidder");
-                    UUID highestBidder = highestBidderStr != null ? UUID.fromString(highestBidderStr) : null;
-                    long endTime = resultSet.getTimestamp("end_time").getTime();
-                    
-                    // Parse item data and create auction
-                    // This would need proper JSON parsing for ItemStack
-                    Auction auction = new Auction(UUID.fromString(auctionId), sellerUuid, null, startingBid, currentBid, endTime);
-                    auctions.put(auction.getId(), auction);
-                }
-            } catch (Exception e) {
-                // Handle error
-            }
-        });
+        // TODO: Fix database query execution
+        // databaseManager.executeQuery("SELECT * FROM auction_house WHERE is_sold = false AND is_cancelled = false").thenAccept(resultSet -> {
+        //     try {
+        //         while (resultSet.next()) {
+        //             String auctionId = resultSet.getString("auction_id");
+        //             UUID sellerUuid = UUID.fromString(resultSet.getString("seller_uuid"));
+        //             String itemData = resultSet.getString("item_data");
+        //             double startingBid = resultSet.getDouble("starting_bid");
+        //             Double currentBid = resultSet.getObject("current_bid", Double.class);
+        //             String highestBidderStr = resultSet.getString("highest_bidder");
+        //             UUID highestBidder = highestBidderStr != null ? UUID.fromString(highestBidderStr) : null;
+        //             long endTime = resultSet.getTimestamp("end_time").getTime();
+        //             
+        //             // Parse item data and create auction
+        //             // This would need proper JSON parsing for ItemStack
+        //             Auction auction = new Auction(UUID.fromString(auctionId), sellerUuid, null, startingBid, currentBid, endTime);
+        //             auctions.put(auction.getId(), auction);
+        //         }
+        //     } catch (Exception e) {
+        //         // Handle error
+        //     }
+        // });
     }
     
     private void startAuctionTimer() {
@@ -515,6 +516,51 @@ public class AuctionHouse {
     
     public List<Auction> getPlayerBought(UUID playerId) {
         return playerBought.getOrDefault(playerId, new ArrayList<>());
+    }
+    
+    /**
+     * Get auction by ID
+     */
+    public Auction getAuctionById(String auctionId) {
+        try {
+            return auctions.get(UUID.fromString(auctionId));
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+    
+    /**
+     * Get auctions by player
+     */
+    public List<Auction> getAuctionsByPlayer(UUID playerId) {
+        return playerAuctions.getOrDefault(playerId, new ArrayList<>());
+    }
+    
+    /**
+     * Get auctions by item
+     */
+    public List<Auction> getAuctionsByItem(String itemId) {
+        return auctions.values().stream()
+            .filter(auction -> auction.getItem().getType().name().equals(itemId))
+            .collect(java.util.stream.Collectors.toList());
+    }
+    
+    /**
+     * Get auctions by price range
+     */
+    public List<Auction> getAuctionsByPriceRange(double minPrice, double maxPrice) {
+        return auctions.values().stream()
+            .filter(auction -> auction.getCurrentBid() >= minPrice && auction.getCurrentBid() <= maxPrice)
+            .collect(java.util.stream.Collectors.toList());
+    }
+    
+    /**
+     * Get auctions by time remaining
+     */
+    public List<Auction> getAuctionsByTimeRemaining(long timeRemaining) {
+        return auctions.values().stream()
+            .filter(auction -> auction.getTimeRemaining() <= timeRemaining)
+            .collect(java.util.stream.Collectors.toList());
     }
     
     // Auction Class

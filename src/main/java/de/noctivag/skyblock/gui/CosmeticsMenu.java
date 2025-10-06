@@ -1,59 +1,41 @@
 package de.noctivag.skyblock.gui;
 
 import de.noctivag.skyblock.SkyblockPlugin;
-import org.bukkit.Material;
+import org.bukkit.Bukkit;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.Arrays;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 
 /**
- * Cosmetics Menu GUI
+ * Cosmetics Menu - Placeholder implementation
  */
-public class CosmeticsMenu extends CustomGUI {
+public class CosmeticsMenu implements InventoryHolder {
     
-    public CosmeticsMenu() {
-        super("§dCosmetics Menu", 54);
-        setupItems();
-    }
+    private final Inventory inventory;
     
     public CosmeticsMenu(SkyblockPlugin plugin, Object cosmeticsManager) {
-        super("§dCosmetics Menu", 54);
-        setupItems();
+        this.inventory = Bukkit.createInventory(this, 54, "§d§lCosmetics");
+        // TODO: Initialize cosmetics menu items
     }
     
     @Override
-    public void setupItems() {
-        // Add cosmetics items
-        ItemStack pets = new ItemStack(Material.BONE);
-        ItemMeta petsMeta = pets.getItemMeta();
-        petsMeta.setDisplayName("§dPets");
-        petsMeta.setLore(Arrays.asList("§7Manage your pets", "§7Click to open!"));
-        pets.setItemMeta(petsMeta);
-        inventory.setItem(10, pets);
-        
-        ItemStack accessories = new ItemStack(Material.DIAMOND);
-        ItemMeta accessoriesMeta = accessories.getItemMeta();
-        accessoriesMeta.setDisplayName("§dAccessories");
-        accessoriesMeta.setLore(Arrays.asList("§7Manage your accessories", "§7Click to open!"));
-        accessories.setItemMeta(accessoriesMeta);
-        inventory.setItem(12, accessories);
-        
-        // Close button
-        ItemStack close = new ItemStack(Material.BARRIER);
-        ItemMeta closeMeta = close.getItemMeta();
-        closeMeta.setDisplayName("§cClose");
-        close.setItemMeta(closeMeta);
-        inventory.setItem(49, close);
+    public Inventory getInventory() {
+        return inventory;
     }
     
-    /**
-     * Open the cosmetics menu for a player
-     */
-    public static void openForPlayer(Player player) {
-        CosmeticsMenu menu = new CosmeticsMenu();
-        menu.open(player);
+    public void open(Player player) {
+        player.openInventory(inventory);
+    }
+    
+    public Particle getParticleAtSlot(int slot) {
+        // TODO: Implement particle slot mapping
+        return null;
+    }
+    
+    public Sound getSoundAtSlot(int slot) {
+        // TODO: Implement sound slot mapping
+        return null;
     }
 }
-

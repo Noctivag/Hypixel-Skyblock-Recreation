@@ -34,7 +34,7 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         instance = this;
-        getLogger().info("Enabling Skyblock Plugin v" + getDescription().getVersion());
+        getLogger().info("Enabling Skyblock Plugin v" + getPluginMeta().getVersion());
 
         try {
             // 1. Folia detection
@@ -208,7 +208,7 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
             }
 
             Player player = (Player) sender;
-            player.sendMessage("§aSkyblock Plugin v" + getDescription().getVersion());
+            player.sendMessage("§aSkyblock Plugin v" + getPluginMeta().getVersion());
             player.sendMessage("§7Folia Support: " + (isFoliaServer ? "§aEnabled" : "§cDisabled"));
             return true;
         }
@@ -514,6 +514,13 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
      * Get async config manager (placeholder)
      */
     public Object getAsyncConfigManager() {
+        return null; // Placeholder
+    }
+
+    /**
+     * Get core platform (placeholder)
+     */
+    public Object getCorePlatform() {
         return null; // Placeholder
     }
 

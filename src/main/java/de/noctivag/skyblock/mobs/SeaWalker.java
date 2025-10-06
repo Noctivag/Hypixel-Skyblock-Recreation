@@ -41,5 +41,13 @@ public class SeaWalker extends CustomMob {
             // Squid-specific attributes can be set here
         }
     }
+    
+    /**
+     * Spawn sea walker at location
+     */
+    public void spawn(Location location) {
+        // TODO: Implement sea walker spawning
+        plugin.getLogger().info("Spawning Sea Walker at " + location);
+    }
 }
 

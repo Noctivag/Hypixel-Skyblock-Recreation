@@ -29,52 +29,53 @@ public class CatacombsDungeon implements Service {
     }
     
     @Override
-    public CompletableFuture<Void> initialize() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.INITIALIZING;
-            
-            // Initialize floor configurations
-            for (int floor = 1; floor <= 7; floor++) {
-                floors.put(floor, new FloorConfig(floor));
-            }
-            
-            // Load player progress from database
-            loadPlayerProgress();
-            
-            status = SystemStatus.ENABLED;
-        });
+    public void initialize() {
+        status = SystemStatus.INITIALIZING;
+        
+        // Initialize floor configurations
+        for (int floor = 1; floor <= 7; floor++) {
+            floors.put(floor, new FloorConfig(floor));
+        }
+        
+        // Load player progress from database
+        loadPlayerProgress();
+        
+        status = SystemStatus.RUNNING;
     }
     
     @Override
-    public CompletableFuture<Void> shutdown() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.SHUTTING_DOWN;
-            
-            // Save all active instances
-            saveActiveInstances();
-            
-            status = SystemStatus.UNINITIALIZED;
-        });
+    public void shutdown() {
+        status = SystemStatus.SHUTTING_DOWN;
+        
+        // Save all active instances
+        saveActiveInstances();
+        
+        status = SystemStatus.DISABLED;
     }
     
-    @Override
-    public boolean isInitialized() {
-        return status == SystemStatus.ENABLED;
-    }
 
-    @Override
-    public int getPriority() {
-        return 50;
-    }
-
-    @Override
-    public boolean isRequired() {
-        return false;
-    }
-    
     @Override
     public String getName() {
         return "CatacombsDungeon";
+    }
+    
+    @Override
+    public SystemStatus getStatus() {
+        return status;
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && status == SystemStatus.DISABLED) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
     }
     
     /**

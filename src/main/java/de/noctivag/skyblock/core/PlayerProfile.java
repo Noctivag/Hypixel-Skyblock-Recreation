@@ -68,4 +68,18 @@ public class PlayerProfile {
         }
         return false;
     }
+    
+    /**
+     * Check if player has enough balance
+     */
+    public boolean hasBalance(double amount) {
+        return coins >= amount;
+    }
+    
+    /**
+     * Remove coins from the player
+     */
+    public void removeCoins(double amount) {
+        this.coins = Math.max(0, this.coins - amount);
+    }
 }

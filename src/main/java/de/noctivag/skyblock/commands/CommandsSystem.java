@@ -90,7 +90,7 @@ public class CommandsSystem implements Listener {
         ItemMeta meta = item.getItemMeta();
         if (meta == null || !meta.hasDisplayName()) return;
         
-        String displayName = meta.getDisplayName();
+        String displayName = meta.displayName() != null ? meta.displayName().toString() : "";
         
         if (displayName.contains("Commands")) {
             openCommandsGUI(player);

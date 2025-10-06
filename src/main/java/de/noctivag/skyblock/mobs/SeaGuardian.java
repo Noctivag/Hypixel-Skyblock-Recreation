@@ -38,5 +38,13 @@ public class SeaGuardian extends CustomMob {
             // Guardian-specific attributes
         }
     }
+    
+    /**
+     * Spawn sea guardian at location
+     */
+    public void spawn(Location location) {
+        // TODO: Implement sea guardian spawning
+        plugin.getLogger().info("Spawning Sea Guardian at " + location);
+    }
 }
 

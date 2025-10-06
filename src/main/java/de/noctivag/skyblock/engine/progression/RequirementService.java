@@ -42,36 +42,46 @@ public class RequirementService implements Service {
     }
     
     @Override
-    public CompletableFuture<Void> initialize() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.INITIALIZING;
-            
-            // Initialize content requirements
-            initializeContentRequirements();
-            
-            // Initialize quest requirements
-            initializeQuestRequirements();
-            
-            status = SystemStatus.ENABLED;
-        });
+    public void initialize() {
+        status = SystemStatus.INITIALIZING;
+        
+        // Initialize content requirements
+        initializeContentRequirements();
+        
+        // Initialize quest requirements
+        initializeQuestRequirements();
+        
+        status = SystemStatus.RUNNING;
     }
     
     @Override
-    public CompletableFuture<Void> shutdown() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.SHUTTING_DOWN;
-            
-            // Clear requirements
-            contentRequirements.clear();
-            questRequirements.clear();
-            
-            status = SystemStatus.UNINITIALIZED;
-        });
+    public void shutdown() {
+        status = SystemStatus.SHUTTING_DOWN;
+        
+        // Clear requirements
+        contentRequirements.clear();
+        questRequirements.clear();
+        
+        status = SystemStatus.DISABLED;
     }
     
     @Override
-    public boolean isInitialized() {
-        return status == SystemStatus.ENABLED;
+    public SystemStatus getStatus() {
+        return status;
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && status == SystemStatus.DISABLED) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
     }
     
     @Override

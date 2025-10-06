@@ -38,5 +38,13 @@ public class NightSquid extends CustomMob {
             // Night Squid-specific attributes
         }
     }
+    
+    /**
+     * Spawn night squid at location
+     */
+    public void spawn(Location location) {
+        // TODO: Implement night squid spawning
+        plugin.getLogger().info("Spawning Night Squid at " + location);
+    }
 }
 

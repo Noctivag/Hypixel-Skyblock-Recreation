@@ -18,7 +18,7 @@ public class DungeonLootManager implements Service {
     private final Map<String, DungeonItem> dungeonItems = new ConcurrentHashMap<>();
     private final Random random = new Random();
     
-    private SystemStatus status = SystemStatus.UNINITIALIZED;
+    private SystemStatus status = SystemStatus.DISABLED;
     
     public DungeonLootManager() {
         initializeLootTables();
@@ -26,42 +26,42 @@ public class DungeonLootManager implements Service {
     }
     
     @Override
-    public CompletableFuture<Void> initialize() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.INITIALIZING;
-            
-            // Load loot tables from database
-            loadLootTables();
-            
-            status = SystemStatus.ENABLED;
-        });
+    public void initialize() {
+        status = SystemStatus.INITIALIZING;
+        
+        // Load loot tables from database
+        loadLootTables();
+        
+        status = SystemStatus.RUNNING;
     }
     
     @Override
-    public CompletableFuture<Void> shutdown() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.SHUTTING_DOWN;
-            
-            // Save loot tables to database
-            saveLootTables();
-            
-            status = SystemStatus.UNINITIALIZED;
-        });
+    public void shutdown() {
+        status = SystemStatus.SHUTTING_DOWN;
+        
+        // Save loot tables to database
+        saveLootTables();
+        
+        status = SystemStatus.DISABLED;
     }
     
     @Override
-    public boolean isInitialized() {
-        return status == SystemStatus.ENABLED;
+    public SystemStatus getStatus() {
+        return status;
     }
-
+    
     @Override
-    public int getPriority() {
-        return 50;
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
     }
-
+    
     @Override
-    public boolean isRequired() {
-        return false;
+    public void setEnabled(boolean enabled) {
+        if (enabled && status == SystemStatus.DISABLED) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
     }
     
     @Override

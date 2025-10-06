@@ -164,25 +164,15 @@ public class WorldCommands implements CommandExecutor, TabCompleter {
     private void loadWorld(CommandSender sender, String worldName) {
         sender.sendMessage(Component.text("§aLade Welt '" + worldName + "'..."));
         
-        worldManager.loadWorld(worldName).thenAccept(world -> {
-            if (world != null) {
-                sender.sendMessage(Component.text("§aWelt '" + worldName + "' erfolgreich geladen!"));
-            } else {
-                sender.sendMessage(Component.text("§cFehler beim Laden der Welt '" + worldName + "'!"));
-            }
-        });
+        worldManager.loadWorld(worldName);
+        sender.sendMessage(Component.text("§aWelt '" + worldName + "' wird geladen..."));
     }
     
     private void unloadWorld(CommandSender sender, String worldName) {
         sender.sendMessage(Component.text("§aEntlade Welt '" + worldName + "'..."));
         
-        worldManager.unloadWorld(worldName).thenAccept(success -> {
-            if (success) {
-                sender.sendMessage(Component.text("§aWelt '" + worldName + "' erfolgreich entladen!"));
-            } else {
-                sender.sendMessage(Component.text("§cFehler beim Entladen der Welt '" + worldName + "'!"));
-            }
-        });
+        worldManager.unloadWorld(worldName);
+        sender.sendMessage(Component.text("§aWelt '" + worldName + "' wird entladen..."));
     }
     
     private void teleportToWorld(Player player, String worldName) {

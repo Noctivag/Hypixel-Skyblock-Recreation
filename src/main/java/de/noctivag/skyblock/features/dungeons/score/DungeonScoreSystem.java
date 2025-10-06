@@ -20,50 +20,50 @@ public class DungeonScoreSystem implements Service {
     private final Map<Integer, DungeonLeaderboard> floorLeaderboards = new ConcurrentHashMap<>();
     private final Map<UUID, PlayerDungeonStats> playerStats = new ConcurrentHashMap<>();
     
-    private SystemStatus status = SystemStatus.UNINITIALIZED;
+    private SystemStatus status = SystemStatus.DISABLED;
     
     @Override
-    public CompletableFuture<Void> initialize() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.INITIALIZING;
-            
-            // Initialize leaderboards for all floors
-            for (int floor = 1; floor <= 7; floor++) {
-                floorLeaderboards.put(floor, new DungeonLeaderboard(floor));
-            }
-            
-            // Load player stats from database
-            loadPlayerStats();
-            
-            status = SystemStatus.ENABLED;
-        });
-    }
-    
-    @Override
-    public CompletableFuture<Void> shutdown() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.SHUTTING_DOWN;
-            
-            // Save player stats to database
-            savePlayerStats();
-            
-            status = SystemStatus.UNINITIALIZED;
-        });
+    public void initialize() {
+        status = SystemStatus.INITIALIZING;
+        
+        // Initialize leaderboards for all floors
+        for (int floor = 1; floor <= 7; floor++) {
+            floorLeaderboards.put(floor, new DungeonLeaderboard(floor));
+        }
+        
+        // Load player stats from database
+        loadPlayerStats();
+        
+        status = SystemStatus.RUNNING;
     }
     
     @Override
-    public boolean isInitialized() {
-        return status == SystemStatus.ENABLED;
+    public void shutdown() {
+        status = SystemStatus.SHUTTING_DOWN;
+        
+        // Save player stats to database
+        savePlayerStats();
+        
+        status = SystemStatus.DISABLED;
     }
-
+    
     @Override
-    public int getPriority() {
-        return 50;
+    public SystemStatus getStatus() {
+        return status;
     }
-
+    
     @Override
-    public boolean isRequired() {
-        return false;
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && status == SystemStatus.DISABLED) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
     }
     
     @Override

@@ -17,14 +17,16 @@ import java.util.List;
 public class AdvancedDungeonGUI extends CustomGUI {
     
     private final DungeonManager dungeonManager;
+    private final Player player;
     
     public AdvancedDungeonGUI(Player player, DungeonManager dungeonManager) {
-        super(player, "§cAdvanced Dungeon Menu", 54);
+        super("§cAdvanced Dungeon Menu", 54);
+        this.player = player;
         this.dungeonManager = dungeonManager;
     }
     
     @Override
-    protected void setupItems() {
+    public void setupItems() {
         // Check if player is in a dungeon
         DungeonInstance playerInstance = dungeonManager.getPlayerDungeonInstance(player);
         

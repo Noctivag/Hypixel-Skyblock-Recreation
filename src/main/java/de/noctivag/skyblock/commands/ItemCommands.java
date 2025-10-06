@@ -103,11 +103,7 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
             case "slayerweapons":
                 player.sendMessage(Component.text("§7Opening Slayer Weapons GUI..."));
                 // Implement slayer weapons GUI
-                if (SkyblockPlugin.getSlayerSystem() != null) {
-                    SkyblockPlugin.getSlayerSystem().openSlayerWeaponsGUI(player);
-                } else {
-                    player.sendMessage(Component.text("§cSlayer-System ist nicht verfügbar!"));
-                }
+                openSlayerWeaponsGUI(player);
                 break;
             case "mining":
             case "miningtools":
@@ -137,21 +133,13 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
             case "crossbows":
                 player.sendMessage(Component.text("§7Opening Bows & Crossbows GUI..."));
                 // Implement bows GUI
-                if (SkyblockPlugin.getCombatSystem() != null) {
-                    SkyblockPlugin.getCombatSystem().openBowsGUI(player);
-                } else {
-                    player.sendMessage(Component.text("§cCombat-System ist nicht verfügbar!"));
-                }
+                openBowsGUI(player);
                 break;
             case "special":
             case "specialitems":
                 player.sendMessage(Component.text("§7Opening Special Items GUI..."));
                 // Implement special items GUI
-                if (SkyblockPlugin.getItemsSystem() != null) {
-                    SkyblockPlugin.getItemsSystem().openSpecialItemsGUI(player);
-                } else {
-                    player.sendMessage(Component.text("§cItems-System ist nicht verfügbar!"));
-                }
+                openSpecialItemsGUI(player);
                 break;
             default:
                 player.sendMessage(Component.text("§cUnknown category! Available categories:"));
@@ -531,5 +519,29 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
         }
         
         return completions;
+    }
+    
+    /**
+     * Open slayer weapons GUI
+     */
+    public void openSlayerWeaponsGUI(Player player) {
+        // TODO: Implement slayer weapons GUI
+        player.sendMessage("§cSlayer weapons GUI not yet implemented!");
+    }
+    
+    /**
+     * Open bows GUI
+     */
+    public void openBowsGUI(Player player) {
+        // TODO: Implement bows GUI
+        player.sendMessage("§cBows GUI not yet implemented!");
+    }
+    
+    /**
+     * Open special items GUI
+     */
+    public void openSpecialItemsGUI(Player player) {
+        // TODO: Implement special items GUI
+        player.sendMessage("§cSpecial items GUI not yet implemented!");
     }
 }

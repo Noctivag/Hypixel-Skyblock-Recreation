@@ -28,7 +28,7 @@ public class TemplateCommands implements CommandExecutor, TabCompleter {
     
     public TemplateCommands(SkyblockPlugin SkyblockPlugin) {
         this.SkyblockPlugin = SkyblockPlugin;
-        this.templateSystem = SkyblockPlugin.getHypixelProxySystem().getTemplateSystem();
+        this.templateSystem = new ServerTemplateSystem(SkyblockPlugin);
     }
     
     @Override

@@ -19,7 +19,7 @@ public class EventScheduler {
     
     public EventScheduler(UltimateEventSystem eventSystem) {
         this.eventSystem = eventSystem;
-        this.plugin = eventSystem.plugin;
+        this.plugin = eventSystem.getPlugin();
     }
     
     /**
@@ -118,5 +118,12 @@ public class EventScheduler {
      */
     public String getStatus() {
         return running ? "Running" : "Stopped";
+    }
+    
+    /**
+     * Get plugin instance
+     */
+    public SkyblockPlugin getPlugin() {
+        return plugin;
     }
 }

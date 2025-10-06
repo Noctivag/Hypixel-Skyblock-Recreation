@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Random;
 
@@ -70,30 +69,30 @@ public class SeaCreatureEvent implements Listener {
     }
 
     private void spawnSeaWalker(Player player, Location location) {
-        SeaWalker seaWalker = new SeaWalker(plugin);
-        seaWalker.spawn(location);
+        SeaWalker seaWalker = new SeaWalker("sea_walker_" + System.currentTimeMillis(), location);
+        seaWalker.spawn();
         
         player.sendMessage("§b§lSea Walker §7ist aus dem Wasser aufgestiegen!");
         
-        if (plugin.getSettingsConfig().isDebugMode()) {
+        if (isDebugMode()) {
             plugin.getLogger().info("Sea Walker spawned for player " + player.getName() + " at " + location);
         }
     }
 
     private void spawnNightSquid(Player player, Location location) {
-        NightSquid nightSquid = new NightSquid(plugin);
-        nightSquid.spawn(location);
+        NightSquid nightSquid = new NightSquid("night_squid_" + System.currentTimeMillis(), location);
+        nightSquid.spawn();
         
         player.sendMessage("§5§lNight Squid §7erscheint aus den Tiefen!");
         
-        if (plugin.getSettingsConfig().isDebugMode()) {
+        if (isDebugMode()) {
             plugin.getLogger().info("Night Squid spawned for player " + player.getName() + " at " + location);
         }
     }
 
     private void spawnSeaGuardian(Player player, Location location) {
-        SeaGuardian seaGuardian = new SeaGuardian(plugin);
-        seaGuardian.spawn(location);
+        SeaGuardian seaGuardian = new SeaGuardian("sea_guardian_" + System.currentTimeMillis(), location);
+        seaGuardian.spawn();
         
         player.sendMessage("§b§lSea Guardian §7erhebt sich aus den Tiefen!");
         player.sendMessage("§c§lVORSICHT: §7Dieser Boss ist sehr gefährlich!");
@@ -105,8 +104,15 @@ public class SeaCreatureEvent implements Listener {
             }
         });
         
-        if (plugin.getSettingsConfig().isDebugMode()) {
+        if (isDebugMode()) {
             plugin.getLogger().info("Sea Guardian (mini-boss) spawned for player " + player.getName() + " at " + location);
         }
+    }
+    
+    /**
+     * Check if debug mode is enabled
+     */
+    public boolean isDebugMode() {
+        return false; // Placeholder - always return false for now
     }
 }

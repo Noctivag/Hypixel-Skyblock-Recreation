@@ -574,8 +574,8 @@ public class AdvancedFairySoulsSystem {
      */
     public void loadFairySoulData(UUID playerId) {
         try {
-            CompletableFuture<Object> future = databaseManager.loadPlayerFairySoulData(playerId);
-            PlayerFairySoulData data = (PlayerFairySoulData) future.get();
+            CompletableFuture<PlayerFairySoulData> future = databaseManager.loadPlayerFairySoulData(playerId);
+            PlayerFairySoulData data = future.get();
             if (data != null) {
                 playerFairySoulData.put(playerId, data);
             }
@@ -597,5 +597,21 @@ public class AdvancedFairySoulsSystem {
         playerFairySoulData.clear();
         collectedFairySouls.clear();
         activeFairySoulEffects.clear();
+    }
+    
+    /**
+     * Save player fairy soul data
+     */
+    public void savePlayerFairySoulData(UUID playerId, PlayerFairySoulData data) {
+        // TODO: Implement fairy soul data saving
+        SkyblockPlugin.getLogger().info("Saving fairy soul data for player " + playerId);
+    }
+    
+    /**
+     * Load player fairy soul data
+     */
+    public PlayerFairySoulData loadPlayerFairySoulData(UUID playerId) {
+        // TODO: Implement fairy soul data loading
+        return new PlayerFairySoulData();
     }
 }

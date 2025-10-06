@@ -50,7 +50,7 @@ public class MiningCommand implements CommandExecutor, TabCompleter {
                 }
 
                 String areaId = args[1].toLowerCase();
-                MiningAreaSystem mining = SkyblockPlugin.getMiningAreaSystem();
+                MiningAreaSystem mining = (MiningAreaSystem) SkyblockPlugin.getMiningAreaSystem();
                 if (mining == null) {
                     player.sendMessage(Component.text("§cMining system not available."));
                     return true;
@@ -64,14 +64,14 @@ public class MiningCommand implements CommandExecutor, TabCompleter {
                 }
 
                 // Check if player has required level
-                SkyblockManager sky = SkyblockPlugin.getSkyblockManager();
+                SkyblockManager sky = (SkyblockManager) SkyblockPlugin.getSkyblockManager();
                 if (sky == null) {
                     player.sendMessage(Component.text("§cSkyblock system not available."));
                     return true;
                 }
 
                 var skills = sky.getSkills(player.getUniqueId());
-                int playerLevel = skills.getLevel(SkyblockManager.SkyblockSkill.MINING);
+                int playerLevel = skills.getSkillLevel("mining");
                 int requiredLevel = getRequiredLevelForArea(area);
 
                 if (playerLevel < requiredLevel) {
@@ -86,7 +86,7 @@ public class MiningCommand implements CommandExecutor, TabCompleter {
 
             case "list" -> {
                 player.sendMessage(Component.text("§6§lAvailable Mining Areas:"));
-                MiningAreaSystem mining = SkyblockPlugin.getMiningAreaSystem();
+                MiningAreaSystem mining = (MiningAreaSystem) SkyblockPlugin.getMiningAreaSystem();
                 if (mining == null) {
                     player.sendMessage(Component.text("§cMining system not available."));
                     return true;
@@ -94,7 +94,7 @@ public class MiningCommand implements CommandExecutor, TabCompleter {
 
                 Map<String, MiningAreaSystem.MiningArea> areas = mining.getAllMiningAreas();
 
-                SkyblockManager sky = SkyblockPlugin.getSkyblockManager();
+                SkyblockManager sky = (SkyblockManager) SkyblockPlugin.getSkyblockManager();
                 for (Map.Entry<String, MiningAreaSystem.MiningArea> entry : areas.entrySet()) {
                     MiningAreaSystem.MiningArea area = entry.getValue();
 
@@ -102,7 +102,7 @@ public class MiningCommand implements CommandExecutor, TabCompleter {
                     int requiredLevel = getRequiredLevelForArea(area);
                     if (sky != null) {
                         var skills = sky.getSkills(player.getUniqueId());
-                        playerLevel = skills.getLevel(SkyblockManager.SkyblockSkill.MINING);
+                        playerLevel = skills.getSkillLevel("mining");
                     }
 
                     boolean canAccess = playerLevel >= requiredLevel;
@@ -113,23 +113,23 @@ public class MiningCommand implements CommandExecutor, TabCompleter {
             }
 
             case "stats" -> {
-                SkyblockManager sky = SkyblockPlugin.getSkyblockManager();
+                SkyblockManager sky = (SkyblockManager) SkyblockPlugin.getSkyblockManager();
                 if (sky == null) {
                     player.sendMessage(Component.text("§cSkyblock system not available."));
                     return true;
                 }
 
                 var skills = sky.getSkills(player.getUniqueId());
-                int miningLevel = skills.getLevel(SkyblockManager.SkyblockSkill.MINING);
-                double miningXP = skills.getXP(SkyblockManager.SkyblockSkill.MINING);
-                double xpToNext = skills.getXPToNextLevel(SkyblockManager.SkyblockSkill.MINING);
+                int miningLevel = skills.getSkillLevel("mining");
+                double miningXP = skills.getSkillExperience("mining");
+                double xpToNext = skills.getXPToNextLevel("mining");
 
                 player.sendMessage(Component.text("§6§lYour Mining Stats:"));
                 player.sendMessage("§7Mining Level: §e" + miningLevel);
                 player.sendMessage("§7Mining XP: §e" + miningXP);
                 player.sendMessage("§7XP to Next Level: §e" + xpToNext);
 
-                MiningAreaSystem mining = SkyblockPlugin.getMiningAreaSystem();
+                MiningAreaSystem mining = (MiningAreaSystem) SkyblockPlugin.getMiningAreaSystem();
                 if (mining == null) {
                     player.sendMessage(Component.text("§7Current Area: §cUnknown (mining system unavailable)"));
                     return true;
@@ -210,7 +210,7 @@ public class MiningCommand implements CommandExecutor, TabCompleter {
         if (args.length == 1) {
             return Arrays.asList("gui", "teleport", "tp", "list", "stats", "help");
         } else if (args.length == 2 && (args[0].equalsIgnoreCase("teleport") || args[0].equalsIgnoreCase("tp"))) {
-            MiningAreaSystem mining = SkyblockPlugin.getMiningAreaSystem();
+            MiningAreaSystem mining = (MiningAreaSystem) SkyblockPlugin.getMiningAreaSystem();
             if (mining == null) return new ArrayList<>();
             // return a mutable list of area ids (keys)
             return new ArrayList<>(mining.getAllMiningAreas().keySet());

@@ -52,6 +52,25 @@ public class EnhancedScoreboardSystem implements Service {
         return status;
     }
     
+    @Override
+    public String getName() {
+        return "EnhancedScoreboardSystem";
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && status == SystemStatus.DISABLED) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
+    }
+    
     /**
      * Set a player's scoreboard
      */

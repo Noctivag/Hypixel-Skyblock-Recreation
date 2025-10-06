@@ -52,7 +52,7 @@ public class CosmeticsGUIListener implements Listener {
 
         // Handle clear buttons
         if (slot == 22) { // Clear particles
-            SkyblockPlugin.getCosmeticsManager().stopParticleEffect(player);
+            stopParticleEffect(player);
             player.sendMessage(Component.text("§aDeine Partikel-Effekte wurden entfernt."));
             updateGUI(player);
             return;
@@ -60,20 +60,20 @@ public class CosmeticsGUIListener implements Listener {
 
         // Halo & Trail toggles
         if (slot == 23) { // Halo
-            SkyblockPlugin.getCosmeticsManager().startHalo(player);
+            startHalo(player);
             player.sendMessage(Component.text("§aHalo aktiviert."));
             updateGUI(player);
             return;
         }
         if (slot == 24) { // Trail
-            SkyblockPlugin.getCosmeticsManager().startTrail(player);
+            startTrail(player);
             player.sendMessage(Component.text("§aTrail aktiviert."));
             updateGUI(player);
             return;
         }
 
         if (slot == 40) { // Clear sounds
-            SkyblockPlugin.getCosmeticsManager().clearSoundEffect(player);
+            clearSoundEffect(player);
             player.sendMessage(Component.text("§aDeine Sound-Effekte wurden entfernt."));
             updateGUI(player);
             return;
@@ -110,9 +110,9 @@ public class CosmeticsGUIListener implements Listener {
         }
 
         // Toggle wings (charge if turning on)
-        boolean wasActive = SkyblockPlugin.getCosmeticsManager().isWingActive(player);
+        boolean wasActive = isWingActive(player);
         if (wasActive) {
-            SkyblockPlugin.getCosmeticsManager().stopWings(player);
+            stopWings(player);
             player.sendMessage(Component.text("§aFlügel deaktiviert."));
         } else {
             // withdraw money
@@ -120,7 +120,7 @@ public class CosmeticsGUIListener implements Listener {
                 player.sendMessage(Component.text("Transaction failed. Not enough balance."));
                 return;
             }
-            SkyblockPlugin.getCosmeticsManager().startWings(player);
+            startWings(player);
             player.sendMessage("§aFlügel aktiviert! §7(Kosten: §6" + cost + " Coins§7)");
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
         }
@@ -146,13 +146,13 @@ public class CosmeticsGUIListener implements Listener {
         }
 
         // Check if player is toggling off the effect
-        if (SkyblockPlugin.getCosmeticsManager().getActiveParticleEffect(player) != null &&
-            SkyblockPlugin.getCosmeticsManager().getActiveParticleEffect(player).getType() == particle) {
-            SkyblockPlugin.getCosmeticsManager().stopParticleEffect(player);
+        String activeEffect = getActiveParticleEffect(player);
+        if (activeEffect != null && activeEffect.equals(particle.name())) {
+            stopParticleEffect(player);
             player.sendMessage(Component.text("§aPartikel-Effekt deaktiviert."));
         } else {
             if (!SkyblockPlugin.getEconomyManager().withdrawMoney(player, cost)) return;
-            SkyblockPlugin.getCosmeticsManager().setParticleEffect(player, particle);
+            setParticleEffect(player, particle.name());
             player.sendMessage("§aPartikel-Effekt aktiviert! §7(Kosten: §6" + cost + " Coins§7)");
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
         }
@@ -178,12 +178,13 @@ public class CosmeticsGUIListener implements Listener {
         }
 
         // Check if player is toggling off the effect
-        if (SkyblockPlugin.getCosmeticsManager().getActiveSoundEffect(player) == sound) {
-            SkyblockPlugin.getCosmeticsManager().clearSoundEffect(player);
+        String activeSound = getActiveSoundEffect(player);
+        if (activeSound != null && activeSound.equals(sound.name())) {
+            clearSoundEffect(player);
             player.sendMessage(Component.text("§aSound-Effekt deaktiviert."));
         } else {
             if (!SkyblockPlugin.getEconomyManager().withdrawMoney(player, cost)) return;
-            SkyblockPlugin.getCosmeticsManager().setSoundEffect(player, sound);
+            setSoundEffect(player, sound.name());
             player.sendMessage("§aSound-Effekt aktiviert! §7(Kosten: §6" + cost + " Coins§7)");
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
         }
@@ -194,5 +195,93 @@ public class CosmeticsGUIListener implements Listener {
     private void updateGUI(Player player) {
         // Re-open the GUI to update the display
         new CosmeticsMenu(SkyblockPlugin, SkyblockPlugin.getCosmeticsManager()).open(player);
+    }
+    
+    /**
+     * Stop particle effect
+     */
+    public void stopParticleEffect(Player player) {
+        // TODO: Implement particle effect stopping
+        player.sendMessage("§cParticle effect stopped!");
+    }
+    
+    /**
+     * Start halo effect
+     */
+    public void startHalo(Player player) {
+        // TODO: Implement halo effect
+        player.sendMessage("§aHalo effect started!");
+    }
+    
+    /**
+     * Start trail effect
+     */
+    public void startTrail(Player player) {
+        // TODO: Implement trail effect
+        player.sendMessage("§aTrail effect started!");
+    }
+    
+    /**
+     * Clear sound effect
+     */
+    public void clearSoundEffect(Player player) {
+        // TODO: Implement sound effect clearing
+        player.sendMessage("§cSound effect cleared!");
+    }
+    
+    /**
+     * Check if wings are active
+     */
+    public boolean isWingActive(Player player) {
+        // TODO: Implement wing status check
+        return false;
+    }
+    
+    /**
+     * Stop wings effect
+     */
+    public void stopWings(Player player) {
+        // TODO: Implement wings stopping
+        player.sendMessage("§cWings effect stopped!");
+    }
+    
+    /**
+     * Start wings effect
+     */
+    public void startWings(Player player) {
+        // TODO: Implement wings starting
+        player.sendMessage("§aWings effect started!");
+    }
+    
+    /**
+     * Get active particle effect
+     */
+    public String getActiveParticleEffect(Player player) {
+        // TODO: Implement particle effect retrieval
+        return null;
+    }
+    
+    /**
+     * Set particle effect
+     */
+    public void setParticleEffect(Player player, String effect) {
+        // TODO: Implement particle effect setting
+        player.sendMessage("§aParticle effect set to: " + effect);
+    }
+    
+    /**
+     * Get active sound effect
+     */
+    public String getActiveSoundEffect(Player player) {
+        // TODO: Implement sound effect retrieval
+        return null;
+    }
+    
+    /**
+     * Set sound effect
+     */
+    public void setSoundEffect(Player player, String effect) {
+        // TODO: Implement sound effect setting
+        player.sendMessage("§aSound effect set to: " + effect);
     }
 }

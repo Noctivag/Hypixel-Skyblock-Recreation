@@ -45,35 +45,45 @@ public class EnhancedSkillProgressionSystem implements Service {
     }
     
     @Override
-    public CompletableFuture<Void> initialize() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.INITIALIZING;
-            
-            // Load skill XP configuration
-            loadSkillXPConfiguration();
-            
-            // Initialize skill level data
-            initializeSkillLevelData();
-            
-            status = SystemStatus.ENABLED;
-        });
+    public void initialize() {
+        status = SystemStatus.INITIALIZING;
+        
+        // Load skill XP configuration
+        loadSkillXPConfiguration();
+        
+        // Initialize skill level data
+        initializeSkillLevelData();
+        
+        status = SystemStatus.RUNNING;
     }
     
     @Override
-    public CompletableFuture<Void> shutdown() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.SHUTTING_DOWN;
-            
-            // Save player skill data
-            savePlayerSkillData();
-            
-            status = SystemStatus.UNINITIALIZED;
-        });
+    public void shutdown() {
+        status = SystemStatus.SHUTTING_DOWN;
+        
+        // Save player skill data
+        savePlayerSkillData();
+        
+        status = SystemStatus.DISABLED;
     }
     
     @Override
-    public boolean isInitialized() {
-        return status == SystemStatus.ENABLED;
+    public SystemStatus getStatus() {
+        return status;
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && status == SystemStatus.DISABLED) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
     }
     
     @Override

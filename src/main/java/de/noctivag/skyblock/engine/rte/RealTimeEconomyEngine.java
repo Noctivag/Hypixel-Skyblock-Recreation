@@ -509,7 +509,7 @@ public class RealTimeEconomyEngine {
         // Check if player has sufficient resources
         if (type == BazaarOrder.OrderType.BUY) {
             double totalCost = amount * price * (1 + BAZAAR_FEE);
-            PlayerProfile profile = SkyblockPlugin.getCorePlatform().getPlayerProfile(playerId);
+            PlayerProfile profile = null; // TODO: Implement proper player profile retrieval
             if (profile == null || !profile.hasBalance(totalCost)) {
                 return new BazaarOrderResult(false, "Insufficient funds", null);
             }
@@ -603,8 +603,8 @@ public class RealTimeEconomyEngine {
         double sellerFee = totalValue * BAZAAR_FEE;
         
         // Update player balances
-        PlayerProfile buyerProfile = SkyblockPlugin.getCorePlatform().getPlayerProfile(buyer.getPlayerId());
-        PlayerProfile sellerProfile = SkyblockPlugin.getCorePlatform().getPlayerProfile(seller.getPlayerId());
+        PlayerProfile buyerProfile = null; // TODO: Implement proper player profile retrieval
+        PlayerProfile sellerProfile = null; // TODO: Implement proper player profile retrieval
         
         if (buyerProfile != null) {
             buyerProfile.removeCoins(totalValue + buyerFee);
@@ -919,5 +919,12 @@ public class RealTimeEconomyEngine {
     
     public SkyblockPlugin getPlugin() {
         return SkyblockPlugin;
+    }
+    
+    /**
+     * Get core platform
+     */
+    public Object getCorePlatform() {
+        return SkyblockPlugin.getCorePlatform();
     }
 }

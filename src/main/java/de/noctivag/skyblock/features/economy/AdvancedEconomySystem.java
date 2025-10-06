@@ -25,7 +25,7 @@ public class AdvancedEconomySystem implements Service {
     
     private final Map<UUID, PlayerEconomy> playerEconomies = new ConcurrentHashMap<>();
     
-    private SystemStatus status = SystemStatus.UNINITIALIZED;
+    private SystemStatus status = SystemStatus.DISABLED;
     
     public AdvancedEconomySystem() {
         this.bazaarManager = new BazaarManager();
@@ -34,53 +34,53 @@ public class AdvancedEconomySystem implements Service {
     }
     
     @Override
-    public CompletableFuture<Void> initialize() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.INITIALIZING;
-            
-            // Initialize all economy managers
-            bazaarManager.initialize().join();
-            auctionHouseManager.initialize().join();
-            // TODO: Implement proper BankingManager interface
-            // bankingManager.initialize().join();
-            
-            // Load player economies from database
-            loadPlayerEconomies();
-            
-            status = SystemStatus.ENABLED;
-        });
+    public void initialize() {
+        status = SystemStatus.INITIALIZING;
+        
+        // Initialize all economy managers
+        bazaarManager.initialize();
+        auctionHouseManager.initialize();
+        // TODO: Implement proper BankingManager interface
+        // bankingManager.initialize();
+        
+        // Load player economies from database
+        loadPlayerEconomies();
+        
+        status = SystemStatus.RUNNING;
     }
     
     @Override
-    public CompletableFuture<Void> shutdown() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.SHUTTING_DOWN;
-            
-            bazaarManager.shutdown().join();
-            auctionHouseManager.shutdown().join();
-            // TODO: Implement proper BankingManager interface
-            // bankingManager.shutdown().join();
-            
-            // Save player economies to database
-            savePlayerEconomies();
-            
-            status = SystemStatus.UNINITIALIZED;
-        });
+    public void shutdown() {
+        status = SystemStatus.SHUTTING_DOWN;
+        
+        bazaarManager.shutdown();
+        auctionHouseManager.shutdown();
+        // TODO: Implement proper BankingManager interface
+        // bankingManager.shutdown();
+        
+        // Save player economies to database
+        savePlayerEconomies();
+        
+        status = SystemStatus.DISABLED;
     }
     
     @Override
-    public boolean isInitialized() {
-        return status == SystemStatus.ENABLED;
+    public SystemStatus getStatus() {
+        return status;
     }
     
     @Override
-    public int getPriority() {
-        return 50;
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
     }
     
     @Override
-    public boolean isRequired() {
-        return false;
+    public void setEnabled(boolean enabled) {
+        if (enabled && status == SystemStatus.DISABLED) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
     }
     
     @Override

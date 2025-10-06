@@ -26,49 +26,50 @@ public class DungeonClassManager implements Service {
     }
     
     @Override
-    public CompletableFuture<Void> initialize() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.INITIALIZING;
-            
-            // Initialize all dungeon classes
-            for (DungeonClassType classType : DungeonClassType.values()) {
-                classes.put(classType, new DungeonClass(classType));
-            }
-            
-            status = SystemStatus.ENABLED;
-        });
+    public void initialize() {
+        status = SystemStatus.INITIALIZING;
+        
+        // Initialize all dungeon classes
+        for (DungeonClassType classType : DungeonClassType.values()) {
+            classes.put(classType, new DungeonClass(classType));
+        }
+        
+        status = SystemStatus.RUNNING;
     }
     
     @Override
-    public CompletableFuture<Void> shutdown() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.SHUTTING_DOWN;
-            
-            // Save player progress
-            savePlayerProgress();
-            
-            status = SystemStatus.UNINITIALIZED;
-        });
+    public void shutdown() {
+        status = SystemStatus.SHUTTING_DOWN;
+        
+        // Save player progress
+        savePlayerProgress();
+        
+        status = SystemStatus.DISABLED;
     }
     
-    @Override
-    public boolean isInitialized() {
-        return status == SystemStatus.ENABLED;
-    }
 
-    @Override
-    public int getPriority() {
-        return 50;
-    }
-
-    @Override
-    public boolean isRequired() {
-        return false;
-    }
-    
     @Override
     public String getName() {
         return "DungeonClassManager";
+    }
+    
+    @Override
+    public SystemStatus getStatus() {
+        return status;
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && status == SystemStatus.DISABLED) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
     }
     
     /**

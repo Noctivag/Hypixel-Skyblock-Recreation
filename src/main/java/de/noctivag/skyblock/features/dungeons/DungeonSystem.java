@@ -36,52 +36,53 @@ public class DungeonSystem implements Service {
     }
     
     @Override
-    public CompletableFuture<Void> initialize() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.INITIALIZING;
-            
-            // Initialize all dungeon components
-            catacombsDungeon.initialize().join();
-            classManager.initialize().join();
-            lootManager.initialize().join();
-            scoreSystem.initialize().join();
-            
-            status = SystemStatus.ENABLED;
-        });
+    public void initialize() {
+        status = SystemStatus.INITIALIZING;
+        
+        // Initialize all dungeon components
+        catacombsDungeon.initialize();
+        classManager.initialize();
+        lootManager.initialize();
+        scoreSystem.initialize();
+        
+        status = SystemStatus.RUNNING;
     }
     
     @Override
-    public CompletableFuture<Void> shutdown() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.SHUTTING_DOWN;
-            
-            catacombsDungeon.shutdown().join();
-            classManager.shutdown().join();
-            lootManager.shutdown().join();
-            scoreSystem.shutdown().join();
-            
-            status = SystemStatus.UNINITIALIZED;
-        });
+    public void shutdown() {
+        status = SystemStatus.SHUTTING_DOWN;
+        
+        catacombsDungeon.shutdown();
+        classManager.shutdown();
+        lootManager.shutdown();
+        scoreSystem.shutdown();
+        
+        status = SystemStatus.DISABLED;
     }
     
-    @Override
-    public boolean isInitialized() {
-        return status == SystemStatus.ENABLED;
-    }
-    
-    @Override
-    public int getPriority() {
-        return 50;
-    }
-    
-    @Override
-    public boolean isRequired() {
-        return false;
-    }
     
     @Override
     public String getName() {
         return "DungeonSystem";
+    }
+    
+    @Override
+    public SystemStatus getStatus() {
+        return status;
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && status == SystemStatus.DISABLED) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
     }
     
     // Dungeon Management Methods

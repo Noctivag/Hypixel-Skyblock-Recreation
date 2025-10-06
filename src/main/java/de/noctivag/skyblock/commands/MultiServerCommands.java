@@ -30,8 +30,8 @@ public class MultiServerCommands implements CommandExecutor, TabCompleter {
 
     public MultiServerCommands(SkyblockPlugin SkyblockPlugin) {
         this.SkyblockPlugin = SkyblockPlugin;
-        this.proxySystem = SkyblockPlugin.getHypixelProxySystem();
-        CentralDatabaseSystem centralDatabase = SkyblockPlugin.getCentralDatabaseSystem();
+        this.proxySystem = (HypixelStyleProxySystem) SkyblockPlugin.getHypixelProxySystem();
+        CentralDatabaseSystem centralDatabase = (CentralDatabaseSystem) SkyblockPlugin.getCentralDatabaseSystem();
     }
 
     @Override

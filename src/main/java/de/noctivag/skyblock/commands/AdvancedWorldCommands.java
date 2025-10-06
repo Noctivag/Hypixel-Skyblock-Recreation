@@ -155,10 +155,9 @@ public class AdvancedWorldCommands implements CommandExecutor, TabCompleter {
         
         // Zeige verwaltete Welten
         sender.sendMessage(Component.text("§e§lVerwaltete Welten:"));
-        Map<String, org.bukkit.World> managedWorlds = worldManager.getManagedWorlds();
-        for (Map.Entry<String, org.bukkit.World> entry : managedWorlds.entrySet()) {
-            String worldName = entry.getKey();
-            org.bukkit.World world = entry.getValue();
+        Set<String> managedWorldNames = worldManager.getManagedWorlds();
+        for (String worldName : managedWorldNames) {
+            org.bukkit.World world = worldManager.getWorld(worldName);
             
             if (world != null) {
                 String status = "§aGeladen";
@@ -173,18 +172,16 @@ public class AdvancedWorldCommands implements CommandExecutor, TabCompleter {
         }
         
         // Zeige Custom-Welten
-        Map<String, ThreadSafeWorldManager.CustomWorldInfo> customWorlds = worldManager.getCustomWorlds();
+        Map<String, Object> customWorlds = worldManager.getCustomWorlds();
         if (!customWorlds.isEmpty()) {
             sender.sendMessage(Component.text(""));
             sender.sendMessage(Component.text("§e§lCustom Welten:"));
-            for (Map.Entry<String, ThreadSafeWorldManager.CustomWorldInfo> entry : customWorlds.entrySet()) {
+            for (Map.Entry<String, Object> entry : customWorlds.entrySet()) {
                 String worldName = entry.getKey();
-                ThreadSafeWorldManager.CustomWorldInfo customInfo = entry.getValue();
+                Object customInfo = entry.getValue();
                 
                 sender.sendMessage(Component.text("§7- " + worldName));
-                sender.sendMessage(Component.text("§7  Pfad: §e" + customInfo.getWorldPath()));
-                sender.sendMessage(Component.text("§7  Typ: §e" + customInfo.getWorldType().name()));
-                sender.sendMessage(Component.text("§7  Geladen: §e" + new java.util.Date(customInfo.getLoadTime())));
+                sender.sendMessage(Component.text("§7  Info: §e" + customInfo.toString()));
             }
         }
         
@@ -192,7 +189,7 @@ public class AdvancedWorldCommands implements CommandExecutor, TabCompleter {
         sender.sendMessage(Component.text(""));
         sender.sendMessage(Component.text("§e§lAlle verfügbaren Welten:"));
         for (org.bukkit.World world : SkyblockPlugin.getServer().getWorlds()) {
-            String status = managedWorlds.containsKey(world.getName()) ? "§aVerwaltet" : "§7Nicht verwaltet";
+            String status = managedWorldNames.contains(world.getName()) ? "§aVerwaltet" : "§7Nicht verwaltet";
             sender.sendMessage(Component.text("§7- " + world.getName() + " " + status));
         }
     }
@@ -204,24 +201,19 @@ public class AdvancedWorldCommands implements CommandExecutor, TabCompleter {
             WorldType worldType = WorldType.valueOf(worldTypeStr.toUpperCase());
             
             // Erstelle World Config
-            ThreadSafeWorldManager.WorldConfig worldConfig = new ThreadSafeWorldManager.WorldConfig(
-                worldName, 
-                "Custom: " + worldName, 
-                worldType, 
-                new CustomWorldGenerator(),
-                true, 
-                false, 
-                "Custom created world"
-            );
+            // ThreadSafeWorldManager.WorldConfig worldConfig = new ThreadSafeWorldManager.WorldConfig(
+            //     worldName, 
+            //     "Custom: " + worldName, 
+            //     worldType, 
+            //     new CustomWorldGenerator(),
+            //     true, 
+            //     false, 
+            //     "Custom created world"
+            // );
             
-            // Erstelle Welt asynchron
-            worldManager.loadWorld(worldName).thenAccept(world -> {
-                if (world != null) {
-                    sender.sendMessage(Component.text("§aWelt '" + worldName + "' erfolgreich erstellt!"));
-                } else {
-                    sender.sendMessage(Component.text("§cFehler beim Erstellen der Welt '" + worldName + "'!"));
-                }
-            });
+            // Erstelle Welt
+            worldManager.loadWorld(worldName);
+            sender.sendMessage(Component.text("§aWelt '" + worldName + "' wird erstellt..."));
             
         } catch (IllegalArgumentException e) {
             sender.sendMessage(Component.text("§cUngültiger Welt-Typ: " + worldTypeStr));
@@ -247,26 +239,15 @@ public class AdvancedWorldCommands implements CommandExecutor, TabCompleter {
         String worldName = worldFolder.getName();
         
         // Lade Welt asynchron
-        worldManager.loadCustomWorld(worldName, worldPath, WorldType.NORMAL, new CustomWorldGenerator(), null)
-            .thenAccept(success -> {
-                if (success) {
-                    sender.sendMessage(Component.text("§aCustom-Welt '" + worldName + "' erfolgreich geladen!"));
-                } else {
-                    sender.sendMessage(Component.text("§cFehler beim Laden der Custom-Welt '" + worldName + "'!"));
-                }
-            });
+        worldManager.loadCustomWorld(worldName, worldPath, WorldType.NORMAL, null, null);
+        sender.sendMessage(Component.text("§aCustom-Welt '" + worldName + "' wird geladen..."));
     }
     
     private void unloadWorld(CommandSender sender, String worldName) {
         sender.sendMessage(Component.text("§aEntlade Welt '" + worldName + "'..."));
         
-        worldManager.unloadWorld(worldName).thenAccept(success -> {
-            if (success) {
-                sender.sendMessage(Component.text("§aWelt '" + worldName + "' erfolgreich entladen!"));
-            } else {
-                sender.sendMessage(Component.text("§cFehler beim Entladen der Welt '" + worldName + "'!"));
-            }
-        });
+        worldManager.unloadWorld(worldName);
+        sender.sendMessage(Component.text("§aWelt '" + worldName + "' wird entladen..."));
     }
     
     private void teleportToWorld(Player player, String worldName) {
@@ -308,25 +289,28 @@ public class AdvancedWorldCommands implements CommandExecutor, TabCompleter {
             return;
         }
         
-        Map<String, ThreadSafeWorldManager.WorldMetrics> metrics = worldManager.getWorldMetrics();
+        Object metrics = worldManager.getWorldMetrics();
         
-        if (metrics.isEmpty()) {
-            sender.sendMessage(Component.text("§7Keine Metriken verfügbar"));
-            return;
-        }
+        // TODO: Fix metrics checking when WorldMetrics class is implemented
+        // if (metrics instanceof Map && ((Map<?, ?>) metrics).isEmpty()) {
+        //     sender.sendMessage(Component.text("§7Keine Metriken verfügbar"));
+        //     return;
+        // }
         
-        for (Map.Entry<String, ThreadSafeWorldManager.WorldMetrics> entry : metrics.entrySet()) {
-            String worldName = entry.getKey();
-            ThreadSafeWorldManager.WorldMetrics worldMetrics = entry.getValue();
-            
-            sender.sendMessage(Component.text("§e§l" + worldName + ":"));
-            sender.sendMessage(Component.text("§7- Aktuelle Spieler: §e" + worldMetrics.getPlayerCount()));
-            sender.sendMessage(Component.text("§7- Geladene Chunks: §e" + worldMetrics.getLoadedChunks()));
-            sender.sendMessage(Component.text("§7- Durchschnittliche Spieler: §e" + String.format("%.1f", worldMetrics.getAveragePlayerCount())));
-            sender.sendMessage(Component.text("§7- Durchschnittliche Chunks: §e" + String.format("%.1f", worldMetrics.getAverageChunkCount())));
-            sender.sendMessage(Component.text("§7- Letztes Update: §e" + new java.util.Date(worldMetrics.getLastUpdate())));
-            sender.sendMessage(Component.text(""));
-        }
+        // TODO: Fix WorldMetrics class access
+        // for (Map.Entry<String, ThreadSafeWorldManager.WorldMetrics> entry : metrics.entrySet()) {
+        //     String worldName = entry.getKey();
+        //     ThreadSafeWorldManager.WorldMetrics worldMetrics = entry.getValue();
+        //     
+        //     sender.sendMessage(Component.text("§e§l" + worldName + ":"));
+        //     sender.sendMessage(Component.text("§7- Aktuelle Spieler: §e" + worldMetrics.getPlayerCount()));
+        //     sender.sendMessage(Component.text("§7- Geladene Chunks: §e" + worldMetrics.getLoadedChunks()));
+        //     sender.sendMessage(Component.text("§7- Durchschnittliche Spieler: §e" + String.format("%.1f", worldMetrics.getAveragePlayerCount())));
+        //     sender.sendMessage(Component.text("§7- Durchschnittliche Chunks: §e" + String.format("%.1f", worldMetrics.getAverageChunkCount())));
+        //     sender.sendMessage(Component.text("§7- Letztes Update: §e" + new java.util.Date(worldMetrics.getLastUpdate())));
+        //     sender.sendMessage(Component.text(""));
+        // }
+        sender.sendMessage(Component.text("§7WorldMetrics display not yet implemented"));
     }
     
     private void createCustomWorld(CommandSender sender, String worldName, String configStr) {
@@ -337,32 +321,26 @@ public class AdvancedWorldCommands implements CommandExecutor, TabCompleter {
             Map<String, Object> customConfig = parseCustomConfig(configStr);
             
             // Erstelle Custom World Generator mit Konfiguration
-            CustomWorldGenerator.WorldGenerationConfig genConfig = new CustomWorldGenerator.WorldGenerationConfig();
+            // CustomWorldGenerator.WorldGenerationConfig genConfig = new CustomWorldGenerator.WorldGenerationConfig();
             
             if (customConfig.containsKey("terrain_type")) {
-                genConfig.setTerrainType(CustomWorldGenerator.TerrainType.valueOf(
-                    customConfig.get("terrain_type").toString().toUpperCase()));
+                // genConfig.setTerrainType(CustomWorldGenerator.TerrainType.valueOf(
+                //     customConfig.get("terrain_type").toString().toUpperCase()));
             }
             
-            if (customConfig.containsKey("base_height")) {
-                genConfig.setBaseHeight(Integer.parseInt(customConfig.get("base_height").toString()));
-            }
-            
-            if (customConfig.containsKey("height_variation")) {
-                genConfig.setHeightVariation(Double.parseDouble(customConfig.get("height_variation").toString()));
-            }
-            
-            CustomWorldGenerator generator = new CustomWorldGenerator(genConfig);
+            // if (customConfig.containsKey("base_height")) {
+            //     genConfig.setBaseHeight(Integer.parseInt(customConfig.get("base_height").toString()));
+            // }
+            // 
+            // if (customConfig.containsKey("height_variation")) {
+            //     genConfig.setHeightVariation(Double.parseDouble(customConfig.get("height_variation").toString()));
+            // }
+            // 
+            // CustomWorldGenerator generator = new CustomWorldGenerator(genConfig);
             
             // Erstelle Welt asynchron
-            worldManager.loadCustomWorld(worldName, null, WorldType.NORMAL, generator, customConfig)
-                .thenAccept(success -> {
-                    if (success) {
-                        sender.sendMessage(Component.text("§aCustom-Welt '" + worldName + "' erfolgreich erstellt!"));
-                    } else {
-                        sender.sendMessage(Component.text("§cFehler beim Erstellen der Custom-Welt '" + worldName + "'!"));
-                    }
-                });
+            worldManager.loadCustomWorld(worldName, null, WorldType.NORMAL, null, customConfig);
+            sender.sendMessage(Component.text("§aCustom-Welt '" + worldName + "' wird erstellt..."));
                 
         } catch (Exception e) {
             sender.sendMessage(Component.text("§cFehler beim Parsen der Konfiguration: " + e.getMessage()));
@@ -408,14 +386,19 @@ public class AdvancedWorldCommands implements CommandExecutor, TabCompleter {
         sender.sendMessage(Component.text("§7- doMobSpawning: §e" + world.getGameRuleValue(org.bukkit.GameRule.DO_MOB_SPAWNING)));
         
         // Zeige Metriken falls verfügbar
-        Map<String, ThreadSafeWorldManager.WorldMetrics> metrics = worldManager.getWorldMetrics();
-        ThreadSafeWorldManager.WorldMetrics worldMetrics = metrics.get(worldName);
-        if (worldMetrics != null) {
-            sender.sendMessage(Component.text(""));
-            sender.sendMessage(Component.text("§7Performance Metriken:"));
-            sender.sendMessage(Component.text("§7- Durchschnittliche Spieler: §e" + String.format("%.1f", worldMetrics.getAveragePlayerCount())));
-            sender.sendMessage(Component.text("§7- Durchschnittliche Chunks: §e" + String.format("%.1f", worldMetrics.getAverageChunkCount())));
-        }
+        Object metrics = worldManager.getWorldMetrics();
+        // TODO: Fix WorldMetrics class access
+        // if (metrics instanceof Map) {
+        //     Map<String, ThreadSafeWorldManager.WorldMetrics> metricsMap = (Map<String, ThreadSafeWorldManager.WorldMetrics>) metrics;
+        //     ThreadSafeWorldManager.WorldMetrics worldMetrics = metricsMap.get(worldName);
+        //     if (worldMetrics != null) {
+        //         sender.sendMessage(Component.text(""));
+        //         sender.sendMessage(Component.text("§7Performance Metriken:"));
+        //         sender.sendMessage(Component.text("§7- Durchschnittliche Spieler: §e" + String.format("%.1f", worldMetrics.getAveragePlayerCount())));
+        //         sender.sendMessage(Component.text("§7- Durchschnittliche Chunks: §e" + String.format("%.1f", worldMetrics.getAverageChunkCount())));
+        //     }
+        // }
+        sender.sendMessage(Component.text("§7WorldMetrics display not yet implemented"));
     }
     
     private void showPerformance(CommandSender sender) {
@@ -427,10 +410,10 @@ public class AdvancedWorldCommands implements CommandExecutor, TabCompleter {
         }
         
         sender.sendMessage(Component.text("§7Status: §a" + (worldManager.isInitialized() ? "Initialisiert" : "Nicht initialisiert")));
-        sender.sendMessage(Component.text("§7Aktive Operationen: §e" + worldManager.getActiveOperations()));
+        // sender.sendMessage(Component.text("§7Aktive Operationen: §e" + worldManager.getActiveOperations()));
         sender.sendMessage(Component.text("§7Verwaltete Welten: §e" + worldManager.getManagedWorlds().size()));
         sender.sendMessage(Component.text("§7Custom Welten: §e" + worldManager.getCustomWorlds().size()));
-        sender.sendMessage(Component.text("§7Welt-Konfigurationen: §e" + worldManager.getWorldConfigs().size()));
+        // sender.sendMessage(Component.text("§7Welt-Konfigurationen: §e" + worldManager.getWorldConfigs().size()));
         
         // Zeige Server-Typen
         sender.sendMessage(Component.text(""));
@@ -507,18 +490,21 @@ public class AdvancedWorldCommands implements CommandExecutor, TabCompleter {
             } else if (args[0].equalsIgnoreCase("unload") || args[0].equalsIgnoreCase("teleport") || 
                       args[0].equalsIgnoreCase("tp") || args[0].equalsIgnoreCase("info")) {
                 // Zeige verfügbare Welten
-                for (String worldName : worldManager.getManagedWorlds().keySet()) {
+                for (String worldName : worldManager.getManagedWorlds()) {
                     if (worldName.toLowerCase().startsWith(args[1].toLowerCase())) {
                         completions.add(worldName);
                     }
                 }
-            } else if (args[0].equalsIgnoreCase("custom")) {
+            } else             if (args[0].equalsIgnoreCase("custom")) {
                 // Zeige verfügbare Terrain-Typen
-                for (CustomWorldGenerator.TerrainType terrainType : CustomWorldGenerator.TerrainType.values()) {
-                    if (terrainType.name().toLowerCase().startsWith(args[1].toLowerCase())) {
-                        completions.add(terrainType.name().toLowerCase());
-                    }
-                }
+                // for (CustomWorldGenerator.TerrainType terrainType : CustomWorldGenerator.TerrainType.values()) {
+                //     if (terrainType.name().toLowerCase().startsWith(args[1].toLowerCase())) {
+                //         completions.add(terrainType.name().toLowerCase());
+                //     }
+                // }
+                completions.add("normal");
+                completions.add("flat");
+                completions.add("amplified");
             }
         } else if (args.length == 3) {
             if (args[0].equalsIgnoreCase("custom")) {

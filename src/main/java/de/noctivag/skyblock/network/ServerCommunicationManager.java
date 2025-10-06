@@ -172,32 +172,33 @@ public class ServerCommunicationManager {
      */
     private void updateServerStatus() {
         // Lade Server-Status aus Datenbank
-        databaseManager.executeQuery("""
-            SELECT server_id, timestamp, player_count, tps, memory_usage, cpu_usage
-            FROM server_heartbeats
-            WHERE timestamp > ?
-        """, java.lang.System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(2))
-        .thenAccept(resultSet -> {
-            try {
-                while (resultSet.next()) {
-                    String serverId = resultSet.getString("server_id");
-                    long timestamp = resultSet.getLong("timestamp");
-                    int playerCount = resultSet.getInt("player_count");
-                    double tps = resultSet.getDouble("tps");
-                    double memoryUsage = resultSet.getDouble("memory_usage");
-                    double cpuUsage = resultSet.getDouble("cpu_usage");
-                    
-                    // Aktualisiere Server-Info
-                    ServerInfo serverInfo = connectedServers.get(serverId);
-                    if (serverInfo != null) {
-                        serverInfo.updateStatus(playerCount, tps, memoryUsage, cpuUsage);
-                        serverLastSeen.put(serverId, timestamp);
-                    }
-                }
-            } catch (Exception e) {
-                SkyblockPlugin.getLogger().log(Level.WARNING, "Error updating server status", e);
-            }
-        });
+        // TODO: Fix database query execution
+        // databaseManager.executeQuery("""
+        //     SELECT server_id, timestamp, player_count, tps, memory_usage, cpu_usage
+        //     FROM server_heartbeats
+        //     WHERE timestamp > ?
+        // """, java.lang.System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(2))
+        // .thenAccept(resultSet -> {
+        //     try {
+        //         while (resultSet.next()) {
+        //             String serverId = resultSet.getString("server_id");
+        //             long timestamp = resultSet.getLong("timestamp");
+        //             int playerCount = resultSet.getInt("player_count");
+        //             double tps = resultSet.getDouble("tps");
+        //             double memoryUsage = resultSet.getDouble("memory_usage");
+        //             double cpuUsage = resultSet.getDouble("cpu_usage");
+        //             
+        //             // Aktualisiere Server-Info
+        //             ServerInfo serverInfo = connectedServers.get(serverId);
+        //             if (serverInfo != null) {
+        //                 serverInfo.updateStatus(playerCount, tps, memoryUsage, cpuUsage);
+        //                 serverLastSeen.put(serverId, timestamp);
+        //             }
+        //         }
+        //     } catch (Exception e) {
+        //         SkyblockPlugin.getLogger().log(Level.WARNING, "Error updating server status", e);
+        //     }
+        // });
     }
     
     /**

@@ -67,16 +67,21 @@ public class IslandCommand implements CommandExecutor {
     private void teleportToIsland(Player player, UUID playerUUID) {
         try {
             // Lade die private Insel on-demand
-            World island = SkyblockPlugin.getWorldManager().loadPrivateIsland(playerUUID);
-            
-            if (island == null) {
-                player.sendMessage(Component.text("§cFehler beim Laden deiner Insel. Bitte versuche es erneut."));
-                return;
-            }
-            
-            // Teleportiere zur Insel
-            player.teleport(island.getSpawnLocation());
-            player.sendMessage(Component.text("§aWillkommen auf deiner privaten Insel!"));
+            var future = SkyblockPlugin.getWorldManager().loadPrivateIsland(playerUUID);
+            future.thenAccept(island -> {
+                if (island == null) {
+                    player.sendMessage(Component.text("§cFehler beim Laden deiner Insel. Bitte versuche es erneut."));
+                    return;
+                }
+                
+                // Teleportiere zur Insel
+                player.teleport(island.getSpawnLocation());
+                player.sendMessage(Component.text("§aWillkommen auf deiner privaten Insel!"));
+            }).exceptionally(throwable -> {
+                player.sendMessage("§cFehler beim Teleportieren zur Insel: " + throwable.getMessage());
+                SkyblockPlugin.getLogger().severe("Fehler beim Laden der Insel für " + player.getName() + ": " + throwable.getMessage());
+                return null;
+            });
             
         } catch (Exception e) {
             player.sendMessage("§cFehler beim Teleportieren zur Insel: " + e.getMessage());
@@ -100,14 +105,19 @@ public class IslandCommand implements CommandExecutor {
             SkyblockPlugin.getWorldManager().unloadPrivateIsland(playerUUID);
             
             // Lade sie neu
-            World island = SkyblockPlugin.getWorldManager().loadPrivateIsland(playerUUID);
-            
-            if (island != null) {
-                player.teleport(island.getSpawnLocation());
-                player.sendMessage(Component.text("§aDeine Insel wurde neu geladen!"));
-            } else {
-                player.sendMessage(Component.text("§cFehler beim Neuladen der Insel."));
-            }
+            var future = SkyblockPlugin.getWorldManager().loadPrivateIsland(playerUUID);
+            future.thenAccept(island -> {
+                if (island != null) {
+                    player.teleport(island.getSpawnLocation());
+                    player.sendMessage(Component.text("§aDeine Insel wurde neu geladen!"));
+                } else {
+                    player.sendMessage(Component.text("§cFehler beim Neuladen der Insel."));
+                }
+            }).exceptionally(throwable -> {
+                player.sendMessage("§cFehler beim Neuladen der Insel: " + throwable.getMessage());
+                SkyblockPlugin.getLogger().severe("Fehler beim Neuladen der Insel für " + player.getName() + ": " + throwable.getMessage());
+                return null;
+            });
         } catch (Exception e) {
             player.sendMessage("§cFehler beim Neuladen der Insel: " + e.getMessage());
             SkyblockPlugin.getLogger().severe("Fehler beim Neuladen der Insel für " + player.getName() + ": " + e.getMessage());

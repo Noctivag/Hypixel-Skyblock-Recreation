@@ -1,6 +1,5 @@
 package de.noctivag.skyblock.features.armor;
 import java.util.UUID;
-import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.core.api.Service;
 import de.noctivag.skyblock.core.api.SystemStatus;
@@ -25,40 +24,51 @@ public class DragonArmorSystem implements Service {
     }
     
     @Override
-    public CompletableFuture<Void> initialize() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.INITIALIZING;
-            
-            // Initialize dragon armor sets
-            initializeDragonArmorSets();
-            
-            // Load player armor from database
-            loadPlayerArmor();
-            
-            status = SystemStatus.ENABLED;
-        });
+    public void initialize() {
+        status = SystemStatus.INITIALIZING;
+        
+        // Initialize dragon armor sets
+        initializeDragonArmorSets();
+        
+        // Load player armor from database
+        loadPlayerArmor();
+        
+        status = SystemStatus.RUNNING;
     }
     
     @Override
-    public CompletableFuture<Void> shutdown() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.SHUTTING_DOWN;
-            
-            // Save player armor to database
-            savePlayerArmor();
-            
-            status = SystemStatus.UNINITIALIZED;
-        });
+    public void shutdown() {
+        status = SystemStatus.SHUTTING_DOWN;
+        
+        // Save player armor to database
+        savePlayerArmor();
+        
+        status = SystemStatus.DISABLED;
     }
     
-    @Override
-    public boolean isInitialized() {
-        return status == SystemStatus.ENABLED;
-    }
     
     @Override
     public String getName() {
         return "DragonArmorSystem";
+    }
+    
+    @Override
+    public SystemStatus getStatus() {
+        return status;
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && status == SystemStatus.DISABLED) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
     }
     
     /**

@@ -37,6 +37,10 @@ public class UltimateEventSystem implements Service, Listener {
         this.eventScheduler = new EventScheduler(this);
     }
     
+    public SkyblockPlugin getPlugin() {
+        return plugin;
+    }
+    
     @Override
     public void initialize() {
         status = SystemStatus.INITIALIZING;

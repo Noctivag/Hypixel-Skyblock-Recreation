@@ -92,23 +92,22 @@ public class HypixelSkyblockIntegration {
                 SkyblockPlugin.getLogger().info("Initializing complete Hypixel SkyBlock integration...");
                 
                 // Initialize all systems in parallel for better performance
-                CompletableFuture.allOf(
-                    dungeonSystem.initialize(),
-                    minionSystem.initialize(),
-                    collectionsSystem.initialize(),
-                    skillsSystem.initialize(),
-                    dragonArmorSystem.initialize(),
-                    legendaryWeaponsSystem.initialize(),
-                    petsSystem.initialize(),
-                    eventsSystem.initialize(),
-                    economySystem.initialize(),
-                    cosmeticsSystem.initialize(),
-                    statsSystem.initialize(),
-                    weaponsSystem.initialize(),
-                    armorSystem.initialize(),
-                    toolsSystem.initialize(),
-                    enchantmentsSystem.initialize()
-                ).join();
+                // Initialize all systems
+                dungeonSystem.initialize();
+                minionSystem.initialize();
+                collectionsSystem.initialize();
+                skillsSystem.initialize();
+                dragonArmorSystem.initialize();
+                legendaryWeaponsSystem.initialize();
+                petsSystem.initialize();
+                eventsSystem.initialize();
+                economySystem.initialize();
+                cosmeticsSystem.initialize();
+                statsSystem.initialize();
+                weaponsSystem.initialize();
+                armorSystem.initialize();
+                toolsSystem.initialize();
+                enchantmentsSystem.initialize();
                 
                 SkyblockPlugin.getLogger().info("All Hypixel SkyBlock systems initialized successfully!");
                 
@@ -278,23 +277,22 @@ public class HypixelSkyblockIntegration {
                 playerSessions.clear();
                 
                 // Shutdown all systems
-                CompletableFuture.allOf(
-                    dungeonSystem.shutdown(),
-                    minionSystem.shutdown(),
-                    collectionsSystem.shutdown(),
-                    skillsSystem.shutdown(),
-                    dragonArmorSystem.shutdown(),
-                    legendaryWeaponsSystem.shutdown(),
-                    petsSystem.shutdown(),
-                    eventsSystem.shutdown(),
-                    economySystem.shutdown(),
-                    cosmeticsSystem.shutdown(),
-                    statsSystem.shutdown(),
-                    weaponsSystem.shutdown(),
-                    armorSystem.shutdown(),
-                    toolsSystem.shutdown(),
-                    enchantmentsSystem.shutdown()
-                ).join();
+                // Shutdown all systems
+                dungeonSystem.shutdown();
+                minionSystem.shutdown();
+                collectionsSystem.shutdown();
+                skillsSystem.shutdown();
+                dragonArmorSystem.shutdown();
+                legendaryWeaponsSystem.shutdown();
+                petsSystem.shutdown();
+                eventsSystem.shutdown();
+                economySystem.shutdown();
+                cosmeticsSystem.shutdown();
+                statsSystem.shutdown();
+                weaponsSystem.shutdown();
+                armorSystem.shutdown();
+                toolsSystem.shutdown();
+                enchantmentsSystem.shutdown();
                 
                 SkyblockPlugin.getLogger().info("All Hypixel SkyBlock systems shut down successfully!");
                 

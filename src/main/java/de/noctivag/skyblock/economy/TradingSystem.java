@@ -415,6 +415,45 @@ public class TradingSystem {
         return pendingRequests.get(playerId);
     }
     
+    /**
+     * Get trade by ID
+     */
+    public TradeSession getTradeById(String tradeId) {
+        try {
+            return activeTrades.get(UUID.fromString(tradeId));
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+    
+    /**
+     * Get trades by player
+     */
+    public List<TradeSession> getTradesByPlayer(UUID playerId) {
+        return activeTrades.values().stream()
+            .filter(trade -> trade.getPlayer1().equals(playerId) || trade.getPlayer2().equals(playerId))
+            .collect(java.util.stream.Collectors.toList());
+    }
+    
+    /**
+     * Get trades by status
+     */
+    public List<TradeSession> getTradesByStatus(TradeSession.TradeStatus status) {
+        return activeTrades.values().stream()
+            .filter(trade -> trade.getStatus() == status)
+            .collect(java.util.stream.Collectors.toList());
+    }
+    
+    /**
+     * Get trades by item
+     */
+    public List<TradeSession> getTradesByItem(String itemId) {
+        return activeTrades.values().stream()
+            .filter(trade -> trade.getPlayerItems(trade.getPlayer1()).stream().anyMatch(item -> item.getType().name().equals(itemId)) ||
+                           trade.getPlayerItems(trade.getPlayer2()).stream().anyMatch(item -> item.getType().name().equals(itemId)))
+            .collect(java.util.stream.Collectors.toList());
+    }
+    
     // Trade Request Class
     public static class TradeRequest {
         private final UUID requester;
@@ -448,6 +487,11 @@ public class TradingSystem {
         private final UUID player2;
         private final Map<UUID, List<ItemStack>> playerItems = new HashMap<>();
         private final Map<UUID, Boolean> playerReady = new HashMap<>();
+        private TradeStatus status = TradeStatus.PENDING;
+        
+        public enum TradeStatus {
+            PENDING, ACCEPTED, COMPLETED, CANCELLED
+        }
         
         public TradeSession(UUID player1, UUID player2) {
             this.player1 = player1;
@@ -480,6 +524,8 @@ public class TradingSystem {
         
         public UUID getPlayer1() { return player1; }
         public UUID getPlayer2() { return player2; }
+        public TradeStatus getStatus() { return status; }
+        public void setStatus(TradeStatus status) { this.status = status; }
     }
     
     // Trade History Class

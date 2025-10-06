@@ -16,12 +16,12 @@ public class ClassSelectionGUI extends CustomGUI {
     private final ClassManager classManager;
     
     public ClassSelectionGUI(Player player, ClassManager classManager) {
-        super(player, "§cSelect Dungeon Class", 54);
+        super("§cSelect Dungeon Class", 54);
         this.classManager = classManager;
     }
     
     @Override
-    protected void setupItems() {
+    public void setupItems() {
         // Get available classes
         Map<String, DungeonClass> availableClasses = classManager.getAvailableClasses();
         

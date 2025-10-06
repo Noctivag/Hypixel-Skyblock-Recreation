@@ -51,37 +51,47 @@ public class CollectionConstraintSystem implements Service {
     }
     
     @Override
-    public CompletableFuture<Void> initialize() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.INITIALIZING;
-            
-            // Initialize constraint system
-            initializeConstraintSystem();
-            
-            status = SystemStatus.ENABLED;
-        });
+    public void initialize() {
+        status = SystemStatus.INITIALIZING;
+        
+        // Initialize constraint system
+        initializeConstraintSystem();
+        
+        status = SystemStatus.RUNNING;
     }
     
     @Override
-    public CompletableFuture<Void> shutdown() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.SHUTTING_DOWN;
-            
-            // Save constraint data
-            saveConstraintData();
-            
-            status = SystemStatus.UNINITIALIZED;
-        });
-    }
-    
-    @Override
-    public boolean isInitialized() {
-        return status == SystemStatus.ENABLED;
+    public void shutdown() {
+        status = SystemStatus.SHUTTING_DOWN;
+        
+        // Save constraint data
+        saveConstraintData();
+        
+        status = SystemStatus.DISABLED;
     }
     
     @Override
     public String getName() {
         return "CollectionConstraintSystem";
+    }
+    
+    @Override
+    public SystemStatus getStatus() {
+        return status;
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && status == SystemStatus.DISABLED) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
     }
     
     /**

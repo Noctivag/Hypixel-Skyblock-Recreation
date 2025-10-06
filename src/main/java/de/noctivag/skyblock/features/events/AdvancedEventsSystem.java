@@ -28,57 +28,65 @@ public class AdvancedEventsSystem implements Service {
     private final Map<EventType, EventConfig> eventConfigs = new ConcurrentHashMap<>();
     private final Map<EventType, EventInstance> activeEvents = new ConcurrentHashMap<>();
     
-    private SystemStatus status = SystemStatus.UNINITIALIZED;
+    private SystemStatus status = SystemStatus.DISABLED;
     
     @Override
-    public CompletableFuture<Void> initialize() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.INITIALIZING;
-            
-            // Initialize all event configurations
-            initializeAllEvents();
-            
-            // Schedule recurring events
-            scheduleRecurringEvents();
-            
-            status = SystemStatus.ENABLED;
-        });
+    public void initialize() {
+        status = SystemStatus.INITIALIZING;
+        
+        // Initialize all event configurations
+        initializeAllEvents();
+        
+        // Schedule recurring events
+        scheduleRecurringEvents();
+        
+        status = SystemStatus.RUNNING;
     }
     
     @Override
-    public CompletableFuture<Void> shutdown() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.SHUTTING_DOWN;
-            
-            // Stop all active events
-            activeEvents.values().forEach(instance -> instance.setActive(false));
-            activeEvents.clear();
-            
-            // Shutdown scheduler
-            scheduler.shutdown();
-            
-            status = SystemStatus.UNINITIALIZED;
-        });
-    }
-    
-    @Override
-    public boolean isInitialized() {
-        return status == SystemStatus.ENABLED;
-    }
-    
-    @Override
-    public int getPriority() {
-        return 50;
-    }
-    
-    @Override
-    public boolean isRequired() {
-        return false;
+    public void shutdown() {
+        status = SystemStatus.SHUTTING_DOWN;
+        
+        // Stop all active events
+        activeEvents.values().forEach(instance -> instance.setActive(false));
+        activeEvents.clear();
+        
+        // Shutdown scheduler
+        scheduler.shutdown();
+        
+        status = SystemStatus.DISABLED;
     }
     
     @Override
     public String getName() {
         return "AdvancedEventsSystem";
+    }
+    
+    @Override
+    public SystemStatus getStatus() {
+        return status;
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && status == SystemStatus.DISABLED) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
+    }
+    
+    public int getPriority() {
+        return 50;
+    }
+    
+    public boolean isRequired() {
+        return false;
     }
     
     /**

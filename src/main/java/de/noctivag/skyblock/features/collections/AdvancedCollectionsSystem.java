@@ -24,40 +24,51 @@ public class AdvancedCollectionsSystem implements Service {
     }
     
     @Override
-    public CompletableFuture<Void> initialize() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.INITIALIZING;
-            
-            // Initialize collection configurations
-            initializeCollectionConfigs();
-            
-            // Load player collections from database
-            loadPlayerCollections();
-            
-            status = SystemStatus.ENABLED;
-        });
+    public void initialize() {
+        status = SystemStatus.INITIALIZING;
+        
+        // Initialize collection configurations
+        initializeCollectionConfigs();
+        
+        // Load player collections from database
+        loadPlayerCollections();
+        
+        status = SystemStatus.RUNNING;
     }
     
     @Override
-    public CompletableFuture<Void> shutdown() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.SHUTTING_DOWN;
-            
-            // Save player collections to database
-            savePlayerCollections();
-            
-            status = SystemStatus.UNINITIALIZED;
-        });
+    public void shutdown() {
+        status = SystemStatus.SHUTTING_DOWN;
+        
+        // Save player collections to database
+        savePlayerCollections();
+        
+        status = SystemStatus.DISABLED;
     }
     
-    @Override
-    public boolean isInitialized() {
-        return status == SystemStatus.ENABLED;
-    }
     
     @Override
     public String getName() {
         return "AdvancedCollectionsSystem";
+    }
+    
+    @Override
+    public SystemStatus getStatus() {
+        return status;
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && status == SystemStatus.DISABLED) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
     }
     
     /**

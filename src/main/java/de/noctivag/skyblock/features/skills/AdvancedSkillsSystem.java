@@ -35,59 +35,67 @@ public class AdvancedSkillsSystem implements Service {
     }
     
     @Override
-    public CompletableFuture<Void> initialize() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.INITIALIZING;
-            
-            // Initialize all skill components
-            rewardManager.initialize().join();
-            calculator.initialize().join();
-            milestoneManager.initialize().join();
-            
-            // Initialize skill configurations
-            initializeSkillConfigs();
-            
-            // Load player skills from database
-            loadPlayerSkills();
-            
-            status = SystemStatus.ENABLED;
-        });
+    public void initialize() {
+        status = SystemStatus.INITIALIZING;
+        
+        // Initialize all skill components
+        rewardManager.initialize();
+        calculator.initialize();
+        milestoneManager.initialize();
+        
+        // Initialize skill configurations
+        initializeSkillConfigs();
+        
+        // Load player skills from database
+        loadPlayerSkills();
+        
+        status = SystemStatus.RUNNING;
     }
     
     @Override
-    public CompletableFuture<Void> shutdown() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.SHUTTING_DOWN;
-            
-            rewardManager.shutdown().join();
-            calculator.shutdown().join();
-            milestoneManager.shutdown().join();
-            
-            // Save player skills to database
-            savePlayerSkills();
-            
-            status = SystemStatus.UNINITIALIZED;
-        });
-    }
-    
-    @Override
-    public boolean isInitialized() {
-        return status == SystemStatus.ENABLED;
-    }
-    
-    @Override
-    public int getPriority() {
-        return 50;
-    }
-    
-    @Override
-    public boolean isRequired() {
-        return false;
+    public void shutdown() {
+        status = SystemStatus.SHUTTING_DOWN;
+        
+        rewardManager.shutdown();
+        calculator.shutdown();
+        milestoneManager.shutdown();
+        
+        // Save player skills to database
+        savePlayerSkills();
+        
+        status = SystemStatus.DISABLED;
     }
     
     @Override
     public String getName() {
         return "AdvancedSkillsSystem";
+    }
+    
+    @Override
+    public SystemStatus getStatus() {
+        return status;
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && status == SystemStatus.DISABLED) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
+    }
+    
+    public int getPriority() {
+        return 50;
+    }
+    
+    public boolean isRequired() {
+        return false;
     }
     
     /**

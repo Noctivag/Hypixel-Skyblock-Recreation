@@ -2,6 +2,7 @@ package de.noctivag.skyblock.features.cosmetics;
 import java.util.UUID;
 
 import de.noctivag.skyblock.core.api.Service;
+import de.noctivag.skyblock.core.api.SystemStatus;
 import de.noctivag.skyblock.features.cosmetics.config.CosmeticConfig;
 import de.noctivag.skyblock.features.cosmetics.config.CosmeticConfig.CosmeticCategory;
 import de.noctivag.skyblock.features.cosmetics.config.CosmeticConfig.CosmeticRarity;
@@ -17,26 +18,22 @@ public class AdvancedCosmeticsSystem implements Service {
     
     private final Map<UUID, Map<String, Boolean>> playerCosmetics = new ConcurrentHashMap<>();
     private final Map<String, CosmeticConfig> cosmeticConfigs = new ConcurrentHashMap<>();
+    private SystemStatus status = SystemStatus.DISABLED;
     
     @Override
-    public CompletableFuture<Void> initialize() {
-        return CompletableFuture.runAsync(() -> {
-            // Initialize basic cosmetic configurations
-            initializeBasicCosmetics();
-        });
+    public void initialize() {
+        status = SystemStatus.INITIALIZING;
+        // Initialize basic cosmetic configurations
+        initializeBasicCosmetics();
+        status = SystemStatus.RUNNING;
     }
     
     @Override
-    public CompletableFuture<Void> shutdown() {
-        return CompletableFuture.runAsync(() -> {
-            // Save player cosmetics
-            savePlayerCosmetics();
-        });
-    }
-    
-    @Override
-    public boolean isInitialized() {
-        return !cosmeticConfigs.isEmpty();
+    public void shutdown() {
+        status = SystemStatus.SHUTTING_DOWN;
+        // Save player cosmetics
+        savePlayerCosmetics();
+        status = SystemStatus.DISABLED;
     }
     
     @Override
@@ -45,13 +42,22 @@ public class AdvancedCosmeticsSystem implements Service {
     }
     
     @Override
-    public int getPriority() {
-        return 50;
+    public SystemStatus getStatus() {
+        return status;
     }
     
     @Override
-    public boolean isRequired() {
-        return false;
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && status == SystemStatus.DISABLED) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
     }
     
     /**

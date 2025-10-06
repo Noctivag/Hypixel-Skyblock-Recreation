@@ -37,8 +37,22 @@ public class AuctionHouseManager implements Service {
     }
     
     @Override
-    public boolean isInitialized() {
-        return status == SystemStatus.ENABLED;
+    public SystemStatus getStatus() {
+        return status;
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && status == SystemStatus.DISABLED) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
     }
     
     public AuctionHouseManager() {
@@ -46,31 +60,23 @@ public class AuctionHouseManager implements Service {
     }
     
     @Override
-    public CompletableFuture<Void> initialize() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.INITIALIZING;
-            
-            // Initialize auction house
-            loadActiveAuctions();
-            
-            status = SystemStatus.ENABLED;
-        });
+    public void initialize() {
+        status = SystemStatus.INITIALIZING;
+        
+        // Initialize auction house
+        loadActiveAuctions();
+        
+        status = SystemStatus.RUNNING;
     }
     
     @Override
-    public CompletableFuture<Void> shutdown() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.SHUTTING_DOWN;
+    public void shutdown() {
+        status = SystemStatus.SHUTTING_DOWN;
             
-            // Save all active auctions
-            saveActiveAuctions();
-            
-            status = SystemStatus.UNINITIALIZED;
-        });
-    }
-    
-    public SystemStatus getStatus() {
-        return status;
+        // Save all active auctions
+        saveActiveAuctions();
+        
+        status = SystemStatus.DISABLED;
     }
     
     private void initializeCategories() {
