@@ -63,4 +63,21 @@ public class TeleportService implements Service {
             player.teleport(location);
         }
     }
+    
+    /**
+     * Teleport player to hub
+     */
+    public void teleportToHub(Player player) {
+        // TODO: Implement hub teleportation
+        plugin.getLogger().info("Teleporting player " + player.getName() + " to hub");
+    }
+    
+    /**
+     * Teleport player to hub (async version)
+     */
+    public java.util.concurrent.CompletableFuture<Void> teleportToHubAsync(Player player) {
+        return java.util.concurrent.CompletableFuture.runAsync(() -> {
+            teleportToHub(player);
+        });
+    }
 }

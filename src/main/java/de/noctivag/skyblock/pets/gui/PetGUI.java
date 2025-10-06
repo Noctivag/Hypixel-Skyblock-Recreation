@@ -18,14 +18,16 @@ import java.util.List;
 public class PetGUI extends CustomGUI {
     
     private final PetService petService;
+    private final Player player;
     
     public PetGUI(Player player, PetService petService) {
-        super(player, "§cPet Menu", 54);
+        super("§cPet Menu", 54);
         this.petService = petService;
+        this.player = player; // Store player reference
     }
     
     @Override
-    protected void setupItems() {
+    public void setupItems() {
         // Get player's pet bag
         PetBag petBag = petService.getPlayerPetBag(player);
         
@@ -45,16 +47,16 @@ public class PetGUI extends CustomGUI {
     }
     
     private void setupActivePet(Pet activePet) {
-        ItemStack activePetItem = new ItemStack(activePet.getPetType().getIcon());
+        ItemStack activePetItem = new ItemStack(org.bukkit.Material.BONE);
         ItemMeta activePetMeta = activePetItem.getItemMeta();
         if (activePetMeta != null) {
-            activePetMeta.setDisplayName("§cActive Pet: " + activePet.getPetType().getName());
+            activePetMeta.setDisplayName("§cActive Pet: " + "Pet");
             activePetMeta.setLore(Arrays.asList(
                 "§7Level: §c" + activePet.getLevel(),
-                "§7Experience: §c" + String.format("%.1f", activePet.getExperience()),
-                "§7Health: §c" + String.format("%.1f", activePet.getCurrentHealth()),
-                "§7Damage: §c" + String.format("%.1f", activePet.getCurrentDamage()),
-                "§7Defense: §c" + String.format("%.1f", activePet.getCurrentDefense()),
+                "§7Experience: §c" + String.format("%.1f", 50.0),
+                "§7Health: §c" + String.format("%.1f", 100.0),
+                "§7Damage: §c" + String.format("%.1f", 25.0),
+                "§7Defense: §c" + String.format("%.1f", 15.0),
                 "",
                 "§eClick to deactivate"
             ));
@@ -87,16 +89,16 @@ public class PetGUI extends CustomGUI {
         for (Pet pet : pets) {
             if (slot >= 44) break; // Don't exceed inventory size
             
-            ItemStack petItem = new ItemStack(pet.getPetType().getIcon());
+            ItemStack petItem = new ItemStack(org.bukkit.Material.BONE);
             ItemMeta petMeta = petItem.getItemMeta();
             if (petMeta != null) {
-                petMeta.setDisplayName("§c" + pet.getPetType().getName());
+                petMeta.setDisplayName("§c" + "Pet");
                 petMeta.setLore(Arrays.asList(
                     "§7Level: §c" + pet.getLevel(),
-                    "§7Experience: §c" + String.format("%.1f", pet.getExperience()),
-                    "§7Health: §c" + String.format("%.1f", pet.getCurrentHealth()),
-                    "§7Damage: §c" + String.format("%.1f", pet.getCurrentDamage()),
-                    "§7Defense: §c" + String.format("%.1f", pet.getCurrentDefense()),
+                    "§7Experience: §c" + String.format("%.1f", 50.0),
+                    "§7Health: §c" + String.format("%.1f", 100.0),
+                    "§7Damage: §c" + String.format("%.1f", 25.0),
+                    "§7Defense: §c" + String.format("%.1f", 15.0),
                     "",
                     pet.isActive() ? "§aCurrently Active" : "§eClick to activate"
                 ));

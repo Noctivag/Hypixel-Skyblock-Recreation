@@ -382,40 +382,48 @@ public enum CompleteWeaponType implements Service {
     }
 
     @Override
-    public CompletableFuture<Void> initialize() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.INITIALIZING;
-            // Initialize complete weapon type
-            status = SystemStatus.ENABLED;
-        });
+    public void initialize() {
+        status = SystemStatus.INITIALIZING;
+        // Initialize complete weapon type
+        status = SystemStatus.RUNNING;
     }
 
     @Override
-    public CompletableFuture<Void> shutdown() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.SHUTTING_DOWN;
-            // Shutdown complete weapon type
-            status = SystemStatus.UNINITIALIZED;
-        });
-    }
-
-    @Override
-    public boolean isInitialized() {
-        return status == SystemStatus.ENABLED;
-    }
-
-    @Override
-    public int getPriority() {
-        return 50;
-    }
-
-    @Override
-    public boolean isRequired() {
-        return false;
+    public void shutdown() {
+        status = SystemStatus.SHUTTING_DOWN;
+        // Shutdown complete weapon type
+        status = SystemStatus.DISABLED;
     }
 
     @Override
     public String getName() {
         return "CompleteWeaponType";
+    }
+
+    @Override
+    public SystemStatus getStatus() {
+        return status;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && status == SystemStatus.DISABLED) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
+    }
+
+    public int getPriority() {
+        return 50;
+    }
+
+    public boolean isRequired() {
+        return false;
     }
 }

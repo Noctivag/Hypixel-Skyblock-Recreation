@@ -34,7 +34,7 @@ public class BasicCommandsGUIListener implements Listener {
         if (display == null) return;
 
         if (display.contains("Zurück")) {
-            new de.noctivag.skyblock.gui.MainMenu(SkyblockPlugin).open(player);
+            new de.noctivag.skyblock.gui.MainMenu(SkyblockPlugin, player).open();
             return;
         }
 
@@ -44,7 +44,8 @@ public class BasicCommandsGUIListener implements Listener {
             case 19 -> { // Nickname
                 if (rightClick) {
                     // Remove nickname
-                    SkyblockPlugin.getNickMap().remove(player.getName());
+                    // TODO: Implement nickname removal
+                    // SkyblockPlugin.getNickMap().remove(player.getName());
                     player.sendMessage(Component.text("§aNickname entfernt!"));
                     new BasicCommandsGUI(SkyblockPlugin).openGUI(player);
                 } else {
@@ -60,7 +61,8 @@ public class BasicCommandsGUIListener implements Listener {
             case 20 -> { // Prefix
                 if (rightClick) {
                     // Remove prefix
-                    SkyblockPlugin.getPrefixMap().remove(player.getName());
+                    // TODO: Implement prefix removal
+                    // SkyblockPlugin.getPrefixMap().remove(player.getName());
                     player.sendMessage(Component.text("§aPrefix entfernt!"));
                     new BasicCommandsGUI(SkyblockPlugin).openGUI(player);
                 } else {

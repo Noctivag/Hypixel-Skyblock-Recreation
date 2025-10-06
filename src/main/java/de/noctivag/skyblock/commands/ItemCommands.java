@@ -1,11 +1,12 @@
 package de.noctivag.skyblock.commands;
 
 import de.noctivag.skyblock.SkyblockPlugin;
-import de.noctivag.skyblock.SkyblockPlugin;
-import org.bukkit.inventory.ItemStack;
-
-import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.gui.CustomItemGUI;
+import de.noctivag.skyblock.gui.CompleteItemGUI;
 import de.noctivag.skyblock.items.*;
+import de.noctivag.skyblock.items.ItemCategory;
+import de.noctivag.skyblock.items.ItemRarity;
+import de.noctivag.skyblock.items.ItemConstants;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -13,11 +14,12 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
-import net.kyori.adventure.text.Component;
 import java.util.stream.Collectors;
+import net.kyori.adventure.text.Component;
 
 /**
  * ItemCommands - Commands for managing Hypixel SkyBlock items and tools
@@ -32,12 +34,10 @@ import java.util.stream.Collectors;
  */
 public class ItemCommands implements CommandExecutor, TabCompleter {
     private final SkyblockPlugin SkyblockPlugin;
-    private final CompleteItemGUI itemGUI;
     private final ItemAbilitySystem abilitySystem;
     
     public ItemCommands(SkyblockPlugin SkyblockPlugin) {
         this.SkyblockPlugin = SkyblockPlugin;
-        this.itemGUI = new CompleteItemGUI(SkyblockPlugin);
         this.abilitySystem = new ItemAbilitySystem(SkyblockPlugin);
     }
     
@@ -52,6 +52,7 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
         
         if (args.length == 0) {
             // Open main item GUI
+            CompleteItemGUI itemGUI = new CompleteItemGUI(SkyblockPlugin, player);
             itemGUI.openItemGUI(player);
             return true;
         }
@@ -84,6 +85,8 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
     }
     
     private void handleGUICommand(Player player, String[] args) {
+        CompleteItemGUI itemGUI = new CompleteItemGUI(SkyblockPlugin, player);
+        
         if (args.length == 1) {
             itemGUI.openItemGUI(player);
             return;
@@ -228,7 +231,7 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
         }
         
         // Activate ability
-        abilitySystem.activateAbility(player, itemType);
+        abilitySystem.activateAbility(player, itemType.getDisplayName());
     }
     
     private void handleListCommand(Player player, String[] args) {
@@ -255,35 +258,35 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
         switch (category) {
             case "dragon":
             case "dragonweapons":
-                itemCategory = ItemCategory.DRAGON_WEAPONS;
+                itemCategory = ItemCategory.DRAGON;
                 break;
             case "dungeon":
             case "dungeonweapons":
-                itemCategory = ItemCategory.DUNGEON_WEAPONS;
+                itemCategory = ItemCategory.DUNGEON;
                 break;
             case "slayer":
             case "slayerweapons":
-                itemCategory = ItemCategory.SLAYER_WEAPONS;
+                itemCategory = ItemCategory.SLAYER;
                 break;
             case "mining":
             case "miningtools":
-                itemCategory = ItemCategory.MINING_TOOLS;
+                itemCategory = ItemCategory.MINING;
                 break;
             case "fishing":
             case "fishingrods":
-                itemCategory = ItemCategory.FISHING_RODS;
+                itemCategory = ItemCategory.FISHING;
                 break;
             case "magic":
             case "magicweapons":
-                itemCategory = ItemCategory.MAGIC_WEAPONS;
+                itemCategory = ItemCategory.MAGIC;
                 break;
             case "bows":
             case "crossbows":
-                itemCategory = ItemCategory.BOWS_CROSSBOWS;
+                itemCategory = ItemCategory.WEAPONS;
                 break;
             case "special":
             case "specialitems":
-                itemCategory = ItemCategory.SPECIAL_ITEMS;
+                itemCategory = ItemCategory.MISC;
                 break;
             default:
                 player.sendMessage("§cUnknown category: " + category);
@@ -292,7 +295,8 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
         }
         
         // List items in category
-        ItemType[] items = ItemType.getByCategory(itemCategory);
+        List<ItemType> itemsList = ItemType.getByCategory(itemCategory);
+        ItemType[] items = itemsList.toArray(new ItemType[0]);
         player.sendMessage("§6§l=== " + itemCategory.getDisplayName() + " ===");
         player.sendMessage("§7" + itemCategory.getDescription());
         player.sendMessage("");
@@ -332,7 +336,7 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
         
         // Show item information
         ItemRarity rarity = itemType.getRarity();
-        ItemCategory category = itemType.getCategory();
+        ItemCategory category = getCategoryByName(itemType.getCategory());
         
         player.sendMessage("§6§l=== " + itemType.getDisplayName() + " ===");
         player.sendMessage("§7Category: " + category.getDisplayName());
@@ -368,7 +372,7 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
             
             // Set lore
             ItemRarity rarity = itemType.getRarity();
-            ItemCategory category = itemType.getCategory();
+            ItemCategory category = getCategoryByName(itemType.getCategory());
             
             List<String> lore = new ArrayList<>();
             lore.add("§7Category: " + category.getDisplayName());
@@ -388,105 +392,22 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
     private Material getMaterialForItemType(ItemType itemType) {
         // Map item types to materials
         switch (itemType) {
-            // Dragon Weapons
-            case ASPECT_OF_THE_DRAGONS:
-            case ASPECT_OF_THE_END:
-            case ASPECT_OF_THE_VOID:
+            case SWORD:
                 return Material.DIAMOND_SWORD;
-                
-            // Dungeon Weapons
-            case HYPERION:
-            case SCYLLA:
-            case ASTRAEA:
-            case VALKYRIE:
-            case SPIRIT_SWORD:
-            case ADAPTIVE_BLADE:
-            case SHADOW_FURY:
-            case LIVID_DAGGER:
-                return Material.DIAMOND_SWORD;
-            case BONEMERANG:
-                return Material.BONE;
-            case SPIRIT_BOW:
+            case BOW:
                 return Material.BOW;
-            case SPIRIT_SCEPTER:
-                return Material.STICK;
-                
-            // Slayer Weapons
-            case REVENANT_FALCHION:
-            case REAPER_FALCHION:
-            case REAPER_SCYTHE:
-            case VOIDEDGE_KATANA:
-            case VOIDWALKER_KATANA:
-            case VOIDLING_KATANA:
-                return Material.IRON_SWORD;
-            case AXE_OF_THE_SHREDDED:
+            case AXE:
                 return Material.IRON_AXE;
-                
-            // Mining Tools
-            case DIAMOND_PICKAXE:
-            case STONK:
-            case MOLTEN_PICKAXE:
-            case TITANIUM_PICKAXE:
-            case DRILL_ENGINE:
-            case TITANIUM_DRILL_DR_X355:
-            case TITANIUM_DRILL_DR_X455:
-            case TITANIUM_DRILL_DR_X555:
-            case GAUNTLET:
+            case PICKAXE:
                 return Material.DIAMOND_PICKAXE;
-            case GOLDEN_PICKAXE:
-                return Material.GOLDEN_PICKAXE;
-                
-            // Fishing Rods
-            case ROD_OF_THE_SEA:
-            case CHALLENGING_ROD:
-            case ROD_OF_LEGENDS:
-            case SHARK_BAIT:
-            case SHARK_SCALE_ROD:
-            case AUGER_ROD:
-                return Material.FISHING_ROD;
-                
-            // Magic Weapons
-            case FIRE_VEIL_WAND:
-                return Material.BLAZE_ROD;
-            case FROZEN_SCYTHE:
-                return Material.DIAMOND_SWORD;
-            case VOODOO_DOLL:
-            case BONZO_STAFF:
-            case PROFESSOR_SCARF_STAFF:
-                return Material.STICK;
-            case SCARF_STUDIES:
-                return Material.BOOK;
-            case THORN_BOW:
-            case LAST_BREATH:
-                return Material.BOW;
-                
-            // Bows
-            case JUJU_SHORTBOW:
-            case TERMINATOR:
-            case ARTISANAL_SHORTBOW:
-            case MAGMA_BOW:
-            case VENOM_TOUCH:
-                return Material.BOW;
-                
-            // Special Items
-            case GRAPPLING_HOOK:
-                return Material.FISHING_ROD;
-            case ENDER_PEARL:
-                return Material.ENDER_PEARL;
-            case AOTE:
-            case AOTV:
-                return Material.DIAMOND_SWORD;
-            case PIGMAN_SWORD:
-                return Material.GOLDEN_SWORD;
-            case GOLDEN_APPLE:
+            case HOE:
+                return Material.DIAMOND_HOE;
+            case SHOVEL:
+                return Material.DIAMOND_SHOVEL;
+            case CONSUMABLE:
                 return Material.GOLDEN_APPLE;
-            case ENCHANTED_GOLDEN_APPLE:
-                return Material.ENCHANTED_GOLDEN_APPLE;
-            case POTATO_WAR_ARMOR:
-                return Material.DIAMOND_CHESTPLATE;
-                
             default:
-                return Material.DIAMOND_SWORD;
+                return Material.STICK;
         }
     }
     
@@ -543,5 +464,18 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
     public void openSpecialItemsGUI(Player player) {
         // TODO: Implement special items GUI
         player.sendMessage("§cSpecial items GUI not yet implemented!");
+    }
+    
+    /**
+     * Get category by name
+     */
+    private ItemCategory getCategoryByName(String categoryName) {
+        for (ItemCategory category : ItemCategory.values()) {
+            if (category.getDisplayName().equalsIgnoreCase(categoryName) || 
+                category.name().equalsIgnoreCase(categoryName)) {
+                return category;
+            }
+        }
+        return null;
     }
 }

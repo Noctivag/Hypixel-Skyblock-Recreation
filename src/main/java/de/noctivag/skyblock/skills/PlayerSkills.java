@@ -1,260 +1,240 @@
 package de.noctivag.skyblock.skills;
-import java.util.UUID;
-import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
- * Player Skills - Individuelle Skill-Daten für Spieler
- * 
- * Verantwortlich für:
- * - Skill-Level und XP
- * - Skill-Fortschritt
- * - Skill-Statistiken
- * - Skill-Boosts
+ * Represents a player's skill data and progression
  */
 public class PlayerSkills {
     private final UUID playerId;
-    private final Map<SkillType, Double> skillXP = new ConcurrentHashMap<>();
-    private final Map<SkillType, Integer> skillLevels = new ConcurrentHashMap<>();
-    private final Map<SkillType, Double> totalXP = new ConcurrentHashMap<>();
-    private final Map<SkillType, Long> lastActivity = new ConcurrentHashMap<>();
-    
-    // Skill Statistics
-    private final Map<SkillType, Integer> skillUses = new ConcurrentHashMap<>();
-    private final Map<SkillType, Double> skillEfficiency = new ConcurrentHashMap<>();
-    
+    private final Map<SkillType, Long> skillXP;
+    private final Map<SkillType, Integer> skillLevels;
+    private final Map<SkillType, Long> lastUpdated;
+
     public PlayerSkills(UUID playerId) {
         this.playerId = playerId;
-        initializeSkills();
-    }
-    
-    private void initializeSkills() {
-        for (SkillType skillType : SkillType.values()) {
-            skillXP.put(skillType, 0.0);
-            skillLevels.put(skillType, 1);
-            totalXP.put(skillType, 0.0);
-            lastActivity.put(skillType, java.lang.System.currentTimeMillis());
-            skillUses.put(skillType, 0);
-            skillEfficiency.put(skillType, 1.0);
+        this.skillXP = new HashMap<>();
+        this.skillLevels = new HashMap<>();
+        this.lastUpdated = new HashMap<>();
+        
+        // Initialize all skills with level 0
+        for (SkillType skill : SkillType.values()) {
+            skillXP.put(skill, 0L);
+            skillLevels.put(skill, 0);
+            lastUpdated.put(skill, System.currentTimeMillis());
         }
     }
-    
-    public double addXP(SkillType skillType, double xpAmount) {
-        double currentXP = skillXP.get(skillType);
-        double newXP = currentXP + xpAmount;
+
+    public PlayerSkills(UUID playerId, Map<SkillType, Long> skillXP, Map<SkillType, Integer> skillLevels) {
+        this.playerId = playerId;
+        this.skillXP = new HashMap<>(skillXP);
+        this.skillLevels = new HashMap<>(skillLevels);
+        this.lastUpdated = new HashMap<>();
         
-        // Update XP
-        skillXP.put(skillType, newXP);
-        totalXP.put(skillType, totalXP.get(skillType) + xpAmount);
-        lastActivity.put(skillType, java.lang.System.currentTimeMillis());
-        
-        // Update level
-        int newLevel = calculateLevel(newXP);
-        skillLevels.put(skillType, newLevel);
-        
-        // Update statistics
-        skillUses.put(skillType, skillUses.get(skillType) + 1);
-        
-        return newXP;
-    }
-    
-    public int getLevel(SkillType skillType) {
-        return skillLevels.getOrDefault(skillType, 1);
-    }
-    
-    public double getXP(SkillType skillType) {
-        return skillXP.getOrDefault(skillType, 0.0);
-    }
-    
-    public double getTotalXP(SkillType skillType) {
-        return totalXP.getOrDefault(skillType, 0.0);
-    }
-    
-    public long getLastActivity(SkillType skillType) {
-        return lastActivity.getOrDefault(skillType, 0L);
-    }
-    
-    public int getSkillUses(SkillType skillType) {
-        return skillUses.getOrDefault(skillType, 0);
-    }
-    
-    public double getSkillEfficiency(SkillType skillType) {
-        return skillEfficiency.getOrDefault(skillType, 1.0);
-    }
-    
-    public void setSkillEfficiency(SkillType skillType, double efficiency) {
-        skillEfficiency.put(skillType, efficiency);
-    }
-    
-    public double getXPToNextLevel(SkillType skillType) {
-        double currentXP = getXP(skillType);
-        int currentLevel = getLevel(skillType);
-        double xpForNextLevel = getXPRequiredForLevel(currentLevel + 1);
-        return xpForNextLevel - currentXP;
-    }
-    
-    public double getXPProgress(SkillType skillType) {
-        double currentXP = getXP(skillType);
-        int currentLevel = getLevel(skillType);
-        double xpForCurrentLevel = getXPRequiredForLevel(currentLevel);
-        double xpForNextLevel = getXPRequiredForLevel(currentLevel + 1);
-        
-        return (currentXP - xpForCurrentLevel) / (xpForNextLevel - xpForCurrentLevel);
-    }
-    
-    public int calculateLevel(double xp) {
-        int level = 1;
-        double totalXPRequired = 0;
-        
-        while (totalXPRequired <= xp) {
-            level++;
-            totalXPRequired += getXPRequiredForLevel(level);
+        // Initialize lastUpdated for all skills
+        for (SkillType skill : SkillType.values()) {
+            lastUpdated.put(skill, System.currentTimeMillis());
         }
         
-        return level - 1;
+        // Recalculate levels based on XP
+        recalculateAllLevels();
     }
-    
-    public double getXPRequiredForLevel(int level) {
-        if (level <= 1) return 0;
-        if (level <= 15) return level * 2.0;
-        if (level <= 30) return 15 * 2.0 + (level - 15) * 3.0;
-        if (level <= 50) return 15 * 2.0 + 15 * 3.0 + (level - 30) * 4.0;
-        return 15 * 2.0 + 15 * 3.0 + 20 * 4.0 + (level - 50) * 5.0;
+
+    /**
+     * Add XP to a specific skill
+     */
+    public boolean addXP(SkillType skill, long xp) {
+        if (xp <= 0) return false;
+        
+        long currentXP = skillXP.getOrDefault(skill, 0L);
+        int currentLevel = skillLevels.getOrDefault(skill, 0);
+        
+        long newXP = currentXP + xp;
+        int newLevel = skill.getLevelFromXP(newXP);
+        
+        skillXP.put(skill, newXP);
+        skillLevels.put(skill, newLevel);
+        lastUpdated.put(skill, System.currentTimeMillis());
+        
+        // Return true if level increased
+        return newLevel > currentLevel;
     }
-    
-    public double getTotalXPRequiredForLevel(int level) {
-        double total = 0;
-        for (int i = 2; i <= level; i++) {
-            total += getXPRequiredForLevel(i);
-        }
-        return total;
+
+    /**
+     * Set XP for a specific skill
+     */
+    public void setXP(SkillType skill, long xp) {
+        skillXP.put(skill, Math.max(0, xp));
+        skillLevels.put(skill, skill.getLevelFromXP(xp));
+        lastUpdated.put(skill, System.currentTimeMillis());
     }
-    
+
+    /**
+     * Get XP for a specific skill
+     */
+    public long getXP(SkillType skill) {
+        return skillXP.getOrDefault(skill, 0L);
+    }
+
+    /**
+     * Get level for a specific skill
+     */
+    public int getLevel(SkillType skill) {
+        return skillLevels.getOrDefault(skill, 0);
+    }
+
+    /**
+     * Get XP progress for current level
+     */
+    public long getXPProgress(SkillType skill) {
+        long totalXP = getXP(skill);
+        int level = getLevel(skill);
+        return skill.getXPProgressForLevel(totalXP, level);
+    }
+
+    /**
+     * Get XP required for next level
+     */
+    public long getXPRequiredForNextLevel(SkillType skill) {
+        long totalXP = getXP(skill);
+        int level = getLevel(skill);
+        return skill.getXPRequiredForNextLevel(totalXP, level);
+    }
+
+    /**
+     * Get total XP across all skills
+     */
+    public long getTotalXP() {
+        return skillXP.values().stream().mapToLong(Long::longValue).sum();
+    }
+
+    /**
+     * Get total level across all skills
+     */
     public int getTotalLevel() {
         return skillLevels.values().stream().mapToInt(Integer::intValue).sum();
     }
-    
-    public double getTotalXP() {
-        return totalXP.values().stream().mapToDouble(Double::doubleValue).sum();
+
+    /**
+     * Get average skill level
+     */
+    public double getAverageLevel() {
+        return skillLevels.values().stream().mapToInt(Integer::intValue).average().orElse(0.0);
     }
-    
-    public SkillType getHighestSkill() {
-        return skillLevels.entrySet().stream()
-            .max(Map.Entry.comparingByValue())
-            .map(Map.Entry::getKey)
-            .orElse(SkillType.FARMING);
+
+    /**
+     * Get skill bonuses for a specific skill
+     */
+    public SkillBonuses getBonuses(SkillType skill) {
+        int level = getLevel(skill);
+        return skill.getBonusesForLevel(level);
     }
-    
-    public SkillType getLowestSkill() {
-        return skillLevels.entrySet().stream()
-            .min(Map.Entry.comparingByValue())
-            .map(Map.Entry::getKey)
-            .orElse(SkillType.FARMING);
+
+    /**
+     * Get combined bonuses from all skills
+     */
+    public SkillBonuses getCombinedBonuses() {
+        SkillBonuses[] bonuses = new SkillBonuses[SkillType.values().length];
+        for (int i = 0; i < SkillType.values().length; i++) {
+            bonuses[i] = getBonuses(SkillType.values()[i]);
+        }
+        return SkillBonuses.combine(bonuses);
     }
-    
-    public List<SkillType> getSkillsByLevel() {
-        List<SkillType> skills = new ArrayList<>(Arrays.asList(SkillType.values()));
-        skills.sort((a, b) -> Integer.compare(getLevel(b), getLevel(a)));
-        return skills;
+
+    /**
+     * Get the highest level skill
+     */
+    public SkillType getHighestLevelSkill() {
+        SkillType highest = SkillType.COMBAT;
+        int highestLevel = 0;
+        
+        for (Map.Entry<SkillType, Integer> entry : skillLevels.entrySet()) {
+            if (entry.getValue() > highestLevel) {
+                highestLevel = entry.getValue();
+                highest = entry.getKey();
+            }
+        }
+        
+        return highest;
     }
-    
-    public Map<SkillType, Integer> getAllLevels() {
-        return new HashMap<>(skillLevels);
+
+    /**
+     * Get the lowest level skill
+     */
+    public SkillType getLowestLevelSkill() {
+        SkillType lowest = SkillType.COMBAT;
+        int lowestLevel = Integer.MAX_VALUE;
+        
+        for (Map.Entry<SkillType, Integer> entry : skillLevels.entrySet()) {
+            if (entry.getValue() < lowestLevel) {
+                lowestLevel = entry.getValue();
+                lowest = entry.getKey();
+            }
+        }
+        
+        return lowest;
     }
-    
-    public Map<SkillType, Double> getAllXP() {
+
+    /**
+     * Check if player has reached a specific level in any skill
+     */
+    public boolean hasReachedLevel(int level) {
+        return skillLevels.values().stream().anyMatch(l -> l >= level);
+    }
+
+    /**
+     * Check if player has reached a specific level in a specific skill
+     */
+    public boolean hasReachedLevel(SkillType skill, int level) {
+        return getLevel(skill) >= level;
+    }
+
+    /**
+     * Get skill level distribution
+     */
+    public Map<Integer, Integer> getLevelDistribution() {
+        Map<Integer, Integer> distribution = new HashMap<>();
+        for (int level : skillLevels.values()) {
+            distribution.put(level, distribution.getOrDefault(level, 0) + 1);
+        }
+        return distribution;
+    }
+
+    /**
+     * Recalculate all skill levels based on current XP
+     */
+    private void recalculateAllLevels() {
+        for (SkillType skill : SkillType.values()) {
+            long xp = skillXP.getOrDefault(skill, 0L);
+            skillLevels.put(skill, skill.getLevelFromXP(xp));
+        }
+    }
+
+    /**
+     * Get all skill data as a map
+     */
+    public Map<SkillType, Long> getAllSkillXP() {
         return new HashMap<>(skillXP);
     }
-    
-    public Map<SkillType, Double> getAllTotalXP() {
-        return new HashMap<>(totalXP);
+
+    /**
+     * Get all skill levels as a map
+     */
+    public Map<SkillType, Integer> getAllSkillLevels() {
+        return new HashMap<>(skillLevels);
     }
-    
-    public Map<SkillType, Integer> getAllSkillUses() {
-        return new HashMap<>(skillUses);
+
+    /**
+     * Get last updated timestamp for a skill
+     */
+    public long getLastUpdated(SkillType skill) {
+        return lastUpdated.getOrDefault(skill, 0L);
     }
-    
-    public Map<SkillType, Double> getAllSkillEfficiency() {
-        return new HashMap<>(skillEfficiency);
-    }
-    
-    public void resetSkill(SkillType skillType) {
-        skillXP.put(skillType, 0.0);
-        skillLevels.put(skillType, 1);
-        totalXP.put(skillType, 0.0);
-        lastActivity.put(skillType, java.lang.System.currentTimeMillis());
-        skillUses.put(skillType, 0);
-        skillEfficiency.put(skillType, 1.0);
-    }
-    
-    public void resetAllSkills() {
-        for (SkillType skillType : SkillType.values()) {
-            resetSkill(skillType);
-        }
-    }
-    
-    public boolean hasSkillLevel(SkillType skillType, int requiredLevel) {
-        return getLevel(skillType) >= requiredLevel;
-    }
-    
-    public double getSkillBonus(SkillType skillType) {
-        int level = getLevel(skillType);
-        return level * 0.01; // 1% bonus per level
-    }
-    
-    public double getSkillMultiplier(SkillType skillType) {
-        int level = getLevel(skillType);
-        return 1.0 + (level * 0.005); // 0.5% multiplier per level
-    }
-    
-    public String getSkillProgressBar(SkillType skillType) {
-        double progress = getXPProgress(skillType);
-        int barLength = 20;
-        int filledLength = (int) (progress * barLength);
-        
-        StringBuilder bar = new StringBuilder();
-        bar.append("§a");
-        for (int i = 0; i < filledLength; i++) {
-            bar.append("█");
-        }
-        bar.append("§7");
-        for (int i = filledLength; i < barLength; i++) {
-            bar.append("█");
-        }
-        
-        return bar.toString();
-    }
-    
-    public String getSkillSummary() {
-        StringBuilder summary = new StringBuilder();
-        summary.append("§6§lSkill Summary:\n");
-        
-        for (SkillType skillType : getSkillsByLevel()) {
-            int level = getLevel(skillType);
-            double xp = getXP(skillType);
-            double xpToNext = getXPToNextLevel(skillType);
-            
-            summary.append(skillType.getDisplayName()).append(" §7Level: §e").append(level)
-                   .append(" §7XP: §a").append(String.format("%.1f", xp))
-                   .append(" §7To Next: §b").append(String.format("%.1f", xpToNext)).append("\n");
-        }
-        
-        return summary.toString();
-    }
-    
+
+    // Getters
     public UUID getPlayerId() {
         return playerId;
-    }
-    
-    @Override
-    public String toString() {
-        return "PlayerSkills{" +
-                "playerId=" + playerId +
-                ", totalLevel=" + getTotalLevel() +
-                ", totalXP=" + getTotalXP() +
-                ", highestSkill=" + getHighestSkill() +
-                '}';
     }
 }

@@ -33,13 +33,15 @@ public class SetHomeCommand implements CommandExecutor {
         }
 
         String homeName = args[0];
-        int currentHomes = SkyblockPlugin.getLocationManager().getPlayerHomeCount(player);
-        int maxHomes = SkyblockPlugin.getLocationManager().getMaxHomes();
-
+        Object locationManager = SkyblockPlugin.getLocationManager();
+        int currentHomes = 0;
+        int maxHomes = 5;
         try {
-            SkyblockPlugin.getLocationManager().setHome(player, homeName, player.getLocation());
+            currentHomes = (Integer) locationManager.getClass().getMethod("getPlayerHomeCount", Player.class).invoke(locationManager, player);
+            maxHomes = (Integer) locationManager.getClass().getMethod("getMaxHomes").invoke(locationManager);
+            locationManager.getClass().getMethod("setHome", Player.class, String.class, org.bukkit.Location.class).invoke(locationManager, player, homeName, player.getLocation());
             player.sendMessage("§aHome §e" + homeName + " §awurde gesetzt! §7(" + currentHomes + "/" + maxHomes + ")");
-        } catch (IllegalStateException e) {
+        } catch (Exception e) {
             player.sendMessage("§cDu hast bereits die maximale Anzahl an Homes erreicht! §7(" + maxHomes + ")");
         }
 

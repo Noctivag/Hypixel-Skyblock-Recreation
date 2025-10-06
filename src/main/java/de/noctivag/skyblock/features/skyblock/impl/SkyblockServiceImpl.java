@@ -44,68 +44,46 @@ public class SkyblockServiceImpl implements SkyblockService {
     }
     
     @Override
-    public CompletableFuture<Void> initialize() {
+    public void initialize() {
         status = SystemStatus.INITIALIZING;
         
-        return CompletableFuture.runAsync(() -> {
-            try {
-                // Initialize skyblock systems
-                loadPlayerData();
-                
-                status = SystemStatus.INITIALIZED;
-                logger.info("SkyblockService initialized successfully");
-            } catch (Exception e) {
-                status = SystemStatus.ERROR;
-                logger.severe("Failed to initialize SkyblockService: " + e.getMessage());
-                throw new RuntimeException("SkyblockService initialization failed", e);
-            }
-        });
+        try {
+            // Initialize skyblock systems
+            loadPlayerData();
+            
+            status = SystemStatus.RUNNING;
+            logger.info("SkyblockService initialized successfully");
+        } catch (Exception e) {
+            status = SystemStatus.ERROR;
+            logger.severe("Failed to initialize SkyblockService: " + e.getMessage());
+            throw new RuntimeException("SkyblockService initialization failed", e);
+        }
     }
     
     @Override
-    public CompletableFuture<Void> shutdown() {
+    public void shutdown() {
         status = SystemStatus.SHUTTING_DOWN;
         
-        return CompletableFuture.runAsync(() -> {
-            try {
-                // Save all player data
-                savePlayerData();
-                
-                status = SystemStatus.SHUTDOWN;
-                logger.info("SkyblockService shutdown completed");
-            } catch (Exception e) {
-                status = SystemStatus.ERROR;
-                logger.warning("Error during SkyblockService shutdown: " + e.getMessage());
-            }
-        });
-    }
-    
-    @Override
-    public CompletableFuture<Void> enable() {
-        return CompletableFuture.runAsync(() -> {
-            enabled = true;
-            status = SystemStatus.ENABLED;
-            logger.info("SkyblockService enabled");
-        });
-    }
-    
-    @Override
-    public CompletableFuture<Void> disable() {
-        return CompletableFuture.runAsync(() -> {
-            enabled = false;
+        try {
+            // Save all player data
+            savePlayerData();
+            
             status = SystemStatus.DISABLED;
-            logger.info("SkyblockService disabled");
-        });
-    }
-    
-    @Override
-    public boolean isInitialized() {
-        return status != SystemStatus.UNINITIALIZED;
+            logger.info("SkyblockService shutdown completed");
+        } catch (Exception e) {
+            status = SystemStatus.ERROR;
+            logger.warning("Error during SkyblockService shutdown: " + e.getMessage());
+        }
     }
     
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
     
     @Override
@@ -118,15 +96,6 @@ public class SkyblockServiceImpl implements SkyblockService {
         return status;
     }
     
-    @Override
-    public void setStatus(SystemStatus status) {
-        this.status = status;
-    }
-    
-    @Override
-    public int getPriority() {
-        return 50; // Medium priority
-    }
     
     @Override
     public CompletableFuture<Void> createIsland(UUID playerId) {

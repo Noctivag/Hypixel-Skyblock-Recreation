@@ -26,41 +26,47 @@ public class SkillRewardManager implements Service {
     }
     
     @Override
-    public CompletableFuture<Void> initialize() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.INITIALIZING;
-            
-            // Load reward data from database
-            loadRewards();
-            
-            status = SystemStatus.ENABLED;
-        });
+    public void initialize() {
+        status = SystemStatus.INITIALIZING;
+        
+        // Load reward data from database
+        loadRewards();
+        
+        status = SystemStatus.RUNNING;
     }
     
     @Override
-    public CompletableFuture<Void> shutdown() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.SHUTTING_DOWN;
-            
-            // Save reward data to database
-            saveRewards();
-            
-            status = SystemStatus.UNINITIALIZED;
-        });
+    public void shutdown() {
+        status = SystemStatus.SHUTTING_DOWN;
+        
+        // Save reward data to database
+        saveRewards();
+        
+        status = SystemStatus.DISABLED;
     }
-    
-    @Override
-    public boolean isInitialized() {
-        return status == SystemStatus.INITIALIZED || status == SystemStatus.ENABLED;
-    }
-    
-    public SystemStatus getStatus() {
-        return status;
-    }
-    
+
     @Override
     public String getName() {
         return "SkillRewardManager";
+    }
+
+    @Override
+    public SystemStatus getStatus() {
+        return status;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && status == SystemStatus.DISABLED) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
     }
     
     /**

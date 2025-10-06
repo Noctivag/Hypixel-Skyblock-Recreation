@@ -20,6 +20,14 @@ public class CosmeticsMenu implements InventoryHolder {
         // TODO: Initialize cosmetics menu items
     }
     
+    public CosmeticsMenu(SkyblockPlugin plugin, Object cosmeticsManager, Player player) {
+        this.inventory = Bukkit.createInventory(this, 54, "§d§lCosmetics");
+        this.player = player;
+        // TODO: Initialize cosmetics menu items
+    }
+    
+    private Player player;
+    
     @Override
     public Inventory getInventory() {
         return inventory;
@@ -27,6 +35,16 @@ public class CosmeticsMenu implements InventoryHolder {
     
     public void open(Player player) {
         player.openInventory(inventory);
+    }
+    
+    public void open() {
+        if (player != null) {
+            open(player);
+        }
+    }
+    
+    public void openGUI(Player player) {
+        open(player);
     }
     
     public Particle getParticleAtSlot(int slot) {

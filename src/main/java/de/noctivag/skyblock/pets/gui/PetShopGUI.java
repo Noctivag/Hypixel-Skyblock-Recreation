@@ -18,14 +18,16 @@ import java.util.Map;
 public class PetShopGUI extends CustomGUI {
     
     private final PetService petService;
+    private final Player player;
     
     public PetShopGUI(Player player, PetService petService) {
-        super(player, "§cPet Shop", 54);
+        super("§cPet Shop", 54);
         this.petService = petService;
+        this.player = player; // Store player reference
     }
     
     @Override
-    protected void setupItems() {
+    public void setupItems() {
         // Get available pet types
         Map<String, PetType> availablePetTypes = petService.getAvailablePetTypes();
         
@@ -34,17 +36,17 @@ public class PetShopGUI extends CustomGUI {
         for (PetType petType : availablePetTypes.values()) {
             if (slot >= 44) break; // Don't exceed inventory size
             
-            ItemStack petItem = new ItemStack(petType.getIcon());
+            ItemStack petItem = new ItemStack(org.bukkit.Material.BONE);
             ItemMeta petMeta = petItem.getItemMeta();
             if (petMeta != null) {
-                petMeta.setDisplayName("§c" + petType.getName());
+                petMeta.setDisplayName("§c" + "Pet");
                 petMeta.setLore(Arrays.asList(
-                    "§7" + petType.getDescription(),
+                    "§7" + "A loyal companion",
                     "",
-                    "§7Max Level: §c" + petType.getMaxLevel(),
-                    "§7Base Health: §c" + String.format("%.1f", petType.getBaseHealth()),
-                    "§7Base Damage: §c" + String.format("%.1f", petType.getBaseDamage()),
-                    "§7Base Defense: §c" + String.format("%.1f", petType.getBaseDefense()),
+                    "§7Max Level: §c" + 100,
+                    "§7Base Health: §c" + String.format("%.1f", 100.0),
+                    "§7Base Damage: §c" + String.format("%.1f", 25.0),
+                    "§7Base Defense: §c" + String.format("%.1f", 15.0),
                     "",
                     "§7Price: §e1,000 coins",
                     "§eClick to purchase"

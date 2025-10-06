@@ -24,41 +24,49 @@ public class SkillMilestoneManager implements Service {
     }
 
     @Override
-    public CompletableFuture<Void> initialize() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.INITIALIZING;
-            // Initialize milestone manager
-            status = SystemStatus.ENABLED;
-        });
+    public void initialize() {
+        status = SystemStatus.INITIALIZING;
+        // Initialize milestone manager
+        status = SystemStatus.RUNNING;
     }
 
     @Override
-    public CompletableFuture<Void> shutdown() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.SHUTTING_DOWN;
-            // Shutdown milestone manager
-            status = SystemStatus.UNINITIALIZED;
-        });
-    }
-
-    @Override
-    public boolean isInitialized() {
-        return status == SystemStatus.ENABLED;
-    }
-
-    @Override
-    public int getPriority() {
-        return 50;
-    }
-
-    @Override
-    public boolean isRequired() {
-        return false;
+    public void shutdown() {
+        status = SystemStatus.SHUTTING_DOWN;
+        // Shutdown milestone manager
+        status = SystemStatus.DISABLED;
     }
 
     @Override
     public String getName() {
         return "SkillMilestoneManager";
+    }
+
+    @Override
+    public SystemStatus getStatus() {
+        return status;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && status == SystemStatus.DISABLED) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
+    }
+
+    public int getPriority() {
+        return 50;
+    }
+
+    public boolean isRequired() {
+        return false;
     }
 
     private void initializeMilestones() {

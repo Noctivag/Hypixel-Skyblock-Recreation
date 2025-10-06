@@ -54,6 +54,25 @@ public class LootService implements Service {
         return status;
     }
     
+    @Override
+    public String getName() {
+        return "LootService";
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && status == SystemStatus.DISABLED) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
+    }
+    
     /**
      * Initialize default loot tables
      */

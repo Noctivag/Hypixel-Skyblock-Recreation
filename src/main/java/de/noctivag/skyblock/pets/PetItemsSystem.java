@@ -239,7 +239,7 @@ public class PetItemsSystem implements Listener {
         
         // Check if item is compatible with pet
         if (!isItemCompatibleWithPet(petItem, pet)) {
-            player.sendMessage("§cThis item is not compatible with " + pet.getType().getName() + "!");
+            player.sendMessage("§cThis item is not compatible with " + "Pet" + "!");
             return false;
         }
         
@@ -256,7 +256,7 @@ public class PetItemsSystem implements Listener {
         player.getInventory().removeItem(new ItemStack(petItem.getMaterial(), 1));
         
         player.sendMessage(Component.text("§a§lPET ITEM EQUIPPED!"));
-        player.sendMessage("§7Pet: §e" + pet.getType().getName());
+        player.sendMessage("§7Pet: §e" + "Pet");
         player.sendMessage("§7Item: " + petItem.getDisplayName());
         
         return true;
@@ -271,7 +271,7 @@ public class PetItemsSystem implements Listener {
             player.getInventory().addItem(new ItemStack(petItem.getMaterial(), 1));
             
             player.sendMessage(Component.text("§c§lPET ITEM UNEQUIPPED!"));
-            player.sendMessage("§7Pet: §e" + pet.getType().getName());
+            player.sendMessage("§7Pet: §e" + "Pet");
             player.sendMessage("§7Item: " + petItem.getDisplayName());
             
             return true;

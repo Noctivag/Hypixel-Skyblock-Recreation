@@ -1,14 +1,14 @@
 package de.noctivag.skyblock.infrastructure.config.impl;
 
 import de.noctivag.skyblock.SkyblockPlugin;
-import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.core.api.Service;
+import de.noctivag.skyblock.core.api.SystemStatus;
 import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.infrastructure.config.ConfigService;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import de.noctivag.skyblock.SkyblockPlugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,46 +44,37 @@ public class ConfigServiceImpl implements ConfigService {
     }
     
     @Override
-    public CompletableFuture<Void> initialize() {
-        return CompletableFuture.runAsync(() -> {
-            try {
-                // Initialize main config
-                SkyblockPlugin.saveDefaultConfig();
-                mainConfig = SkyblockPlugin.getConfig();
-                
-                // Load other configuration files
-                loadConfigFiles();
-                
-                initialized = true;
-                logger.info("ConfigService initialized successfully");
-            } catch (Exception e) {
-                logger.severe("Failed to initialize ConfigService: " + e.getMessage());
-                throw new RuntimeException("ConfigService initialization failed", e);
-            }
-        }, executor);
+    public void initialize() {
+        try {
+            // Initialize main config
+            SkyblockPlugin.saveDefaultConfig();
+            mainConfig = SkyblockPlugin.getConfig();
+            
+            // Load other configuration files
+            loadConfigFiles();
+            
+            initialized = true;
+            logger.info("ConfigService initialized successfully");
+        } catch (Exception e) {
+            logger.severe("Failed to initialize ConfigService: " + e.getMessage());
+            throw new RuntimeException("ConfigService initialization failed", e);
+        }
     }
     
     @Override
-    public CompletableFuture<Void> shutdown() {
-        return CompletableFuture.runAsync(() -> {
-            try {
-                // Save all configurations
-                for (String fileName : configs.keySet()) {
-                    saveConfig(fileName).join();
-                }
-                
-                executor.shutdown();
-                initialized = false;
-                logger.info("ConfigService shutdown completed");
-            } catch (Exception e) {
-                logger.warning("Error during ConfigService shutdown: " + e.getMessage());
+    public void shutdown() {
+        try {
+            // Save all configurations
+            for (String fileName : configs.keySet()) {
+                saveConfig(fileName).join();
             }
-        });
-    }
-    
-    @Override
-    public boolean isInitialized() {
-        return initialized;
+            
+            executor.shutdown();
+            initialized = false;
+            logger.info("ConfigService shutdown completed");
+        } catch (Exception e) {
+            logger.warning("Error during ConfigService shutdown: " + e.getMessage());
+        }
     }
     
     @Override
@@ -92,8 +83,22 @@ public class ConfigServiceImpl implements ConfigService {
     }
     
     @Override
-    public int getPriority() {
-        return 10; // High priority - needed by other services
+    public SystemStatus getStatus() {
+        return initialized ? SystemStatus.RUNNING : SystemStatus.DISABLED;
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return initialized;
+    }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && !initialized) {
+            initialize();
+        } else if (!enabled && initialized) {
+            shutdown();
+        }
     }
     
     @Override

@@ -30,13 +30,24 @@ public class WarpCommand implements CommandExecutor {
 
         if (args.length == 0) {
             // Liste alle verfügbaren Warps auf
-            java.util.List<String> warps = SkyblockPlugin.getLocationManager().getWarpNames();
+            Object locationManager = SkyblockPlugin.getLocationManager();
+            java.util.List<String> warps = new java.util.ArrayList<>();
+            try {
+                warps = (java.util.List<String>) locationManager.getClass().getMethod("getWarpNames").invoke(locationManager);
+            } catch (Exception e) {
+                // If method doesn't exist, warps will be empty
+            }
             if (warps.isEmpty()) {
                 player.sendMessage(Component.text("§cEs sind keine Warps verfügbar!"));
             } else {
                 StringBuilder message = new StringBuilder("§7Verfügbare Warps:\n");
                 for (String warpName : warps) {
-                    de.noctivag.skyblock.locations.Warp warp = SkyblockPlugin.getLocationManager().getWarp(warpName);
+                    de.noctivag.skyblock.locations.Warp warp = null;
+                    try {
+                        warp = (de.noctivag.skyblock.locations.Warp) locationManager.getClass().getMethod("getWarp", String.class).invoke(locationManager, warpName);
+                    } catch (Exception e) {
+                        // If method doesn't exist, warp will be null
+                    }
                     if (warp.getPermission().isEmpty() || player.hasPermission(warp.getPermission())) {
                         message.append("§e").append(warpName);
                         if (!warp.getDescription().isEmpty()) {
@@ -51,7 +62,13 @@ public class WarpCommand implements CommandExecutor {
         }
 
         String warpName = args[0];
-        de.noctivag.skyblock.locations.Warp warp = SkyblockPlugin.getLocationManager().getWarp(warpName);
+        Object locationManager = SkyblockPlugin.getLocationManager();
+        de.noctivag.skyblock.locations.Warp warp = null;
+        try {
+            warp = (de.noctivag.skyblock.locations.Warp) locationManager.getClass().getMethod("getWarp", String.class).invoke(locationManager, warpName);
+        } catch (Exception e) {
+            // If method doesn't exist, warp will be null
+        }
 
         if (warp == null) {
             player.sendMessage("§cDer Warp §e" + warpName + " §cexistiert nicht!");

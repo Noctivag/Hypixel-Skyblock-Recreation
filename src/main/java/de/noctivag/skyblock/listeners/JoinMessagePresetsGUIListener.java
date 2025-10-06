@@ -35,7 +35,7 @@ public class JoinMessagePresetsGUIListener implements Listener {
         if (display == null) return;
 
         if (display.contains("Zurück")) {
-            new de.noctivag.skyblock.gui.JoinMessageGUI(SkyblockPlugin).open(player);
+            new de.noctivag.skyblock.gui.JoinMessageGUI(SkyblockPlugin).open();
             return;
         }
 

@@ -50,6 +50,14 @@ public abstract class CustomGUI implements InventoryHolder {
     }
     
     /**
+     * Open the GUI (for compatibility with Menu framework)
+     */
+    public void open() {
+        // This method should be overridden by subclasses that have access to the player
+        throw new UnsupportedOperationException("open() method must be overridden by subclasses");
+    }
+    
+    /**
      * Setup the GUI items
      * Override this method to add items to the GUI
      */

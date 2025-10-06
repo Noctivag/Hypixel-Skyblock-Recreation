@@ -42,12 +42,18 @@ public class RankPermissionsGUIListener implements Listener {
         String permission = display.replace("§a", "").replace("§c", "");
         String rankKey = permsGUI.getRankKey();
 
-        if (SkyblockPlugin.getRankManager().hasPermission(rankKey, permission)) {
-            SkyblockPlugin.getRankManager().removePermission(rankKey, permission);
-            admin.sendMessage("§ePermission entfernt: §c" + permission);
-        } else {
-            SkyblockPlugin.getRankManager().addPermission(rankKey, permission);
-            admin.sendMessage("§ePermission hinzugefügt: §a" + permission);
+        Object rankManager = SkyblockPlugin.getRankManager();
+        try {
+            boolean hasPermission = (Boolean) rankManager.getClass().getMethod("hasPermission", String.class, String.class).invoke(rankManager, rankKey, permission);
+            if (hasPermission) {
+                rankManager.getClass().getMethod("removePermission", String.class, String.class).invoke(rankManager, rankKey, permission);
+                admin.sendMessage("§ePermission entfernt: §c" + permission);
+            } else {
+                rankManager.getClass().getMethod("addPermission", String.class, String.class).invoke(rankManager, rankKey, permission);
+                admin.sendMessage("§ePermission hinzugefügt: §a" + permission);
+            }
+        } catch (Exception e) {
+            admin.sendMessage("§cError managing permissions: " + e.getMessage());
         }
 
         // Refresh GUI

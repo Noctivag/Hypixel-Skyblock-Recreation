@@ -1,10 +1,6 @@
 package de.noctivag.skyblock.commands;
 
 import de.noctivag.skyblock.SkyblockPlugin;
-import de.noctivag.skyblock.SkyblockPlugin;
-import org.bukkit.inventory.ItemStack;
-
-import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.gui.MissingItemsGUI;
 import de.noctivag.skyblock.items.MissingItemsSystem;
 import de.noctivag.skyblock.items.MissingItemsSystem.ItemCategory;
@@ -116,7 +112,7 @@ public class MissingItemsCommand implements CommandExecutor, TabCompleter {
     private void showStatistics(CommandSender sender) {
         sender.sendMessage("§6§l=== MISSING ITEMS STATISTICS ===");
         
-        int totalItems = missingItemsSystem.getMissingItemCount();
+        int totalItems = missingItemsSystem.getMissingItemCount((Player) sender);
         Map<ItemCategory, List<MissingItem>> categorizedItems = missingItemsSystem.getMissingItemsByCategory();
         
         sender.sendMessage("§7Total Missing Items: §a" + totalItems);
@@ -136,7 +132,7 @@ public class MissingItemsCommand implements CommandExecutor, TabCompleter {
         
         // Rarity statistics
         Map<String, Integer> rarityStats = new HashMap<>();
-        for (MissingItem item : missingItemsSystem.getAllMissingItems().values()) {
+        for (MissingItem item : missingItemsSystem.getAllMissingItems((Player) sender)) {
             String rarity = item.getRarity().getDisplayName();
             rarityStats.put(rarity, rarityStats.getOrDefault(rarity, 0) + 1);
         }
@@ -190,7 +186,7 @@ public class MissingItemsCommand implements CommandExecutor, TabCompleter {
     
     private void showItemDetails(CommandSender sender, String itemName) {
         MissingItem item = null;
-        for (MissingItem missingItem : missingItemsSystem.getAllMissingItems().values()) {
+        for (MissingItem missingItem : missingItemsSystem.getAllMissingItems((Player) sender)) {
             if (missingItem.getName().equalsIgnoreCase(itemName) || 
                 missingItem.getDisplayName().toLowerCase().contains(itemName.toLowerCase())) {
                 item = missingItem;
@@ -267,7 +263,7 @@ public class MissingItemsCommand implements CommandExecutor, TabCompleter {
                     }
                 }
             } else if (args[0].equalsIgnoreCase("item")) {
-                for (MissingItem item : missingItemsSystem.getAllMissingItems().values()) {
+                for (MissingItem item : missingItemsSystem.getAllMissingItems((Player) sender)) {
                     if (item.getName().toLowerCase().startsWith(args[1].toLowerCase())) {
                         completions.add(item.getName());
                     }

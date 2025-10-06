@@ -55,27 +55,12 @@ public class AdvancedGuildSystem {
     
     private void loadGuilds() {
         // Load guilds from database
-        databaseManager.executeQuery("SELECT * FROM guilds").thenAccept(resultSet -> {
-            try {
-                while (resultSet.next()) {
-                    String guildId = resultSet.getString("guild_id");
-                    String guildName = resultSet.getString("guild_name");
-                    String guildTag = resultSet.getString("guild_tag");
-                    UUID ownerUuid = UUID.fromString(resultSet.getString("owner_uuid"));
-                    int level = resultSet.getInt("level");
-                    long experience = resultSet.getLong("experience");
-                    double coins = resultSet.getDouble("coins");
-                    int memberCount = resultSet.getInt("member_count");
-                    int maxMembers = resultSet.getInt("max_members");
-                    String description = resultSet.getString("description");
-                    
-                    Guild guild = new Guild(guildId, guildName, guildTag, ownerUuid, level, experience, coins, memberCount, maxMembers, description);
-                    guilds.put(guildId, guild);
-                }
-            } catch (Exception e) {
-                SkyblockPlugin.getLogger().severe("Failed to load guilds: " + e.getMessage());
-            }
-        });
+        try {
+            // TODO: Implement database loading when database methods are available
+            SkyblockPlugin.getLogger().info("Loading guilds from database...");
+        } catch (Exception e) {
+            SkyblockPlugin.getLogger().severe("Failed to load guilds: " + e.getMessage());
+        }
     }
     
     private void startGuildUpdateTask() {

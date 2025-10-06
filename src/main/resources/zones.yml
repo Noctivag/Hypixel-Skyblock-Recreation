@@ -1,0 +1,374 @@
+# Zone Configuration for Hypixel Skyblock Recreation
+# This file defines zones within worlds and their properties
+
+worlds:
+  hub:
+    zones:
+      spawn_area:
+        display_name: "Hub Spawn"
+        description: "Main spawn area in the hub"
+        min_level: 1
+        max_level: 100
+        pvp_enabled: false
+        mob_spawning_enabled: false
+        player_limit: -1
+        bounds:
+          min_x: -100
+          min_y: 0
+          min_z: -100
+          max_x: 100
+          max_y: 256
+          max_z: 100
+        spawns:
+          main_spawn:
+            x: 0
+            y: 64
+            z: 0
+            yaw: 0
+            pitch: 0
+        mobs: {}
+      
+      graveyard:
+        display_name: "Graveyard"
+        description: "Spooky graveyard area with crypt ghouls"
+        min_level: 1
+        max_level: 50
+        pvp_enabled: false
+        mob_spawning_enabled: true
+        player_limit: -1
+        bounds:
+          min_x: -200
+          min_y: 0
+          min_z: -200
+          max_x: 200
+          max_y: 256
+          max_z: 200
+        spawns:
+          graveyard_entrance:
+            x: 0
+            y: 64
+            z: 0
+            yaw: 0
+            pitch: 0
+        mobs:
+          CRYPT_GHOUL:
+            weight: 10
+            min_level: 1
+            max_level: 50
+            spawn_radius: 50
+            max_count: 15
+            spawn_conditions: []
+          ZOMBIE_VILLAGER:
+            weight: 5
+            min_level: 1
+            max_level: 30
+            spawn_radius: 40
+            max_count: 10
+            spawn_conditions: []
+
+  gold_mine:
+    zones:
+      lapis_quarry:
+        display_name: "Lapis Quarry"
+        description: "Mining area with lapis zombies"
+        min_level: 1
+        max_level: 30
+        pvp_enabled: false
+        mob_spawning_enabled: true
+        player_limit: -1
+        bounds:
+          min_x: -500
+          min_y: 0
+          min_z: -500
+          max_x: 500
+          max_y: 256
+          max_z: 500
+        spawns:
+          quarry_entrance:
+            x: 0
+            y: 64
+            z: 0
+            yaw: 0
+            pitch: 0
+        mobs:
+          LAPIS_ZOMBIE:
+            weight: 15
+            min_level: 1
+            max_level: 30
+            spawn_radius: 60
+            max_count: 20
+            spawn_conditions: []
+          ZOMBIE_VILLAGER:
+            weight: 5
+            min_level: 1
+            max_level: 25
+            spawn_radius: 50
+            max_count: 10
+            spawn_conditions: []
+      
+      gold_mine_entrance:
+        display_name: "Gold Mine Entrance"
+        description: "Entrance to the gold mine"
+        min_level: 1
+        max_level: 20
+        pvp_enabled: false
+        mob_spawning_enabled: true
+        player_limit: -1
+        bounds:
+          min_x: -100
+          min_y: 0
+          min_z: -100
+          max_x: 100
+          max_y: 256
+          max_z: 100
+        spawns:
+          mine_entrance:
+            x: 0
+            y: 64
+            z: 0
+            yaw: 0
+            pitch: 0
+        mobs:
+          LAPIS_ZOMBIE:
+            weight: 8
+            min_level: 1
+            max_level: 20
+            spawn_radius: 40
+            max_count: 12
+            spawn_conditions: []
+          ZOMBIE_VILLAGER:
+            weight: 3
+            min_level: 1
+            max_level: 15
+            spawn_radius: 30
+            max_count: 8
+            spawn_conditions: []
+
+  deep_caverns:
+    zones:
+      lapis_cavern:
+        display_name: "Lapis Cavern"
+        description: "Deep underground lapis mining area"
+        min_level: 5
+        max_level: 40
+        pvp_enabled: false
+        mob_spawning_enabled: true
+        player_limit: -1
+        bounds:
+          min_x: -300
+          min_y: 0
+          min_z: -300
+          max_x: 300
+          max_y: 256
+          max_z: 300
+        spawns:
+          cavern_entrance:
+            x: 0
+            y: 32
+            z: 0
+            yaw: 0
+            pitch: 0
+        mobs:
+          LAPIS_ZOMBIE:
+            weight: 20
+            min_level: 5
+            max_level: 40
+            spawn_radius: 70
+            max_count: 25
+            spawn_conditions: []
+          ZOMBIE_VILLAGER:
+            weight: 8
+            min_level: 5
+            max_level: 35
+            spawn_radius: 60
+            max_count: 15
+            spawn_conditions: []
+      
+      diamond_reserve:
+        display_name: "Diamond Reserve"
+        description: "High-level diamond mining area"
+        min_level: 15
+        max_level: 60
+        pvp_enabled: false
+        mob_spawning_enabled: true
+        player_limit: -1
+        bounds:
+          min_x: -200
+          min_y: 0
+          min_z: -200
+          max_x: 200
+          max_y: 256
+          max_z: 200
+        spawns:
+          reserve_entrance:
+            x: 0
+            y: 16
+            z: 0
+            yaw: 0
+            pitch: 0
+        mobs:
+          LAPIS_ZOMBIE:
+            weight: 25
+            min_level: 15
+            max_level: 60
+            spawn_radius: 80
+            max_count: 30
+            spawn_conditions: []
+          ZOMBIE_VILLAGER:
+            weight: 10
+            min_level: 15
+            max_level: 50
+            spawn_radius: 70
+            max_count: 20
+            spawn_conditions: []
+
+  spiders_den:
+    zones:
+      spiders_den_main:
+        display_name: "Spider's Den"
+        description: "Main spider area with cave spiders"
+        min_level: 10
+        max_level: 50
+        pvp_enabled: false
+        mob_spawning_enabled: true
+        player_limit: -1
+        bounds:
+          min_x: -400
+          min_y: 0
+          min_z: -400
+          max_x: 400
+          max_y: 256
+          max_z: 400
+        spawns:
+          den_entrance:
+            x: 0
+            y: 64
+            z: 0
+            yaw: 0
+            pitch: 0
+        mobs:
+          CAVE_SPIDER:
+            weight: 15
+            min_level: 10
+            max_level: 50
+            spawn_radius: 60
+            max_count: 20
+            spawn_conditions: []
+          SPIDER:
+            weight: 10
+            min_level: 10
+            max_level: 40
+            spawn_radius: 50
+            max_count: 15
+            spawn_conditions: []
+      
+      broodmother_lair:
+        display_name: "Broodmother's Lair"
+        description: "Boss area for the Broodmother"
+        min_level: 20
+        max_level: 80
+        pvp_enabled: false
+        mob_spawning_enabled: true
+        player_limit: -1
+        bounds:
+          min_x: -100
+          min_y: 0
+          min_z: -100
+          max_x: 100
+          max_y: 256
+          max_z: 100
+        spawns:
+          lair_entrance:
+            x: 0
+            y: 64
+            z: 0
+            yaw: 0
+            pitch: 0
+        mobs:
+          BROODMOTHER:
+            weight: 1
+            min_level: 20
+            max_level: 80
+            spawn_radius: 30
+            max_count: 1
+            spawn_conditions: ["TIME:NIGHT"]
+
+  the_end:
+    zones:
+      end_main:
+        display_name: "The End"
+        description: "Main end area with endermen"
+        min_level: 20
+        max_level: 80
+        pvp_enabled: false
+        mob_spawning_enabled: true
+        player_limit: -1
+        bounds:
+          min_x: -500
+          min_y: 0
+          min_z: -500
+          max_x: 500
+          max_y: 256
+          max_z: 500
+        spawns:
+          end_spawn:
+            x: 0
+            y: 64
+            z: 0
+            yaw: 0
+            pitch: 0
+        mobs:
+          ENDERMAN:
+            weight: 20
+            min_level: 20
+            max_level: 80
+            spawn_radius: 80
+            max_count: 25
+            spawn_conditions: []
+          ENDERMITE:
+            weight: 5
+            min_level: 20
+            max_level: 60
+            spawn_radius: 60
+            max_count: 15
+            spawn_conditions: []
+      
+      dragon_nest:
+        display_name: "Dragon's Nest"
+        description: "Ender Dragon boss area"
+        min_level: 30
+        max_level: 100
+        pvp_enabled: false
+        mob_spawning_enabled: true
+        player_limit: -1
+        bounds:
+          min_x: -200
+          min_y: 0
+          min_z: -200
+          max_x: 200
+          max_y: 256
+          max_z: 200
+        spawns:
+          nest_center:
+            x: 0
+            y: 64
+            z: 0
+            yaw: 0
+            pitch: 0
+        mobs:
+          ENDER_DRAGON:
+            weight: 1
+            min_level: 30
+            max_level: 100
+            spawn_radius: 50
+            max_count: 1
+            spawn_conditions: ["TIME:NIGHT"]
+
+# Global zone settings
+global_settings:
+  enabled: true
+  debug: false
+  zone_enter_messages: true
+  zone_exit_messages: true
+  auto_teleport_on_zone_enter: false
+  zone_protection: true

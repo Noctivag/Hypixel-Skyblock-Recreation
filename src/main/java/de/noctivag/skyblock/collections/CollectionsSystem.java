@@ -1,463 +1,495 @@
 package de.noctivag.skyblock.collections;
 
-import java.util.UUID;
 import de.noctivag.skyblock.SkyblockPlugin;
-import de.noctivag.skyblock.SkyblockPlugin;
-import org.bukkit.inventory.ItemStack;
-
-import de.noctivag.skyblock.SkyblockPlugin;
-import de.noctivag.skyblock.core.CorePlatform;
+import de.noctivag.skyblock.core.api.Service;
+import de.noctivag.skyblock.core.api.SystemStatus;
+import de.noctivag.skyblock.database.DatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerFishEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import net.kyori.adventure.text.Component;
-import java.util.stream.Collectors;
 
 /**
- * Collections System - Hypixel Skyblock Style
+ * Main Collections System - Manages player collection progress and milestone rewards
  */
-public class CollectionsSystem implements Listener {
-    private final SkyblockPlugin SkyblockPlugin;
-    private final CorePlatform corePlatform;
-    private final Map<UUID, PlayerCollections> playerCollections = new ConcurrentHashMap<>();
+public class CollectionsSystem implements Service, Listener {
     
-    public CollectionsSystem(SkyblockPlugin SkyblockPlugin, CorePlatform corePlatform, de.noctivag.skyblock.database.MultiServerDatabaseManager databaseManager) {
-        this.SkyblockPlugin = SkyblockPlugin;
-        this.corePlatform = corePlatform;
-        Bukkit.getPluginManager().registerEvents(this, SkyblockPlugin);
+    private final SkyblockPlugin plugin;
+    private final DatabaseManager databaseManager;
+    private final Map<UUID, PlayerCollections> playerCollections;
+    private SystemStatus status = SystemStatus.UNINITIALIZED;
+
+    public CollectionsSystem(SkyblockPlugin plugin, DatabaseManager databaseManager) {
+        this.plugin = plugin;
+        this.databaseManager = databaseManager;
+        this.playerCollections = new ConcurrentHashMap<>();
     }
-    
+
+    @Override
+    public void initialize() {
+        status = SystemStatus.INITIALIZING;
+        plugin.getLogger().info("Initializing CollectionsSystem...");
+
+        // Register event listeners
+        Bukkit.getPluginManager().registerEvents(this, plugin);
+
+        // Load all online player data
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            loadPlayerCollections(player.getUniqueId());
+        }
+
+        status = SystemStatus.RUNNING;
+        plugin.getLogger().info("CollectionsSystem initialized successfully!");
+    }
+
+    @Override
+    public void shutdown() {
+        status = SystemStatus.SHUTTING_DOWN;
+        plugin.getLogger().info("Shutting down CollectionsSystem...");
+
+        // Save all player data
+        saveAllPlayerCollections();
+
+        playerCollections.clear();
+        status = SystemStatus.SHUTDOWN;
+        plugin.getLogger().info("CollectionsSystem shutdown complete!");
+    }
+
+    @Override
+    public String getName() {
+        return "CollectionsSystem";
+    }
+
+    @Override
+    public SystemStatus getStatus() {
+        return status;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        // Collections system is always enabled when running
+    }
+
+    /**
+     * Load player collections from database
+     */
+    public void loadPlayerCollections(UUID playerId) {
+        try {
+            // Load from database (placeholder - implement actual database loading)
+            PlayerCollections collections = new PlayerCollections(playerId);
+            playerCollections.put(playerId, collections);
+            plugin.getLogger().info("Loaded collections for player: " + playerId);
+        } catch (Exception e) {
+            plugin.getLogger().warning("Failed to load collections for player " + playerId + ": " + e.getMessage());
+            // Create new collections if loading fails
+            playerCollections.put(playerId, new PlayerCollections(playerId));
+        }
+    }
+
+    /**
+     * Save player collections to database
+     */
+    public void savePlayerCollections(UUID playerId) {
+        try {
+            PlayerCollections collections = playerCollections.get(playerId);
+            if (collections != null) {
+                // Save to database (placeholder - implement actual database saving)
+                plugin.getLogger().info("Saved collections for player: " + playerId);
+            }
+                } catch (Exception e) {
+            plugin.getLogger().warning("Failed to save collections for player " + playerId + ": " + e.getMessage());
+        }
+    }
+
+    /**
+     * Save all player collections
+     */
+    public void saveAllPlayerCollections() {
+        for (UUID playerId : playerCollections.keySet()) {
+            savePlayerCollections(playerId);
+        }
+    }
+
+    /**
+     * Get player collections
+     */
+    public PlayerCollections getPlayerCollections(UUID playerId) {
+        return playerCollections.get(playerId);
+    }
+
+    /**
+     * Get player collections (by Player object)
+     */
+    public PlayerCollections getPlayerCollections(Player player) {
+        return getPlayerCollections(player.getUniqueId());
+    }
+
+    /**
+     * Add collection amount to a player
+     */
+    public boolean addCollection(Player player, CollectionType collection, long amount) {
+        PlayerCollections collections = getPlayerCollections(player);
+        if (collections == null) {
+            loadPlayerCollections(player.getUniqueId());
+            collections = getPlayerCollections(player);
+        }
+
+        boolean milestoneUnlocked = collections.addCollection(collection, amount);
+        
+        if (milestoneUnlocked) {
+            int newMilestoneLevel = collections.getCurrentMilestoneLevel(collection);
+            player.sendMessage("§a§lCOLLECTION MILESTONE! §r" + collection.getColor() + collection.getIcon() + " " + collection.getDisplayName() + " §aLevel " + newMilestoneLevel);
+            
+            // Get milestone information
+            CollectionMilestone[] milestones = CollectionMilestone.createDefaultMilestones(collection);
+            if (newMilestoneLevel <= milestones.length) {
+                CollectionMilestone milestone = milestones[newMilestoneLevel - 1];
+                player.sendMessage("§7" + milestone.getFormattedDescription());
+                player.sendMessage("§aReward: " + milestone.getFormattedRewardDescription());
+            }
+        }
+
+        return milestoneUnlocked;
+    }
+
+    /**
+     * Add collection from item stack
+     */
+    public boolean addCollectionFromItem(Player player, ItemStack item) {
+        if (item == null || item.getType() == Material.AIR) return false;
+        
+        CollectionType collection = CollectionType.getByMaterial(item.getType());
+        if (collection == null) return false;
+        
+        long amount = item.getAmount();
+        return addCollection(player, collection, amount);
+    }
+
+    /**
+     * Get collection amount for a player
+     */
+    public long getCollectionAmount(Player player, CollectionType collection) {
+        PlayerCollections collections = getPlayerCollections(player);
+        if (collections == null) return 0;
+        
+        return collections.getCollection(collection);
+    }
+
+    /**
+     * Get milestone level for a player's collection
+     */
+    public int getMilestoneLevel(Player player, CollectionType collection) {
+        PlayerCollections collections = getPlayerCollections(player);
+        if (collections == null) return 0;
+        
+        return collections.getCurrentMilestoneLevel(collection);
+    }
+
+    /**
+     * Check if player has unlocked a specific milestone
+     */
+    public boolean hasUnlockedMilestone(Player player, CollectionType collection, int milestoneLevel) {
+        PlayerCollections collections = getPlayerCollections(player);
+        if (collections == null) return false;
+        
+        return collections.isMilestoneUnlocked(collection, milestoneLevel);
+    }
+
+    /**
+     * Get collections by category for a player
+     */
+    public Map<CollectionType, Long> getCollectionsByCategory(Player player, String category) {
+        PlayerCollections collections = getPlayerCollections(player);
+        if (collections == null) return new HashMap<>();
+        
+        return collections.getCollectionsByCategory(category);
+    }
+
+    /**
+     * Get total collections for a player
+     */
+    public long getTotalCollections(Player player) {
+        PlayerCollections collections = getPlayerCollections(player);
+        if (collections == null) return 0;
+        
+        return collections.getTotalCollections();
+    }
+
+    /**
+     * Get total unlocked milestones for a player
+     */
+    public int getTotalUnlockedMilestones(Player player) {
+        PlayerCollections collections = getPlayerCollections(player);
+        if (collections == null) return 0;
+        
+        return collections.getTotalUnlockedMilestones();
+    }
+
+    // Event Handlers
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        loadPlayerCollections(player.getUniqueId());
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        savePlayerCollections(player.getUniqueId());
+    }
+
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         Material material = event.getBlock().getType();
         
-        // Add to farming collection
-        if (isFarmingMaterial(material)) {
-            addToCollection(player, CollectionType.FARMING, material, 1.0);
-        }
-        
-        // Add to mining collection
-        if (isMiningMaterial(material)) {
-            addToCollection(player, CollectionType.MINING, material, 1.0);
+        // Check if the block drops items that can be collected
+        CollectionType collection = CollectionType.getByMaterial(material);
+        if (collection != null) {
+            // Add collection based on block type
+            long amount = getCollectionAmountFromBlock(material);
+            addCollection(player, collection, amount);
         }
     }
-    
-    private boolean isFarmingMaterial(Material material) {
-        return material == Material.WHEAT || material == Material.CARROT || 
-               material == Material.POTATO || material == Material.BEETROOT;
-    }
-    
-    private boolean isMiningMaterial(Material material) {
-        return material == Material.COAL || material == Material.IRON_INGOT || 
-               material == Material.GOLD_INGOT || material == Material.DIAMOND;
-    }
-    
-    public void addToCollection(Player player, CollectionType type, Material material, double amount) {
-        PlayerCollections collections = getPlayerCollections(player.getUniqueId());
-        int newAmount = collections.addToCollection(type, (int) amount);
-        
-        // Check for milestones and rewards
-        checkMilestones(player, type, newAmount);
-    }
-    
-    private void checkMilestones(Player player, CollectionType type, int amount) {
-        PlayerCollections collections = getPlayerCollections(player.getUniqueId());
-        
-        // Check for milestone rewards
-        for (CollectionReward reward : getCollectionRewards(type)) {
-            if (amount >= reward.getRequiredAmount() && !collections.hasReward(type, reward)) {
-                collections.addReward(type, reward);
-                giveReward(player, reward);
-                
-                player.sendMessage(Component.text("§a§lCOLLECTION MILESTONE!"));
-                player.sendMessage("§7" + type.getDisplayName() + " §7→ §e" + reward.getRequiredAmount() + " " + type.getName());
-                player.sendMessage("§aReward: " + reward.getDescription());
-            }
-        }
-        
-        // Check for recipe unlocks
-        for (CollectionRecipe recipe : getCollectionRecipes(type)) {
-            if (amount >= recipe.getRequiredAmount() && !collections.hasRecipe(type, recipe)) {
-                collections.addRecipe(type, recipe);
-                unlockRecipe(player, recipe);
-                
-                player.sendMessage(Component.text("§a§lRECIPE UNLOCKED!"));
-                player.sendMessage("§7" + recipe.getName() + " §7→ §e" + recipe.getDescription());
+
+    @EventHandler
+    public void onEntityDeath(EntityDeathEvent event) {
+        if (event.getEntity().getKiller() != null) {
+            Player player = event.getEntity().getKiller();
+            
+            // Add collections from dropped items
+            for (ItemStack drop : event.getDrops()) {
+                addCollectionFromItem(player, drop);
             }
         }
     }
-    
-    private void giveReward(Player player, CollectionReward reward) {
-        // Give coins, items, or other rewards
-        switch (reward.getRewardType()) {
-            case COINS:
-                // Use economy system to give coins
-                try {
-                    SkyblockPlugin.getEconomyManager().depositMoney(player, reward.getAmount());
-                    player.sendMessage("§a+§6" + reward.getAmount() + " coins");
-                } catch (Exception e) {
-                    player.sendMessage("§a+§6" + reward.getAmount() + " coins");
-                }
-                break;
-            case ITEM:
-                // Give item to player
-                if (reward.getItem() != null) {
-                    player.getInventory().addItem(reward.getItem());
-                    player.sendMessage("§a+§e" + reward.getItem().getAmount() + " " + reward.getItem().getType().name());
-                }
-                break;
-            case XP:
-                // Give XP to player
-                player.giveExp((int) reward.getAmount());
-                player.sendMessage("§a+§b" + reward.getAmount() + " XP");
-                break;
+
+    @EventHandler
+    public void onPlayerFish(PlayerFishEvent event) {
+        if (event.getState() == PlayerFishEvent.State.CAUGHT_FISH) {
+            Player player = event.getPlayer();
+            org.bukkit.entity.Entity caughtEntity = event.getCaught();
+            
+            if (caughtEntity instanceof org.bukkit.entity.Item) {
+                org.bukkit.entity.Item itemEntity = (org.bukkit.entity.Item) caughtEntity;
+                ItemStack caught = itemEntity.getItemStack();
+                addCollectionFromItem(player, caught);
+            }
         }
     }
-    
-    private void unlockRecipe(Player player, CollectionRecipe recipe) {
-        // Unlock recipe for player
-        // This would integrate with the recipe system
-        player.sendMessage("§aRecipe unlocked: " + recipe.getName());
-    }
-    
-    public PlayerCollections getPlayerCollections(UUID playerId) {
-        return playerCollections.computeIfAbsent(playerId, k -> new PlayerCollections(playerId));
-    }
-    
-    private List<CollectionReward> getCollectionRewards(CollectionType type) {
-        List<CollectionReward> rewards = new ArrayList<>();
-        
-        switch (type) {
-            case FARMING:
-                rewards.add(new CollectionReward(50, "§a+100 coins", RewardType.COINS, 100.0, null));
-                rewards.add(new CollectionReward(100, "§a+250 coins", RewardType.COINS, 250.0, null));
-                rewards.add(new CollectionReward(250, "§a+500 coins", RewardType.COINS, 500.0, null));
-                rewards.add(new CollectionReward(500, "§a+1000 coins", RewardType.COINS, 1000.0, null));
-                break;
-            case MINING:
-                rewards.add(new CollectionReward(50, "§a+150 coins", RewardType.COINS, 150.0, null));
-                rewards.add(new CollectionReward(100, "§a+300 coins", RewardType.COINS, 300.0, null));
-                rewards.add(new CollectionReward(250, "§a+600 coins", RewardType.COINS, 600.0, null));
-                rewards.add(new CollectionReward(500, "§a+1200 coins", RewardType.COINS, 1200.0, null));
-                break;
-            case COMBAT:
-                rewards.add(new CollectionReward(50, "§a+200 coins", RewardType.COINS, 200.0, null));
-                rewards.add(new CollectionReward(100, "§a+400 coins", RewardType.COINS, 400.0, null));
-                rewards.add(new CollectionReward(250, "§a+800 coins", RewardType.COINS, 800.0, null));
-                rewards.add(new CollectionReward(500, "§a+1600 coins", RewardType.COINS, 1600.0, null));
-                break;
+
+    /**
+     * Get collection amount from block type
+     */
+    private long getCollectionAmountFromBlock(Material material) {
+        switch (material) {
+            // Mining blocks
+            case COAL_ORE:
+            case DEEPSLATE_COAL_ORE:
+                return 1;
+            case IRON_ORE:
+            case DEEPSLATE_IRON_ORE:
+                return 1;
+            case GOLD_ORE:
+            case DEEPSLATE_GOLD_ORE:
+                return 1;
+            case DIAMOND_ORE:
+            case DEEPSLATE_DIAMOND_ORE:
+                return 1;
+            case EMERALD_ORE:
+            case DEEPSLATE_EMERALD_ORE:
+                return 1;
+            case REDSTONE_ORE:
+            case DEEPSLATE_REDSTONE_ORE:
+                return 4; // Redstone drops 4-5
+            case LAPIS_ORE:
+            case DEEPSLATE_LAPIS_ORE:
+                return 4; // Lapis drops 4-8
+            case NETHER_QUARTZ_ORE:
+                return 1;
+            case NETHER_GOLD_ORE:
+                return 1;
+            case ANCIENT_DEBRIS:
+                return 1;
+            case OBSIDIAN:
+                return 1;
+            case GLOWSTONE:
+                return 2; // Glowstone drops 2-4
+            case GRAVEL:
+                return 1;
+            case SAND:
+                return 1;
+            case END_STONE:
+                return 1;
+            case NETHERRACK:
+                return 1;
+            case ICE:
+                return 1;
+            case SNOW_BLOCK:
+                return 1;
+            case CLAY:
+                return 4; // Clay drops 4 clay balls
+            case STONE:
+            case COBBLESTONE:
+                return 1;
+                
+            // Farming blocks
+            case WHEAT:
+                return 1;
+            case CARROTS:
+                return 1;
+            case POTATOES:
+                return 1;
+            case BEETROOTS:
+                return 1;
+            case PUMPKIN:
+                return 1;
+            case MELON:
+                return 3; // Melon drops 3-7 slices
+            case SUGAR_CANE:
+                return 1;
+            case CACTUS:
+                return 1;
+            case NETHER_WART:
+                return 1;
+            case COCOA:
+                return 3; // Cocoa drops 3 beans
+            case RED_MUSHROOM:
+            case BROWN_MUSHROOM:
+                return 1;
+                
+            // Foraging blocks
+            case OAK_LOG:
+            case BIRCH_LOG:
+            case SPRUCE_LOG:
+            case JUNGLE_LOG:
+            case ACACIA_LOG:
+            case DARK_OAK_LOG:
+            case MANGROVE_LOG:
+            case CHERRY_LOG:
+                return 1;
+            case OAK_LEAVES:
+            case BIRCH_LEAVES:
+            case SPRUCE_LEAVES:
+            case JUNGLE_LEAVES:
+            case ACACIA_LEAVES:
+            case DARK_OAK_LEAVES:
+                return 1;
+                
             default:
-                rewards.add(new CollectionReward(50, "§a+100 coins", RewardType.COINS, 100.0, null));
-                rewards.add(new CollectionReward(100, "§a+200 coins", RewardType.COINS, 200.0, null));
-                break;
+                return 1;
         }
-        
-        return rewards;
     }
-    
-    private List<CollectionRecipe> getCollectionRecipes(CollectionType type) {
-        List<CollectionRecipe> recipes = new ArrayList<>();
-        
-        switch (type) {
-            case FARMING:
-                recipes.add(new CollectionRecipe(100, "Farming Minion I", "Unlocks basic farming minion"));
-                recipes.add(new CollectionRecipe(250, "Farming Minion II", "Unlocks improved farming minion"));
-                recipes.add(new CollectionRecipe(500, "Farming Minion III", "Unlocks advanced farming minion"));
-                break;
-            case MINING:
-                recipes.add(new CollectionRecipe(100, "Mining Minion I", "Unlocks basic mining minion"));
-                recipes.add(new CollectionRecipe(250, "Mining Minion II", "Unlocks improved mining minion"));
-                recipes.add(new CollectionRecipe(500, "Mining Minion III", "Unlocks advanced mining minion"));
-                break;
-            case COMBAT:
-                recipes.add(new CollectionRecipe(100, "Combat Minion I", "Unlocks basic combat minion"));
-                recipes.add(new CollectionRecipe(250, "Combat Minion II", "Unlocks improved combat minion"));
-                recipes.add(new CollectionRecipe(500, "Combat Minion III", "Unlocks advanced combat minion"));
-                break;
-            case FORAGING:
-                recipes.add(new CollectionRecipe(100, "Foraging Minion I", "Unlocks basic foraging minion"));
-                recipes.add(new CollectionRecipe(250, "Foraging Minion II", "Unlocks improved foraging minion"));
-                recipes.add(new CollectionRecipe(500, "Foraging Minion III", "Unlocks advanced foraging minion"));
-                break;
-            case FISHING:
-                recipes.add(new CollectionRecipe(100, "Fishing Minion I", "Unlocks basic fishing minion"));
-                recipes.add(new CollectionRecipe(250, "Fishing Minion II", "Unlocks improved fishing minion"));
-                recipes.add(new CollectionRecipe(500, "Fishing Minion III", "Unlocks advanced fishing minion"));
-                break;
-            case ENCHANTING:
-                recipes.add(new CollectionRecipe(100, "Enchanting Minion I", "Unlocks basic enchanting minion"));
-                recipes.add(new CollectionRecipe(250, "Enchanting Minion II", "Unlocks improved enchanting minion"));
-                recipes.add(new CollectionRecipe(500, "Enchanting Minion III", "Unlocks advanced enchanting minion"));
-                break;
-            case TAMING:
-                recipes.add(new CollectionRecipe(100, "Taming Minion I", "Unlocks basic taming minion"));
-                recipes.add(new CollectionRecipe(250, "Taming Minion II", "Unlocks improved taming minion"));
-                recipes.add(new CollectionRecipe(500, "Taming Minion III", "Unlocks advanced taming minion"));
-                break;
-            case ALCHEMY:
-                recipes.add(new CollectionRecipe(100, "Alchemy Minion I", "Unlocks basic alchemy minion"));
-                recipes.add(new CollectionRecipe(250, "Alchemy Minion II", "Unlocks improved alchemy minion"));
-                recipes.add(new CollectionRecipe(500, "Alchemy Minion III", "Unlocks advanced alchemy minion"));
-                break;
-        }
-        
-        return recipes;
-    }
-    
+
+    /**
+     * Open collections GUI for player
+     */
     public void openCollectionsGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, net.kyori.adventure.text.Component.text("§a§lCollections"));
-        
-        PlayerCollections collections = getPlayerCollections(player.getUniqueId());
-        
-        // Add collection items
-        int slot = 10;
-        for (CollectionType type : CollectionType.values()) {
-            if (slot >= 44) break;
-            
-            int amount = collections.getCollectionAmount(type);
-            List<CollectionReward> rewards = getCollectionRewards(type);
-            
-            ItemStack item = new ItemStack(getCollectionIcon(type));
-            ItemMeta meta = item.getItemMeta();
-            
-            if (meta != null) {
-                meta.displayName(net.kyori.adventure.text.Component.text(type.getDisplayName() + " §7Collection"));
-                
-                List<String> lore = new ArrayList<>();
-                lore.add("§7Total: §e" + amount);
-                lore.add("");
-                lore.add("§7Milestones:");
-                for (CollectionReward reward : rewards) {
-                    String status = collections.hasReward(type, reward) ? "§a✓" : "§7-";
-                    lore.add(status + " §e" + reward.getRequiredAmount() + " §7→ " + reward.getDescription());
-                }
-                
-                meta.lore(lore.stream().map(net.kyori.adventure.text.Component::text).toList());
-                item.setItemMeta(meta);
-            }
-            
-            gui.setItem(slot, item);
-            slot++;
-        }
-        
-        // Add navigation items
-        addGUIItem(gui, 45, Material.ARROW, "§7§lPrevious Page", "§7Go to previous page.");
-        addGUIItem(gui, 49, Material.BARRIER, "§c§lClose", "§7Close the collections menu.");
-        addGUIItem(gui, 53, Material.ARROW, "§7§lNext Page", "§7Go to next page.");
-        
-        player.openInventory(gui);
+        de.noctivag.skyblock.gui.features.CollectionsGUI gui = new de.noctivag.skyblock.gui.features.CollectionsGUI(plugin, player);
+        gui.open();
     }
-    
-    private Material getCollectionIcon(CollectionType type) {
-        return switch (type) {
-            case FARMING -> Material.WHEAT;
-            case MINING -> Material.DIAMOND_PICKAXE;
-            case COMBAT -> Material.DIAMOND_SWORD;
-            case FORAGING -> Material.OAK_LOG;
-            case FISHING -> Material.FISHING_ROD;
-            case ENCHANTING -> Material.ENCHANTING_TABLE;
-            case ALCHEMY -> Material.BREWING_STAND;
-            case TAMING -> Material.BONE;
-        };
-    }
-    
-    private void addGUIItem(Inventory gui, int slot, Material material, String name, String description) {
-        ItemStack item = new ItemStack(material);
-        ItemMeta meta = item.getItemMeta();
-        if (meta != null) {
-            meta.displayName(net.kyori.adventure.text.Component.text(name));
-            meta.lore(Arrays.asList(net.kyori.adventure.text.Component.text(description)));
-            item.setItemMeta(meta);
-        }
-        gui.setItem(slot, item);
-    }
-    
-    public enum CollectionType {
-        FARMING("§aFarming"),
-        MINING("§7Mining"),
-        COMBAT("§cCombat"),
-        FORAGING("§2Foraging"),
-        FISHING("§bFishing"),
-        ENCHANTING("§dEnchanting"),
-        ALCHEMY("§5Alchemy"),
-        TAMING("§6Taming");
+
+    /**
+     * Open collection category GUI for player
+     */
+    public void openCollectionCategoryGUI(Player player, String category) {
+        de.noctivag.skyblock.collections.CollectionsGUI gui = new de.noctivag.skyblock.collections.CollectionsGUI(plugin, this);
         
-        private final String displayName;
-        
-        CollectionType(String displayName) {
-            this.displayName = displayName;
-        }
-        
-        public String getDisplayName() { return displayName; }
-        public String getName() { return name(); }
-    }
-    
-    public static class CollectionConfig {
-        private final String displayName;
-        private final String description;
-        private final Material material;
-        
-        public CollectionConfig(String displayName, String description, Material material) {
-            this.displayName = displayName;
-            this.description = description;
-            this.material = material;
-        }
-        
-        public String getDisplayName() { return displayName; }
-        public String getDescription() { return description; }
-        public Material getMaterial() { return material; }
-    }
-    
-    public static class CollectionReward {
-        private final int requiredAmount;
-        private final String description;
-        private final RewardType rewardType;
-        private final double amount;
-        private final ItemStack item;
-        
-        public CollectionReward(int requiredAmount, String description, RewardType rewardType, double amount, ItemStack item) {
-            this.requiredAmount = requiredAmount;
-            this.description = description;
-            this.rewardType = rewardType;
-            this.amount = amount;
-            this.item = item;
-        }
-        
-        public int getRequiredAmount() { return requiredAmount; }
-        public String getDescription() { return description; }
-        public RewardType getRewardType() { return rewardType; }
-        public double getAmount() { return amount; }
-        public ItemStack getItem() { return item; }
-    }
-    
-    public static class CollectionRecipe {
-        private final int requiredAmount;
-        private final String name;
-        private final String description;
-        
-        public CollectionRecipe(int requiredAmount, String name, String description) {
-            this.requiredAmount = requiredAmount;
-            this.name = name;
-            this.description = description;
-        }
-        
-        public int getRequiredAmount() { return requiredAmount; }
-        public String getName() { return name; }
-        public String getDescription() { return description; }
-    }
-    
-    public enum RewardType {
-        COINS, ITEM, XP
-    }
-    
-    public CollectionConfig getCollectionConfig(CollectionType type) {
-        switch (type) {
-            case FARMING:
-                return new CollectionConfig("§aFarming", "Sammle landwirtschaftliche Gegenstände", Material.WHEAT);
-            case MINING:
-                return new CollectionConfig("§7Mining", "Sammle Erze und Steine", Material.COAL);
-            case COMBAT:
-                return new CollectionConfig("§cCombat", "Sammle Kampf-Gegenstände", Material.IRON_SWORD);
-            case FORAGING:
-                return new CollectionConfig("§2Foraging", "Sammle Holz und Pflanzen", Material.OAK_LOG);
-            case FISHING:
-                return new CollectionConfig("§bFishing", "Sammle Fische und Schätze", Material.FISHING_ROD);
-            case ENCHANTING:
-                return new CollectionConfig("§dEnchanting", "Sammle Verzauberungs-Gegenstände", Material.ENCHANTING_TABLE);
-            case ALCHEMY:
-                return new CollectionConfig("§5Alchemy", "Sammle Alchemie-Gegenstände", Material.BREWING_STAND);
-            case TAMING:
-                return new CollectionConfig("§6Taming", "Sammle Zähmungs-Gegenstände", Material.BONE);
+        switch (category.toLowerCase()) {
+            case "farming":
+                gui.openFarmingCollectionsGUI(player);
+                break;
+            case "mining":
+                gui.openMiningCollectionsGUI(player);
+                break;
+            case "combat":
+                gui.openCombatCollectionsGUI(player);
+                break;
+            case "foraging":
+                gui.openForagingCollectionsGUI(player);
+                break;
+            case "fishing":
+                gui.openFishingCollectionsGUI(player);
+                break;
             default:
-                return null;
+                openCollectionsGUI(player);
+                break;
         }
     }
+
+    /**
+     * Get collection config for a collection type
+     */
+    public CollectionConfig getCollectionConfig(CollectionType type) {
+        return new CollectionConfig(type);
+    }
     
-    public static class PlayerCollections {
-        private final UUID playerId;
-        private final Map<CollectionType, Map<Material, Double>> collections = new ConcurrentHashMap<>();
-        private final Map<CollectionType, Set<CollectionReward>> unlockedRewards = new ConcurrentHashMap<>();
-        private final Map<CollectionType, Set<CollectionRecipe>> unlockedRecipes = new ConcurrentHashMap<>();
+    /**
+     * Add to collection for player
+     */
+    public void addToCollection(Player player, CollectionType type, Material material, int amount) {
+        PlayerCollections playerCollections = getPlayerCollections(player.getUniqueId());
+        long currentAmount = playerCollections.getCollectionAmount(type);
+        playerCollections.setCollectionAmount(type, currentAmount + amount);
         
-        public PlayerCollections(UUID playerId) {
-            this.playerId = playerId;
-            for (CollectionType type : CollectionType.values()) {
-                collections.put(type, new ConcurrentHashMap<>());
-                unlockedRewards.put(type, new HashSet<>());
-                unlockedRecipes.put(type, new HashSet<>());
-            }
+        // Check for milestone progression
+        checkMilestoneProgression(player, type, playerCollections);
+    }
+    
+    /**
+     * Check milestone progression for a collection
+     */
+    private void checkMilestoneProgression(Player player, CollectionType type, PlayerCollections playerCollections) {
+        // Check if any new milestones were unlocked
+        boolean newMilestone = playerCollections.checkMilestoneProgression(type);
+        if (newMilestone) {
+            player.sendMessage("§a§lCollection Milestone Unlocked!");
+            player.sendMessage("§7" + type.getDisplayName() + " collection milestone reached!");
         }
-        
-        public int addToCollection(CollectionType type, int amount) {
-            // For simplicity, we'll use a single material per collection type
-            Material material = getDefaultMaterial(type);
-            Map<Material, Double> collection = collections.get(type);
-            double currentAmount = collection.getOrDefault(material, 0.0);
-            collection.put(material, currentAmount + amount);
-            return collection.get(material).intValue();
-        }
-        
-        public void addToCollection(CollectionType type, Material material, double amount) {
-            Map<Material, Double> collection = collections.get(type);
-            double currentAmount = collection.getOrDefault(material, 0.0);
-            collection.put(material, currentAmount + amount);
-        }
-        
-        public int getCollectionAmount(CollectionType type) {
-            Map<Material, Double> collection = collections.get(type);
-            return (int) collection.values().stream().mapToDouble(Double::doubleValue).sum();
-        }
-        
-        public double getTotalCollectionAmount(CollectionType type) {
-            Map<Material, Double> collection = collections.get(type);
-            return collection.values().stream().mapToDouble(Double::doubleValue).sum();
-        }
-        
-        public void addReward(CollectionType type, CollectionReward reward) {
-            unlockedRewards.get(type).add(reward);
-        }
-        
-        public boolean hasReward(CollectionType type, CollectionReward reward) {
-            return unlockedRewards.get(type).contains(reward);
-        }
-        
-        public void addRecipe(CollectionType type, CollectionRecipe recipe) {
-            unlockedRecipes.get(type).add(recipe);
-        }
-        
-        public boolean hasRecipe(CollectionType type, CollectionRecipe recipe) {
-            return unlockedRecipes.get(type).contains(recipe);
-        }
-        
-        private Material getDefaultMaterial(CollectionType type) {
-            return switch (type) {
-                case FARMING -> Material.WHEAT;
-                case MINING -> Material.COAL;
-                case COMBAT -> Material.ROTTEN_FLESH;
-                case FORAGING -> Material.OAK_LOG;
-                case FISHING -> Material.COD;
-                case ENCHANTING -> Material.LAPIS_LAZULI;
-                case ALCHEMY -> Material.NETHER_WART;
-                case TAMING -> Material.BONE;
+    }
+
+    /**
+     * Collection config class
+     */
+    public static class CollectionConfig {
+        private final CollectionType type;
+        private final long[] milestones;
+        private final String[] rewards;
+
+        public CollectionConfig(CollectionType type) {
+            this.type = type;
+            this.milestones = type.getMilestoneRequirements();
+            this.rewards = new String[]{
+                "Collection milestone reached!",
+                "You've collected " + type.getDisplayName() + "!",
+                "Keep collecting to unlock more rewards!"
             };
         }
-        
-        public UUID getPlayerId() { return playerId; }
-        public Map<CollectionType, Map<Material, Double>> getCollections() { return collections; }
-    }
-    
-    // Missing methods for GUI integration
-    public void openCollectionCategoryGUI(Player player, String category) {
-        // Delegate to CollectionsGUI
-        new de.noctivag.skyblock.collections.CollectionsGUI(SkyblockPlugin, this).openCategoryGUI(player, category);
+
+        public CollectionType getType() { return type; }
+        public long[] getMilestones() { return milestones; }
+        public String[] getRewards() { return rewards; }
+        public String getDisplayName() { return type.getDisplayName(); }
+        public String getDescription() { return "Collection for " + type.getDisplayName(); }
+        public org.bukkit.Material getMaterial() { return type.getMaterial(); }
     }
 }

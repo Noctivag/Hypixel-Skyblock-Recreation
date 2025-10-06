@@ -80,13 +80,13 @@ public class SystemTestCommand implements CommandExecutor {
         
         // Test Main Menu
         player.sendMessage(Component.text("§eTesting Main Menu..."));
-        new de.noctivag.skyblock.gui.MainMenu(SkyblockPlugin).open(player);
+        new de.noctivag.skyblock.gui.MainMenu(SkyblockPlugin, player).open();
         player.sendMessage(Component.text("§a✓ Main Menu opened successfully"));
         
         // Wait a bit then test Ultimate Menu
         SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
             player.sendMessage(Component.text("§eTesting Ultimate Menu..."));
-            new de.noctivag.skyblock.gui.UltimateMainMenu(SkyblockPlugin, player).open(player);
+            new de.noctivag.skyblock.gui.UltimateMainMenu(SkyblockPlugin, player).open();
             player.sendMessage(Component.text("§a✓ Ultimate Menu opened successfully"));
         }, 20L);
         
@@ -101,7 +101,7 @@ public class SystemTestCommand implements CommandExecutor {
         // Test Cosmetics Menu
         SkyblockPlugin.getServer().getScheduler().runTaskLater(SkyblockPlugin, () -> {
             player.sendMessage(Component.text("§eTesting Cosmetics Menu..."));
-            new de.noctivag.skyblock.gui.CosmeticsMenu(SkyblockPlugin, SkyblockPlugin.getCosmeticsManager()).open(player);
+            new de.noctivag.skyblock.gui.CosmeticsMenu(SkyblockPlugin, SkyblockPlugin.getCosmeticsManager(), player).open();
             player.sendMessage(Component.text("§a✓ Cosmetics Menu opened successfully"));
         }, 60L);
         
@@ -180,13 +180,13 @@ public class SystemTestCommand implements CommandExecutor {
         try {
             switch (guiType) {
                 case "MainMenu":
-                    new de.noctivag.skyblock.gui.MainMenu(SkyblockPlugin).open(player);
+                    new de.noctivag.skyblock.gui.MainMenu(SkyblockPlugin, player).open();
                     break;
                 case "UltimateMainMenu":
-                    new de.noctivag.skyblock.gui.UltimateMainMenu(SkyblockPlugin, player).open(player);
+                    new de.noctivag.skyblock.gui.UltimateMainMenu(SkyblockPlugin, player).open();
                     break;
                 case "CosmeticsMenu":
-                    new de.noctivag.skyblock.gui.CosmeticsMenu(SkyblockPlugin, SkyblockPlugin.getCosmeticsManager()).open(player);
+                    new de.noctivag.skyblock.gui.CosmeticsMenu(SkyblockPlugin, SkyblockPlugin.getCosmeticsManager(), player).open();
                     break;
                 case "WarpGUI":
                     new de.noctivag.skyblock.locations.gui.WarpGUI(SkyblockPlugin).openMainMenu(player);
@@ -196,16 +196,16 @@ public class SystemTestCommand implements CommandExecutor {
             player.sendMessage(Component.text("§cIsland system not implemented yet!"));
                     break;
                 case "EventMenu":
-                    new de.noctivag.skyblock.gui.EventMenu(SkyblockPlugin).open(player);
+                    new de.noctivag.skyblock.gui.EventMenu(SkyblockPlugin, player).open();
                     break;
                 case "SettingsGUI":
-                    new de.noctivag.skyblock.gui.SettingsGUI(SkyblockPlugin).openGUI(player);
+                    new de.noctivag.skyblock.gui.SettingsGUI(SkyblockPlugin, player).open();
                     break;
                 case "FriendsGUI":
-                    new de.noctivag.skyblock.gui.FriendsGUI(SkyblockPlugin, player).openGUI(player);
+                    new de.noctivag.skyblock.gui.FriendsGUI(SkyblockPlugin, player).open();
                     break;
                 case "PartyGUI":
-                    new de.noctivag.skyblock.gui.PartyGUI(SkyblockPlugin).openGUI(player);
+                    new de.noctivag.skyblock.gui.PartyGUI(SkyblockPlugin, player).open();
                     break;
             }
             player.sendMessage("§a✓ " + guiType + " opened successfully");

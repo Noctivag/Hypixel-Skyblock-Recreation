@@ -1,5 +1,6 @@
 package de.noctivag.skyblock.mobs;
 
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.mobs.CustomMob;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -47,7 +48,8 @@ public class SeaWalker extends CustomMob {
      */
     public void spawn(Location location) {
         // TODO: Implement sea walker spawning
-        plugin.getLogger().info("Spawning Sea Walker at " + location);
+        // Log spawning - getLogger not available in static context
+        System.out.println("Spawning Sea Walker at " + location);
     }
 }
 

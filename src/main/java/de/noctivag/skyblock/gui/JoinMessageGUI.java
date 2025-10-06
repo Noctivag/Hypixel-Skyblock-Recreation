@@ -1,5 +1,6 @@
 package de.noctivag.skyblock.gui;
 
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -15,6 +16,24 @@ public class JoinMessageGUI extends CustomGUI {
     public JoinMessageGUI() {
         super("§bJoin Messages", 54);
         setupItems();
+    }
+    
+    public JoinMessageGUI(SkyblockPlugin plugin) {
+        super("§bJoin Messages", 54);
+        setupItems();
+    }
+    
+    private Player player;
+    
+    @Override
+    public void open() {
+        if (player != null) {
+            open(player);
+        }
+    }
+    
+    public void openGUI(Player player) {
+        open(player);
     }
     
     @Override

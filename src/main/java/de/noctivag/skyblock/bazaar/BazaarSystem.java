@@ -184,7 +184,7 @@ public class BazaarSystem implements Listener {
     }
     
     public void openBazaarCategoryGUI(Player player, BazaarCategory category) {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6§lBazaar - " + category.getDisplayName());
+        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lBazaar - " + category.getDisplayName()));
         
         List<BazaarItem> categoryItems = bazaarItems.values().stream()
             .filter(item -> category.getMaterials().contains(item.getMaterial()))
@@ -211,7 +211,7 @@ public class BazaarSystem implements Listener {
         BazaarItem item = bazaarItems.get(material);
         if (item == null) return;
         
-        Inventory gui = Bukkit.createInventory(null, 27, "§6§lBazaar - " + item.getName());
+        Inventory gui = Bukkit.createInventory(null, 27, Component.text("§6§lBazaar - " + item.getName()));
         
         // Item display
         ItemStack itemStack = new ItemStack(material);

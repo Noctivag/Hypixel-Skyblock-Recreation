@@ -1,7 +1,7 @@
 package de.noctivag.skyblock.commands;
 import net.kyori.adventure.text.Component;
 
-import de.noctivag.skyblock.SkyblockPluginRefactored;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.gui.MiningGUI;
 import de.noctivag.skyblock.skyblock.MiningAreaSystem;
 import de.noctivag.skyblock.skyblock.SkyblockManager;
@@ -19,9 +19,9 @@ import java.util.Map;
 import org.bukkit.Location;
 
 public class MiningCommand implements CommandExecutor, TabCompleter {
-    private final SkyblockPluginRefactored SkyblockPlugin;
+    private final SkyblockPlugin SkyblockPlugin;
 
-    public MiningCommand(SkyblockPluginRefactored SkyblockPlugin) {
+    public MiningCommand(SkyblockPlugin SkyblockPlugin) {
         this.SkyblockPlugin = SkyblockPlugin;
     }
 
@@ -34,14 +34,14 @@ public class MiningCommand implements CommandExecutor, TabCompleter {
 
         if (args.length == 0) {
             // Open mining GUI
-            new MiningGUI(SkyblockPlugin, player).open(player);
+            new MiningGUI(SkyblockPlugin, player).open();
             return true;
         }
 
         String subCommand = args[0].toLowerCase();
 
         switch (subCommand) {
-            case "gui" -> new MiningGUI(SkyblockPlugin, player).open(player);
+            case "gui" -> new MiningGUI(SkyblockPlugin, player).open();
 
             case "teleport", "tp" -> {
                 if (args.length < 2) {

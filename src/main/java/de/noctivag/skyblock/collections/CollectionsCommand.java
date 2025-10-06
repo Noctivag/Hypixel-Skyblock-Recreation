@@ -1,10 +1,9 @@
 package de.noctivag.skyblock.collections;
 
 import de.noctivag.skyblock.SkyblockPlugin;
-import de.noctivag.skyblock.SkyblockPlugin;
-import org.bukkit.inventory.ItemStack;
-
-import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.gui.features.CollectionsGUI;
+import de.noctivag.skyblock.collections.CollectionType;
+import de.noctivag.skyblock.collections.PlayerCollections;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -146,11 +145,11 @@ public class CollectionsCommand implements CommandExecutor, TabCompleter {
     
     private void showCategoryCollections(Player player, String category) {
         List<Material> materials = getCollectionsByCategory(category);
-        CollectionsSystem.PlayerCollections playerCollections = collectionsSystem.getPlayerCollections(player.getUniqueId());
+        PlayerCollections playerCollections = collectionsSystem.getPlayerCollections(player.getUniqueId());
         
         for (Material material : materials) {
             // Get the collection type for this material
-            CollectionsSystem.CollectionType collectionType = getCollectionTypeForMaterial(material);
+            CollectionType collectionType = getCollectionTypeForMaterial(material);
             if (collectionType == null) continue;
             
             int amount = 0; // Placeholder
@@ -162,7 +161,7 @@ public class CollectionsCommand implements CommandExecutor, TabCompleter {
     }
     
     private void showCollectionInfo(Player player, String collectionName) {
-        CollectionsSystem.CollectionType collectionType = getCollectionTypeByName(collectionName);
+        CollectionType collectionType = getCollectionTypeByName(collectionName);
         if (collectionType == null) {
             player.sendMessage(Component.text("§cCollection not found: " + collectionName));
             return;
@@ -174,7 +173,7 @@ public class CollectionsCommand implements CommandExecutor, TabCompleter {
             return;
         }
         
-        CollectionsSystem.PlayerCollections playerCollections = collectionsSystem.getPlayerCollections(player.getUniqueId());
+        PlayerCollections playerCollections = collectionsSystem.getPlayerCollections(player.getUniqueId());
         int currentAmount = 0; // Placeholder
         
         player.sendMessage(Component.text("§6§l=== " + config.getDisplayName() + " ==="));
@@ -199,7 +198,7 @@ public class CollectionsCommand implements CommandExecutor, TabCompleter {
     }
     
     private void showCollectionProgress(Player player) {
-        CollectionsSystem.PlayerCollections playerCollections = collectionsSystem.getPlayerCollections(player.getUniqueId());
+        PlayerCollections playerCollections = collectionsSystem.getPlayerCollections(player.getUniqueId());
         
         player.sendMessage(Component.text("§6§l=== Collection Progress ==="));
         player.sendMessage(Component.text("§7Total Collections: §e" + "0"));
@@ -217,13 +216,13 @@ public class CollectionsCommand implements CommandExecutor, TabCompleter {
     }
     
     private void resetCollection(Player player, String collectionName) {
-        CollectionsSystem.CollectionType collectionType = getCollectionTypeByName(collectionName);
+        CollectionType collectionType = getCollectionTypeByName(collectionName);
         if (collectionType == null) {
             player.sendMessage(Component.text("§cCollection not found: " + collectionName));
             return;
         }
         
-        CollectionsSystem.PlayerCollections playerCollections = collectionsSystem.getPlayerCollections(player.getUniqueId());
+        PlayerCollections playerCollections = collectionsSystem.getPlayerCollections(player.getUniqueId());
         // Reset collection (placeholder)
         player.sendMessage(Component.text("§aCollection reset!"));
         
@@ -231,7 +230,7 @@ public class CollectionsCommand implements CommandExecutor, TabCompleter {
     }
     
     private void addCollection(Player player, String collectionName, String amountStr) {
-        CollectionsSystem.CollectionType collectionType = getCollectionTypeByName(collectionName);
+        CollectionType collectionType = getCollectionTypeByName(collectionName);
         if (collectionType == null) {
             player.sendMessage(Component.text("§cCollection not found: " + collectionName));
             return;
@@ -264,9 +263,9 @@ public class CollectionsCommand implements CommandExecutor, TabCompleter {
         }
     }
     
-    private CollectionsSystem.CollectionType getCollectionTypeByName(String name) {
-        for (CollectionsSystem.CollectionType type : CollectionsSystem.CollectionType.values()) {
-            if (type.getName().equalsIgnoreCase(name) || 
+    private CollectionType getCollectionTypeByName(String name) {
+        for (CollectionType type : CollectionType.values()) {
+            if (type.getDisplayName().equalsIgnoreCase(name) || 
                 type.getDisplayName().toLowerCase().contains(name.toLowerCase())) {
                 return type;
             }
@@ -274,29 +273,29 @@ public class CollectionsCommand implements CommandExecutor, TabCompleter {
         return null;
     }
     
-    private CollectionsSystem.CollectionType getCollectionTypeForMaterial(Material material) {
+    private CollectionType getCollectionTypeForMaterial(Material material) {
         // Simple mapping - in a real implementation, this would be more sophisticated
         if (material == Material.WHEAT || material == Material.CARROT || material == Material.POTATO) {
-            return CollectionsSystem.CollectionType.FARMING;
+            return CollectionType.WHEAT;
         } else if (material == Material.COBBLESTONE || material == Material.COAL || material == Material.IRON_INGOT) {
-            return CollectionsSystem.CollectionType.MINING;
+            return CollectionType.COBBLESTONE;
         } else if (material == Material.ROTTEN_FLESH || material == Material.BONE || material == Material.STRING) {
-            return CollectionsSystem.CollectionType.COMBAT;
+            return CollectionType.ROTTEN_FLESH;
         } else if (material == Material.OAK_LOG || material == Material.BIRCH_LOG || material == Material.SPRUCE_LOG) {
-            return CollectionsSystem.CollectionType.FORAGING;
+            return CollectionType.OAK_LOG;
         } else if (material == Material.FISHING_ROD || material == Material.COD || material == Material.SALMON) {
-            return CollectionsSystem.CollectionType.FISHING;
+            return CollectionType.RAW_FISH;
         } else if (material == Material.ENCHANTING_TABLE || material == Material.EXPERIENCE_BOTTLE) {
-            return CollectionsSystem.CollectionType.ENCHANTING;
+            return CollectionType.LAPIS_LAZULI;
         } else if (material == Material.BREWING_STAND || material == Material.POTION) {
-            return CollectionsSystem.CollectionType.ALCHEMY;
+            return CollectionType.NETHER_WART;
         } else if (material == Material.BONE || material == Material.LEAD) {
-            return CollectionsSystem.CollectionType.TAMING;
+            return CollectionType.BONE;
         }
-        return CollectionsSystem.CollectionType.FARMING; // Default fallback
+        return CollectionType.WHEAT; // Default fallback
     }
     
-    private int getCollectionAmount(CollectionsSystem.PlayerCollections playerCollections, CollectionsSystem.CollectionType type, Material material) {
+    private int getCollectionAmount(PlayerCollections playerCollections, CollectionType type, Material material) {
         // This is a simplified implementation - in reality, you'd need to track individual material amounts
         return 0; // Placeholder
     }
@@ -377,9 +376,9 @@ public class CollectionsCommand implements CommandExecutor, TabCompleter {
                 case "info":
                 case "reset":
                 case "add":
-                    for (CollectionsSystem.CollectionType type : CollectionsSystem.CollectionType.values()) {
-                        if (type.getName().toLowerCase().startsWith(args[1].toLowerCase())) {
-                            completions.add(type.getName());
+                    for (CollectionType type : CollectionType.values()) {
+                        if (type.getDisplayName().toLowerCase().startsWith(args[1].toLowerCase())) {
+                            completions.add(type.getDisplayName());
                         }
                     }
                     break;

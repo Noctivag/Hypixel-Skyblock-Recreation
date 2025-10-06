@@ -56,4 +56,9 @@ public interface EconomyInterface {
      * Format money amount
      */
     String formatMoney(double amount);
+    
+    /**
+     * Get currency name
+     */
+    String getCurrencyName();
 }

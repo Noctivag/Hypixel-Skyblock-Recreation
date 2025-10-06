@@ -83,12 +83,12 @@ public class PetBag {
         if (pet != null && pets.contains(pet)) {
             // Deactivate current active pet
             if (activePet != null) {
-                activePet.setActive(false);
+                // activePet.setActive(false);
             }
             
             // Set new active pet
             activePet = pet;
-            pet.setActive(true);
+            // pet.setActive(true);
             return true;
         }
         return false;
@@ -99,7 +99,7 @@ public class PetBag {
      */
     public void deactivateActivePet() {
         if (activePet != null) {
-            activePet.setActive(false);
+            // activePet.setActive(false);
             activePet = null;
         }
     }

@@ -1,202 +1,309 @@
 package de.noctivag.skyblock.minions;
-import org.bukkit.inventory.ItemStack;
 
 import org.bukkit.Material;
-import org.bukkit.inventory.meta.ItemMeta;
-import net.kyori.adventure.text.Component;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
- * Minion Fuel - Fuel System für Minions
- * 
- * Verantwortlich für:
- * - Fuel Types
- * - Fuel Duration
- * - Fuel Multipliers
- * - Fuel Management
+ * Represents fuel that can be used in minions
  */
 public class MinionFuel {
-    
-    public enum FuelType {
-        COAL("Coal", "§8Coal", Material.COAL, 3600000L, 1.1, "§7Basic fuel for minions"),
-        CHARCOAL("Charcoal", "§8Charcoal", Material.CHARCOAL, 3600000L, 1.1, "§7Basic fuel for minions"),
-        COAL_BLOCK("Coal Block", "§8Coal Block", Material.COAL_BLOCK, 36000000L, 1.2, "§7Efficient fuel block"),
-        LAVA_BUCKET("Lava Bucket", "§cLava Bucket", Material.LAVA_BUCKET, 7200000L, 1.25, "§7Hot fuel for minions"),
-        ENCHANTED_COAL("Enchanted Coal", "§8Enchanted Coal", Material.COAL, 18000000L, 1.3, "§7Enchanted fuel"),
-        ENCHANTED_CHARCOAL("Enchanted Charcoal", "§8Enchanted Charcoal", Material.CHARCOAL, 18000000L, 1.3, "§7Enchanted fuel"),
-        ENCHANTED_COAL_BLOCK("Enchanted Coal Block", "§8Enchanted Coal Block", Material.COAL_BLOCK, 180000000L, 1.4, "§7Enchanted fuel block"),
-        ENCHANTED_LAVA_BUCKET("Enchanted Lava Bucket", "§cEnchanted Lava Bucket", Material.LAVA_BUCKET, 36000000L, 1.5, "§7Enchanted hot fuel"),
-        CATALYST("Catalyst", "§dCatalyst", Material.NETHER_STAR, 86400000L, 2.0, "§7Ultimate fuel catalyst"),
-        HAMSTER_WHEEL("Hamster Wheel", "§eHamster Wheel", Material.SPONGE, 7200000L, 1.0, "§7Cute but effective"),
-        FOUL_FLESH("Foul Flesh", "§2Foul Flesh", Material.ROTTEN_FLESH, 18000000L, 1.0, "§7Gross but works"),
-        ENCHANTED_BREAD("Enchanted Bread", "§eEnchanted Bread", Material.BREAD, 14400000L, 1.0, "§7Nutritious fuel"),
-        ENCHANTED_CARROT("Enchanted Carrot", "§6Enchanted Carrot", Material.CARROT, 14400000L, 1.0, "§7Healthy fuel"),
-        ENCHANTED_POTATO("Enchanted Potato", "§eEnchanted Potato", Material.POTATO, 14400000L, 1.0, "§7Starchy fuel"),
-        ENCHANTED_PUMPKIN("Enchanted Pumpkin", "§6Enchanted Pumpkin", Material.PUMPKIN, 14400000L, 1.0, "§7Seasonal fuel"),
-        ENCHANTED_MELON("Enchanted Melon", "§aEnchanted Melon", Material.MELON, 14400000L, 1.0, "§7Sweet fuel"),
-        ENCHANTED_SEEDS("Enchanted Seeds", "§eEnchanted Seeds", Material.WHEAT_SEEDS, 14400000L, 1.0, "§7Growing fuel"),
-        ENCHANTED_SUGAR_CANE("Enchanted Sugar Cane", "§fEnchanted Sugar Cane", Material.SUGAR_CANE, 14400000L, 1.0, "§7Sweet fuel"),
-        ENCHANTED_COCOA("Enchanted Cocoa", "§6Enchanted Cocoa", Material.COCOA_BEANS, 14400000L, 1.0, "§7Chocolate fuel"),
-        ENCHANTED_CACTUS("Enchanted Cactus", "§aEnchanted Cactus", Material.CACTUS, 14400000L, 1.0, "§7Prickly fuel"),
-        ENCHANTED_NETHER_WART("Enchanted Nether Wart", "§cEnchanted Nether Wart", Material.NETHER_WART, 14400000L, 1.0, "§7Magical fuel");
-        
-        private final String name;
+    private final String id;
         private final String displayName;
-        private final Material icon;
-        private final long duration; // in milliseconds
-        private final double speedMultiplier;
         private final String description;
-        
-        FuelType(String name, String displayName, Material icon, long duration, double speedMultiplier, String description) {
-            this.name = name;
+    private final Material material;
+    private final String rarity;
+    private final double efficiencyMultiplier;
+    private final long duration; // Duration in milliseconds
+    private final long cost;
+    private final boolean isStackable;
+
+    public MinionFuel(String id, String displayName, String description, Material material, 
+                     String rarity, double efficiencyMultiplier, long duration, long cost, boolean isStackable) {
+        this.id = id;
             this.displayName = displayName;
-            this.icon = icon;
+        this.description = description;
+        this.material = material;
+        this.rarity = rarity;
+        this.efficiencyMultiplier = efficiencyMultiplier;
             this.duration = duration;
-            this.speedMultiplier = speedMultiplier;
-            this.description = description;
+        this.cost = cost;
+        this.isStackable = isStackable;
         }
         
-        public String getName() { return name; }
+    // Getters
+    public String getId() { return id; }
         public String getDisplayName() { return displayName; }
-        public Material getIcon() { return icon; }
+    public String getDescription() { return description; }
+    public Material getMaterial() { return material; }
+    public String getRarity() { return rarity; }
+    public double getEfficiencyMultiplier() { return efficiencyMultiplier; }
         public long getDuration() { return duration; }
-        public double getSpeedMultiplier() { return speedMultiplier; }
-        public String getDescription() { return description; }
+    public long getCost() { return cost; }
+    public boolean isStackable() { return isStackable; }
+
+    /**
+     * Get colored display name
+     */
+    public String getColoredDisplayName() {
+        return getRarityColor() + displayName;
     }
-    
-    private final FuelType type;
-    private final long startTime;
-    private final long endTime;
-    private final boolean active;
-    
-    public MinionFuel(FuelType type) {
-        this.type = type;
-        this.startTime = java.lang.System.currentTimeMillis();
-        this.endTime = startTime + type.getDuration();
-        this.active = true;
+
+    /**
+     * Get rarity color
+     */
+    public String getRarityColor() {
+        switch (rarity.toLowerCase()) {
+            case "common": return "&7";
+            case "uncommon": return "&a";
+            case "rare": return "&9";
+            case "epic": return "&5";
+            case "legendary": return "&6";
+            case "mythic": return "&d";
+            case "special": return "&c";
+            default: return "&7";
+        }
     }
-    
-    public MinionFuel(FuelType type, long startTime, long endTime, boolean active) {
-        this.type = type;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.active = active;
+
+    /**
+     * Get fuel lore
+     */
+    public String[] getFuelLore() {
+        return new String[]{
+            "&7" + description,
+            "",
+            "&7Efficiency: &a+" + (efficiencyMultiplier * 100) + "%",
+            "&7Duration: &a" + formatDuration(duration),
+            "&7Cost: &e" + formatNumber(cost) + " coins",
+            "",
+            isStackable ? "&a✓ Stackable" : "&c✗ Not Stackable",
+            "",
+            "&eClick to add to minion"
+        };
     }
-    
-    public FuelType getType() { return type; }
-    public long getStartTime() { return startTime; }
-    public long getEndTime() { return endTime; }
-    public boolean isActive() { return active && java.lang.System.currentTimeMillis() < endTime; }
-    public long getRemainingTime() { return Math.max(0, endTime - java.lang.System.currentTimeMillis()); }
-    public double getSpeedMultiplier() { return type.getSpeedMultiplier(); }
-    
-    public boolean isExpired() {
-        return java.lang.System.currentTimeMillis() >= endTime;
+
+    /**
+     * Get fuel icon
+     */
+    public String getFuelIcon() {
+        switch (rarity.toLowerCase()) {
+            case "common": return "⚡";
+            case "uncommon": return "🔥";
+            case "rare": return "💎";
+            case "epic": return "🌟";
+            case "legendary": return "👑";
+            case "mythic": return "✨";
+            case "special": return "🎯";
+            default: return "⚡";
+        }
     }
-    
-    public String getRemainingTimeFormatted() {
-        long remaining = getRemainingTime();
-        if (remaining <= 0) return "Expired";
+
+    /**
+     * Get fuel type
+     */
+    public FuelType getFuelType() {
+        if (efficiencyMultiplier >= 2.0) return FuelType.SUPER_FUEL;
+        if (efficiencyMultiplier >= 1.5) return FuelType.ADVANCED_FUEL;
+        if (efficiencyMultiplier >= 1.2) return FuelType.IMPROVED_FUEL;
+        return FuelType.BASIC_FUEL;
+    }
+
+    /**
+     * Get fuel category
+     */
+    public String getFuelCategory() {
+        return getFuelType().getDisplayName();
+    }
+
+    /**
+     * Check if this fuel is better than another
+     */
+    public boolean isBetterThan(MinionFuel other) {
+        return this.efficiencyMultiplier > other.efficiencyMultiplier;
+    }
+
+    /**
+     * Get fuel value (efficiency per cost)
+     */
+    public double getFuelValue() {
+        if (cost == 0) return Double.MAX_VALUE;
+        return efficiencyMultiplier / (cost / 1000.0); // Efficiency per 1000 coins
+    }
+
+    /**
+     * Get estimated fuel efficiency per hour
+     */
+    public double getEfficiencyPerHour() {
+        double hours = duration / (1000.0 * 60.0 * 60.0); // Convert to hours
+        return efficiencyMultiplier / hours;
+    }
+
+    /**
+     * Format duration
+     */
+    private String formatDuration(long duration) {
+        long seconds = duration / 1000;
+        long minutes = seconds / 60;
+        long hours = minutes / 60;
+        long days = hours / 24;
         
-        long hours = remaining / 3600000;
-        long minutes = (remaining % 3600000) / 60000;
-        long seconds = (remaining % 60000) / 1000;
-        
-        if (hours > 0) {
-            return hours + "h " + minutes + "m " + seconds + "s";
+        if (days > 0) {
+            return days + "d " + (hours % 24) + "h";
+        } else if (hours > 0) {
+            return hours + "h " + (minutes % 60) + "m";
         } else if (minutes > 0) {
-            return minutes + "m " + seconds + "s";
+            return minutes + "m " + (seconds % 60) + "s";
         } else {
             return seconds + "s";
         }
     }
     
-    public ItemStack toItemStack() {
-        ItemStack item = new ItemStack(type.getIcon());
-        ItemMeta meta = item.getItemMeta();
-        
-        if (meta != null) {
-            meta.displayName(Component.text(type.getDisplayName()));
-            
-            List<String> lore = Arrays.asList(
-                type.getDescription(),
-                "§7",
-                "§7Duration: §e" + formatDuration(type.getDuration()),
-                "§7Speed Multiplier: §e" + String.format("%.1f", type.getSpeedMultiplier()) + "x",
-                "§7",
-                "§7Right-click on a minion to use!"
-            );
-            
-            List<Component> componentLore = new ArrayList<>();
-            for (String line : lore) {
-                componentLore.add(Component.text(line));
-            }
-            meta.lore(componentLore);
-            
-            item.setItemMeta(meta);
+    /**
+     * Format large numbers
+     */
+    private String formatNumber(long number) {
+        if (number >= 1_000_000_000_000L) {
+            return String.format("%.1fT", number / 1_000_000_000_000.0);
+        } else if (number >= 1_000_000_000L) {
+            return String.format("%.1fB", number / 1_000_000_000.0);
+        } else if (number >= 1_000_000L) {
+            return String.format("%.1fM", number / 1_000_000.0);
+        } else if (number >= 1_000L) {
+            return String.format("%.1fK", number / 1_000.0);
+        } else {
+            return String.valueOf(number);
         }
-        
-        return item;
     }
-    
-    public static MinionFuel fromItemStack(ItemStack item) {
-        if (item == null || !item.hasItemMeta()) return null;
-        
-        ItemMeta meta = item.getItemMeta();
-        if (meta == null || !meta.hasDisplayName()) return null;
-        
-        String displayName = meta.getDisplayName();
-        
-        // Find matching fuel type
-        for (FuelType type : FuelType.values()) {
-            if (displayName.contains(type.getDisplayName())) {
-                return new MinionFuel(type);
+
+    /**
+     * Create default fuels
+     */
+    public static MinionFuel[] createDefaultFuels() {
+        return new MinionFuel[]{
+            // Basic Fuels
+            new MinionFuel("coal", "Coal", "Basic fuel for minions", 
+                Material.COAL, "common", 1.1, 3600000, 100, true), // 1 hour
+            new MinionFuel("charcoal", "Charcoal", "Basic fuel for minions", 
+                Material.CHARCOAL, "common", 1.1, 3600000, 100, true), // 1 hour
+            new MinionFuel("lava_bucket", "Lava Bucket", "Long-lasting fuel", 
+                Material.LAVA_BUCKET, "uncommon", 1.2, 14400000, 500, false), // 4 hours
+            
+            // Improved Fuels
+            new MinionFuel("blaze_rod", "Blaze Rod", "Improved fuel efficiency", 
+                Material.BLAZE_ROD, "uncommon", 1.25, 7200000, 1000, true), // 2 hours
+            new MinionFuel("coal_block", "Coal Block", "Compressed coal fuel", 
+                Material.COAL_BLOCK, "uncommon", 1.3, 10800000, 1500, true), // 3 hours
+            new MinionFuel("magma_cream", "Magma Cream", "Hot fuel for minions", 
+                Material.MAGMA_CREAM, "rare", 1.4, 14400000, 2000, true), // 4 hours
+            
+            // Advanced Fuels
+            new MinionFuel("enchanted_coal", "Enchanted Coal", "Magically enhanced coal", 
+                Material.COAL, "rare", 1.5, 21600000, 5000, true), // 6 hours
+            new MinionFuel("enchanted_charcoal", "Enchanted Charcoal", "Magically enhanced charcoal", 
+                Material.CHARCOAL, "rare", 1.5, 21600000, 5000, true), // 6 hours
+            new MinionFuel("enchanted_lava_bucket", "Enchanted Lava Bucket", "Superheated lava", 
+                Material.LAVA_BUCKET, "epic", 1.6, 43200000, 10000, false), // 12 hours
+            
+            // Super Fuels
+            new MinionFuel("enchanted_blaze_rod", "Enchanted Blaze Rod", "Magically enhanced blaze rod", 
+                Material.BLAZE_ROD, "epic", 1.8, 43200000, 15000, true), // 12 hours
+            new MinionFuel("enchanted_coal_block", "Enchanted Coal Block", "Magically compressed coal", 
+                Material.COAL_BLOCK, "epic", 2.0, 64800000, 20000, true), // 18 hours
+            new MinionFuel("enchanted_magma_cream", "Enchanted Magma Cream", "Superheated magma", 
+                Material.MAGMA_CREAM, "legendary", 2.2, 86400000, 30000, true), // 24 hours
+            
+            // Special Fuels
+            new MinionFuel("catalyst", "Catalyst", "Special fuel that doubles minion speed", 
+                Material.NETHER_STAR, "mythic", 2.5, 172800000, 100000, false), // 48 hours
+            new MinionFuel("hyper_catalyst", "Hyper Catalyst", "Ultimate fuel for minions", 
+                Material.DRAGON_EGG, "mythic", 3.0, 259200000, 200000, false), // 72 hours
+            new MinionFuel("plasma_bucket", "Plasma Bucket", "Experimental plasma fuel", 
+                Material.LAVA_BUCKET, "special", 4.0, 604800000, 500000, false) // 168 hours (1 week)
+        };
+    }
+
+    /**
+     * Get fuel by ID
+     */
+    public static MinionFuel getById(String id) {
+        for (MinionFuel fuel : createDefaultFuels()) {
+            if (fuel.getId().equals(id)) {
+                return fuel;
             }
         }
-        
         return null;
     }
     
-    private String formatDuration(long duration) {
-        long hours = duration / 3600000;
-        long minutes = (duration % 3600000) / 60000;
-        
-        if (hours > 0) {
-            return hours + "h " + minutes + "m";
-        } else {
-            return minutes + "m";
-        }
+    /**
+     * Get fuels by type
+     */
+    public static MinionFuel[] getByType(FuelType fuelType) {
+        return java.util.Arrays.stream(createDefaultFuels())
+                .filter(fuel -> fuel.getFuelType() == fuelType)
+                .toArray(MinionFuel[]::new);
     }
-    
-    public static List<MinionFuel> getAllFuels() {
-        List<MinionFuel> fuels = new ArrayList<>();
-        
-        for (FuelType type : FuelType.values()) {
-            fuels.add(new MinionFuel(type));
-        }
-        
-        return fuels;
+
+    /**
+     * Get fuels by rarity
+     */
+    public static MinionFuel[] getByRarity(String rarity) {
+        return java.util.Arrays.stream(createDefaultFuels())
+                .filter(fuel -> fuel.getRarity().equalsIgnoreCase(rarity))
+                .toArray(MinionFuel[]::new);
     }
-    
+
+    /**
+     * Get best fuel by efficiency
+     */
     public static MinionFuel getBestFuel() {
-        return new MinionFuel(FuelType.CATALYST);
+        return java.util.Arrays.stream(createDefaultFuels())
+                .max((a, b) -> Double.compare(a.getEfficiencyMultiplier(), b.getEfficiencyMultiplier()))
+                .orElse(null);
     }
-    
-    public static MinionFuel getCheapestFuel() {
-        return new MinionFuel(FuelType.COAL);
+
+    /**
+     * Get best fuel by value
+     */
+    public static MinionFuel getBestValueFuel() {
+        return java.util.Arrays.stream(createDefaultFuels())
+                .max((a, b) -> Double.compare(a.getFuelValue(), b.getFuelValue()))
+                .orElse(null);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        MinionFuel that = (MinionFuel) obj;
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
     
     @Override
     public String toString() {
-        return "MinionFuel{" +
-                "type=" + type +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", active=" + active +
-                ", remainingTime=" + getRemainingTimeFormatted() +
-                '}';
+        return getColoredDisplayName();
+    }
+
+    /**
+     * Enum for fuel types
+     */
+    public enum FuelType {
+        BASIC_FUEL("Basic Fuel", "Basic fuel for minions"),
+        IMPROVED_FUEL("Improved Fuel", "Improved fuel efficiency"),
+        ADVANCED_FUEL("Advanced Fuel", "Advanced fuel technology"),
+        SUPER_FUEL("Super Fuel", "Supercharged fuel");
+
+        private final String displayName;
+        private final String description;
+
+        FuelType(String displayName, String description) {
+            this.displayName = displayName;
+            this.description = description;
+        }
+
+        public String getDisplayName() { return displayName; }
+        public String getDescription() { return description; }
     }
 }

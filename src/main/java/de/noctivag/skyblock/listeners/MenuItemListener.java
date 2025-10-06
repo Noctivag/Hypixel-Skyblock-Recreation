@@ -43,7 +43,7 @@ public class MenuItemListener implements Listener {
         String displayName = Component.text().append(meta.displayName()).build().toString();
         if (displayName.contains("§6✧ Hauptmenü ✧") || displayName.contains("Hauptmenü")) {
             event.setCancelled(true);
-            new MainMenu(SkyblockPlugin).open(player);
+            new MainMenu(SkyblockPlugin, player).open();
             player.sendMessage(Component.text("§aHauptmenü geöffnet!"));
         }
     }

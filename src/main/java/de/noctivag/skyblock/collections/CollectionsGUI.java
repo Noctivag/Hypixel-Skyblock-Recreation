@@ -1,10 +1,8 @@
 package de.noctivag.skyblock.collections;
 
 import de.noctivag.skyblock.SkyblockPlugin;
-import de.noctivag.skyblock.SkyblockPlugin;
-import org.bukkit.inventory.ItemStack;
-
-import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.collections.CollectionType;
+import de.noctivag.skyblock.collections.PlayerCollections;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,11 +10,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import net.kyori.adventure.text.Component;
 
 import java.util.*;
-import de.noctivag.skyblock.collections.PlayerCollections;
 import java.util.stream.Collectors;
 
 
@@ -146,18 +144,18 @@ public class CollectionsGUI implements Listener {
         Inventory gui = Bukkit.createInventory(null, 54, Component.text("§a§lFarming Collections"));
         
         // Add farming collections
-        addCollectionItem(gui, 10, CollectionsSystem.CollectionType.FARMING, player);
-        addCollectionItem(gui, 11, CollectionsSystem.CollectionType.FARMING, player);
-        addCollectionItem(gui, 12, CollectionsSystem.CollectionType.FARMING, player);
-        addCollectionItem(gui, 13, CollectionsSystem.CollectionType.FARMING, player);
-        addCollectionItem(gui, 14, CollectionsSystem.CollectionType.FARMING, player);
-        addCollectionItem(gui, 15, CollectionsSystem.CollectionType.FARMING, player);
-        addCollectionItem(gui, 16, CollectionsSystem.CollectionType.FARMING, player);
-        addCollectionItem(gui, 17, CollectionsSystem.CollectionType.FARMING, player);
+        addCollectionItem(gui, 10, CollectionType.WHEAT, player);
+        addCollectionItem(gui, 11, CollectionType.CARROT, player);
+        addCollectionItem(gui, 12, CollectionType.POTATO, player);
+        addCollectionItem(gui, 13, CollectionType.PUMPKIN, player);
+        addCollectionItem(gui, 14, CollectionType.MELON, player);
+        addCollectionItem(gui, 15, CollectionType.SEEDS, player);
+        addCollectionItem(gui, 16, CollectionType.MUSHROOM, player);
+        addCollectionItem(gui, 17, CollectionType.CACTUS, player);
         
-        addCollectionItem(gui, 19, CollectionsSystem.CollectionType.FARMING, player);
-        addCollectionItem(gui, 20, CollectionsSystem.CollectionType.FARMING, player);
-        addCollectionItem(gui, 21, CollectionsSystem.CollectionType.FARMING, player);
+        addCollectionItem(gui, 19, CollectionType.SUGAR_CANE, player);
+        addCollectionItem(gui, 20, CollectionType.NETHER_WART, player);
+        addCollectionItem(gui, 21, CollectionType.COCOA_BEANS, player);
         
         // Add navigation items
         addGUIItem(gui, 45, Material.ARROW, "§7§lPrevious Page", "§7Go to previous page.");
@@ -171,17 +169,17 @@ public class CollectionsGUI implements Listener {
         Inventory gui = Bukkit.createInventory(null, 54, Component.text("§6§lMining Collections"));
         
         // Add mining collections
-        addCollectionItem(gui, 10, CollectionsSystem.CollectionType.MINING, player);
-        addCollectionItem(gui, 11, CollectionsSystem.CollectionType.MINING, player);
-        addCollectionItem(gui, 12, CollectionsSystem.CollectionType.MINING, player);
-        addCollectionItem(gui, 13, CollectionsSystem.CollectionType.MINING, player);
-        addCollectionItem(gui, 14, CollectionsSystem.CollectionType.MINING, player);
-        addCollectionItem(gui, 15, CollectionsSystem.CollectionType.MINING, player);
-        addCollectionItem(gui, 16, CollectionsSystem.CollectionType.MINING, player);
-        addCollectionItem(gui, 17, CollectionsSystem.CollectionType.MINING, player);
+        addCollectionItem(gui, 10, CollectionType.COBBLESTONE, player);
+        addCollectionItem(gui, 11, CollectionType.COAL, player);
+        addCollectionItem(gui, 12, CollectionType.IRON, player);
+        addCollectionItem(gui, 13, CollectionType.GOLD, player);
+        addCollectionItem(gui, 14, CollectionType.DIAMOND, player);
+        addCollectionItem(gui, 15, CollectionType.LAPIS_LAZULI, player);
+        addCollectionItem(gui, 16, CollectionType.EMERALD, player);
+        addCollectionItem(gui, 17, CollectionType.REDSTONE, player);
         
-        addCollectionItem(gui, 19, CollectionsSystem.CollectionType.MINING, player);
-        addCollectionItem(gui, 20, CollectionsSystem.CollectionType.MINING, player);
+        addCollectionItem(gui, 19, CollectionType.QUARTZ, player);
+        addCollectionItem(gui, 20, CollectionType.OBSIDIAN, player);
         
         // Add navigation items
         addGUIItem(gui, 45, Material.ARROW, "§7§lPrevious Page", "§7Go to previous page.");
@@ -195,14 +193,14 @@ public class CollectionsGUI implements Listener {
         Inventory gui = Bukkit.createInventory(null, 54, Component.text("§c§lCombat Collections"));
         
         // Add combat collections
-        addCollectionItem(gui, 10, CollectionsSystem.CollectionType.COMBAT, player);
-        addCollectionItem(gui, 11, CollectionsSystem.CollectionType.COMBAT, player);
-        addCollectionItem(gui, 12, CollectionsSystem.CollectionType.COMBAT, player);
-        addCollectionItem(gui, 13, CollectionsSystem.CollectionType.COMBAT, player);
-        addCollectionItem(gui, 14, CollectionsSystem.CollectionType.COMBAT, player);
-        addCollectionItem(gui, 15, CollectionsSystem.CollectionType.COMBAT, player);
-        addCollectionItem(gui, 16, CollectionsSystem.CollectionType.COMBAT, player);
-        addCollectionItem(gui, 17, CollectionsSystem.CollectionType.COMBAT, player);
+        addCollectionItem(gui, 10, CollectionType.ROTTEN_FLESH, player);
+        addCollectionItem(gui, 11, CollectionType.BONE, player);
+        addCollectionItem(gui, 12, CollectionType.STRING, player);
+        addCollectionItem(gui, 13, CollectionType.SPIDER_EYE, player);
+        addCollectionItem(gui, 14, CollectionType.ENDER_PEARL, player);
+        addCollectionItem(gui, 15, CollectionType.GHAST_TEAR, player);
+        addCollectionItem(gui, 16, CollectionType.BLAZE_ROD, player);
+        addCollectionItem(gui, 17, CollectionType.MAGMA_CREAM, player);
         
         // Add navigation items
         addGUIItem(gui, 45, Material.ARROW, "§7§lPrevious Page", "§7Go to previous page.");
@@ -216,12 +214,12 @@ public class CollectionsGUI implements Listener {
         Inventory gui = Bukkit.createInventory(null, 54, Component.text("§2§lForaging Collections"));
         
         // Add foraging collections
-        addCollectionItem(gui, 10, CollectionsSystem.CollectionType.FORAGING, player);
-        addCollectionItem(gui, 11, CollectionsSystem.CollectionType.FORAGING, player);
-        addCollectionItem(gui, 12, CollectionsSystem.CollectionType.FORAGING, player);
-        addCollectionItem(gui, 13, CollectionsSystem.CollectionType.FORAGING, player);
-        addCollectionItem(gui, 14, CollectionsSystem.CollectionType.FORAGING, player);
-        addCollectionItem(gui, 15, CollectionsSystem.CollectionType.FORAGING, player);
+        addCollectionItem(gui, 10, CollectionType.OAK_LOG, player);
+        addCollectionItem(gui, 11, CollectionType.BIRCH_LOG, player);
+        addCollectionItem(gui, 12, CollectionType.SPRUCE_LOG, player);
+        addCollectionItem(gui, 13, CollectionType.JUNGLE_LOG, player);
+        addCollectionItem(gui, 14, CollectionType.ACACIA_LOG, player);
+        addCollectionItem(gui, 15, CollectionType.DARK_OAK_LOG, player);
         
         // Add navigation items
         addGUIItem(gui, 45, Material.ARROW, "§7§lPrevious Page", "§7Go to previous page.");
@@ -235,10 +233,10 @@ public class CollectionsGUI implements Listener {
         Inventory gui = Bukkit.createInventory(null, 54, Component.text("§b§lFishing Collections"));
         
         // Add fishing collections
-        addCollectionItem(gui, 10, CollectionsSystem.CollectionType.FISHING, player);
-        addCollectionItem(gui, 11, CollectionsSystem.CollectionType.FISHING, player);
-        addCollectionItem(gui, 12, CollectionsSystem.CollectionType.FISHING, player);
-        addCollectionItem(gui, 13, CollectionsSystem.CollectionType.FISHING, player);
+        addCollectionItem(gui, 10, CollectionType.RAW_FISH, player);
+        addCollectionItem(gui, 11, CollectionType.RAW_SALMON, player);
+        addCollectionItem(gui, 12, CollectionType.CLOWNFISH, player);
+        addCollectionItem(gui, 13, CollectionType.PUFFERFISH, player);
         
         // Add navigation items
         addGUIItem(gui, 45, Material.ARROW, "§7§lPrevious Page", "§7Go to previous page.");
@@ -269,7 +267,7 @@ public class CollectionsGUI implements Listener {
         player.openInventory(gui);
     }
     
-    private void addCollectionItem(Inventory gui, int slot, CollectionsSystem.CollectionType collectionType, Player player) {
+    private void addCollectionItem(Inventory gui, int slot, CollectionType collectionType, Player player) {
         CollectionsSystem.CollectionConfig config = ((de.noctivag.skyblock.collections.CollectionsSystem) SkyblockPlugin.getCollectionsSystem()).getCollectionConfig(collectionType);
         if (config == null) return;
         
@@ -285,7 +283,7 @@ public class CollectionsGUI implements Listener {
             
             // Get player collection data
             // PlayerCollections playerCollections = collectionsSystem.getPlayerCollections(player.getUniqueId());
-            int amount = 0; // Placeholder - would need proper CollectionsSystem.CollectionType mapping
+            int amount = 0; // Placeholder - would need proper CollectionType mapping
             int nextReward = getNextRewardAmount(collectionType, amount);
             
             lore.add("§7Collected: §a" + amount);
@@ -324,7 +322,7 @@ public class CollectionsGUI implements Listener {
             lore.add("§7Completion Rate: §d" + String.format("%.1f", getCompletionRate(null)) + "%");
             lore.add("");
             lore.add("§7Top Collections:");
-            for (Map.Entry<CollectionsSystem.CollectionType, Integer> entry : getTopCollections(null, 5).entrySet()) {
+            for (Map.Entry<CollectionType, Integer> entry : getTopCollections(null, 5).entrySet()) {
                 lore.add("  §7" + entry.getKey().getDisplayName() + ": §e" + entry.getValue());
             }
             
@@ -370,12 +368,12 @@ public class CollectionsGUI implements Listener {
     }
     
     // Helper methods
-    private int getNextRewardAmount(CollectionsSystem.CollectionType collectionType, int currentAmount) {
+    private int getNextRewardAmount(CollectionType collectionType, int currentAmount) {
         // This would be implemented based on the collection rewards
         return currentAmount + 100; // Placeholder
     }
     
-    private List<CollectionReward> getCollectionRewards(CollectionsSystem.CollectionType collectionType) {
+    private List<CollectionReward> getCollectionRewards(CollectionType collectionType) {
         // This would be implemented based on the collection configs
         return Arrays.asList(
             new CollectionReward(100, "§a+1% XP Boost", "xp_boost_1"),
@@ -408,21 +406,21 @@ public class CollectionsGUI implements Listener {
     
     // Helper methods
     private int getTotalCollections(PlayerCollections playerCollections) {
-        return CollectionsSystem.CollectionType.values().length;
+        return CollectionType.values().length;
     }
     
     private int getTotalItemsCollected(PlayerCollections playerCollections) {
         int total = 0;
-        // for (CollectionsSystem.CollectionType collectionType : CollectionsSystem.CollectionType.values()) {
-        //     total += 0; // Placeholder - would need proper CollectionsSystem.CollectionType mapping
+        // for (CollectionType collectionType : CollectionType.values()) {
+        //     total += 0; // Placeholder - would need proper CollectionType mapping
         // }
         return total;
     }
     
     private int getCompletedCollections(PlayerCollections playerCollections) {
         int completed = 0;
-        // for (CollectionsSystem.CollectionType collectionType : CollectionsSystem.CollectionType.values()) {
-        //     if (0 >= 1000) { // Placeholder - would need proper CollectionsSystem.CollectionType mapping
+        // for (CollectionType collectionType : CollectionType.values()) {
+        //     if (0 >= 1000) { // Placeholder - would need proper CollectionType mapping
         //         completed++;
         //     }
         // }
@@ -435,15 +433,15 @@ public class CollectionsGUI implements Listener {
         return total > 0 ? (double) completed / total * 100 : 0.0;
     }
     
-    private Map<CollectionsSystem.CollectionType, Integer> getTopCollections(PlayerCollections playerCollections, int limit) {
-        Map<CollectionsSystem.CollectionType, Integer> topCollections = new HashMap<>();
+    private Map<CollectionType, Integer> getTopCollections(PlayerCollections playerCollections, int limit) {
+        Map<CollectionType, Integer> topCollections = new HashMap<>();
         
-        for (CollectionsSystem.CollectionType collectionType : CollectionsSystem.CollectionType.values()) {
-            topCollections.put(collectionType, 0); // Placeholder - would need proper CollectionsSystem.CollectionType mapping
+        for (CollectionType collectionType : CollectionType.values()) {
+            topCollections.put(collectionType, 0); // Placeholder - would need proper CollectionType mapping
         }
         
         return topCollections.entrySet().stream()
-                .sorted(Map.Entry.<CollectionsSystem.CollectionType, Integer>comparingByValue().reversed())
+                .sorted(Map.Entry.<CollectionType, Integer>comparingByValue().reversed())
                 .limit(limit)
                 .collect(LinkedHashMap::new, (map, entry) -> map.put(entry.getKey(), entry.getValue()), LinkedHashMap::putAll);
     }

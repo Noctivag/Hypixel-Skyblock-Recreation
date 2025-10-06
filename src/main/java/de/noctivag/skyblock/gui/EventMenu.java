@@ -23,6 +23,21 @@ public class EventMenu extends CustomGUI {
         setupItems();
     }
     
+    public EventMenu(SkyblockPlugin plugin, Player player) {
+        super("§cEvents", 54);
+        this.player = player;
+        setupItems();
+    }
+    
+    private Player player;
+    
+    @Override
+    public void open() {
+        if (player != null) {
+            open(player);
+        }
+    }
+    
     @Override
     public void setupItems() {
         // Add events

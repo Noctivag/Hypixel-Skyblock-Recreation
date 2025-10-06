@@ -566,8 +566,7 @@ public class AdvancedGemstoneSystem {
      */
     public void loadGemstoneData(UUID playerId) {
         try {
-            CompletableFuture<Object> future = databaseManager.loadPlayerGemstoneData(playerId);
-            PlayerGemstoneData data = (PlayerGemstoneData) future.get();
+            PlayerGemstoneData data = databaseManager.loadPlayerGemstoneData(playerId);
             if (data != null) {
                 playerGemstoneData.put(playerId, data);
             }

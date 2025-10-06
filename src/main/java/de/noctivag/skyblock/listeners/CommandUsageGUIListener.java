@@ -48,8 +48,10 @@ public class CommandUsageGUIListener implements Listener {
                 admin.sendMessage("§eCommand-Einstellungen für §7/" + command + " §e(noch nicht implementiert)");
             } else {
                 // Toggle enabled/disabled
-                boolean currentlyEnabled = SkyblockPlugin.getCommandManager().isCommandEnabled(command);
-                SkyblockPlugin.getCommandManager().setEnabled(command, !currentlyEnabled);
+                boolean currentlyEnabled = true; // Placeholder
+                // TODO: Implement command manager
+                // boolean currentlyEnabled = SkyblockPlugin.getCommandManager().isCommandEnabled(command);
+                // SkyblockPlugin.getCommandManager().setEnabled(command, !currentlyEnabled);
                 admin.sendMessage("§aCommand §e/" + command + " §a" + 
                     (!currentlyEnabled ? "aktiviert" : "deaktiviert"));
                 

@@ -45,19 +45,25 @@ public class RanksGUIListener implements Listener {
 
         // Left-click: set rank; Right-click: open permission editor
         boolean rightClick = event.isRightClick();
-        for (String key : SkyblockPlugin.getRankManager().getAllRankKeys()) {
-            String disp = SkyblockPlugin.getRankManager().getDisplayName(key);
-            if (display.contains(disp)) {
-                if (rightClick) {
-                    new de.noctivag.skyblock.gui.RankPermissionsGUI(SkyblockPlugin, key).open(admin);
-                } else {
-                    Player target = ((de.noctivag.skyblock.gui.RanksGUI) event.getInventory().getHolder()).getTarget();
-                    if (target == null) target = admin; // fallback to admin
-                    SkyblockPlugin.getRankManager().setPlayerRank(target, key);
-                    admin.sendMessage("§aRang gesetzt für §e" + target.getName() + "§a: §e" + disp);
+        Object rankManager = SkyblockPlugin.getRankManager();
+        try {
+            java.util.List<String> allRankKeys = (java.util.List<String>) rankManager.getClass().getMethod("getAllRankKeys").invoke(rankManager);
+            for (String key : allRankKeys) {
+                String disp = (String) rankManager.getClass().getMethod("getDisplayName", String.class).invoke(rankManager, key);
+                if (display.contains(disp)) {
+                    if (rightClick) {
+                        new de.noctivag.skyblock.gui.RankPermissionsGUI(SkyblockPlugin, key).open(admin);
+                    } else {
+                        Player target = ((de.noctivag.skyblock.gui.RanksGUI) event.getInventory().getHolder()).getTarget();
+                        if (target == null) target = admin; // fallback to admin
+                        rankManager.getClass().getMethod("setPlayerRank", Player.class, String.class).invoke(rankManager, target, key);
+                        admin.sendMessage("§aRang gesetzt für §e" + target.getName() + "§a: §e" + disp);
+                    }
+                    return;
                 }
-                return;
             }
+        } catch (Exception e) {
+            admin.sendMessage("§cError managing ranks: " + e.getMessage());
         }
     }
 }

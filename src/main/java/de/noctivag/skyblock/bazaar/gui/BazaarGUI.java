@@ -47,16 +47,17 @@ public class BazaarGUI extends CustomGUI {
             ItemStack orderItem = new ItemStack(Material.PAPER);
             ItemMeta orderMeta = orderItem.getItemMeta();
             if (orderMeta != null) {
-                orderMeta.setDisplayName(order.getOrderType().getColorCode() + order.getOrderType().getDisplayName() + " Order");
-                orderMeta.setLore(Arrays.asList(
-                    "§7Item: §c" + order.getItemId(),
-                    "§7Amount: §c" + order.getAmount(),
-                    "§7Price per Unit: §c" + String.format("%.2f", order.getPricePerUnit()),
-                    "§7Total Price: §c" + String.format("%.2f", order.getTotalPrice()),
-                    "§7Status: §a" + (order.isActive() ? "Active" : "Inactive"),
-                    "",
-                    "§eClick to cancel"
-                ));
+                orderMeta.displayName(net.kyori.adventure.text.Component.text(order.getOrderType().getColorCode() + order.getOrderType().getDisplayName() + " Order"));
+                List<net.kyori.adventure.text.Component> lore = Arrays.asList(
+                    net.kyori.adventure.text.Component.text("§7Item: §c" + order.getItemId()),
+                    net.kyori.adventure.text.Component.text("§7Amount: §c" + order.getAmount()),
+                    net.kyori.adventure.text.Component.text("§7Price per Unit: §c" + String.format("%.2f", order.getPricePerUnit())),
+                    net.kyori.adventure.text.Component.text("§7Total Price: §c" + String.format("%.2f", order.getTotalPrice())),
+                    net.kyori.adventure.text.Component.text("§7Status: §a" + (order.isActive() ? "Active" : "Inactive")),
+                    net.kyori.adventure.text.Component.text(""),
+                    net.kyori.adventure.text.Component.text("§eClick to cancel")
+                );
+                orderMeta.lore(lore);
                 orderItem.setItemMeta(orderMeta);
             }
             inventory.setItem(slot, orderItem);
@@ -70,7 +71,7 @@ public class BazaarGUI extends CustomGUI {
         ItemStack closeItem = new ItemStack(Material.BARRIER);
         ItemMeta closeMeta = closeItem.getItemMeta();
         if (closeMeta != null) {
-            closeMeta.setDisplayName("§cClose");
+            closeMeta.displayName(net.kyori.adventure.text.Component.text("§cClose"));
             closeItem.setItemMeta(closeMeta);
         }
         inventory.setItem(49, closeItem);

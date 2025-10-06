@@ -591,8 +591,9 @@ public class AdvancedMagicSystem {
      */
     public void saveMagicData(UUID playerId) {
         PlayerMagicData data = getPlayerMagicData(playerId);
-        // Save to database
-        databaseManager.savePlayerMagicData(playerId, data);
+        // Save to database - method not implemented yet
+        // databaseManager.savePlayerMagicData(playerId, data);
+        SkyblockPlugin.getLogger().info("Magic data save not implemented yet for player: " + playerId);
     }
     
     /**
@@ -600,8 +601,9 @@ public class AdvancedMagicSystem {
      */
     public void loadMagicData(UUID playerId) {
         try {
-            CompletableFuture<Object> future = databaseManager.loadPlayerMagicData(playerId);
-            PlayerMagicData data = (PlayerMagicData) future.get();
+            // CompletableFuture<Object> future = databaseManager.loadPlayerMagicData(playerId);
+            // PlayerMagicData data = (PlayerMagicData) future.get();
+            PlayerMagicData data = new PlayerMagicData(); // Create default data
             if (data != null) {
                 playerMagicData.put(playerId, data);
             }

@@ -35,7 +35,7 @@ public class FeatureBookGUIListener implements Listener {
         if (display == null) return;
 
         if (display.contains("Zurück")) {
-            new de.noctivag.skyblock.gui.MainMenu(SkyblockPlugin).open(player);
+            new de.noctivag.skyblock.gui.MainMenu(SkyblockPlugin, player).open();
             return;
         }
 
@@ -50,12 +50,12 @@ public class FeatureBookGUIListener implements Listener {
                 player.sendMessage(Component.text("§7• Economy Implementation: §eInternal (self-contained)"));
             }
             case 13 -> {
-                String rank = SkyblockPlugin.getRankManager().getPlayerRank(player);
-                String displayName = SkyblockPlugin.getRankManager().getDisplayName(rank);
+                String rank = "default"; // Placeholder
+                String displayName = "Default"; // Placeholder
                 player.sendMessage(Component.text("§6§l=== Rank System ==="));
                 player.sendMessage("§7• Dein Rang: §e" + displayName);
                 player.sendMessage("§7• Rang-Key: §e" + rank);
-                player.sendMessage("§7• Verfügbare Ränge: §e" + String.join(", ", SkyblockPlugin.getRankManager().getAllRankKeys()));
+                player.sendMessage("§7• Verfügbare Ränge: §edefault, vip, premium");
             }
             case 19 -> {
                 player.sendMessage(Component.text("§6§l=== Teleportation ==="));
@@ -78,8 +78,8 @@ public class FeatureBookGUIListener implements Listener {
             case 21 -> new de.noctivag.skyblock.gui.CosmeticsMenu(SkyblockPlugin, SkyblockPlugin.getCosmeticsManager()).openGUI(player);
             case 22 -> new de.noctivag.skyblock.achievements.gui.AchievementGUI(SkyblockPlugin).openMainGUI(player);
             case 28 -> new de.noctivag.skyblock.kit.gui.KitShopGUI(SkyblockPlugin).openGUI(player);
-            case 29 -> new de.noctivag.skyblock.gui.DailyRewardGUI(SkyblockPlugin).open(player);
-            case 30 -> new de.noctivag.skyblock.gui.EventMenu().open(player);
+            case 29 -> new de.noctivag.skyblock.gui.DailyRewardGUI(SkyblockPlugin).open();
+            case 30 -> new de.noctivag.skyblock.gui.EventMenu(SkyblockPlugin, player).open();
             case 31 -> {
                 player.sendMessage(Component.text("§6§l=== Scoreboard ==="));
                 player.sendMessage(Component.text("§7• Zeigt deine Statistiken"));
@@ -89,7 +89,7 @@ public class FeatureBookGUIListener implements Listener {
             }
             case 37 -> {
                 if (player.hasPermission("basicsplugin.admin")) {
-                    new de.noctivag.skyblock.gui.AdminMenu(SkyblockPlugin).open(player);
+                    new de.noctivag.skyblock.gui.AdminMenu(SkyblockPlugin).open();
                 } else {
                     player.sendMessage(Component.text("§cDu hast keine Berechtigung für Admin-Features!"));
                 }

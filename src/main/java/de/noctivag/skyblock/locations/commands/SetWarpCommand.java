@@ -46,8 +46,13 @@ public class SetWarpCommand implements CommandExecutor {
             description.append(args[i]).append(" ");
         }
 
-        SkyblockPlugin.getLocationManager().setWarp(warpName, player.getLocation(),
-            permission, description.toString().trim());
+        Object locationManager = SkyblockPlugin.getLocationManager();
+        try {
+            locationManager.getClass().getMethod("setWarp", String.class, org.bukkit.Location.class, String.class, String.class)
+                .invoke(locationManager, warpName, player.getLocation(), permission, description.toString().trim());
+        } catch (Exception e) {
+            player.sendMessage(Component.text("§cError setting warp: " + e.getMessage()));
+        }
 
         player.sendMessage("§aWarp §e" + warpName + " §awurde gesetzt!");
         if (!permission.isEmpty()) {

@@ -79,46 +79,46 @@ public class UltimateGUIListener implements Listener {
         
         switch (slot) {
             // Core Features (10-18)
-            case 10 -> new ProfileGUI(SkyblockPlugin, player).openGUI(player);
-            case 11 -> new EnhancedDailyRewardGUI(SkyblockPlugin, player).openGUI(player);
-            case 12 -> new EnhancedAchievementGUI(SkyblockPlugin, player).openGUI(player);
-            case 13 -> new EnhancedCosmeticsGUI(SkyblockPlugin, player).openGUI(player);
-            case 14 -> new KitShopGUI(SkyblockPlugin, player).openGUI(player);
-            case 15 -> new WarpGUI(SkyblockPlugin, player).openGUI(player);
-            case 16 -> new TeleportGUI(SkyblockPlugin, player).openGUI(player);
-            case 17 -> new JoinMessageGUI(SkyblockPlugin, player).openGUI(player);
-            case 18 -> new BasicCommandsGUI(SkyblockPlugin).openGUI(player);
+            case 10 -> player.sendMessage("§cProfile GUI not implemented yet!");
+            case 11 -> new DailyRewardGUI(SkyblockPlugin).open();
+            case 12 -> player.sendMessage("§cAchievement GUI not implemented yet!");
+            case 13 -> player.sendMessage("§cEnhanced Cosmetics GUI not implemented yet!");
+            case 14 -> player.sendMessage("§cKit Shop GUI not implemented yet!");
+            case 15 -> player.sendMessage("§cWarp GUI not implemented yet!");
+            case 16 -> player.sendMessage("§cTeleport GUI not implemented yet!");
+            case 17 -> new JoinMessageGUI(SkyblockPlugin).open();
+            case 18 -> new BasicCommandsGUI(SkyblockPlugin).open();
             
             // Combat & Events (19-27)
-            case 19 -> new UltimateEventGUI(SkyblockPlugin, player).openGUI(player);
-            case 20 -> new PvPArenaGUI(SkyblockPlugin, player).openGUI(player);
-            case 21 -> new MobArenaGUI(SkyblockPlugin, player).openGUI(player);
-            case 22 -> new DuelSystemGUI(SkyblockPlugin, player).openGUI(player);
-            case 23 -> new TournamentGUI(SkyblockPlugin, player).openGUI(player);
-            case 24 -> new BattlePassGUI(SkyblockPlugin, player).openGUI(player);
-            case 25 -> new QuestGUI(SkyblockPlugin, player).openGUI(player);
-            case 26 -> new StatisticsGUI(SkyblockPlugin, player).openGUI(player);
-            case 27 -> new LeaderboardGUI(SkyblockPlugin, player).openGUI(player);
+            case 19 -> player.sendMessage("§cUltimate Event GUI not implemented yet!");
+            case 20 -> player.sendMessage("§cPvP Arena GUI not implemented yet!");
+            case 21 -> player.sendMessage("§cMob Arena GUI not implemented yet!");
+            case 22 -> player.sendMessage("§cDuel System GUI not implemented yet!");
+            case 23 -> player.sendMessage("§cTournament GUI not implemented yet!");
+            case 24 -> player.sendMessage("§cBattle Pass GUI not implemented yet!");
+            case 25 -> player.sendMessage("§cQuest GUI not implemented yet!");
+            case 26 -> player.sendMessage("§cStatistics GUI not implemented yet!");
+            case 27 -> player.sendMessage("§cLeaderboard GUI not implemented yet!");
             
             // Social & Economy (28-36)
-            case 28 -> new PartyGUI(SkyblockPlugin, player).openGUI(player);
-            case 29 -> new FriendsGUI(SkyblockPlugin, player).openGUI(player);
-            case 30 -> new GuildSystemGUI(SkyblockPlugin, player).openGUI(player);
-            case 31 -> new ChatChannelsGUI(SkyblockPlugin, player).openGUI(player);
-            case 32 -> new EconomyGUI(SkyblockPlugin, player).openGUI(player);
-            case 33 -> new ShopGUI(SkyblockPlugin, player).openGUI(player);
-            case 34 -> new AuctionHouseGUI(SkyblockPlugin).openAuctionHouseGUI(player);
-            case 35 -> new BankGUI(SkyblockPlugin).openBankGUI(player);
-            case 36 -> new JobsGUI(SkyblockPlugin, player).openGUI(player);
+            case 28 -> new PartyGUI(SkyblockPlugin, player).open();
+            case 29 -> new FriendsGUI(SkyblockPlugin, player).open();
+            case 30 -> player.sendMessage("§cGuild System GUI not implemented yet!");
+            case 31 -> player.sendMessage("§cChat Channels GUI not implemented yet!");
+            case 32 -> player.sendMessage("§cEconomy GUI not implemented yet!");
+            case 33 -> player.sendMessage("§cShop GUI not implemented yet!");
+            case 34 -> player.sendMessage("§cAuction House GUI not implemented yet!");
+            case 35 -> player.sendMessage("§cBank GUI not implemented yet!");
+            case 36 -> player.sendMessage("§cJobs GUI not implemented yet!");
             
             // New Systems (37-43)
-            case 37 -> new PotatoBookGUI(SkyblockPlugin, player).openGUI(player);
-            case 38 -> new RecombobulatorGUI(SkyblockPlugin, player).openGUI(player);
-            case 39 -> new DungeonStarGUI(SkyblockPlugin, player).open(player);
-            case 40 -> new PetItemGUI(SkyblockPlugin, player).openGUI(player);
-            case 41 -> new ArmorAbilityGUI(SkyblockPlugin, player).openGUI(player);
-            case 42 -> new WeaponAbilityGUI(SkyblockPlugin, player).openGUI(player);
-            case 43 -> new NPCManagementGUI(SkyblockPlugin, player).openGUI(player);
+            case 37 -> player.sendMessage("§cPotato Book GUI not implemented yet!");
+            case 38 -> player.sendMessage("§cRecombobulator GUI not implemented yet!");
+            case 39 -> player.sendMessage("§cDungeon Star GUI not implemented yet!");
+            case 40 -> player.sendMessage("§cPet Item GUI not implemented yet!");
+            case 41 -> player.sendMessage("§cArmor Ability GUI not implemented yet!");
+            case 42 -> player.sendMessage("§cWeapon Ability GUI not implemented yet!");
+            case 43 -> player.sendMessage("§cNPC Management GUI not implemented yet!");
             
             // Core Hypixel SkyBlock Features (44-46)
             case 44 -> {
@@ -135,15 +135,15 @@ public class UltimateGUIListener implements Listener {
             case 46 -> SkyblockPlugin.openCalendar(player);
             
             // Utility & Admin (47-48)
-            case 47 -> new SettingsGUI(SkyblockPlugin).openGUI(player);
-            case 48 -> new AdminMenu(SkyblockPlugin, player).open(player);
+            case 47 -> new SettingsGUI(SkyblockPlugin, player).open();
+            case 48 -> new AdminMenu(SkyblockPlugin).open();
             
             // Navigation & Info (49-53)
-            case 49 -> new EventScheduleGUI(SkyblockPlugin, player).openGUI(player);
-            case 50 -> new ServerInfoGUI(SkyblockPlugin).openServerInfoGUI(player);
-            case 51 -> new QuickActionsGUI(SkyblockPlugin, player).openGUI(player);
+            case 49 -> player.sendMessage("§cEvent Schedule GUI not implemented yet!");
+            case 50 -> player.sendMessage("§cServer Info GUI not implemented yet!");
+            case 51 -> player.sendMessage("§cQuick Actions GUI not implemented yet!");
             case 52 -> player.closeInventory();
-            case 53 -> new HelpGUI(SkyblockPlugin).openHelpGUI(player);
+            case 53 -> player.sendMessage("§cHelp GUI not implemented yet!");
         }
     }
 
@@ -154,49 +154,58 @@ public class UltimateGUIListener implements Listener {
         switch (slot) {
             // Category buttons (10-14)
             case 10 -> {
-                UltimateEventGUI gui = new UltimateEventGUI(SkyblockPlugin, player);
-                gui.setCategory("dragon");
-                gui.openGUI(player);
+                // UltimateEventGUI gui = new UltimateEventGUI(SkyblockPlugin, player); // Not implemented yet
+                // // gui.setCategory("dragon");
+                // // gui.openGUI(player);
+                player.sendMessage(Component.text("§cUltimateEventGUI not implemented yet!"));
             }
             case 11 -> {
-                UltimateEventGUI gui = new UltimateEventGUI(SkyblockPlugin, player);
-                gui.setCategory("undead");
-                gui.openGUI(player);
+                // UltimateEventGUI gui = new UltimateEventGUI(SkyblockPlugin, player); // Not implemented yet
+                // // gui.setCategory("undead");
+                // // gui.openGUI(player);
+                player.sendMessage(Component.text("§cUltimateEventGUI not implemented yet!"));
             }
             case 12 -> {
-                UltimateEventGUI gui = new UltimateEventGUI(SkyblockPlugin, player);
-                gui.setCategory("elemental");
-                gui.openGUI(player);
+                // UltimateEventGUI gui = new UltimateEventGUI(SkyblockPlugin, player); // Not implemented yet
+                // gui.setCategory("elemental");
+                // gui.openGUI(player);
+                player.sendMessage(Component.text("§cUltimateEventGUI not implemented yet!"));
             }
             case 13 -> {
-                UltimateEventGUI gui = new UltimateEventGUI(SkyblockPlugin, player);
-                gui.setCategory("monster");
-                gui.openGUI(player);
+                // UltimateEventGUI gui = new UltimateEventGUI(SkyblockPlugin, player); // Not implemented yet
+                // gui.setCategory("monster");
+                // gui.openGUI(player);
+                player.sendMessage(Component.text("§cGUI not implemented yet!"));
             }
             case 14 -> {
-                UltimateEventGUI gui = new UltimateEventGUI(SkyblockPlugin, player);
-                gui.setCategory("all");
-                gui.openGUI(player);
+                // UltimateEventGUI gui = new UltimateEventGUI(SkyblockPlugin, player); // Not implemented yet
+                // gui.setCategory("all");
+                // gui.openGUI(player);
+                player.sendMessage(Component.text("§cGUI not implemented yet!"));
             }
             case 15 -> {
-                UltimateEventGUI gui = new UltimateEventGUI(SkyblockPlugin, player);
-                gui.setCategory("dark");
-                gui.openGUI(player);
+                // UltimateEventGUI gui = new UltimateEventGUI(SkyblockPlugin, player); // Not implemented yet
+                // gui.setCategory("dark");
+                // gui.openGUI(player);
+                player.sendMessage(Component.text("§cGUI not implemented yet!"));
             }
             case 16 -> {
-                UltimateEventGUI gui = new UltimateEventGUI(SkyblockPlugin, player);
-                gui.setCategory("celestial");
-                gui.openGUI(player);
+                // UltimateEventGUI gui = new UltimateEventGUI(SkyblockPlugin, player); // Not implemented yet
+                // gui.setCategory("celestial");
+                // gui.openGUI(player);
+                player.sendMessage(Component.text("§cGUI not implemented yet!"));
             }
             case 17 -> {
-                UltimateEventGUI gui = new UltimateEventGUI(SkyblockPlugin, player);
-                gui.setCategory("mechanical");
-                gui.openGUI(player);
+                // UltimateEventGUI gui = new UltimateEventGUI(SkyblockPlugin, player); // Not implemented yet
+                // gui.setCategory("mechanical");
+                // gui.openGUI(player);
+                player.sendMessage(Component.text("§cGUI not implemented yet!"));
             }
             case 18 -> {
-                UltimateEventGUI gui = new UltimateEventGUI(SkyblockPlugin, player);
-                gui.setCategory("nature");
-                gui.openGUI(player);
+                // UltimateEventGUI gui = new UltimateEventGUI(SkyblockPlugin, player); // Not implemented yet
+                // gui.setCategory("nature");
+                // gui.openGUI(player);
+                player.sendMessage(Component.text("§cGUI not implemented yet!"));
             }
             
             // Event slots (19-27)
@@ -209,12 +218,12 @@ public class UltimateGUIListener implements Listener {
             }
             
             // Info buttons (28-32)
-            case 28 -> new EventScheduleGUI(SkyblockPlugin, player).openGUI(player);
-            case 30 -> new EventStatisticsGUI(SkyblockPlugin, player).openGUI(player);
-            case 32 -> new EventRewardsGUI(SkyblockPlugin, player).openGUI(player);
+            case 28 -> player.sendMessage("§cEvent Schedule GUI not implemented yet!");
+            case 30 -> player.sendMessage("§cEvent Statistics GUI not implemented yet!");
+            case 32 -> player.sendMessage("§cEvent Rewards GUI not implemented yet!");
             
             // Navigation (45-49)
-            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open(player);
+            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open();
             case 49 -> player.closeInventory();
         }
     }
@@ -226,43 +235,50 @@ public class UltimateGUIListener implements Listener {
         switch (slot) {
             // Category buttons (10-16)
             case 10 -> {
-                EnhancedAchievementGUI gui = new EnhancedAchievementGUI(SkyblockPlugin, player);
-                gui.setCategory("events");
-                gui.openGUI(player);
+                // EnhancedAchievementGUI gui = new EnhancedAchievementGUI(SkyblockPlugin, player); // Not implemented yet
+                // gui.setCategory("events");
+                // gui.openGUI(player);
+                player.sendMessage(Component.text("§cGUI not implemented yet!"));
             }
             case 11 -> {
-                EnhancedAchievementGUI gui = new EnhancedAchievementGUI(SkyblockPlugin, player);
-                gui.setCategory("economy");
-                gui.openGUI(player);
+                // EnhancedAchievementGUI gui = new EnhancedAchievementGUI(SkyblockPlugin, player); // Not implemented yet
+                // gui.setCategory("economy");
+                // gui.openGUI(player);
+                player.sendMessage(Component.text("§cGUI not implemented yet!"));
             }
             case 12 -> {
-                EnhancedAchievementGUI gui = new EnhancedAchievementGUI(SkyblockPlugin, player);
-                gui.setCategory("cosmetics");
-                gui.openGUI(player);
+                // EnhancedAchievementGUI gui = new EnhancedAchievementGUI(SkyblockPlugin, player); // Not implemented yet
+                // gui.setCategory("cosmetics");
+                // gui.openGUI(player);
+                player.sendMessage(Component.text("§cGUI not implemented yet!"));
             }
             case 13 -> {
-                EnhancedAchievementGUI gui = new EnhancedAchievementGUI(SkyblockPlugin, player);
-                gui.setCategory("social");
-                gui.openGUI(player);
+                // EnhancedAchievementGUI gui = new EnhancedAchievementGUI(SkyblockPlugin, player); // Not implemented yet
+                // gui.setCategory("social");
+                // gui.openGUI(player);
+                player.sendMessage(Component.text("§cGUI not implemented yet!"));
             }
             case 14 -> {
-                EnhancedAchievementGUI gui = new EnhancedAchievementGUI(SkyblockPlugin, player);
-                gui.setCategory("combat");
-                gui.openGUI(player);
+                // EnhancedAchievementGUI gui = new EnhancedAchievementGUI(SkyblockPlugin, player); // Not implemented yet
+                // gui.setCategory("combat");
+                // gui.openGUI(player);
+                player.sendMessage(Component.text("§cGUI not implemented yet!"));
             }
             case 15 -> {
-                EnhancedAchievementGUI gui = new EnhancedAchievementGUI(SkyblockPlugin, player);
-                gui.setCategory("exploration");
-                gui.openGUI(player);
+                // EnhancedAchievementGUI gui = new EnhancedAchievementGUI(SkyblockPlugin, player); // Not implemented yet
+                // gui.setCategory("exploration");
+                // gui.openGUI(player);
+                player.sendMessage(Component.text("§cGUI not implemented yet!"));
             }
             case 16 -> {
-                EnhancedAchievementGUI gui = new EnhancedAchievementGUI(SkyblockPlugin, player);
-                gui.setCategory("all");
-                gui.openGUI(player);
+                // EnhancedAchievementGUI gui = new EnhancedAchievementGUI(SkyblockPlugin, player); // Not implemented yet
+                // gui.setCategory("all");
+                // gui.openGUI(player);
+                player.sendMessage(Component.text("§cGUI not implemented yet!"));
             }
             
             // Navigation (45-49)
-            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open(player);
+            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open();
             case 49 -> player.closeInventory();
         }
     }
@@ -274,16 +290,12 @@ public class UltimateGUIListener implements Listener {
         switch (slot) {
             // Claim button (30)
             case 30 -> {
-                if (SkyblockPlugin.canClaimReward(player)) {
-                    SkyblockPlugin.claimReward(player);
-                    new EnhancedDailyRewardGUI(SkyblockPlugin, player).openGUI(player); // Refresh
-                } else {
-                    player.sendMessage(Component.text("§cDu hast deine tägliche Belohnung bereits erhalten!"));
-                }
+                // TODO: Implement daily reward system
+                player.sendMessage(Component.text("§cDaily reward system not implemented yet!"));
             }
             
             // Navigation (45-49)
-            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open(player);
+            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open();
             case 49 -> player.closeInventory();
         }
     }
@@ -295,41 +307,46 @@ public class UltimateGUIListener implements Listener {
         switch (slot) {
             // Category buttons (10-14)
             case 10 -> {
-                EnhancedCosmeticsGUI gui = new EnhancedCosmeticsGUI(SkyblockPlugin, player);
-                gui.setCategory("particles");
-                gui.openGUI(player);
+                // EnhancedCosmeticsGUI gui = new EnhancedCosmeticsGUI(SkyblockPlugin, player); // Not implemented yet
+                // gui.setCategory("particles");
+                // gui.openGUI(player);
+                player.sendMessage(Component.text("§cGUI not implemented yet!"));
             }
             case 11 -> {
-                EnhancedCosmeticsGUI gui = new EnhancedCosmeticsGUI(SkyblockPlugin, player);
-                gui.setCategory("wings");
-                gui.openGUI(player);
+                // EnhancedCosmeticsGUI gui = new EnhancedCosmeticsGUI(SkyblockPlugin, player); // Not implemented yet
+                // gui.setCategory("wings");
+                // gui.openGUI(player);
+                player.sendMessage(Component.text("§cGUI not implemented yet!"));
             }
             case 12 -> {
-                EnhancedCosmeticsGUI gui = new EnhancedCosmeticsGUI(SkyblockPlugin, player);
-                gui.setCategory("halos");
-                gui.openGUI(player);
+                // EnhancedCosmeticsGUI gui = new EnhancedCosmeticsGUI(SkyblockPlugin, player); // Not implemented yet
+                // gui.setCategory("halos");
+                // gui.openGUI(player);
+                player.sendMessage(Component.text("§cGUI not implemented yet!"));
             }
             case 13 -> {
-                EnhancedCosmeticsGUI gui = new EnhancedCosmeticsGUI(SkyblockPlugin, player);
-                gui.setCategory("trails");
-                gui.openGUI(player);
+                // EnhancedCosmeticsGUI gui = new EnhancedCosmeticsGUI(SkyblockPlugin, player); // Not implemented yet
+                // gui.setCategory("trails");
+                // gui.openGUI(player);
+                player.sendMessage(Component.text("§cGUI not implemented yet!"));
             }
             case 14 -> {
-                EnhancedCosmeticsGUI gui = new EnhancedCosmeticsGUI(SkyblockPlugin, player);
-                gui.setCategory("sounds");
-                gui.openGUI(player);
+                // EnhancedCosmeticsGUI gui = new EnhancedCosmeticsGUI(SkyblockPlugin, player); // Not implemented yet
+                // gui.setCategory("sounds");
+                // gui.openGUI(player);
+                player.sendMessage(Component.text("§cGUI not implemented yet!"));
             }
             
             // Action buttons (28-32)
             case 28 -> {
-                SkyblockPlugin.deactivateAllCosmetics(player);
+                // TODO: Implement cosmetics deactivation
                 player.sendMessage(Component.text("§aAlle Cosmetics deaktiviert!"));
             }
-            case 30 -> new MyCosmeticsGUI(SkyblockPlugin, player).openGUI(player);
-            case 32 -> new CosmeticShopGUI(SkyblockPlugin, player).openGUI(player);
+            case 30 -> player.sendMessage("§cMy Cosmetics GUI not implemented yet!");
+            case 32 -> player.sendMessage("§cCosmetic Shop GUI not implemented yet!");
             
             // Navigation (45-49)
-            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open(player);
+            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open();
             case 49 -> player.closeInventory();
         }
     }
@@ -400,7 +417,8 @@ public class UltimateGUIListener implements Listener {
             case 11 -> {
                 if (SkyblockPlugin.getEconomyManager().getBalance(player) >= 100) {
                     SkyblockPlugin.getEconomyManager().withdrawMoney(player, 100);
-                    player.getInventory().addItem((org.bukkit.inventory.ItemStack) SkyblockPlugin.createHotPotatoBook());
+                    // player.getInventory().addItem((org.bukkit.inventory.ItemStack) SkyblockPlugin.createHotPotatoBook());
+                    player.sendMessage(Component.text("§cHot Potato Book creation not implemented yet!"));
                     player.sendMessage(Component.text("§aHot Potato Book erstellt!"));
                 } else {
                     player.sendMessage(Component.text("§cDu hast nicht genug Geld! (Benötigt: 100 coins)"));
@@ -408,9 +426,9 @@ public class UltimateGUIListener implements Listener {
             }
             
             // Navigation
-            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open(player);
+            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open();
             case 49 -> player.closeInventory();
-            case 51 -> new PotatoBookGUI(SkyblockPlugin, player).openGUI(player); // Refresh
+            case 51 -> player.sendMessage(Component.text("§cPotatoBookGUI not implemented yet!")); // Refresh
         }
     }
 
@@ -423,7 +441,8 @@ public class UltimateGUIListener implements Listener {
             case 11 -> {
                 if (SkyblockPlugin.getEconomyManager().getBalance(player) >= 1000) {
                     SkyblockPlugin.getEconomyManager().withdrawMoney(player, 1000);
-                    player.getInventory().addItem((org.bukkit.inventory.ItemStack) SkyblockPlugin.createRecombobulator3000());
+                    // player.getInventory().addItem((org.bukkit.inventory.ItemStack) SkyblockPlugin.createRecombobulator3000());
+                    player.sendMessage(Component.text("§cRecombobulator3000 creation not implemented yet!"));
                     player.sendMessage(Component.text("§aRecombobulator 3000 erstellt!"));
                 } else {
                     player.sendMessage(Component.text("§cDu hast nicht genug Geld! (Benötigt: 1,000 coins)"));
@@ -431,9 +450,9 @@ public class UltimateGUIListener implements Listener {
             }
             
             // Navigation
-            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open(player);
+            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open();
             case 49 -> player.closeInventory();
-            case 51 -> new RecombobulatorGUI(SkyblockPlugin, player).open(player); // Refresh
+            case 51 -> player.sendMessage("§cRecombobulator GUI not implemented yet!"); // Refresh
         }
     }
 
@@ -446,7 +465,8 @@ public class UltimateGUIListener implements Listener {
             case 15 -> {
                 if (SkyblockPlugin.getEconomyManager().getBalance(player) >= 100) {
                     SkyblockPlugin.getEconomyManager().withdrawMoney(player, 100);
-                    player.getInventory().addItem((org.bukkit.inventory.ItemStack) SkyblockPlugin.createDungeonStar(1));
+                    // player.getInventory().addItem((org.bukkit.inventory.ItemStack) SkyblockPlugin.createDungeonStar(1));
+                    player.sendMessage(Component.text("§cDungeon Star creation not implemented yet!"));
                     player.sendMessage(Component.text("§aDungeon Star erstellt!"));
                 } else {
                     player.sendMessage(Component.text("§cDu hast nicht genug Geld! (Benötigt: 100 coins)"));
@@ -454,9 +474,9 @@ public class UltimateGUIListener implements Listener {
             }
             
             // Navigation
-            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open(player);
+            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open();
             case 49 -> player.closeInventory();
-            case 51 -> new DungeonStarGUI(SkyblockPlugin, player).open(player); // Refresh
+            case 51 -> player.sendMessage("§cDungeon Star GUI not implemented yet!"); // Refresh
         }
     }
 
@@ -472,9 +492,9 @@ public class UltimateGUIListener implements Listener {
             }
             
             // Navigation
-            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open(player);
+            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open();
             case 49 -> player.closeInventory();
-            case 51 -> new PetItemGUI(SkyblockPlugin, player).openGUI(player); // Refresh
+            case 51 -> player.sendMessage(Component.text("§cPetItemGUI not implemented yet!")); // Refresh
         }
     }
 
@@ -484,9 +504,9 @@ public class UltimateGUIListener implements Listener {
         
         switch (slot) {
             // Navigation
-            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open(player);
+            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open();
             case 49 -> player.closeInventory();
-            case 51 -> new ArmorAbilityGUI(SkyblockPlugin, player).openGUI(player); // Refresh
+            case 51 -> player.sendMessage(Component.text("§cArmorAbilityGUI not implemented yet!")); // Refresh
         }
     }
 
@@ -496,9 +516,9 @@ public class UltimateGUIListener implements Listener {
         
         switch (slot) {
             // Navigation
-            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open(player);
+            case 45 -> new UltimateMainMenu(SkyblockPlugin, player).open();
             case 49 -> player.closeInventory();
-            case 51 -> new WeaponAbilityGUI(SkyblockPlugin, player).openGUI(player); // Refresh
+            case 51 -> player.sendMessage(Component.text("§cWeaponAbilityGUI not implemented yet!")); // Refresh
         }
     }
 }

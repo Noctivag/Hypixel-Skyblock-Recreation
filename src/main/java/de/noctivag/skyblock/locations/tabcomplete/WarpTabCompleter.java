@@ -32,10 +32,16 @@ public class WarpTabCompleter implements TabCompleter {
 
         if (args.length == 1) {
             String partial = args[0].toLowerCase();
-            for (String warpName : SkyblockPlugin.getLocationManager().getWarpNames()) {
-                if (warpName.toLowerCase().startsWith(partial)) {
-                    completions.add(warpName);
+            Object locationManager = SkyblockPlugin.getLocationManager();
+            try {
+                java.util.List<String> warpNames = (java.util.List<String>) locationManager.getClass().getMethod("getWarpNames").invoke(locationManager);
+                for (String warpName : warpNames) {
+                    if (warpName.toLowerCase().startsWith(partial)) {
+                        completions.add(warpName);
+                    }
                 }
+            } catch (Exception e) {
+                // If reflection fails, no completions will be added
             }
         }
 

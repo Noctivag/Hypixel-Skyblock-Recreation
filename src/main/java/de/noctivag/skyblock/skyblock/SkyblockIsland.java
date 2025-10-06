@@ -64,4 +64,19 @@ public class SkyblockIsland {
     public void setSetting(String key, Object value) {
         settings.put(key, value);
     }
+    
+    /**
+     * Get owner UUID
+     */
+    public UUID getOwner() {
+        return ownerId;
+    }
+    
+    /**
+     * Check if player is trusted
+     */
+    public boolean isTrusted(UUID playerId) {
+        // TODO: Implement trust system
+        return false;
+    }
 }

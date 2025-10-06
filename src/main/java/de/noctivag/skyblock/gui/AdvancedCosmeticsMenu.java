@@ -1,5 +1,7 @@
 package de.noctivag.skyblock.gui;
 
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.cosmetics.ParticleShape;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -15,6 +17,21 @@ public class AdvancedCosmeticsMenu extends CustomGUI {
     public AdvancedCosmeticsMenu() {
         super("§dAdvanced Cosmetics", 54);
         setupItems();
+    }
+    
+    public AdvancedCosmeticsMenu(SkyblockPlugin plugin, Player player) {
+        super("§dAdvanced Cosmetics", 54);
+        this.player = player;
+        setupItems();
+    }
+    
+    private Player player;
+    
+    @Override
+    public void open() {
+        if (player != null) {
+            open(player);
+        }
     }
     
     @Override
@@ -41,6 +58,11 @@ public class AdvancedCosmeticsMenu extends CustomGUI {
     public static void openForPlayer(Player player) {
         AdvancedCosmeticsMenu menu = new AdvancedCosmeticsMenu();
         menu.open(player);
+    }
+    
+    public ParticleShape getShapeAtSlot(int slot) {
+        // TODO: Implement particle shape mapping
+        return null;
     }
 }
 

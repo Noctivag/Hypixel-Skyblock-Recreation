@@ -26,12 +26,13 @@ public class PlayerListener implements Listener {
         // Ensure Skyblock profile exists for this player to avoid null pointer issues in other systems
         try {
             // Use ServiceManager to get PlayerProfileService
-            if (SkyblockPlugin.getServiceManager() != null) {
-                var playerProfileService = SkyblockPlugin.getServiceManager().getService(PlayerProfileService.class);
-                if (playerProfileService != null) {
-                    playerProfileService.loadProfile(player.getUniqueId());
-                }
-            }
+            // TODO: Implement service manager
+            // if (SkyblockPlugin.getServiceManager() != null) {
+            //     var playerProfileService = SkyblockPlugin.getServiceManager().getService(PlayerProfileService.class);
+            //     if (playerProfileService != null) {
+            //         playerProfileService.loadProfile(player.getUniqueId());
+            //     }
+            // }
         } catch (Exception e) {
             SkyblockPlugin.getLogger().warning("Error while ensuring Skyblock profile for player " + player.getName() + ": " + e.getMessage());
         }
@@ -41,12 +42,13 @@ public class PlayerListener implements Listener {
 
         // Load Minions for player (if system available)
         try {
-            if (SkyblockPlugin.getServiceManager() != null) {
-                var minionManager = SkyblockPlugin.getServiceManager().getService(MinionManager.class);
-                if (minionManager != null) {
-                    // Minion data will be loaded through PlayerProfileService
-                }
-            }
+            // TODO: Implement service manager
+            // if (SkyblockPlugin.getServiceManager() != null) {
+            //     var minionManager = SkyblockPlugin.getServiceManager().getService(MinionManager.class);
+            //     if (minionManager != null) {
+            //         // Minion data will be loaded through PlayerProfileService
+            //     }
+            // }
         } catch (Exception ignored) {}
 
         // Debug mode info
@@ -78,12 +80,13 @@ public class PlayerListener implements Listener {
 
         // Save player data through services
         try {
-            if (SkyblockPlugin.getServiceManager() != null) {
-                var playerProfileService = SkyblockPlugin.getServiceManager().getService(PlayerProfileService.class);
-                if (playerProfileService != null) {
-                    playerProfileService.saveProfile(player.getUniqueId());
-                }
-            }
+            // TODO: Implement service manager
+            // if (SkyblockPlugin.getServiceManager() != null) {
+            //     var playerProfileService = SkyblockPlugin.getServiceManager().getService(PlayerProfileService.class);
+            //     if (playerProfileService != null) {
+            //         playerProfileService.saveProfile(player.getUniqueId());
+            //     }
+            // }
         } catch (Exception e) {
             SkyblockPlugin.getLogger().warning("Error while saving player data for " + player.getName() + ": " + e.getMessage());
         }

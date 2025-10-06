@@ -3,6 +3,8 @@ package de.noctivag.skyblock.mobs;
 import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.api.Service;
 import de.noctivag.skyblock.core.api.SystemStatus;
+import de.noctivag.skyblock.zones.Zone;
+import de.noctivag.skyblock.zones.ZoneSystem;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -23,18 +25,21 @@ public class SpawningService implements Service {
     
     private final SkyblockPlugin plugin;
     private final MobManager mobManager;
+    private final ZoneSystem zoneSystem;
     private final Map<String, WorldSpawnConfig> worldConfigs = new ConcurrentHashMap<>();
     private final Map<UUID, Integer> playerMobCounts = new ConcurrentHashMap<>();
     private final Map<String, Integer> regionMobCounts = new ConcurrentHashMap<>();
+    private final Map<String, Integer> zoneMobCounts = new ConcurrentHashMap<>();
     
     private SystemStatus status = SystemStatus.UNINITIALIZED;
     private boolean enabled = true;
     private BukkitTask spawningTask;
     private BukkitTask cleanupTask;
     
-    public SpawningService(SkyblockPlugin plugin, MobManager mobManager) {
+    public SpawningService(SkyblockPlugin plugin, MobManager mobManager, ZoneSystem zoneSystem) {
         this.plugin = plugin;
         this.mobManager = mobManager;
+        this.zoneSystem = zoneSystem;
     }
     
     @Override
@@ -196,6 +201,14 @@ public class SpawningService implements Service {
      * Handle spawning for a specific player
      */
     private void handlePlayerSpawning(Player player) {
+        // First, try zone-based spawning
+        Zone playerZone = zoneSystem.getPlayerZone(player);
+        if (playerZone != null && playerZone.isMobSpawningEnabled()) {
+            spawnMobsInZone(player, playerZone);
+            return;
+        }
+        
+        // Fallback to legacy region-based spawning
         World world = player.getWorld();
         WorldSpawnConfig worldConfig = worldConfigs.get(world.getName());
         
@@ -225,7 +238,55 @@ public class SpawningService implements Service {
     }
     
     /**
-     * Spawn mobs in a specific region
+     * Spawn mobs in a specific zone
+     */
+    private void spawnMobsInZone(Player player, Zone zone) {
+        String zoneKey = zone.getWorldName() + ":" + zone.getName();
+        int currentMobs = zoneMobCounts.getOrDefault(zoneKey, 0);
+        
+        // Get mob spawn configurations for this zone
+        List<de.noctivag.skyblock.zones.MobSpawnConfig> mobSpawns = zone.getMobSpawns();
+        if (mobSpawns.isEmpty()) {
+            return; // No mobs configured for this zone
+        }
+        
+        // Calculate total spawn limit for this zone
+        int totalSpawnLimit = mobSpawns.stream().mapToInt(de.noctivag.skyblock.zones.MobSpawnConfig::getMaxCount).sum();
+        
+        if (currentMobs >= totalSpawnLimit) {
+            return; // Zone is at capacity
+        }
+        
+        // Select a mob to spawn based on weights
+        de.noctivag.skyblock.zones.MobSpawnConfig selectedMobConfig = selectMobToSpawn(mobSpawns, player);
+        if (selectedMobConfig == null) {
+            return;
+        }
+        
+        // Check if this specific mob type is at capacity
+        String mobKey = zoneKey + ":" + selectedMobConfig.getMobId();
+        int currentMobCount = zoneMobCounts.getOrDefault(mobKey, 0);
+        if (currentMobCount >= selectedMobConfig.getMaxCount()) {
+            return;
+        }
+        
+        // Find a spawn location
+        Location spawnLocation = findSpawnLocation(player, selectedMobConfig);
+        if (spawnLocation == null) {
+            return;
+        }
+        
+        // Spawn the mob
+        CustomMob mob = mobManager.spawnMob(selectedMobConfig.getMobId(), spawnLocation);
+        if (mob != null) {
+            zoneMobCounts.put(zoneKey, currentMobs + 1);
+            zoneMobCounts.put(mobKey, currentMobCount + 1);
+            playerMobCounts.put(player.getUniqueId(), playerMobCounts.getOrDefault(player.getUniqueId(), 0) + 1);
+        }
+    }
+    
+    /**
+     * Spawn mobs in a specific region (legacy method)
      */
     private void spawnMobsInRegion(Player player, String regionName, RegionSpawnConfig regionConfig) {
         String regionKey = player.getWorld().getName() + ":" + regionName;
@@ -245,7 +306,7 @@ public class SpawningService implements Service {
         }
         
         // Find a spawn location
-        Location spawnLocation = findSpawnLocation(player, regionConfig.getMob(selectedMob));
+        Location spawnLocation = findSpawnLocationLegacy(player, regionConfig.getMob(selectedMob));
         if (spawnLocation == null) {
             return;
         }
@@ -259,7 +320,40 @@ public class SpawningService implements Service {
     }
     
     /**
-     * Select a mob to spawn based on weights
+     * Select a mob to spawn based on weights (zone-based)
+     */
+    private de.noctivag.skyblock.zones.MobSpawnConfig selectMobToSpawn(List<de.noctivag.skyblock.zones.MobSpawnConfig> mobSpawns, Player player) {
+        List<de.noctivag.skyblock.zones.MobSpawnConfig> validMobs = new ArrayList<>();
+        List<Integer> weights = new ArrayList<>();
+        
+        for (de.noctivag.skyblock.zones.MobSpawnConfig mobConfig : mobSpawns) {
+            if (mobConfig.canSpawn(player)) {
+                validMobs.add(mobConfig);
+                weights.add(mobConfig.getWeight());
+            }
+        }
+        
+        if (validMobs.isEmpty()) {
+            return null;
+        }
+        
+        // Weighted random selection
+        int totalWeight = weights.stream().mapToInt(Integer::intValue).sum();
+        int random = new Random().nextInt(totalWeight);
+        
+        int currentWeight = 0;
+        for (int i = 0; i < validMobs.size(); i++) {
+            currentWeight += weights.get(i);
+            if (random < currentWeight) {
+                return validMobs.get(i);
+            }
+        }
+        
+        return validMobs.get(0); // Fallback
+    }
+    
+    /**
+     * Select a mob to spawn based on weights (legacy region-based)
      */
     private String selectMobToSpawn(RegionSpawnConfig regionConfig) {
         List<String> mobs = new ArrayList<>();
@@ -290,9 +384,36 @@ public class SpawningService implements Service {
     }
     
     /**
-     * Find a suitable spawn location near the player
+     * Find a suitable spawn location near the player (zone-based)
      */
-    private Location findSpawnLocation(Player player, MobSpawnConfig mobConfig) {
+    private Location findSpawnLocation(Player player, de.noctivag.skyblock.zones.MobSpawnConfig mobConfig) {
+        Location playerLoc = player.getLocation();
+        Random random = new Random();
+        
+        for (int attempts = 0; attempts < 10; attempts++) {
+            // Generate random location within spawn radius
+            double angle = random.nextDouble() * 2 * Math.PI;
+            double distance = random.nextDouble() * mobConfig.getSpawnRadius();
+            
+            double x = playerLoc.getX() + Math.cos(angle) * distance;
+            double z = playerLoc.getZ() + Math.sin(angle) * distance;
+            double y = playerLoc.getY();
+            
+            Location spawnLoc = new Location(player.getWorld(), x, y, z);
+            
+            // Check if location is safe to spawn
+            if (isSafeSpawnLocation(spawnLoc)) {
+                return spawnLoc;
+            }
+        }
+        
+        return null; // No safe location found
+    }
+    
+    /**
+     * Find a suitable spawn location near the player (legacy region-based)
+     */
+    private Location findSpawnLocationLegacy(Player player, MobSpawnConfig mobConfig) {
         Location playerLoc = player.getLocation();
         Random random = new Random();
         
@@ -353,6 +474,7 @@ public class SpawningService implements Service {
         
         // Reset counts periodically
         regionMobCounts.clear();
+        zoneMobCounts.clear();
         playerMobCounts.clear();
     }
     

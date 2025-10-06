@@ -8,7 +8,7 @@ import org.bukkit.entity.EntityType;
 public class ZombieVillager extends CustomMob {
 
     public ZombieVillager(SkyblockPlugin plugin, Location spawnLocation, double maxHealth, double damage, double defense, double combatXP) {
-        super(plugin, spawnLocation, maxHealth, damage, defense, combatXP);
+        super("ZombieVillager", org.bukkit.entity.EntityType.ZOMBIE_VILLAGER, spawnLocation, maxHealth, damage, defense, combatXP);
     }
 
     @Override

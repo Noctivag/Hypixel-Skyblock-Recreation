@@ -37,7 +37,7 @@ public class CompleteMobsSystem implements System {
     }
 
     @Override
-    public CompletableFuture<Void> initialize() {
+    public void initialize() {
         status = SystemStatus.INITIALIZING;
         SkyblockPlugin.getLogger().info("Initializing Complete Mobs System...");
         try {
@@ -48,24 +48,21 @@ public class CompleteMobsSystem implements System {
             // Register event listeners if any (e.g., for mob spawning, combat, drops)
             // SkyblockPlugin.getServer().getPluginManager().registerEvents(new MobListener(), SkyblockPlugin);
 
-            status = SystemStatus.INITIALIZED;
+            status = SystemStatus.RUNNING;
             SkyblockPlugin.getLogger().info("Complete Mobs System initialized successfully.");
-            return CompletableFuture.completedFuture(null);
         } catch (Exception e) {
             SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to initialize Complete Mobs System", e);
             status = SystemStatus.ERROR;
-            return CompletableFuture.failedFuture(e);
         }
     }
 
     @Override
-    public CompletableFuture<Void> shutdown() {
+    public void shutdown() {
         status = SystemStatus.SHUTTING_DOWN;
         SkyblockPlugin.getLogger().info("Shutting down Complete Mobs System...");
         // Unregister listeners, save data, etc.
-        status = SystemStatus.SHUTDOWN;
+        status = SystemStatus.DISABLED;
         SkyblockPlugin.getLogger().info("Complete Mobs System shut down.");
-        return CompletableFuture.completedFuture(null);
     }
 
     @Override
@@ -74,29 +71,8 @@ public class CompleteMobsSystem implements System {
     }
 
     @Override
-    public boolean isInitialized() {
-        return status == SystemStatus.INITIALIZED || status == SystemStatus.ENABLED || status == SystemStatus.DISABLED;
-    }
-
-    @Override
-    public CompletableFuture<Void> enable() {
-        enabled = true;
-        status = SystemStatus.ENABLED;
-        SkyblockPlugin.getLogger().info("Complete Mobs System enabled.");
-        return CompletableFuture.completedFuture(null);
-    }
-
-    @Override
-    public CompletableFuture<Void> disable() {
-        enabled = false;
-        status = SystemStatus.DISABLED;
-        SkyblockPlugin.getLogger().info("Complete Mobs System disabled.");
-        return CompletableFuture.completedFuture(null);
-    }
-
-    @Override
-    public void setStatus(SystemStatus newStatus) {
-        this.status = newStatus;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     /**

@@ -50,7 +50,7 @@ public class AdvancedBestiarySystem {
     }
     
     public void openBestiaryGUI(Player player) {
-        Inventory gui = SkyblockPlugin.getServer().createInventory(null, 54, "§6§lBestiary");
+        Inventory gui = SkyblockPlugin.getServer().createInventory(null, 54, net.kyori.adventure.text.Component.text("§6§lBestiary"));
         
         // Add bestiary categories
         addGUIItem(gui, 10, Material.GRASS_BLOCK, "§a§lOverworld", "§7Overworld creatures");

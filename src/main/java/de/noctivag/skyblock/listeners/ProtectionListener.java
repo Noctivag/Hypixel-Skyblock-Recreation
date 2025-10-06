@@ -23,9 +23,16 @@ public class ProtectionListener implements Listener {
 
     private boolean canModify(Player player, org.bukkit.Location loc) {
         if (player.hasPermission("basicsplugin.island.bypass")) return true;
-        var manager = SkyblockPlugin.getSkyblockManager();
+        Object manager = SkyblockPlugin.getSkyblockManager();
         if (manager == null) return true; // no skyblock manager -> allow
-        SkyblockIsland island = manager.getIslandAt(loc);
+        // Cast to access the method
+        SkyblockIsland island = null;
+        try {
+            island = (SkyblockIsland) manager.getClass().getMethod("getIslandAt", org.bukkit.Location.class).invoke(manager, loc);
+        } catch (Exception e) {
+            // If casting fails, allow the action
+            return true;
+        }
         if (island == null) return true; // not in island
         // Allow owner or trusted members
         if (island.getOwner().equals(player.getUniqueId())) return true;

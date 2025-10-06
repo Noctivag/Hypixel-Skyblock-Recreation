@@ -41,7 +41,7 @@ public class CompleteMinionsSystem implements System {
     }
 
     @Override
-    public CompletableFuture<Void> initialize() {
+    public void initialize() {
         status = SystemStatus.INITIALIZING;
         SkyblockPlugin.getLogger().info("Initializing Complete Minions System...");
         try {
@@ -55,18 +55,16 @@ public class CompleteMinionsSystem implements System {
             // Register event listeners if any (e.g., for minion spawning, collection, upgrades)
             // SkyblockPlugin.getServer().getPluginManager().registerEvents(new MinionListener(), SkyblockPlugin);
 
-            status = SystemStatus.INITIALIZED;
+            status = SystemStatus.RUNNING;
             SkyblockPlugin.getLogger().info("Complete Minions System initialized successfully.");
-            return CompletableFuture.completedFuture(null);
         } catch (Exception e) {
             SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to initialize Complete Minions System", e);
             status = SystemStatus.ERROR;
-            return CompletableFuture.failedFuture(e);
         }
     }
 
     @Override
-    public CompletableFuture<Void> shutdown() {
+    public void shutdown() {
         status = SystemStatus.SHUTTING_DOWN;
         SkyblockPlugin.getLogger().info("Shutting down Complete Minions System...");
         
@@ -75,9 +73,8 @@ public class CompleteMinionsSystem implements System {
             worldManager.shutdown();
         }
         
-        status = SystemStatus.SHUTDOWN;
+        status = SystemStatus.DISABLED;
         SkyblockPlugin.getLogger().info("Complete Minions System shut down.");
-        return CompletableFuture.completedFuture(null);
     }
 
     @Override
@@ -86,29 +83,8 @@ public class CompleteMinionsSystem implements System {
     }
 
     @Override
-    public boolean isInitialized() {
-        return status == SystemStatus.INITIALIZED || status == SystemStatus.ENABLED || status == SystemStatus.DISABLED;
-    }
-
-    @Override
-    public CompletableFuture<Void> enable() {
-        enabled = true;
-        status = SystemStatus.ENABLED;
-        SkyblockPlugin.getLogger().info("Complete Minions System enabled.");
-        return CompletableFuture.completedFuture(null);
-    }
-
-    @Override
-    public CompletableFuture<Void> disable() {
-        enabled = false;
-        status = SystemStatus.DISABLED;
-        SkyblockPlugin.getLogger().info("Complete Minions System disabled.");
-        return CompletableFuture.completedFuture(null);
-    }
-
-    @Override
-    public void setStatus(SystemStatus newStatus) {
-        this.status = newStatus;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     /**

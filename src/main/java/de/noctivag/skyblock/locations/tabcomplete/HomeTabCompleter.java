@@ -32,10 +32,16 @@ public class HomeTabCompleter implements TabCompleter {
 
         if (args.length == 1) {
             String partial = args[0].toLowerCase();
-            for (String homeName : SkyblockPlugin.getLocationManager().getHomeNames(player)) {
-                if (homeName.toLowerCase().startsWith(partial)) {
-                    completions.add(homeName);
+            Object locationManager = SkyblockPlugin.getLocationManager();
+            try {
+                java.util.Set<String> homeNames = (java.util.Set<String>) locationManager.getClass().getMethod("getHomeNames", Player.class).invoke(locationManager, player);
+                for (String homeName : homeNames) {
+                    if (homeName.toLowerCase().startsWith(partial)) {
+                        completions.add(homeName);
+                    }
                 }
+            } catch (Exception e) {
+                // If reflection fails, no completions will be added
             }
         }
 

@@ -1,5 +1,6 @@
 package de.noctivag.skyblock.gui;
 
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -15,6 +16,25 @@ public class PlayerSelectorMenu extends CustomGUI {
     public PlayerSelectorMenu() {
         super("§bPlayer Selector", 54);
         setupItems();
+    }
+    
+    public PlayerSelectorMenu(SkyblockPlugin plugin) {
+        super("§bPlayer Selector", 54);
+        setupItems();
+    }
+    
+    private Player player;
+    
+    @Override
+    public void open() {
+        if (player != null) {
+            open(player);
+        }
+    }
+    
+    public Player getPlayerAtSlot(int slot) {
+        // TODO: Implement player slot mapping
+        return null;
     }
     
     @Override

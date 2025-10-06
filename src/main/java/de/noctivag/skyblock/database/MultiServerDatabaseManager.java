@@ -71,4 +71,34 @@ public class MultiServerDatabaseManager extends DatabaseManager {
         plugin.getLogger().log(Level.INFO, "Loading fairy soul data for player: " + playerId);
         return CompletableFuture.completedFuture(new PlayerFairySoulData());
     }
+    
+    /**
+     * Save player furniture data
+     */
+    public void savePlayerFurnitureData(UUID playerId, de.noctivag.skyblock.furniture.PlayerFurnitureData data) {
+        plugin.getLogger().log(Level.INFO, "Saving furniture data for player: " + playerId);
+    }
+    
+    /**
+     * Load player furniture data
+     */
+    public de.noctivag.skyblock.furniture.PlayerFurnitureData loadPlayerFurnitureData(UUID playerId) {
+        plugin.getLogger().log(Level.INFO, "Loading furniture data for player: " + playerId);
+        return new de.noctivag.skyblock.furniture.PlayerFurnitureData();
+    }
+    
+    /**
+     * Save player gemstone data
+     */
+    public void savePlayerGemstoneData(UUID playerId, de.noctivag.skyblock.gemstones.PlayerGemstoneData data) {
+        plugin.getLogger().log(Level.INFO, "Saving gemstone data for player: " + playerId);
+    }
+    
+    /**
+     * Load player gemstone data
+     */
+    public de.noctivag.skyblock.gemstones.PlayerGemstoneData loadPlayerGemstoneData(UUID playerId) {
+        plugin.getLogger().log(Level.INFO, "Loading gemstone data for player: " + playerId);
+        return new de.noctivag.skyblock.gemstones.PlayerGemstoneData();
+    }
 }

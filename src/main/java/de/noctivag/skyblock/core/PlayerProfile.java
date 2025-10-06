@@ -82,4 +82,32 @@ public class PlayerProfile {
     public void removeCoins(double amount) {
         this.coins = Math.max(0, this.coins - amount);
     }
+    
+    /**
+     * Join method for async operations
+     */
+    public void join() {
+        // Placeholder for async operations
+    }
+    
+    /**
+     * Set last logout time
+     */
+    public void setLastLogout(long time) {
+        // Placeholder
+    }
+    
+    /**
+     * Get skill level
+     */
+    public int getSkillLevel(String skill) {
+        return 1; // Placeholder
+    }
+    
+    /**
+     * Get collections
+     */
+    public java.util.Map<String, Object> getCollections() {
+        return new java.util.HashMap<>(); // Placeholder
+    }
 }

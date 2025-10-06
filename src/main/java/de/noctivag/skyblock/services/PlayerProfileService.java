@@ -73,4 +73,26 @@ public class PlayerProfileService implements Service {
     public PlayerProfile getOrCreateProfile(UUID playerId) {
         return profiles.computeIfAbsent(playerId, k -> new PlayerProfile(k));
     }
+    
+    /**
+     * Load player profile from database
+     */
+    public PlayerProfile loadProfile(UUID playerId) {
+        // TODO: Implement database loading
+        return new PlayerProfile(playerId);
+    }
+    
+    /**
+     * Save player profile to database
+     */
+    public void saveProfile(PlayerProfile profile) {
+        // TODO: Implement database saving
+    }
+    
+    /**
+     * Save player profile to database (async version)
+     */
+    public void saveProfile(de.noctivag.skyblock.models.PlayerProfile profile) {
+        // TODO: Implement database saving
+    }
 }

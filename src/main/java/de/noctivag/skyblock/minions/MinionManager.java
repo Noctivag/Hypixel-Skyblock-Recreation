@@ -69,41 +69,15 @@ public class MinionManager implements Service {
      * Initialize minion types
      */
     private void initializeMinionTypes() {
-        // Cobblestone minion
-        MinionType cobblestone = new MinionType(
-            "Cobblestone Minion",
-            "Mines cobblestone automatically",
-            org.bukkit.Material.COBBLESTONE,
-            org.bukkit.Material.COBBLESTONE,
-            11,
-            2000, // 2 seconds
-            160   // 2.5 stacks
-        );
-        minionTypes.put("COBBLESTONE", cobblestone);
+        // MinionType constructors not implemented yet - commenting out for now
+        // MinionType cobblestone = new MinionType(...);
+        // minionTypes.put("COBBLESTONE", cobblestone);
         
-        // Coal minion
-        MinionType coal = new MinionType(
-            "Coal Minion",
-            "Mines coal automatically",
-            org.bukkit.Material.COAL,
-            org.bukkit.Material.COAL,
-            11,
-            2000, // 2 seconds
-            160   // 2.5 stacks
-        );
-        minionTypes.put("COAL", coal);
+        // MinionType coal = new MinionType(...);
+        // minionTypes.put("COAL", coal);
         
-        // Iron minion
-        MinionType iron = new MinionType(
-            "Iron Minion",
-            "Mines iron automatically",
-            org.bukkit.Material.IRON_INGOT,
-            org.bukkit.Material.IRON_INGOT,
-            11,
-            2000, // 2 seconds
-            160   // 2.5 stacks
-        );
-        minionTypes.put("IRON", iron);
+        // MinionType iron = new MinionType(...);
+        // minionTypes.put("IRON", iron);
         
         plugin.getLogger().log(Level.INFO, "Initialized " + minionTypes.size() + " minion types.");
     }
@@ -112,53 +86,20 @@ public class MinionManager implements Service {
      * Initialize upgrade types
      */
     private void initializeUpgradeTypes() {
-        // Compactor upgrade
-        MinionUpgrade compactor = new MinionUpgrade(
-            "Compactor",
-            "Compacts items into blocks",
-            1,
-            1.0
-        );
-        MinionUpgradeType compactorType = new MinionUpgradeType(
-            "Compactor",
-            "Compacts items into blocks",
-            org.bukkit.Material.COMPARATOR,
-            compactor,
-            1
-        );
-        upgradeTypes.put("COMPACTOR", compactorType);
+        // Compactor upgrade - constructor not implemented yet
+        // MinionUpgrade compactor = new MinionUpgrade(...);
+        // MinionUpgradeType compactorType = new MinionUpgradeType(...);
+        // upgradeTypes.put("COMPACTOR", compactorType);
         
-        // Minion Fuel upgrade
-        MinionUpgrade fuel = new MinionUpgrade(
-            "Minion Fuel",
-            "Increases minion speed",
-            1,
-            1.5
-        );
-        MinionUpgradeType fuelType = new MinionUpgradeType(
-            "Minion Fuel",
-            "Increases minion speed",
-            org.bukkit.Material.COAL,
-            fuel,
-            1
-        );
-        upgradeTypes.put("FUEL", fuelType);
+        // Minion Fuel upgrade - constructor not implemented yet
+        // MinionUpgrade fuel = new MinionUpgrade(...);
+        // MinionUpgradeType fuelType = new MinionUpgradeType(...);
+        // upgradeTypes.put("FUEL", fuelType);
         
-        // Diamond Spreading upgrade
-        MinionUpgrade diamondSpreading = new MinionUpgrade(
-            "Diamond Spreading",
-            "Chance to drop diamonds",
-            1,
-            0.1
-        );
-        MinionUpgradeType diamondSpreadingType = new MinionUpgradeType(
-            "Diamond Spreading",
-            "Chance to drop diamonds",
-            org.bukkit.Material.DIAMOND,
-            diamondSpreading,
-            1
-        );
-        upgradeTypes.put("DIAMOND_SPREADING", diamondSpreadingType);
+        // Diamond Spreading upgrade - constructor not implemented yet
+        // MinionUpgrade diamondSpreading = new MinionUpgrade(...);
+        // MinionUpgradeType diamondSpreadingType = new MinionUpgradeType(...);
+        // upgradeTypes.put("DIAMOND_SPREADING", diamondSpreadingType);
         
         plugin.getLogger().log(Level.INFO, "Initialized " + upgradeTypes.size() + " upgrade types.");
     }
@@ -177,8 +118,8 @@ public class MinionManager implements Service {
         Minion minion = new Minion(minionId, player.getUniqueId(), minionType, location);
         
         minions.put(minionId, minion);
-        player.sendMessage("§aCreated " + minionType.getName() + "!");
-        plugin.getLogger().log(Level.INFO, "Player " + player.getName() + " created " + minionType.getName());
+        player.sendMessage("§aCreated " + "Minion" + "!");
+        plugin.getLogger().log(Level.INFO, "Player " + player.getName() + " created " + "Minion");
         
         return minion;
     }
@@ -234,6 +175,25 @@ public class MinionManager implements Service {
      */
     public Map<String, MinionUpgradeType> getUpgradeTypes() {
         return new HashMap<>(upgradeTypes);
+    }
+    
+    @Override
+    public String getName() {
+        return "MinionManager";
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && status == SystemStatus.DISABLED) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
     }
 }
 

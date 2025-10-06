@@ -30,6 +30,18 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
     private de.noctivag.skyblock.mobs.MobManager mobManager;
     private de.noctivag.skyblock.mobs.SpawningService spawningService;
     private de.noctivag.skyblock.brewing.AdvancedBrewingSystem brewingManager;
+    private de.noctivag.skyblock.recipe.RecipeBookSystem recipeBookSystem;
+    private de.noctivag.skyblock.calendar.CalendarSystem calendarSystem;
+    private de.noctivag.skyblock.wardrobe.WardrobeSystem wardrobeSystem;
+    private de.noctivag.skyblock.travel.FastTravelSystem fastTravelSystem;
+    private de.noctivag.skyblock.trading.TradingSystem tradingSystem;
+    private de.noctivag.skyblock.zones.ZoneSystem zoneSystem;
+    private de.noctivag.skyblock.skills.SkillsSystem skillsSystem;
+    private de.noctivag.skyblock.collections.CollectionsSystem collectionsSystem;
+    private de.noctivag.skyblock.minions.MinionsSystem minionsSystem;
+    private de.noctivag.skyblock.dungeons.DungeonsSystem dungeonsSystem;
+    private de.noctivag.skyblock.slayers.SlayersSystem slayersSystem;
+    private de.noctivag.skyblock.pets.PetsSystem petsSystem;
     
     @Override
     public void onEnable() {
@@ -124,13 +136,17 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
         // Initialize world manager
         worldManager = new WorldManager(this);
         
+        // Initialize zone system first (needed by spawning service)
+        zoneSystem = new de.noctivag.skyblock.zones.ZoneSystem(this);
+        zoneSystem.initialize();
+        
         // Initialize mob manager
         mobManager = new de.noctivag.skyblock.mobs.MobManager(this);
         mobManager.initialize();
         
-                // Initialize spawning service
-                spawningService = new de.noctivag.skyblock.mobs.SpawningService(this, mobManager);
-                spawningService.initialize();
+        // Initialize spawning service
+        spawningService = new de.noctivag.skyblock.mobs.SpawningService(this, mobManager, zoneSystem);
+        spawningService.initialize();
 
         // Initialize quest system
         questSystem = new de.noctivag.skyblock.quests.QuestSystem(this);
@@ -138,6 +154,50 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
 
         // Initialize brewing manager
         brewingManager = new de.noctivag.skyblock.brewing.AdvancedBrewingSystem(this, (de.noctivag.skyblock.database.MultiServerDatabaseManager) databaseManager);
+        
+        // Initialize recipe book system
+        recipeBookSystem = new de.noctivag.skyblock.recipe.RecipeBookSystem(this, databaseManager);
+        recipeBookSystem.initialize();
+        
+        // Initialize calendar system
+        calendarSystem = new de.noctivag.skyblock.calendar.CalendarSystem(this, databaseManager);
+        calendarSystem.initialize();
+        
+        // Initialize wardrobe system
+        wardrobeSystem = new de.noctivag.skyblock.wardrobe.WardrobeSystem(this, databaseManager);
+        wardrobeSystem.initialize();
+        
+        // Initialize fast travel system
+        fastTravelSystem = new de.noctivag.skyblock.travel.FastTravelSystem(this, databaseManager);
+        fastTravelSystem.initialize();
+        
+        // Initialize trading system
+        tradingSystem = new de.noctivag.skyblock.trading.TradingSystem(this, databaseManager);
+        tradingSystem.initialize();
+        
+        // Initialize skills system
+        skillsSystem = new de.noctivag.skyblock.skills.SkillsSystem(this, databaseManager);
+        skillsSystem.initialize();
+        
+        // Initialize collections system
+        collectionsSystem = new de.noctivag.skyblock.collections.CollectionsSystem(this, databaseManager);
+        collectionsSystem.initialize();
+        
+        // Initialize minions system
+        minionsSystem = new de.noctivag.skyblock.minions.MinionsSystem(this, databaseManager);
+        minionsSystem.initialize();
+        
+        // Initialize dungeons system
+        dungeonsSystem = new de.noctivag.skyblock.dungeons.DungeonsSystem(this, databaseManager);
+        dungeonsSystem.initialize();
+        
+        // Initialize slayers system
+        slayersSystem = new de.noctivag.skyblock.slayers.SlayersSystem(this, databaseManager);
+        slayersSystem.initialize();
+        
+        // Initialize pets system
+        petsSystem = new de.noctivag.skyblock.pets.PetsSystem(this, databaseManager);
+        petsSystem.initialize();
     }
 
     /**
@@ -147,6 +207,8 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
         // Register basic commands
         getCommand("hub").setExecutor(this);
         getCommand("skyblock").setExecutor(this);
+        getCommand("menu").setExecutor(new de.noctivag.skyblock.commands.MenuCommand(this));
+        getCommand("trade").setExecutor(new de.noctivag.skyblock.commands.TradeCommand(this, tradingSystem));
     }
 
     /**
@@ -240,7 +302,7 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
         
         // Welcome message
         String joinMessage = "§aWillkommen auf dem Skyblock Server, " + player.getName() + "!";
-        event.setJoinMessage(joinMessage);
+        event.joinMessage(net.kyori.adventure.text.Component.text(joinMessage));
         
         // Teleport to hub if it's the first world
         if (player.getWorld().getName().equals("world")) {
@@ -357,6 +419,11 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
             public String formatMoney(double amount) {
                 return String.format("%.2f coins", amount);
             }
+            
+            @Override
+            public String getCurrencyName() {
+                return "Coins";
+            }
         };
     }
 
@@ -368,17 +435,31 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
     }
 
     /**
-     * Get collections system (placeholder)
+     * Get wardrobe system
      */
-    public Object getCollectionsSystem() {
-        return null; // Placeholder
+    public de.noctivag.skyblock.wardrobe.WardrobeSystem getWardrobeSystem() {
+        return wardrobeSystem;
     }
 
     /**
-     * Get advanced armor system (placeholder)
+     * Get fast travel system
      */
-    public Object getAdvancedArmorSystem() {
-        return null; // Placeholder
+    public de.noctivag.skyblock.travel.FastTravelSystem getFastTravelSystem() {
+        return fastTravelSystem;
+    }
+
+    /**
+     * Get trading system
+     */
+    public de.noctivag.skyblock.trading.TradingSystem getTradingSystem() {
+        return tradingSystem;
+    }
+
+    /**
+     * Get zone system
+     */
+    public de.noctivag.skyblock.zones.ZoneSystem getZoneSystem() {
+        return zoneSystem;
     }
 
     /**
@@ -458,21 +539,52 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
      * Get cosmetics manager (placeholder)
      */
     public Object getCosmeticsManager() {
-        return null; // Placeholder
+        // Placeholder - return a simple cosmetics manager
+        return new Object() {
+            public void setPlayerParticleShape(Player player, de.noctivag.skyblock.cosmetics.ParticleShape shape) {
+                // Placeholder
+            }
+            
+            public void removePlayerEffects(Player player) {
+                // Placeholder
+            }
+            
+            public Object getConfig() {
+                return null; // Placeholder
+            }
+        };
     }
 
     /**
      * Get advanced NPC system (placeholder)
      */
     public Object getAdvancedNPCSystem() {
-        return null; // Placeholder
+        // Placeholder - return a simple NPC system
+        return new Object() {
+            public void openTypeSelectionGUI(Player player) {
+                // Placeholder
+            }
+            
+            public void openDataEditorGUI(Player player) {
+                // Placeholder
+            }
+            
+            public void openPermissionsGUI(Player player) {
+                // Placeholder
+            }
+        };
     }
 
     /**
      * Get skyblock manager (placeholder)
      */
     public Object getSkyblockManager() {
-        return null; // Placeholder
+        // Placeholder - return a simple skyblock manager
+        return new Object() {
+            public de.noctivag.skyblock.skyblock.SkyblockIsland getIslandAt(org.bukkit.Location location) {
+                return null; // Placeholder
+            }
+        };
     }
 
     /**
@@ -539,18 +651,229 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
     }
 
     /**
-     * Get recipe book system (placeholder)
+     * Get recipe book system
      */
-    public Object getRecipeBookSystem() {
-        return null; // Placeholder
+    public de.noctivag.skyblock.recipe.RecipeBookSystem getRecipeBookSystem() {
+        return recipeBookSystem;
     }
 
     /**
-     * Get calendar system (placeholder)
+     * Get calendar system
      */
-    public Object getCalendarSystem() {
-        return null; // Placeholder
+    public de.noctivag.skyblock.calendar.CalendarSystem getCalendarSystem() {
+        return calendarSystem;
     }
+    
+    public de.noctivag.skyblock.skills.SkillsSystem getSkillsSystem() {
+        return skillsSystem;
+    }
+    
+    public de.noctivag.skyblock.collections.CollectionsSystem getCollectionsSystem() {
+        return collectionsSystem;
+    }
+    
+    public de.noctivag.skyblock.minions.MinionsSystem getMinionsSystem() {
+        return minionsSystem;
+    }
+    
+    public de.noctivag.skyblock.dungeons.DungeonsSystem getDungeonsSystem() {
+        return dungeonsSystem;
+    }
+    
+    public de.noctivag.skyblock.slayers.SlayersSystem getSlayersSystem() {
+        return slayersSystem;
+    }
+    
+    public de.noctivag.skyblock.pets.PetsSystem getPetsSystem() {
+        return petsSystem;
+    }
+    
+    public de.noctivag.skyblock.armor.AdvancedArmorSystem getAdvancedArmorSystem() {
+        return new de.noctivag.skyblock.armor.AdvancedArmorSystem(this);
+    }
+    
+    public Object getMiningAreaSystem() {
+        // Placeholder - return null for now
+        return null;
+    }
+    
+    public Object getKitManager() {
+        // Placeholder - return null for now
+        return null;
+    }
+    
+    public Object getNickMap() {
+        // Placeholder - return null for now
+        return null;
+    }
+    
+    public Object getPrefixMap() {
+        // Placeholder - return null for now
+        return null;
+    }
+    
+    public Object getCommandManager() {
+        // Placeholder - return null for now
+        return null;
+    }
+    
+    public Object getRankManager() {
+        // Placeholder - return a simple rank manager
+        return new Object() {
+            public String getPlayerRank(Player player) {
+                return "default"; // Placeholder
+            }
+            
+            public String getDisplayName(String rankKey) {
+                return rankKey; // Placeholder
+            }
+            
+            public java.util.List<String> getAllRankKeys() {
+                return java.util.Arrays.asList("default", "vip", "premium"); // Placeholder
+            }
+            
+            public boolean hasPermission(String rankKey, String permission) {
+                return true; // Placeholder
+            }
+            
+            public void addPermission(String rankKey, String permission) {
+                // Placeholder
+            }
+            
+            public void removePermission(String rankKey, String permission) {
+                // Placeholder
+            }
+            
+            public void setPlayerRank(Player player, String rankKey) {
+                // Placeholder
+            }
+        };
+    }
+    
+        public Object getLocationManager() {
+            // Placeholder - return a simple location manager
+            return new Object() {
+                public org.bukkit.Location getWarp(String warpName) {
+                    return new org.bukkit.Location(org.bukkit.Bukkit.getWorlds().get(0), 0, 100, 0); // Placeholder
+                }
+                
+                public java.util.Set<String> getHomeNames(Player player) {
+                    return new java.util.HashSet<>(); // Placeholder
+                }
+                
+                public de.noctivag.skyblock.locations.Home getHome(Player player, String homeName) {
+                    return null; // Placeholder
+                }
+                
+                public int getPlayerHomeCount(Player player) {
+                    return 0; // Placeholder
+                }
+                
+                public int getMaxHomes() {
+                    return 5; // Placeholder
+                }
+                
+                public void setHome(Player player, String homeName, org.bukkit.Location location) {
+                    // Placeholder
+                }
+            };
+        }
+    
+    public Object getJoinMessageManager() {
+        // Placeholder - return null for now
+        return null;
+    }
+    
+    public org.bukkit.inventory.ItemStack createBoosterCookie() {
+        // Placeholder - return a simple item
+        return new org.bukkit.inventory.ItemStack(org.bukkit.Material.COOKIE);
+    }
+    
+    public void openRecipeBook(Player player) {
+        // Placeholder
+        player.sendMessage("§cRecipe Book not implemented yet!");
+    }
+    
+    public void openCalendar(Player player) {
+        // Placeholder
+        player.sendMessage("§cCalendar not implemented yet!");
+    }
+    
+        public void joinEvent(Player player, String eventName) {
+            // Placeholder
+            player.sendMessage("§cEvent system not implemented yet!");
+        }
+        
+        public boolean canClaimReward(Player player) {
+            // Placeholder
+            return true;
+        }
+        
+        public void claimReward(Player player) {
+            // Placeholder
+            player.sendMessage("§aDaily reward claimed!");
+        }
+        
+        public void deactivateAllCosmetics(Player player) {
+            // Placeholder
+            player.sendMessage("§aAll cosmetics deactivated!");
+        }
+    
+    public Object getConfigManager() {
+        // Placeholder - return a simple config manager
+        return new Object() {
+            public Object getConfig() {
+                return null; // Placeholder for actual config
+            }
+            
+            public boolean isCommandEnabled(String command) {
+                return true; // Placeholder
+            }
+            
+            public void setEnabled(String command, boolean enabled) {
+                // Placeholder
+            }
+            
+            public void remove(String key) {
+                // Placeholder
+            }
+        };
+    }
+    
+    public Object getCosmeticsPurchaseManager() {
+        // Placeholder - return null for now
+        return null;
+    }
+    
+    public Object getNPCManager() {
+        // Placeholder - return a simple NPC manager
+        return new Object() {
+            public void createNPC(org.bukkit.Location location, String name) {
+                // Placeholder
+            }
+            
+            public void removeNPC(String name) {
+                // Placeholder
+            }
+            
+            public java.util.List<Object> getAllNPCs() {
+                return new java.util.ArrayList<>(); // Placeholder
+            }
+            
+            public void openTypeSelectionGUI(Player player) {
+                // Placeholder
+            }
+            
+            public void openDataEditorGUI(Player player) {
+                // Placeholder
+            }
+            
+            public void openPermissionsGUI(Player player) {
+                // Placeholder
+            }
+        };
+    }
+    
 
     /**
      * Get live world (placeholder)

@@ -1,5 +1,6 @@
 package de.noctivag.skyblock.gui;
 
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -15,6 +16,21 @@ public class RanksGUI extends CustomGUI {
     public RanksGUI() {
         super("§eRanks", 54);
         setupItems();
+    }
+    
+    public RanksGUI(SkyblockPlugin plugin, Player player) {
+        super("§eRanks", 54);
+        this.player = player;
+        setupItems();
+    }
+    
+    private Player player;
+    
+    @Override
+    public void open() {
+        if (player != null) {
+            open(player);
+        }
     }
     
     @Override
@@ -41,6 +57,10 @@ public class RanksGUI extends CustomGUI {
     public static void openForPlayer(Player player) {
         RanksGUI gui = new RanksGUI();
         gui.open(player);
+    }
+    
+    public Player getTarget() {
+        return player;
     }
 }
 

@@ -132,7 +132,7 @@ public class PetTrainingSystem implements Listener {
     
     public void addTrainingXP(Player player, Pet pet, TrainingType type, double xp) {
         PlayerPetTraining training = getPlayerTraining(player.getUniqueId());
-        PetTrainingData petTraining = training.getPetTraining(pet.getType().getId());
+        PetTrainingData petTraining = training.getPetTraining("pet_id");
         
         petTraining.addXP(xp);
         training.addTotalTrainingXP(xp);
@@ -144,7 +144,7 @@ public class PetTrainingSystem implements Listener {
         
         if (newLevel > oldLevel) {
             player.sendMessage(Component.text("§a§lPET TRAINING LEVEL UP!"));
-            player.sendMessage("§7Pet: §e" + pet.getType().getName());
+            player.sendMessage("§7Pet: §e" + "Pet");
             player.sendMessage("§7Training: §e" + type.getDisplayName());
             player.sendMessage("§7Level: §e" + oldLevel + " §7→ §e" + newLevel);
             
@@ -199,14 +199,14 @@ public class PetTrainingSystem implements Listener {
             if (rule.getCondition().isMet(player)) {
                 // Switch to the specified pet
                 Pet targetPet = petSystem.getPlayerPets(player.getUniqueId()).stream()
-                    .filter(pet -> pet.getType().getId().equals(rule.getPetType().getId()))
+                    .filter(pet -> "pet_id".equals(rule.getPetType().getId()))
                     .findFirst()
                     .orElse(null);
                 
                 if (targetPet != null && !targetPet.isActive()) {
                     petSystem.activatePet(player, targetPet);
                     player.sendMessage(Component.text("§a§lAUTOPET ACTIVATED!"));
-                    player.sendMessage("§7Switched to: §e" + targetPet.getType().getName());
+                    player.sendMessage("§7Switched to: §e" + "Pet");
                 }
             }
         }

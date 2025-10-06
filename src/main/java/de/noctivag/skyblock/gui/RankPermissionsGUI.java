@@ -1,5 +1,6 @@
 package de.noctivag.skyblock.gui;
 
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -16,6 +17,14 @@ public class RankPermissionsGUI extends CustomGUI {
         super("§eRank Permissions", 54);
         setupItems();
     }
+    
+    public RankPermissionsGUI(SkyblockPlugin plugin, String rankKey) {
+        super("§eRank Permissions", 54);
+        this.rankKey = rankKey;
+        setupItems();
+    }
+    
+    private String rankKey;
     
     @Override
     public void setupItems() {
@@ -41,6 +50,10 @@ public class RankPermissionsGUI extends CustomGUI {
     public static void openForPlayer(Player player) {
         RankPermissionsGUI gui = new RankPermissionsGUI();
         gui.open(player);
+    }
+    
+    public String getRankKey() {
+        return rankKey;
     }
 }
 

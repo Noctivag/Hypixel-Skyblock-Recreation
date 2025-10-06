@@ -1,5 +1,6 @@
 package de.noctivag.skyblock.gui;
 
+import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -15,6 +16,20 @@ public class CommandUsageGUI extends CustomGUI {
     public CommandUsageGUI() {
         super("§eCommand Usage", 54);
         setupItems();
+    }
+    
+    public CommandUsageGUI(SkyblockPlugin plugin) {
+        super("§eCommand Usage", 54);
+        setupItems();
+    }
+    
+    private Player player;
+    
+    @Override
+    public void open() {
+        if (player != null) {
+            open(player);
+        }
     }
     
     @Override

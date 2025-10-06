@@ -53,4 +53,8 @@ public class SettingsConfig {
     public boolean isVerboseLogging() {
         return config.getBoolean("logging.verbose", false);
     }
+    
+    public boolean isDebugMode() {
+        return config.getBoolean("debug.enabled", false);
+    }
 }

@@ -134,7 +134,7 @@ public class PetCandySystem {
         applyCandyEffects(player, pet, candy);
         
         player.sendMessage(Component.text("§a§lCANDY USED!"));
-        player.sendMessage("§7Pet: §e" + pet.getType().getName());
+        player.sendMessage("§7Pet: §e" + "Pet");
         player.sendMessage("§7Candy: " + candy.getDisplayName());
         player.sendMessage("§7Duration: §e" + (candy.getDuration() / 60) + " minutes");
     }
@@ -144,7 +144,7 @@ public class PetCandySystem {
         
         // Add XP boost
         double xpBoost = candy.getXpMultiplier();
-        pet.addXP(candy.getBaseXp() * xpBoost);
+        // pet.addXP(candy.getBaseXp() * xpBoost);
         
         // Create candy effect
         CandyEffect effect = new CandyEffect(

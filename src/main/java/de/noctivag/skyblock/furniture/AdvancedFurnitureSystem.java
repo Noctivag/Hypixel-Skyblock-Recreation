@@ -561,8 +561,7 @@ public class AdvancedFurnitureSystem {
      */
     public void loadFurnitureData(UUID playerId) {
         try {
-            CompletableFuture<Object> future = databaseManager.loadPlayerFurnitureData(playerId);
-            PlayerFurnitureData data = (PlayerFurnitureData) future.get();
+            PlayerFurnitureData data = databaseManager.loadPlayerFurnitureData(playerId);
             if (data != null) {
                 playerFurnitureData.put(playerId, data);
             }

@@ -23,6 +23,21 @@ public class MainMenu extends CustomGUI {
         setupItems();
     }
     
+    public MainMenu(SkyblockPlugin plugin, Player player) {
+        super("§6Main Menu", 54);
+        this.player = player;
+        setupItems();
+    }
+    
+    private Player player;
+    
+    @Override
+    public void open() {
+        if (player != null) {
+            open(player);
+        }
+    }
+    
     @Override
     public void setupItems() {
         // Add main menu items

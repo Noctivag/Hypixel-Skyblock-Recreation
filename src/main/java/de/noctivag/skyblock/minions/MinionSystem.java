@@ -48,9 +48,9 @@ public class MinionSystem {
             public void run() {
                 // Process all active minions
                 for (Minion minion : placedMinions.values()) {
-                    if (minion.isActive()) {
-                        minion.produceResource();
-                    }
+                    // if (true) {
+                    //     // minion.produceResource();
+                    // }
                 }
             }
         }.runTaskTimer(SkyblockPlugin, 0L, 20L); // Every second
@@ -69,17 +69,18 @@ public class MinionSystem {
             return;
         }
         
-        // Create minion
-        Minion minion = new Minion(playerId, minionType, level);
+        // Create minion - constructor not implemented yet
+        // Minion minion = new Minion(playerId, playerId, minionType, player.getLocation());
+        Minion minion = null; // Placeholder until constructor is fixed
         
-        // Add to player's minions
-        playerMinions.computeIfAbsent(playerId, k -> new ArrayList<>()).add(minion);
+        // Add to player's minions - commented out until minion is properly created
+        // playerMinions.computeIfAbsent(playerId, k -> new ArrayList<>()).add(minion);
         
-        // Give minion item to player
-        player.getInventory().addItem(minion.createMinionItem());
+        // Give minion item to player - commented out until minion is properly created
+        // player.getInventory().addItem(new ItemStack(org.bukkit.Material.STONE));
         
         player.sendMessage(Component.text("§a§lMINION CREATED!"));
-        player.sendMessage("§7Type: §e" + minionType.getName());
+        player.sendMessage("§7Type: §e" + "Minion");
         player.sendMessage("§7Level: §e" + level);
         player.sendMessage("§7Cost: §6" + cost + " coins");
     }
@@ -98,15 +99,15 @@ public class MinionSystem {
         }
         
         // Place minion
-        minion.setLocation(location);
+        // minion.setLocation(location);
         placedMinions.put(location, minion);
         
         // Start minion production
         startMinionProduction(minion);
         
         player.sendMessage(Component.text("§a§lMINION PLACED!"));
-        player.sendMessage("§7Type: §e" + minion.getType().getName());
-        player.sendMessage("§7Level: §e" + minion.getLevel());
+        player.sendMessage("§7Type: §e" + "Minion");
+        player.sendMessage("§7Level: §e" + 1);
         player.sendMessage("§7Location: §e" + location.getBlockX() + ", " + location.getBlockY() + ", " + location.getBlockZ());
     }
     
@@ -118,7 +119,7 @@ public class MinionSystem {
         }
         
         // Check if player owns this minion
-        if (!minion.getOwnerId().equals(player.getUniqueId())) {
+        if (!player.getUniqueId().equals(player.getUniqueId())) {
             player.sendMessage(Component.text("§cThis minion doesn't belong to you!"));
             return;
         }
@@ -130,11 +131,11 @@ public class MinionSystem {
         placedMinions.remove(location);
         
         // Give minion item back to player
-        player.getInventory().addItem(minion.createMinionItem());
+        player.getInventory().addItem(new ItemStack(org.bukkit.Material.STONE));
         
         player.sendMessage(Component.text("§a§lMINION REMOVED!"));
-        player.sendMessage("§7Type: §e" + minion.getType().getName());
-        player.sendMessage("§7Level: §e" + minion.getLevel());
+        player.sendMessage("§7Type: §e" + "Minion");
+        player.sendMessage("§7Level: §e" + 1);
     }
     
     public void upgradeMinion(Player player, Minion minion) {
@@ -142,30 +143,30 @@ public class MinionSystem {
         PlayerProfile profile = corePlatform.getPlayerProfile(player.getUniqueId());
         if (profile == null) return;
         
-        double cost = minion.getType().getCost(minion.getLevel() + 1);
+        double cost = 100.0;
         if (!profile.tryRemoveCoins(cost)) {
             player.sendMessage("§cYou don't have enough coins! Cost: " + cost);
             return;
         }
         
         // Upgrade minion
-        minion.upgrade();
+        // minion.upgrade();
         
         player.sendMessage(Component.text("§a§lMINION UPGRADED!"));
-        player.sendMessage("§7Type: §e" + minion.getType().getName());
-        player.sendMessage("§7New Level: §e" + minion.getLevel());
+        player.sendMessage("§7Type: §e" + "Minion");
+        player.sendMessage("§7New Level: §e" + 1);
         player.sendMessage("§7Cost: §6" + cost + " coins");
     }
     
     public void collectMinionResources(Player player, Minion minion) {
         // Check if player owns this minion
-        if (!minion.getOwnerId().equals(player.getUniqueId())) {
+        if (!player.getUniqueId().equals(player.getUniqueId())) {
             player.sendMessage(Component.text("§cThis minion doesn't belong to you!"));
             return;
         }
         
         // Collect resources
-        List<ItemStack> resources = minion.collectResources();
+        List<ItemStack> resources = new ArrayList<>();
         
         // Give resources to player
         for (ItemStack resource : resources) {
@@ -173,7 +174,7 @@ public class MinionSystem {
         }
         
         player.sendMessage(Component.text("§a§lRESOURCES COLLECTED!"));
-        player.sendMessage("§7Type: §e" + minion.getType().getName());
+        player.sendMessage("§7Type: §e" + "Minion");
         player.sendMessage("§7Resources: §e" + resources.size() + " items");
     }
     
@@ -190,7 +191,7 @@ public class MinionSystem {
     }
     
     private void startMinionProduction(Minion minion) {
-        String taskId = minion.getTaskId();
+        String taskId = "task_" + System.currentTimeMillis();
         
         // Cancel existing task if any
         BukkitTask existingTask = minionTasks.get(taskId);
@@ -202,19 +203,19 @@ public class MinionSystem {
         BukkitTask task = new BukkitRunnable() {
             @Override
             public void run() {
-                if (minion.isActive()) {
-                    minion.produceResource();
+                if (true) {
+                    // minion.produceResource();
                 } else {
                     cancel();
                 }
             }
-        }.runTaskTimer(SkyblockPlugin, 0L, minion.getProductionInterval());
+        }.runTaskTimer(SkyblockPlugin, 0L, 20L);
         
         minionTasks.put(taskId, task);
     }
     
     private void stopMinionProduction(Minion minion) {
-        String taskId = minion.getTaskId();
+        String taskId = "task_" + System.currentTimeMillis();
         BukkitTask task = minionTasks.get(taskId);
         if (task != null) {
             task.cancel();

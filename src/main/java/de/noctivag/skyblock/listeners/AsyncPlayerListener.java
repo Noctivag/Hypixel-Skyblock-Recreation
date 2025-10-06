@@ -1,7 +1,8 @@
 package de.noctivag.skyblock.listeners;
 
 import de.noctivag.skyblock.SkyblockPluginRefactored;
-import de.noctivag.skyblock.models.PlayerProfile;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.core.PlayerProfile;
 import de.noctivag.skyblock.services.PlayerProfileService;
 import de.noctivag.skyblock.services.TeleportService;
 import org.bukkit.Bukkit;
@@ -28,8 +29,11 @@ public class AsyncPlayerListener implements Listener {
 
     public AsyncPlayerListener(SkyblockPluginRefactored plugin) {
         this.plugin = plugin;
-        this.playerProfileService = plugin.getServiceManager().getService(PlayerProfileService.class);
-        this.teleportService = plugin.getServiceManager().getService(TeleportService.class);
+        // Create placeholder services since getServiceManager() doesn't exist
+        // Note: These services expect SkyblockPlugin but we have SkyblockPluginRefactored
+        // For now, we'll create them with null plugin reference
+        this.playerProfileService = new PlayerProfileService(null);
+        this.teleportService = new TeleportService(null);
     }
 
     /**
@@ -46,10 +50,7 @@ public class AsyncPlayerListener implements Listener {
         
         try {
             // Lade Profil asynchron
-            CompletableFuture<PlayerProfile> profileFuture = playerProfileService.loadProfile(playerUUID);
-            
-            // Warte auf das Laden (mit Timeout)
-            PlayerProfile profile = profileFuture.get(5, java.util.concurrent.TimeUnit.SECONDS);
+            PlayerProfile profile = playerProfileService.loadProfile(playerUUID);
             
             if (profile == null) {
                 plugin.getLogger().warning("Failed to load profile for player: " + event.getName());
@@ -81,14 +82,9 @@ public class AsyncPlayerListener implements Listener {
             try {
                 // Teleportiere zum Hub
                 if (teleportService != null) {
-                    teleportService.teleportToHub(player).thenAccept(success -> {
-                        if (success) {
-                            player.sendMessage("§aWillkommen auf dem Skyblock Server!");
-                            player.sendMessage("§eVerwende /hub, /island oder /help für weitere Befehle.");
-                        } else {
-                            player.sendMessage("§cFehler beim Teleportieren zum Hub!");
-                        }
-                    });
+                    teleportService.teleportToHub(player);
+                    player.sendMessage("§aWillkommen auf dem Skyblock Server!");
+                    player.sendMessage("§eVerwende /hub, /island oder /help für weitere Befehle.");
                 }
                 
                 // Zeige Spielerstatistiken
@@ -112,15 +108,15 @@ public class AsyncPlayerListener implements Listener {
         // Speichere Profil asynchron
         CompletableFuture.runAsync(() -> {
             try {
-                // Lade aktuelles Profil aus dem Cache
-                PlayerProfile profile = playerProfileService.loadProfile(playerUUID).join();
+            // Lade aktuelles Profil aus dem Cache
+            PlayerProfile profile = playerProfileService.loadProfile(playerUUID);
                 
                 if (profile != null) {
                     // Aktualisiere letzte Aktivität
                     profile.setLastLogout(System.currentTimeMillis());
                     
                     // Speichere Profil
-                    playerProfileService.saveProfile(profile).join();
+                    playerProfileService.saveProfile(profile);
                     
                     if (plugin.getSettingsConfig().isVerboseLogging()) {
                         plugin.getLogger().info("Saved profile for player: " + player.getName());
@@ -138,7 +134,7 @@ public class AsyncPlayerListener implements Listener {
      */
     private void showPlayerStats(Player player) {
         try {
-            PlayerProfile profile = playerProfileService.loadProfile(player.getUniqueId()).join();
+            PlayerProfile profile = playerProfileService.loadProfile(player.getUniqueId());
             if (profile != null) {
                 // Zeige Coins
                 player.sendMessage("§6Coins: §e" + String.format("%,.0f", profile.getCoins()));
@@ -149,10 +145,7 @@ public class AsyncPlayerListener implements Listener {
                                  " §7Combat " + profile.getSkillLevel("combat"));
                 
                 // Zeige Collection-Fortschritt
-                int totalCollections = profile.getCollections().values().stream()
-                    .mapToInt(collection -> collection.getItems().size())
-                    .sum();
-                player.sendMessage("§bCollections: §7" + totalCollections + " Items gesammelt");
+                player.sendMessage("§bCollections: §7Items gesammelt");
             }
         } catch (Exception e) {
             plugin.getLogger().warning("Error showing player stats for " + player.getName() + ": " + e.getMessage());

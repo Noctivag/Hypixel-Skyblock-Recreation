@@ -69,7 +69,7 @@ public class Minion {
      * Set the level
      */
     public void setLevel(int level) {
-        this.level = Math.max(1, Math.min(level, minionType.getMaxLevel()));
+        this.level = Math.max(1, Math.min(level, 100));
     }
     
     /**
@@ -132,14 +132,14 @@ public class Minion {
      * Get the action interval in milliseconds
      */
     public long getActionInterval() {
-        return minionType.getBaseActionInterval() - (level * 100); // Decrease by 100ms per level
+        return 2000L - (level * 100); // Decrease by 100ms per level
     }
     
     /**
      * Get the storage capacity
      */
     public int getStorageCapacity() {
-        return minionType.getBaseStorageCapacity() + (level * 10); // Increase by 10 per level
+        return 160 + (level * 10); // Increase by 10 per level
     }
     
     /**

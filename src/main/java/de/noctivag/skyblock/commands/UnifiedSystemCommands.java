@@ -577,16 +577,16 @@ public class UnifiedSystemCommands implements CommandExecutor, TabCompleter {
                     }
                     break;
                 case "EventMenu":
-                    new de.noctivag.skyblock.gui.EventMenu(SkyblockPlugin).open(player);
+                    new de.noctivag.skyblock.gui.EventMenu(SkyblockPlugin, player).open();
                     break;
                 case "SettingsGUI":
-                    new de.noctivag.skyblock.gui.SettingsGUI(SkyblockPlugin).openGUI(player);
+                    new de.noctivag.skyblock.gui.SettingsGUI(SkyblockPlugin, player).open();
                     break;
                 case "FriendsGUI":
-                    new de.noctivag.skyblock.gui.FriendsGUI(SkyblockPlugin, player).openGUI(player);
+                    new de.noctivag.skyblock.gui.FriendsGUI(SkyblockPlugin, player).open();
                     break;
                 case "PartyGUI":
-                    new de.noctivag.skyblock.gui.PartyGUI(SkyblockPlugin).openGUI(player);
+                    new de.noctivag.skyblock.gui.PartyGUI(SkyblockPlugin, player).open();
                     break;
             }
             player.sendMessage("§a✓ " + guiType + " opened successfully");

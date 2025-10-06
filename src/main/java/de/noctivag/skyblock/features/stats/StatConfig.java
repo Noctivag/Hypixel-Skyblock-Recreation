@@ -168,40 +168,48 @@ public class StatConfig implements Service {
     }
 
     @Override
-    public CompletableFuture<Void> initialize() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.INITIALIZING;
-            // Initialize stat config
-            status = SystemStatus.ENABLED;
-        });
+    public void initialize() {
+        status = SystemStatus.INITIALIZING;
+        // Initialize stat config
+        status = SystemStatus.RUNNING;
     }
 
     @Override
-    public CompletableFuture<Void> shutdown() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.SHUTTING_DOWN;
-            // Shutdown stat config
-            status = SystemStatus.UNINITIALIZED;
-        });
-    }
-
-    @Override
-    public boolean isInitialized() {
-        return status == SystemStatus.ENABLED;
-    }
-
-    @Override
-    public int getPriority() {
-        return 50;
-    }
-
-    @Override
-    public boolean isRequired() {
-        return false;
+    public void shutdown() {
+        status = SystemStatus.SHUTTING_DOWN;
+        // Shutdown stat config
+        status = SystemStatus.DISABLED;
     }
 
     @Override
     public String getName() {
         return "StatConfig";
+    }
+
+    @Override
+    public SystemStatus getStatus() {
+        return status;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && status == SystemStatus.DISABLED) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
+    }
+
+    public int getPriority() {
+        return 50;
+    }
+
+    public boolean isRequired() {
+        return false;
     }
 }

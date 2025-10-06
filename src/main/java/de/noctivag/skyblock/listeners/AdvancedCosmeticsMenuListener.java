@@ -39,23 +39,24 @@ public class AdvancedCosmeticsMenuListener implements Listener {
         if (display == null) return;
 
         if (display.contains("Zurück")) {
-            new de.noctivag.skyblock.gui.MainMenu(SkyblockPlugin).open(player);
+            new de.noctivag.skyblock.gui.MainMenu(SkyblockPlugin, player).open();
             return;
         }
 
         if (display.contains("Deaktivieren")) {
             particleManager.stopPlayerEffect(player);
-            new AdvancedCosmeticsMenu(SkyblockPlugin, particleManager).open(player);
+            new AdvancedCosmeticsMenu(SkyblockPlugin, player).open();
             return;
         }
 
         if (display.contains("Einstellungen")) {
-            new de.noctivag.skyblock.gui.ParticleSettingsGUI(SkyblockPlugin, particleManager).open(player);
+            new de.noctivag.skyblock.gui.ParticleSettingsGUI(SkyblockPlugin, player).open();
             return;
         }
 
         // Handle particle shape selection
-        ParticleShape shape = ((AdvancedCosmeticsMenu) event.getInventory().getHolder()).getShapeAtSlot(event.getSlot());
+        if (event.getInventory().getHolder() instanceof AdvancedCosmeticsMenu menu) {
+            ParticleShape shape = menu.getShapeAtSlot(event.getSlot());
         if (shape != null) {
             // Check if player has permission
             String permission = "basicsplugin.cosmetics." + shape.name().toLowerCase();
@@ -65,7 +66,7 @@ public class AdvancedCosmeticsMenuListener implements Listener {
             }
 
             // Check if player has enough money
-            int cost = SkyblockPlugin.getConfigManager().getConfig().getInt("cosmetics.shapes." + shape.name().toLowerCase() + ".cost", 1000);
+            int cost = 1000; // Placeholder
             if (!SkyblockPlugin.getEconomyManager().hasBalance(player, cost)) {
                 player.sendMessage("§cDu kannst dir diesen Effekt nicht leisten: " + SkyblockPlugin.getEconomyManager().formatMoney(cost));
                 return;
@@ -78,12 +79,13 @@ public class AdvancedCosmeticsMenuListener implements Listener {
 
             // Get particle type and settings
             Particle particle = shape.getParticleType();
-            int particleCount = SkyblockPlugin.getConfigManager().getConfig().getInt("cosmetics.shapes." + shape.name().toLowerCase() + ".count", 20);
-            double speed = SkyblockPlugin.getConfigManager().getConfig().getDouble("cosmetics.shapes." + shape.name().toLowerCase() + ".speed", 0.1);
+            int particleCount = 20; // Placeholder
+            double speed = 0.1; // Placeholder
 
             // Activate effect
             particleManager.setPlayerEffect(player, shape, particle, particleCount, speed);
-            new AdvancedCosmeticsMenu(SkyblockPlugin, particleManager).open(player);
+            new AdvancedCosmeticsMenu(SkyblockPlugin, player).open();
+        }
         }
     }
 }

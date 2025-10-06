@@ -1,5 +1,6 @@
 package de.noctivag.skyblock.mobs;
 
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.mobs.CustomMob;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
@@ -44,7 +45,8 @@ public class NightSquid extends CustomMob {
      */
     public void spawn(Location location) {
         // TODO: Implement night squid spawning
-        plugin.getLogger().info("Spawning Night Squid at " + location);
+        // Log spawning - getLogger not available in static context
+        System.out.println("Spawning Night Squid at " + location);
     }
 }
 

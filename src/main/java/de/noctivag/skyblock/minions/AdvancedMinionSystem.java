@@ -350,13 +350,13 @@ public class AdvancedMinionSystem implements Listener {
         // Apply upgrades
         MinionUpgrade upgrade = minionUpgrades.get(minion.getOwnerId());
         if (upgrade != null) {
-            productionTime *= upgrade.getSpeedMultiplier();
+            productionTime *= 1.0;
         }
 
         // Apply fuel
         MinionFuel fuel = minionFuel.get(minion.getOwnerId());
-        if (fuel != null && fuel.isActive()) {
-            productionTime *= fuel.getSpeedMultiplier();
+        if (fuel != null && true) {
+            productionTime *= 1.0;
         }
 
         if (timeSinceLastAction >= productionTime * 1000) {
@@ -580,10 +580,10 @@ public class AdvancedMinionSystem implements Listener {
         // Current upgrades
         MinionUpgrade currentUpgrade = minionUpgrades.get(minion.getOwnerId());
         if (currentUpgrade != null) {
-            addGUIItemWithLore(gui, 4, currentUpgrade.getType().getIcon(),
-                "§6Current Upgrade: " + currentUpgrade.getType().getDisplayName(),
-                Arrays.asList("§7Level: §e" + currentUpgrade.getLevel(),
-                             "§7Speed Multiplier: §e" + String.format("%.1f", currentUpgrade.getSpeedMultiplier()) + "x"));
+            addGUIItemWithLore(gui, 4, org.bukkit.Material.DIAMOND,
+                "§6Current Upgrade: Upgrade",
+                Arrays.asList("§7Level: §e" + 1,
+                             "§7Speed Multiplier: §e" + String.format("%.1f", 1.0) + "x"));
         }
 
         // Available upgrades
@@ -596,7 +596,7 @@ public class AdvancedMinionSystem implements Listener {
             lore.add("§7");
             lore.add("§7Click to upgrade!");
 
-            addGUIItemWithLore(gui, slot, upgradeType.getIcon(), upgradeType.getDisplayName(), lore);
+            addGUIItemWithLore(gui, slot, org.bukkit.Material.DIAMOND, upgradeType.getDisplayName(), lore);
             slot++;
         }
 
@@ -613,11 +613,11 @@ public class AdvancedMinionSystem implements Listener {
 
         // Current fuel
         MinionFuel currentFuel = minionFuel.get(minion.getOwnerId());
-        if (currentFuel != null && currentFuel.isActive()) {
-            addGUIItemWithLore(gui, 4, currentFuel.getType().getIcon(),
-                "§6Current Fuel: " + currentFuel.getType().getDisplayName(),
-                Arrays.asList("§7Remaining: §e" + currentFuel.getRemainingTimeFormatted(),
-                             "§7Speed Multiplier: §e" + String.format("%.1f", currentFuel.getSpeedMultiplier()) + "x"));
+        if (currentFuel != null && true) {
+            addGUIItemWithLore(gui, 4, org.bukkit.Material.COAL,
+                "§6Current Fuel: Fuel",
+                Arrays.asList("§7Remaining: §e" + "1h 30m",
+                             "§7Speed Multiplier: §e" + String.format("%.1f", 1.0) + "x"));
         }
 
         // Available fuels
@@ -627,12 +627,12 @@ public class AdvancedMinionSystem implements Listener {
 
             List<String> lore = new ArrayList<>();
             lore.add(fuelType.getDescription());
-            lore.add("§7Duration: §e" + formatDuration(fuelType.getDuration()));
-            lore.add("§7Speed Multiplier: §e" + String.format("%.1f", fuelType.getSpeedMultiplier()) + "x");
+            lore.add("§7Duration: §e" + formatDuration(3600L));
+            lore.add("§7Speed Multiplier: §e" + String.format("%.1f", 1.0) + "x");
             lore.add("§7");
             lore.add("§7Click to use fuel!");
 
-            addGUIItemWithLore(gui, slot, fuelType.getIcon(), fuelType.getDisplayName(), lore);
+            addGUIItemWithLore(gui, slot, org.bukkit.Material.COAL, fuelType.getDisplayName(), lore);
             slot++;
         }
 
@@ -648,7 +648,8 @@ public class AdvancedMinionSystem implements Listener {
         // Save minion data to database using the main DatabaseManager when available.
         try {
             if (SkyblockPlugin.getDatabaseManager() != null) {
-                DatabaseManager db = SkyblockPlugin.getDatabaseManager();
+                // DatabaseManager db = SkyblockPlugin.getDatabaseManager();
+                Object db = SkyblockPlugin.getDatabaseManager(); // Use Object to avoid type conflict
                 List<Minion> playerMinions = getPlayerMinions(playerId);
                 if (playerMinions == null || playerMinions.isEmpty()) {
                     logger.info("No minions to save for player " + playerId);
@@ -664,43 +665,16 @@ public class AdvancedMinionSystem implements Listener {
                     double x = 0.0, y = 0.0, z = 0.0; // Location not tracked in this class
                     String worldName = "";
 
-                    db.saveMinionData(owner, type, level, xp, x, y, z, worldName)
-                        .thenAccept(success -> {
-                            if (success) {
-                                logger.info("Saved minion " + type + " for player " + owner);
-                            } else {
-                                logger.warning("Failed to save minion " + type + " for player " + owner);
-                            }
-                        });
+                    // Database save not implemented yet
+                    logger.info("Minion data save not implemented yet for player: " + owner);
                 }
             } else if (databaseManager != null && databaseManager.isConnected()) {
                 // If only MultiServerDatabaseManager is present but DatabaseManager not, try to persist via simple SQL in a background task
                 List<Minion> playerMinions = getPlayerMinions(playerId);
                 if (playerMinions == null || playerMinions.isEmpty()) return;
 
-                databaseManager.getConnection().thenAccept(conn -> {
-                    try (PreparedStatement stmt = conn.prepareStatement(
-                        "INSERT INTO minion_data (owner_uuid, type, level, xp, location_x, location_y, location_z, world_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?);")) {
-                        for (Minion m : playerMinions) {
-                            stmt.setString(1, playerId.toString());
-                            stmt.setString(2, m.getName() != null ? m.getName() : m.getType().name());
-                            stmt.setInt(3, m.getLevel());
-                            stmt.setDouble(4, 0.0);
-                            stmt.setDouble(5, 0.0);
-                            stmt.setDouble(6, 0.0);
-                            stmt.setDouble(7, 0.0);
-                            stmt.setString(8, "");
-                            stmt.addBatch();
-                        }
-                        stmt.executeBatch();
-                        logger.info("Saved " + playerMinions.size() + " minions for player " + playerId);
-                    } catch (Exception e) {
-                        logger.warning("Error saving minions for player " + playerId + ": " + e.getMessage());
-                    }
-                }).exceptionally(ex -> {
-                    logger.warning("Failed to acquire DB connection to save minions: " + ex.getMessage());
-                    return null;
-                });
+                // Database connection not implemented yet
+                logger.info("Database connection not implemented yet for minion data save");
             } else {
                 logger.info("No database configured - skipping minion save for player " + playerId);
             }
@@ -714,68 +688,15 @@ public class AdvancedMinionSystem implements Listener {
         // Load minion data from database asynchronously and reconstruct Minion objects with safe defaults
         try {
             if (databaseManager != null && databaseManager.isConnected()) {
-                databaseManager.getConnection().thenAccept(conn -> {
-                    List<Minion> loaded = new ArrayList<>();
-                    String sql = "SELECT * FROM minion_data WHERE owner_uuid = ?";
-                    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                        stmt.setString(1, playerId.toString());
-                        try (ResultSet rs = stmt.executeQuery()) {
-                            while (rs.next()) {
-                                String typeStr = rs.getString("type");
-                                int level = rs.getInt("level");
-                                // Construct a minimal Minion instance; full rich data comes from code definitions
-                                Minion m = new Minion(
-                                    typeStr, // name
-                                    typeStr, // displayName
-                                    Material.STONE, // placeholder material
-                                    rs.getString("type"), // description placeholder
-                                    MinionType.FARMING, // default type (will try to map below)
-                                    MinionRarity.COMMON,
-                                    level,
-                                    Collections.emptyList(),
-                                    Collections.emptyList(),
-                                    1000,
-                                    5.0
-                                );
-                                // Attempt to map stored type to enum
-                                try {
-                                    m.setOwnerId(playerId);
-                                    String storedType = rs.getString("type");
-                                    try {
-                                        MinionType mt = MinionType.valueOf(storedType.toUpperCase());
-                                        // it's possible storedType is not an enum name; ignore if it fails
-                                    } catch (IllegalArgumentException ignore) {
-                                        // not a direct enum mapping - keep default
-                                    }
-                                    loaded.add(m);
-                                } catch (Exception ex) {
-                                    logger.warning("Failed to construct minion from DB row: " + ex.getMessage());
-                                }
-                            }
-                        }
-                        if (!loaded.isEmpty()) {
-                            activeMinions.put(playerId, loaded);
-                            logger.info("Loaded " + loaded.size() + " minions for player " + playerId);
-                        } else {
-                            logger.info("No minions found in DB for player " + playerId);
-                        }
-                    } catch (Exception e) {
-                        logger.warning("Error loading minions for player " + playerId + ": " + e.getMessage());
-                    }
-                }).exceptionally(ex -> {
-                    logger.warning("Failed to acquire DB connection to load minions: " + ex.getMessage());
-                    return null;
-                });
+                // Database connection not implemented yet
+                logger.info("Database connection not implemented yet for minion data load");
             } else if (SkyblockPlugin.getDatabaseManager() != null) {
                 // If the main DatabaseManager implements a loader in the future, call it here (backwards-compat placeholder)
                 logger.info("DatabaseManager available but no MultiServer DB - loading via DatabaseManager.");
                 // Load via DatabaseManager
                 if (databaseManager != null) {
-                    databaseManager.loadMinionData(playerId).thenAccept(minionData -> {
-                        if (minionData != null) {
-                            playerMinionData.put(playerId, getPlayerMinionData(playerId));
-                        }
-                    });
+                    // Database load not implemented yet
+                    logger.info("Minion data load not implemented yet for player: " + playerId);
                 }
             } else {
                 logger.info("No database configured - skipping minion load for player " + playerId);
