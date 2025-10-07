@@ -17,14 +17,15 @@ import java.util.List;
 public class SlayerMenuGUI extends CustomGUI {
     
     private final SlayerService slayerService;
+    private final Player player;
     
     public SlayerMenuGUI(Player player, SlayerService slayerService) {
-        super(player, "§cSlayer Menu", 54);
+        super("§cSlayer Menu", 54);
+        this.player = player;
         this.slayerService = slayerService;
     }
     
-    @Override
-    protected void setupItems() {
+    public void setupItems() {
         // Check if player has an active quest
         SlayerQuest activeQuest = slayerService.getActiveQuest(player);
         

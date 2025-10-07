@@ -67,13 +67,13 @@ public class SkyblockMainSystem implements Listener {
     private void initializeSystems() {
         // Initialize core systems in dependency order
         healthManaSystem = new HealthManaSystem(SkyblockPlugin, databaseManager);
-        skillsSystem = new AdvancedSkillsSystem(SkyblockPlugin, databaseManager, healthManaSystem);
+        skillsSystem = new AdvancedSkillsSystem(SkyblockPlugin, databaseManager);
         // collectionsSystem = new CollectionsSystem(SkyblockPlugin, databaseManager, skillsSystem);
         // Initialize CollectionsSystem with the skyblock-specific implementation that only requires the SkyblockPlugin
         collectionsSystem = new CollectionsSystem(SkyblockPlugin);
-        combatSystem = new AdvancedCombatSystem(SkyblockPlugin, databaseManager, healthManaSystem, skillsSystem);
-        petSystem = new PetSystem(SkyblockPlugin, databaseManager, healthManaSystem, skillsSystem);
-        menuSystem = new SkyblockMenuSystem(SkyblockPlugin, healthManaSystem);
+        combatSystem = new AdvancedCombatSystem(SkyblockPlugin, databaseManager);
+        petSystem = new PetSystem(SkyblockPlugin, databaseManager);
+        menuSystem = new SkyblockMenuSystem(SkyblockPlugin);
 
         // Register commands
         registerCommands();

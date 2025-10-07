@@ -1,7 +1,7 @@
 package de.noctivag.skyblock.services;
 
-import de.noctivag.skyblock.SkyblockPluginRefactored;
-import de.noctivag.skyblock.models.PlayerProfile;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.core.PlayerProfile;
 import de.noctivag.skyblock.models.SlayerQuest;
 import de.noctivag.skyblock.slayers.bosses.RevenantHorror;
 import de.noctivag.skyblock.slayers.bosses.TarantulaBroodmother;
@@ -20,12 +20,12 @@ import java.util.concurrent.CompletableFuture;
 
 public class AdvancedSlayerManager implements Listener {
 
-    private final SkyblockPluginRefactored plugin;
+    private final SkyblockPlugin plugin;
     private final PlayerProfileService playerProfileService;
     private final Map<String, Integer> slayerXPRequirements = new HashMap<>();
     private final Map<UUID, SlayerBoss> activeBosses = new HashMap<>();
 
-    public AdvancedSlayerManager(SkyblockPluginRefactored plugin, PlayerProfileService playerProfileService) {
+    public AdvancedSlayerManager(SkyblockPlugin plugin, PlayerProfileService playerProfileService) {
         this.plugin = plugin;
         this.playerProfileService = playerProfileService;
         initializeSlayerRequirements();
@@ -181,11 +181,11 @@ public class AdvancedSlayerManager implements Listener {
     private SlayerBoss createSlayerBoss(String slayerType, int tier, org.bukkit.Location location) {
         switch (slayerType.toLowerCase()) {
             case "zombie":
-                return new RevenantHorror(plugin, location, tier);
+                return new RevenantHorror(location, tier);
             case "spider":
-                return new TarantulaBroodmother(plugin, location, tier);
+                return new TarantulaBroodmother(location, tier);
             case "wolf":
-                return new SvenPackmaster(plugin, location, tier);
+                return new SvenPackmaster(location, tier);
             case "enderman":
                 // TODO: Implement Enderman Slayer Boss
                 return null;

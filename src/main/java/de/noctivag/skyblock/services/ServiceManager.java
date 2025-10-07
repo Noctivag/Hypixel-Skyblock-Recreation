@@ -1,6 +1,6 @@
 package de.noctivag.skyblock.services;
 
-import de.noctivag.skyblock.SkyblockPluginRefactored;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.cache.PlayerProfileCache;
 import de.noctivag.skyblock.config.DatabaseConfig;
 import de.noctivag.skyblock.config.SettingsConfig;
@@ -17,11 +17,11 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ServiceManager {
     
-    private final SkyblockPluginRefactored plugin;
+    private final SkyblockPlugin plugin;
     private final Map<Class<?>, Object> services;
     private final Map<String, Object> namedServices;
     
-    public ServiceManager(SkyblockPluginRefactored plugin) {
+    public ServiceManager(SkyblockPlugin plugin) {
         this.plugin = plugin;
         this.services = new ConcurrentHashMap<>();
         this.namedServices = new ConcurrentHashMap<>();
@@ -41,7 +41,7 @@ public class ServiceManager {
         registerService(PlayerProfileCache.class, playerProfileCache);
 
         // Player Profile Service (depends on cache and db)
-        PlayerProfileService playerProfileService = new PlayerProfileService(plugin, playerProfileCache, databaseManager);
+        PlayerProfileService playerProfileService = new PlayerProfileService(plugin);
         registerService(PlayerProfileService.class, playerProfileService);
 
         // World Reset Service (depends on RollingRestartWorldManager and SettingsConfig)
@@ -54,11 +54,11 @@ public class ServiceManager {
         }
 
         // World Management Service (depends on RollingRestartWorldManager)
-        WorldManagementService worldManagementService = new WorldManagementService(plugin, rollingRestartWorldManager);
+        WorldManagementService worldManagementService = new WorldManagementService(plugin);
         registerService(WorldManagementService.class, worldManagementService);
 
         // Teleport Service (depends on WorldManagementService)
-        TeleportService teleportService = new TeleportService(plugin, worldManagementService);
+        TeleportService teleportService = new TeleportService(plugin);
         registerService(TeleportService.class, teleportService);
 
         // Magical Power Service (depends on SettingsConfig)

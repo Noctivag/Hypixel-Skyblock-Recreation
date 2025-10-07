@@ -264,61 +264,101 @@ public class AdvancedTravelScrollSystem {
         
         // Farming Locations
         travelLocations.put("barn", new TravelLocation(
+            "barn",
             "Barn", 
-            "farming_world", 
+            "§a",
+            "A peaceful barn in the farming area",
+            TravelCategory.FARMING,
+            0,
             50.5, 80.0, 50.5, 
-            0.0f, 0.0f
+            0.0f, 0.0f,
+            false
         ));
         
         travelLocations.put("mushroom_desert", new TravelLocation(
+            "mushroom_desert",
             "Mushroom Desert", 
-            "farming_world", 
+            "§e",
+            "A desert filled with mushrooms",
+            TravelCategory.FARMING,
+            0,
             150.5, 70.0, 150.5, 
-            0.0f, 0.0f
+            0.0f, 0.0f,
+            false
         ));
         
         travelLocations.put("spiders_den", new TravelLocation(
+            "spiders_den",
             "Spider's Den", 
-            "farming_world", 
+            "§c",
+            "A dangerous den full of spiders",
+            TravelCategory.COMBAT,
+            0,
             250.5, 60.0, 250.5, 
-            0.0f, 0.0f
+            0.0f, 0.0f,
+            false
         ));
         
         travelLocations.put("blazing_fortress", new TravelLocation(
+            "blazing_fortress",
             "Blazing Fortress", 
-            "nether_world", 
+            "§6",
+            "The blazing hot fortress",
+            TravelCategory.COMBAT,
+            0,
             100.5, 50.0, 100.5, 
-            0.0f, 0.0f
+            0.0f, 0.0f,
+            false
         ));
         
         travelLocations.put("end", new TravelLocation(
+            "end",
             "The End", 
-            "end_world", 
+            "§d",
+            "The mysterious End dimension",
+            TravelCategory.END,
+            0,
             0.5, 70.0, 0.5, 
-            0.0f, 0.0f
+            0.0f, 0.0f,
+            false
         ));
         
         // Fishing Locations
         travelLocations.put("fishing", new TravelLocation(
+            "fishing",
             "Fishing Area", 
-            "fishing_world", 
+            "§b",
+            "A perfect spot for fishing",
+            TravelCategory.FISHING,
+            0,
             50.5, 60.0, 50.5, 
-            0.0f, 0.0f
+            0.0f, 0.0f,
+            false
         ));
         
         travelLocations.put("fishing_harbor", new TravelLocation(
+            "fishing_harbor",
             "Fishing Harbor", 
-            "fishing_world", 
+            "§b",
+            "A busy harbor for fishing",
+            TravelCategory.FISHING,
+            0,
             100.5, 60.0, 100.5, 
-            0.0f, 0.0f
+            0.0f, 0.0f,
+            false
         ));
         
         // Dungeon Locations
         travelLocations.put("catacombs", new TravelLocation(
+            "catacombs",
             "Catacombs", 
-            "dungeon_world", 
+            "§5",
+            "Enter the dangerous catacombs",
+            TravelCategory.DUNGEON,
+            0,
             0.5, 50.0, 0.5, 
-            0.0f, 0.0f
+            0.0f, 0.0f,
+            false
         ));
         
         // Special Locations

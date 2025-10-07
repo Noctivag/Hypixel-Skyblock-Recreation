@@ -12,8 +12,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import de.noctivag.skyblock.database.DatabaseManager;
 import de.noctivag.skyblock.worlds.WorldManager;
+
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Main Skyblock Plugin - Folia Compatible
@@ -24,8 +26,11 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
     private static SkyblockPlugin instance;
     private boolean isFoliaServer = false;
     
+    // Config
+    private de.noctivag.skyblock.config.SettingsConfig settingsConfig;
+    
     // Core systems
-    private DatabaseManager databaseManager;
+    private de.noctivag.skyblock.database.MultiServerDatabaseManager databaseManager;
     private WorldManager worldManager;
     private de.noctivag.skyblock.mobs.MobManager mobManager;
     private de.noctivag.skyblock.mobs.SpawningService spawningService;
@@ -42,6 +47,7 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
     private de.noctivag.skyblock.dungeons.DungeonsSystem dungeonsSystem;
     private de.noctivag.skyblock.slayers.SlayersSystem slayersSystem;
     private de.noctivag.skyblock.pets.PetsSystem petsSystem;
+    private de.noctivag.skyblock.rewards.DailyRewardManager dailyRewardManager;
     
     @Override
     public void onEnable() {
@@ -127,11 +133,21 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
     }
 
     /**
+     * Get the settings config
+     */
+    public de.noctivag.skyblock.config.SettingsConfig getSettingsConfig() {
+        return settingsConfig;
+    }
+
+    /**
      * Initialize core systems
      */
     private void initializeCoreSystems() {
+        // Initialize settings config
+        settingsConfig = new de.noctivag.skyblock.config.SettingsConfig(this);
+        
         // Initialize database manager
-        databaseManager = new DatabaseManager(this);
+        databaseManager = new de.noctivag.skyblock.database.MultiServerDatabaseManager(this);
         
         // Initialize world manager
         worldManager = new WorldManager(this);
@@ -153,7 +169,7 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
         questSystem.initialize();
 
         // Initialize brewing manager
-        brewingManager = new de.noctivag.skyblock.brewing.AdvancedBrewingSystem(this, (de.noctivag.skyblock.database.MultiServerDatabaseManager) databaseManager);
+        brewingManager = new de.noctivag.skyblock.brewing.AdvancedBrewingSystem(this, databaseManager);
         
         // Initialize recipe book system
         recipeBookSystem = new de.noctivag.skyblock.recipe.RecipeBookSystem(this, databaseManager);
@@ -324,10 +340,10 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        
-        String quitMessage = "§c" + player.getName() + " hat den Skyblock Server verlassen.";
-        event.setQuitMessage(quitMessage);
-        
+
+        // Custom quit message - using Adventure API if available, otherwise disable
+        // event.setQuitMessage(quitMessage);
+
         // Save player data
         if (databaseManager != null) {
             databaseManager.savePlayerData(player.getUniqueId());
@@ -337,7 +353,7 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
     /**
      * Get database manager
      */
-    public DatabaseManager getDatabaseManager() {
+    public de.noctivag.skyblock.database.MultiServerDatabaseManager getDatabaseManager() {
         return databaseManager;
     }
 
@@ -687,6 +703,10 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
     public de.noctivag.skyblock.pets.PetsSystem getPetsSystem() {
         return petsSystem;
     }
+
+    public de.noctivag.skyblock.rewards.DailyRewardManager getDailyRewardManager() {
+        return dailyRewardManager;
+    }
     
     public de.noctivag.skyblock.armor.AdvancedArmorSystem getAdvancedArmorSystem() {
         return new de.noctivag.skyblock.armor.AdvancedArmorSystem(this);
@@ -881,5 +901,43 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
     public Object getLiveWorld(String worldName) {
         return null; // Placeholder
     }
+    
+    /**
+     * Get shop system (placeholder)
+     */
+    public Object getShopSystem() {
+        return new Object() {
+            public void openShop(Player player, String shopId) {
+                player.sendMessage("§eShop-System ist noch nicht implementiert!");
+            }
+        };
+    }
+    
+    /**
+     * Get bank system (placeholder)
+     */
+    public Object getBankSystem() {
+        return new Object() {
+            public void openBankGUI(Player player) {
+                player.sendMessage("§eBank-System ist noch nicht implementiert!");
+            }
+        };
+    }
+    
+    /**
+     * Get simple world manager (placeholder)
+     */
+    public Object getSimpleWorldManager() {
+        return null; // Placeholder - use WorldManager instead
+    }
+    
+    /**
+     * Get multi-server database manager
+     */
+    public de.noctivag.skyblock.database.MultiServerDatabaseManager getMultiServerDatabaseManager() {
+        return databaseManager;
+    }
+    
+    private Map<String, String> liveWorlds = new HashMap<>();
 
 }

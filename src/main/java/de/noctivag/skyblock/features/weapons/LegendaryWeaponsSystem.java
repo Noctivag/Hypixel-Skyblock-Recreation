@@ -1,6 +1,5 @@
 package de.noctivag.skyblock.features.weapons;
 import java.util.UUID;
-import org.bukkit.inventory.ItemStack;
 
 import de.noctivag.skyblock.core.api.Service;
 import de.noctivag.skyblock.core.api.SystemStatus;

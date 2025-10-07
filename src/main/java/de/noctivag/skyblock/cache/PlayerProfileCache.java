@@ -1,6 +1,6 @@
 package de.noctivag.skyblock.cache;
 
-import de.noctivag.skyblock.SkyblockPluginRefactored;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.models.PlayerProfile;
 
 import java.util.UUID;
@@ -15,28 +15,29 @@ import java.util.concurrent.TimeUnit;
  */
 public class PlayerProfileCache {
     
-    private final SkyblockPluginRefactored plugin;
+    private final SkyblockPlugin plugin; // Main plugin instance
     private final ConcurrentHashMap<UUID, PlayerProfile> profileCache;
     private final ConcurrentHashMap<UUID, Long> cacheTimestamps;
     private final ScheduledExecutorService cleanupExecutor;
-    
+
     private final int maxCacheSize;
     private final long cacheExpirationTime;
-    
-    public PlayerProfileCache(SkyblockPluginRefactored plugin) {
+
+    public PlayerProfileCache(SkyblockPlugin plugin) {
         this.plugin = plugin;
         this.profileCache = new ConcurrentHashMap<>();
         this.cacheTimestamps = new ConcurrentHashMap<>();
         this.cleanupExecutor = Executors.newSingleThreadScheduledExecutor();
-        
+
         // Konfiguration aus Settings laden
         this.maxCacheSize = plugin.getSettingsConfig().getCacheSize();
         this.cacheExpirationTime = plugin.getSettingsConfig().getCacheExpirationTime();
-        
+
         // Cache-Cleanup alle 5 Minuten
         startCacheCleanup();
-        
-        plugin.getLogger().info("PlayerProfileCache initialized - Max size: " + maxCacheSize + 
+
+        // Log initialization
+        plugin.getLogger().info("PlayerProfileCache initialized - Max size: " + maxCacheSize +
                                ", Expiration: " + cacheExpirationTime + "ms");
     }
     

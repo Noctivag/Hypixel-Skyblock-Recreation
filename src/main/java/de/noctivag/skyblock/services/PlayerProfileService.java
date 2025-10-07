@@ -90,6 +90,13 @@ public class PlayerProfileService implements Service {
     }
     
     /**
+     * Get cached player profile
+     */
+    public PlayerProfile getCachedProfile(UUID playerId) {
+        return profiles.get(playerId);
+    }
+    
+    /**
      * Save player profile to database (async version)
      */
     public void saveProfile(de.noctivag.skyblock.models.PlayerProfile profile) {

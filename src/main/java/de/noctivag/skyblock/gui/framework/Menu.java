@@ -56,6 +56,14 @@ public abstract class Menu implements InventoryHolder, Listener {
     }
     
     /**
+     * Öffnet das Menü für einen spezifischen Spieler
+     */
+    public void open(Player targetPlayer) {
+        setupItems();
+        targetPlayer.openInventory(inventory);
+    }
+    
+    /**
      * Schließt das Menü
      */
     public void close() {

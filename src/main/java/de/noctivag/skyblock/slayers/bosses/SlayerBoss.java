@@ -46,5 +46,25 @@ public class SlayerBoss extends CustomMob {
     public String getSlayerType() {
         return slayerType;
     }
+    
+    /**
+     * Start the boss fight
+     */
+    public void startBoss() {
+        // TODO: Implement boss start logic
+        if (entity != null && entity.isValid()) {
+            entity.setCustomNameVisible(true);
+        }
+    }
+    
+    /**
+     * Stop the boss fight
+     */
+    public void stopBoss() {
+        // TODO: Implement boss stop logic
+        if (entity != null && entity.isValid()) {
+            entity.remove();
+        }
+    }
 }
 

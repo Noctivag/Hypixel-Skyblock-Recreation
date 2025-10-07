@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import de.noctivag.skyblock.models.SlayerQuest;
+import de.noctivag.skyblock.models.PetBag;
+import de.noctivag.skyblock.models.AccessoryBag;
+
 /**
  * Spielerprofil-Model für das Caching-System
  * Repräsentiert alle wichtigen Spielerdaten
@@ -204,6 +208,7 @@ public class PlayerProfile {
     public void removeMinion(UUID minionId) {
         this.minions.removeIf(minion -> minion.getMinionId().equals(minionId));
     }
+
     
     // Collection methods
     private Map<de.noctivag.skyblock.enums.CollectionType, Collection> collections = new HashMap<>();
@@ -256,7 +261,30 @@ public class PlayerProfile {
     public void levelUp() {
         this.level++;
     }
-    
+
+    // Skills-related methods
+    public Map<String, Integer> getSkills() {
+        // TODO: Implement proper skills storage
+        return new HashMap<>();
+    }
+
+    public void setSkills(Map<String, Integer> skills) {
+        // TODO: Implement proper skills storage
+    }
+
+    public int getSkillLevel(String skillType) {
+        // TODO: Implement proper skill level tracking
+        return 1;
+    }
+
+    public void setSkillLevel(String skillType, int level) {
+        // TODO: Implement proper skill level tracking
+    }
+
+    public void addSkillXP(String skillType, double xp) {
+        // TODO: Implement proper skill XP tracking
+    }
+
     @Override
     public String toString() {
         return "PlayerProfile{" +

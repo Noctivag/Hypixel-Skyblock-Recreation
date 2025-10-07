@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -82,7 +83,17 @@ public class IslandManager {
         // Persist to DB if available (async-write but attempt sync here)
         if (databaseManager != null) {
             try {
-                Connection conn = databaseManager.getConnection().get(5, TimeUnit.SECONDS);
+                Object connectionObj = databaseManager.getConnection();
+                Connection conn;
+                if (connectionObj instanceof CompletableFuture) {
+                    @SuppressWarnings("unchecked")
+                    CompletableFuture<Connection> future = (CompletableFuture<Connection>) connectionObj;
+                    conn = future.get(5, TimeUnit.SECONDS);
+                } else if (connectionObj instanceof Connection) {
+                    conn = (Connection) connectionObj;
+                } else {
+                    throw new RuntimeException("Unexpected connection type: " + connectionObj.getClass().getName());
+                }
                 try (PreparedStatement ps = conn.prepareStatement(
                         "INSERT INTO skyblock_islands (island_id, owner_uuid) VALUES (?, ?) ON DUPLICATE KEY UPDATE owner_uuid = owner_uuid"
                 )) {
@@ -116,7 +127,17 @@ public class IslandManager {
 
         if (databaseManager != null) {
             try {
-                Connection conn = databaseManager.getConnection().get(5, TimeUnit.SECONDS);
+                Object connectionObj = databaseManager.getConnection();
+                Connection conn;
+                if (connectionObj instanceof CompletableFuture) {
+                    @SuppressWarnings("unchecked")
+                    CompletableFuture<Connection> future = (CompletableFuture<Connection>) connectionObj;
+                    conn = future.get(5, TimeUnit.SECONDS);
+                } else if (connectionObj instanceof Connection) {
+                    conn = (Connection) connectionObj;
+                } else {
+                    throw new RuntimeException("Unexpected connection type: " + connectionObj.getClass().getName());
+                }
                 try (PreparedStatement ps = conn.prepareStatement(
                         "INSERT INTO island_members (island_id, member_uuid, role) VALUES (?, ?, 'visitor') ON DUPLICATE KEY UPDATE role = role"
                 )) {
@@ -139,7 +160,17 @@ public class IslandManager {
 
         if (databaseManager != null) {
             try {
-                Connection conn = databaseManager.getConnection().get(5, TimeUnit.SECONDS);
+                Object connectionObj = databaseManager.getConnection();
+                Connection conn;
+                if (connectionObj instanceof CompletableFuture) {
+                    @SuppressWarnings("unchecked")
+                    CompletableFuture<Connection> future = (CompletableFuture<Connection>) connectionObj;
+                    conn = future.get(5, TimeUnit.SECONDS);
+                } else if (connectionObj instanceof Connection) {
+                    conn = (Connection) connectionObj;
+                } else {
+                    throw new RuntimeException("Unexpected connection type: " + connectionObj.getClass().getName());
+                }
                 try (PreparedStatement ps = conn.prepareStatement(
                         "DELETE FROM island_members WHERE island_id = ? AND member_uuid = ?"
                 )) {
@@ -164,7 +195,17 @@ public class IslandManager {
         }
 
         try {
-            Connection conn = databaseManager.getConnection().get(5, TimeUnit.SECONDS);
+            Object connectionObj = databaseManager.getConnection();
+            Connection conn;
+            if (connectionObj instanceof CompletableFuture) {
+                @SuppressWarnings("unchecked")
+                CompletableFuture<Connection> future = (CompletableFuture<Connection>) connectionObj;
+                conn = future.get(5, TimeUnit.SECONDS);
+            } else if (connectionObj instanceof Connection) {
+                conn = (Connection) connectionObj;
+            } else {
+                throw new RuntimeException("Unexpected connection type: " + connectionObj.getClass().getName());
+            }
             // load islands
             try (Statement st = conn.createStatement(); ResultSet rs = st.executeQuery("SELECT island_id, owner_uuid FROM skyblock_islands")) {
                 while (rs.next()) {
@@ -212,7 +253,17 @@ public class IslandManager {
         }
 
         try {
-            Connection conn = databaseManager.getConnection().get(5, TimeUnit.SECONDS);
+            Object connectionObj = databaseManager.getConnection();
+            Connection conn;
+            if (connectionObj instanceof CompletableFuture) {
+                @SuppressWarnings("unchecked")
+                CompletableFuture<Connection> future = (CompletableFuture<Connection>) connectionObj;
+                conn = future.get(5, TimeUnit.SECONDS);
+            } else if (connectionObj instanceof Connection) {
+                conn = (Connection) connectionObj;
+            } else {
+                throw new RuntimeException("Unexpected connection type: " + connectionObj.getClass().getName());
+            }
             conn.setAutoCommit(false);
             try {
                 // upsert islands
@@ -279,7 +330,17 @@ public class IslandManager {
 
         if (databaseManager != null) {
             try {
-                Connection conn = databaseManager.getConnection().get(5, TimeUnit.SECONDS);
+                Object connectionObj = databaseManager.getConnection();
+                Connection conn;
+                if (connectionObj instanceof CompletableFuture) {
+                    @SuppressWarnings("unchecked")
+                    CompletableFuture<Connection> future = (CompletableFuture<Connection>) connectionObj;
+                    conn = future.get(5, TimeUnit.SECONDS);
+                } else if (connectionObj instanceof Connection) {
+                    conn = (Connection) connectionObj;
+                } else {
+                    throw new RuntimeException("Unexpected connection type: " + connectionObj.getClass().getName());
+                }
                 try (PreparedStatement ps1 = conn.prepareStatement("DELETE FROM island_members WHERE island_id = ?");
                      PreparedStatement ps2 = conn.prepareStatement("DELETE FROM skyblock_islands WHERE island_id = ?")) {
                     ps1.setString(1, i.getIslandId());
@@ -315,7 +376,17 @@ public class IslandManager {
 
         if (databaseManager != null) {
             try {
-                Connection conn = databaseManager.getConnection().get(5, TimeUnit.SECONDS);
+                Object connectionObj = databaseManager.getConnection();
+                Connection conn;
+                if (connectionObj instanceof CompletableFuture) {
+                    @SuppressWarnings("unchecked")
+                    CompletableFuture<Connection> future = (CompletableFuture<Connection>) connectionObj;
+                    conn = future.get(5, TimeUnit.SECONDS);
+                } else if (connectionObj instanceof Connection) {
+                    conn = (Connection) connectionObj;
+                } else {
+                    throw new RuntimeException("Unexpected connection type: " + connectionObj.getClass().getName());
+                }
                 // update island owner reference
                 try (PreparedStatement ps = conn.prepareStatement("UPDATE skyblock_islands SET owner_uuid = ? WHERE island_id = ?")) {
                     ps.setString(1, newOwner.toString());

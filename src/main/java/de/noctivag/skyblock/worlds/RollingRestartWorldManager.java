@@ -21,9 +21,15 @@ public class RollingRestartWorldManager implements Service {
     private final SkyblockPlugin plugin;
     private SystemStatus status = SystemStatus.DISABLED;
     private final Map<String, World> loadedWorlds = new HashMap<>();
+    private final Map<String, String> liveWorlds = new HashMap<>();
     
     public RollingRestartWorldManager(SkyblockPlugin plugin) {
         this.plugin = plugin;
+    }
+    
+    @Override
+    public String getName() {
+        return "RollingRestartWorldManager";
     }
     
     @Override
@@ -118,5 +124,89 @@ public class RollingRestartWorldManager implements Service {
      */
     public Set<String> getLoadedWorldNames() {
         return Collections.unmodifiableSet(loadedWorlds.keySet());
+    }
+    
+    /**
+     * Set live world
+     */
+    public void setLiveWorld(String worldType, String worldName) {
+        liveWorlds.put(worldType, worldName);
+        plugin.getLogger().info("Set live world for " + worldType + ": " + worldName);
+    }
+    
+    /**
+     * Get live world name
+     */
+    public String getLiveWorldName(String worldType) {
+        return liveWorlds.getOrDefault(worldType, worldType);
+    }
+    
+    /**
+     * Get live world instance
+     */
+    public World getLiveWorld(String worldType) {
+        String worldName = getLiveWorldName(worldType);
+        World world = getWorld(worldName);
+        if (world == null) {
+            // Try to get from server directly
+            world = plugin.getServer().getWorld(worldName);
+        }
+        return world;
+    }
+
+    /**
+     * Get world by type with fallback logic
+     */
+    public World getWorldByType(String worldType) {
+        World world = getLiveWorld(worldType);
+        if (world == null) {
+            // Try to load or create the world
+            try {
+                world = loadOrCreateWorld(worldType);
+            } catch (Exception e) {
+                plugin.getLogger().severe("Failed to get world for type: " + worldType + " - " + e.getMessage());
+            }
+        }
+        return world;
+    }
+
+    /**
+     * Load or create a world based on type
+     */
+    private World loadOrCreateWorld(String worldType) {
+        String worldName = getDefaultWorldName(worldType);
+        return loadWorld(worldName).join();
+    }
+
+    /**
+     * Get default world name for type
+     */
+    private String getDefaultWorldName(String worldType) {
+        return switch (worldType.toLowerCase()) {
+            case "hub" -> "hub_a";
+            case "skyblock", "island" -> "skyblock_a";
+            case "dungeon" -> "dungeon_a";
+            case "mining" -> "mining_a";
+            case "farming" -> "farming_a";
+            case "combat" -> "combat_a";
+            case "fishing" -> "fishing_a";
+            case "nether" -> "nether_a";
+            case "end" -> "end_a";
+            default -> worldType + "_a";
+        };
+    }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && status != SystemStatus.RUNNING) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
     }
 }

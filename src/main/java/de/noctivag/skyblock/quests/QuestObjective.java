@@ -71,6 +71,20 @@ public class QuestObjective {
     }
     
     /**
+     * Get objective ID
+     */
+    public String getId() {
+        return type.name() + "_" + amount;
+    }
+    
+    /**
+     * Get required amount
+     */
+    public int getRequiredAmount() {
+        return amount;
+    }
+    
+    /**
      * Objective type enum
      */
     public enum ObjectiveType {

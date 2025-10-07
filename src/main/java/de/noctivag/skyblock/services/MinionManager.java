@@ -1,9 +1,11 @@
 package de.noctivag.skyblock.services;
 
-import de.noctivag.skyblock.SkyblockPluginRefactored;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.enums.MinionType;
 import de.noctivag.skyblock.models.Minion;
-import de.noctivag.skyblock.models.PlayerProfile;
+import de.noctivag.skyblock.core.PlayerProfile;
+import de.noctivag.skyblock.core.api.Service;
+import de.noctivag.skyblock.core.api.SystemStatus;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -16,21 +18,70 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Manager für Minion-Verwaltung und Offline-Fortschritt
  */
-public class MinionManager {
+public class MinionManager implements Service {
 
-    private final SkyblockPluginRefactored plugin;
+    private final SkyblockPlugin plugin;
     private final PlayerProfileService playerProfileService;
     private final Map<UUID, List<Minion>> playerMinions;
     private final Map<UUID, Long> lastOfflineCalculation;
 
-    public MinionManager(SkyblockPluginRefactored plugin) {
+    public MinionManager(SkyblockPlugin plugin) {
         this.plugin = plugin;
-        this.playerProfileService = plugin.getServiceManager().getService(PlayerProfileService.class);
+        // TODO: Implement proper service manager integration
+        // this.playerProfileService = plugin.getServiceManager().getService(PlayerProfileService.class);
+        this.playerProfileService = null; // Placeholder
         this.playerMinions = new ConcurrentHashMap<>();
         this.lastOfflineCalculation = new ConcurrentHashMap<>();
         
         // Starte Minion-Task
         startMinionTask();
+
+        // Initialize service
+        status = SystemStatus.RUNNING;
+    }
+
+    private SystemStatus status = SystemStatus.DISABLED;
+
+    @Override
+    public void initialize() {
+        status = SystemStatus.INITIALIZING;
+        // Service initialization logic here
+        status = SystemStatus.RUNNING;
+        plugin.getLogger().info("MinionManager initialized.");
+    }
+
+    @Override
+    public void shutdown() {
+        status = SystemStatus.SHUTTING_DOWN;
+        // Cleanup resources
+        playerMinions.clear();
+        lastOfflineCalculation.clear();
+        status = SystemStatus.DISABLED;
+        plugin.getLogger().info("MinionManager shut down.");
+    }
+
+    @Override
+    public SystemStatus getStatus() {
+        return status;
+    }
+
+    @Override
+    public String getName() {
+        return "MinionManager";
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && status != SystemStatus.RUNNING) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
     }
 
     /**
@@ -112,7 +163,8 @@ public class MinionManager {
                 playerMinions.put(playerUUID, minions);
                 
                 // Speichere in PlayerProfile
-                PlayerProfile profile = playerProfileService.loadProfile(playerUUID).join();
+                // TODO: Fix playerProfileService null check
+                PlayerProfile profile = playerProfileService.getCachedProfile(playerUUID);
                 if (profile != null) {
                     profile.addMinion(minion);
                     playerProfileService.saveProfile(profile);
@@ -160,7 +212,8 @@ public class MinionManager {
                 minions.remove(minion);
                 
                 // Aktualisiere PlayerProfile
-                PlayerProfile profile = playerProfileService.loadProfile(playerUUID).join();
+                // TODO: Fix playerProfileService null check
+                PlayerProfile profile = playerProfileService.getCachedProfile(playerUUID);
                 if (profile != null) {
                     profile.removeMinion(minionId);
                     playerProfileService.saveProfile(profile);
@@ -248,7 +301,8 @@ public class MinionManager {
                 }
                 
                 // Prüfe ob Spieler genug Coins hat
-                PlayerProfile profile = playerProfileService.loadProfile(playerUUID).join();
+                // TODO: Fix playerProfileService null check
+                PlayerProfile profile = playerProfileService.getCachedProfile(playerUUID);
                 if (profile == null) {
                     return false;
                 }
@@ -299,7 +353,8 @@ public class MinionManager {
      */
     public void loadPlayerMinions(UUID playerUUID) {
         try {
-            PlayerProfile profile = playerProfileService.loadProfile(playerUUID).join();
+            // TODO: Fix playerProfileService null check
+            PlayerProfile profile = playerProfileService.getCachedProfile(playerUUID);
             if (profile != null) {
                 List<Minion> minions = profile.getMinions();
                 playerMinions.put(playerUUID, minions);

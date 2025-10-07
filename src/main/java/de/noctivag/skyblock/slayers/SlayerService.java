@@ -57,6 +57,25 @@ public class SlayerService implements Service {
         return status;
     }
     
+    @Override
+    public String getName() {
+        return "SlayerService";
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && status != SystemStatus.RUNNING) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
+    }
+    
     /**
      * Get the slayer manager
      */

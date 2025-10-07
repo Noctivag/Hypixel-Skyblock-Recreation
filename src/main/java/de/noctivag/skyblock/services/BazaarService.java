@@ -1,24 +1,69 @@
 package de.noctivag.skyblock.services;
 
-import de.noctivag.skyblock.SkyblockPluginRefactored;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.config.DatabaseConfig;
+import de.noctivag.skyblock.core.api.Service;
+import de.noctivag.skyblock.core.api.SystemStatus;
 import org.bukkit.entity.Player;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class BazaarService {
+public class BazaarService implements Service {
 
-    private final SkyblockPluginRefactored plugin;
+    private final SkyblockPlugin plugin;
     private final DatabaseConfig databaseConfig;
+    private SystemStatus status = SystemStatus.DISABLED;
     private final Map<String, List<BuyOrder>> buyOrders = new ConcurrentHashMap<>();
     private final Map<String, List<SellOrder>> sellOrders = new ConcurrentHashMap<>();
 
-    public BazaarService(SkyblockPluginRefactored plugin, DatabaseConfig databaseConfig) {
+    public BazaarService(SkyblockPlugin plugin, DatabaseConfig databaseConfig) {
         this.plugin = plugin;
         this.databaseConfig = databaseConfig;
         initializeBazaar();
+        status = SystemStatus.RUNNING;
+    }
+
+    @Override
+    public void initialize() {
+        status = SystemStatus.INITIALIZING;
+        initializeBazaar();
+        status = SystemStatus.RUNNING;
+        plugin.getLogger().info("BazaarService initialized.");
+    }
+
+    @Override
+    public void shutdown() {
+        status = SystemStatus.SHUTTING_DOWN;
+        buyOrders.clear();
+        sellOrders.clear();
+        status = SystemStatus.DISABLED;
+        plugin.getLogger().info("BazaarService shut down.");
+    }
+
+    @Override
+    public SystemStatus getStatus() {
+        return status;
+    }
+
+    @Override
+    public String getName() {
+        return "BazaarService";
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled && status != SystemStatus.RUNNING) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
     }
 
     private void initializeBazaar() {
@@ -239,6 +284,10 @@ public class BazaarService {
         public int getQuantity() { return quantity; }
         public void setQuantity(int quantity) { this.quantity = quantity; }
         public long getTimestamp() { return timestamp; }
+        
+        // Additional methods for sorting and calculations
+        public double getPricePerUnit() { return price; }
+        public double getAmount() { return quantity; }
     }
 
     public static class SellOrder {
@@ -262,6 +311,10 @@ public class BazaarService {
         public int getQuantity() { return quantity; }
         public void setQuantity(int quantity) { this.quantity = quantity; }
         public long getTimestamp() { return timestamp; }
+        
+        // Additional methods for sorting and calculations
+        public double getPricePerUnit() { return price; }
+        public double getAmount() { return quantity; }
     }
 
     public static class BazaarResult {

@@ -39,6 +39,7 @@ public class CommandUsageGUI extends CustomGUI {
         ItemMeta usageMeta = usage.getItemMeta();
         usageMeta.setDisplayName("§eCommand Usage");
         usageMeta.setLore(Arrays.asList("§7How to use commands", "§7Click to view!"));
+        // Note: Using deprecated methods - consider updating to Adventure API
         usage.setItemMeta(usageMeta);
         inventory.setItem(22, usage);
         
@@ -46,6 +47,7 @@ public class CommandUsageGUI extends CustomGUI {
         ItemStack close = new ItemStack(Material.BARRIER);
         ItemMeta closeMeta = close.getItemMeta();
         closeMeta.setDisplayName("§cClose");
+        // Note: Using deprecated methods - consider updating to Adventure API
         close.setItemMeta(closeMeta);
         inventory.setItem(49, close);
     }

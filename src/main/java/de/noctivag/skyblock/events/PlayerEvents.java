@@ -1,6 +1,5 @@
 package de.noctivag.skyblock.events;
 import java.util.UUID;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

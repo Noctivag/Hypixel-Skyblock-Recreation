@@ -27,7 +27,9 @@ public class HubSpawnSystem implements Listener {
     
     public HubSpawnSystem(SkyblockPluginRefactored plugin) {
         this.plugin = plugin;
-        this.rollingRestartManager = plugin.getRollingRestartWorldManager();
+        Object manager = plugin.getRollingRestartWorldManager();
+        this.rollingRestartManager = (manager instanceof RollingRestartWorldManager) ? 
+            (RollingRestartWorldManager) manager : null;
         
         // Registriere Events
         Bukkit.getPluginManager().registerEvents(this, plugin);

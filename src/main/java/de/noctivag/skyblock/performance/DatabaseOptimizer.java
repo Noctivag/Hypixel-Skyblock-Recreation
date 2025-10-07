@@ -129,9 +129,22 @@ public class DatabaseOptimizer {
         // Hier würde der Connection Pool implementiert werden
         // Für jetzt: Basic Connection mit Optimierungen
         try {
-            Connection connection = SkyblockPlugin.getMultiServerDatabaseManager().getConnection().get();
-            connection.setAutoCommit(false);
-            return connection;
+            Object connectionObj = SkyblockPlugin.getMultiServerDatabaseManager().getConnection();
+            if (connectionObj instanceof java.sql.Connection) {
+                Connection connection = (Connection) connectionObj;
+                connection.setAutoCommit(false);
+                return connection;
+            } else if (connectionObj instanceof java.util.concurrent.CompletableFuture) {
+                @SuppressWarnings("unchecked")
+                java.util.concurrent.CompletableFuture<Connection> future = 
+                    (java.util.concurrent.CompletableFuture<Connection>) connectionObj;
+                Connection connection = future.get();
+                connection.setAutoCommit(false);
+                return connection;
+            } else {
+                throw new RuntimeException("Unexpected connection object type: " + 
+                    (connectionObj != null ? connectionObj.getClass().getName() : "null"));
+            }
         } catch (Exception e) {
             throw new RuntimeException("Failed to get database connection", e);
         }

@@ -1,11 +1,11 @@
 package de.noctivag.skyblock.services;
 
-import de.noctivag.skyblock.SkyblockPluginRefactored;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.enums.PetType;
 import de.noctivag.skyblock.enums.Rarity;
 import de.noctivag.skyblock.models.Pet;
 import de.noctivag.skyblock.models.PetBag;
-import de.noctivag.skyblock.models.PlayerProfile;
+import de.noctivag.skyblock.core.PlayerProfile;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -15,10 +15,10 @@ import java.util.concurrent.CompletableFuture;
 
 public class PetService {
 
-    private final SkyblockPluginRefactored plugin;
+    private final SkyblockPlugin plugin;
     private final Random random = new Random();
 
-    public PetService(SkyblockPluginRefactored plugin) {
+    public PetService(SkyblockPlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -69,12 +69,13 @@ public class PetService {
     public CompletableFuture<Boolean> addPetToPlayer(Player player, Pet pet) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                PlayerProfileService playerProfileService = plugin.getServiceManager().getService(PlayerProfileService.class);
+                // TODO: Implement proper service manager integration
+                PlayerProfileService playerProfileService = null; // Placeholder
                 if (playerProfileService == null) {
                     return false;
                 }
 
-                PlayerProfile profile = playerProfileService.loadProfile(player.getUniqueId()).join();
+                PlayerProfile profile = playerProfileService.getCachedProfile(player.getUniqueId());
                 if (profile == null) {
                     return false;
                 }
@@ -106,12 +107,13 @@ public class PetService {
     public CompletableFuture<Boolean> setActivePet(Player player, Pet pet) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                PlayerProfileService playerProfileService = plugin.getServiceManager().getService(PlayerProfileService.class);
+                // TODO: Implement proper service manager integration
+                PlayerProfileService playerProfileService = null; // Placeholder
                 if (playerProfileService == null) {
                     return false;
                 }
 
-                PlayerProfile profile = playerProfileService.loadProfile(player.getUniqueId()).join();
+                PlayerProfile profile = playerProfileService.getCachedProfile(player.getUniqueId());
                 if (profile == null) {
                     return false;
                 }
@@ -187,12 +189,13 @@ public class PetService {
     }
 
     public Map<String, Double> getPlayerStatBonuses(Player player) {
-        PlayerProfileService playerProfileService = plugin.getServiceManager().getService(PlayerProfileService.class);
+        // TODO: Implement proper service manager integration
+                PlayerProfileService playerProfileService = null; // Placeholder
         if (playerProfileService == null) {
             return Map.of();
         }
 
-        PlayerProfile profile = playerProfileService.loadProfile(player.getUniqueId()).join();
+        PlayerProfile profile = playerProfileService.getCachedProfile(player.getUniqueId());
         if (profile == null) {
             return Map.of();
         }
@@ -206,12 +209,13 @@ public class PetService {
     }
 
     public List<Pet> getPlayerPets(Player player) {
-        PlayerProfileService playerProfileService = plugin.getServiceManager().getService(PlayerProfileService.class);
+        // TODO: Implement proper service manager integration
+                PlayerProfileService playerProfileService = null; // Placeholder
         if (playerProfileService == null) {
             return List.of();
         }
 
-        PlayerProfile profile = playerProfileService.loadProfile(player.getUniqueId()).join();
+        PlayerProfile profile = playerProfileService.getCachedProfile(player.getUniqueId());
         if (profile == null) {
             return List.of();
         }
@@ -225,12 +229,13 @@ public class PetService {
     }
 
     public Pet getPlayerActivePet(Player player) {
-        PlayerProfileService playerProfileService = plugin.getServiceManager().getService(PlayerProfileService.class);
+        // TODO: Implement proper service manager integration
+                PlayerProfileService playerProfileService = null; // Placeholder
         if (playerProfileService == null) {
             return null;
         }
 
-        PlayerProfile profile = playerProfileService.loadProfile(player.getUniqueId()).join();
+        PlayerProfile profile = playerProfileService.getCachedProfile(player.getUniqueId());
         if (profile == null) {
             return null;
         }

@@ -1,6 +1,6 @@
 package de.noctivag.skyblock.services;
 
-import de.noctivag.skyblock.SkyblockPluginRefactored;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.enums.Rarity;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -17,11 +17,11 @@ import java.util.*;
 
 public class LootService {
 
-    private final SkyblockPluginRefactored plugin;
+    private final SkyblockPlugin plugin;
     private final Map<String, List<LootEntry>> lootTables = new HashMap<>();
     private final Random random = new Random();
 
-    public LootService(SkyblockPluginRefactored plugin) {
+    public LootService(SkyblockPlugin plugin) {
         this.plugin = plugin;
         loadLootTables();
     }

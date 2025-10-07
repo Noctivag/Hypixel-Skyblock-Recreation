@@ -74,7 +74,9 @@ public class AdvancedNPCSystem implements Listener {
     }
     
     private void loadNPCsFromDatabase() {
-        // Load NPCs from database
+        // TODO: Implement proper database loading
+        // Load NPCs from database (placeholder)
+        /*
         databaseManager.executeQuery("SELECT * FROM npcs").thenAccept(resultSet -> {
             try {
                 while (resultSet.next()) {
@@ -97,6 +99,7 @@ public class AdvancedNPCSystem implements Listener {
                 SkyblockPlugin.getLogger().severe("Error loading NPCs from database: " + e.getMessage());
             }
         });
+        */
     }
     
     @EventHandler

@@ -240,7 +240,8 @@ public class NPCDialogueSystem {
                     public void run() {
                         // Open shop GUI
                         if (SkyblockPlugin.getShopSystem() != null) {
-                            SkyblockPlugin.getShopSystem().openShopGUI(player);
+                            // TODO: Implement openShopGUI method in ShopSystem
+                            player.sendMessage(Component.text("§eShop-GUI wird geöffnet... (noch nicht implementiert)"));
                         } else {
                             player.sendMessage(Component.text("§cShop-System ist nicht verfügbar!"));
                         }
@@ -256,7 +257,8 @@ public class NPCDialogueSystem {
                     public void run() {
                         // Open sell GUI
                         if (SkyblockPlugin.getShopSystem() != null) {
-                            SkyblockPlugin.getShopSystem().openSellGUI(player);
+                            // TODO: Implement openSellGUI method in ShopSystem
+                            player.sendMessage(Component.text("§eVerkaufs-GUI wird geöffnet... (noch nicht implementiert)"));
                         } else {
                             player.sendMessage(Component.text("§cShop-System ist nicht verfügbar!"));
                         }
@@ -423,7 +425,8 @@ public class NPCDialogueSystem {
                     public void run() {
                         // Open deposit GUI
                         if (SkyblockPlugin.getBankSystem() != null) {
-                            SkyblockPlugin.getBankSystem().openDepositGUI(player);
+                            // TODO: Implement openDepositGUI method in BankSystem
+                            player.sendMessage(Component.text("§eEinzahlungs-GUI wird geöffnet... (noch nicht implementiert)"));
                         } else {
                             player.sendMessage(Component.text("§cBank-System ist nicht verfügbar!"));
                         }
@@ -439,7 +442,8 @@ public class NPCDialogueSystem {
                     public void run() {
                         // Open withdraw GUI
                         if (SkyblockPlugin.getBankSystem() != null) {
-                            SkyblockPlugin.getBankSystem().openWithdrawGUI(player);
+                            // TODO: Implement openWithdrawGUI method in BankSystem
+                            player.sendMessage(Component.text("§eWithdraw-GUI wird geöffnet... (noch nicht implementiert)"));
                         } else {
                             player.sendMessage(Component.text("§cBank-System ist nicht verfügbar!"));
                         }

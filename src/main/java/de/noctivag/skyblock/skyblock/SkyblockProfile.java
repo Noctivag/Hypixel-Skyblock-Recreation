@@ -52,6 +52,10 @@ public class SkyblockProfile {
     
     public String getPlayerName() { return playerName; }
     public void setPlayerName(String playerName) { this.playerName = playerName; }
+
+    public boolean isFirstJoin() {
+        return firstJoin == lastLogin;
+    }
     
     public long getFirstJoin() { return firstJoin; }
     public void setFirstJoin(long firstJoin) { this.firstJoin = firstJoin; }

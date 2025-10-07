@@ -1,10 +1,10 @@
 package de.noctivag.skyblock.services;
 
-import de.noctivag.skyblock.SkyblockPluginRefactored;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.enums.PowerStone;
 import de.noctivag.skyblock.enums.Rarity;
 import de.noctivag.skyblock.models.AccessoryBag;
-import de.noctivag.skyblock.models.PlayerProfile;
+import de.noctivag.skyblock.core.PlayerProfile;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -18,10 +18,10 @@ import java.util.Map;
 
 public class MagicalPowerService {
 
-    private final SkyblockPluginRefactored plugin;
+    private final SkyblockPlugin plugin;
     private final Map<Rarity, Integer> magicalPowerPerRarity = new HashMap<>();
 
-    public MagicalPowerService(SkyblockPluginRefactored plugin) {
+    public MagicalPowerService(SkyblockPlugin plugin) {
         this.plugin = plugin;
         loadMagicalPowerConfig();
     }

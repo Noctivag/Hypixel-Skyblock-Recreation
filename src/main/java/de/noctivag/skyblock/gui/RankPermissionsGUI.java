@@ -33,6 +33,7 @@ public class RankPermissionsGUI extends CustomGUI {
         ItemMeta permissionsMeta = permissions.getItemMeta();
         permissionsMeta.setDisplayName("§eRank Permissions");
         permissionsMeta.setLore(Arrays.asList("§7Manage rank permissions", "§7Click to configure!"));
+        // Note: Using deprecated methods - consider updating to Adventure API
         permissions.setItemMeta(permissionsMeta);
         inventory.setItem(22, permissions);
         
@@ -40,6 +41,7 @@ public class RankPermissionsGUI extends CustomGUI {
         ItemStack close = new ItemStack(Material.BARRIER);
         ItemMeta closeMeta = close.getItemMeta();
         closeMeta.setDisplayName("§cClose");
+        // Note: Using deprecated methods - consider updating to Adventure API
         close.setItemMeta(closeMeta);
         inventory.setItem(49, close);
     }

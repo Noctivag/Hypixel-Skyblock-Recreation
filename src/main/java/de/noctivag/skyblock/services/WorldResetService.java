@@ -1,6 +1,6 @@
 package de.noctivag.skyblock.services;
 
-import de.noctivag.skyblock.SkyblockPluginRefactored;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.worlds.RollingRestartWorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -17,11 +17,11 @@ import java.util.concurrent.CompletableFuture;
  */
 public class WorldResetService {
     
-    private final SkyblockPluginRefactored plugin;
+    private final SkyblockPlugin plugin;
     private final RollingRestartWorldManager worldManager;
     private final Map<String, BukkitTask> resetTasks;
     
-    public WorldResetService(SkyblockPluginRefactored plugin, RollingRestartWorldManager worldManager) {
+    public WorldResetService(SkyblockPlugin plugin, RollingRestartWorldManager worldManager) {
         this.plugin = plugin;
         this.worldManager = worldManager;
         this.resetTasks = new HashMap<>();

@@ -1,6 +1,6 @@
 package de.noctivag.skyblock.services;
 
-import de.noctivag.skyblock.SkyblockPluginRefactored;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.enums.ZoneType;
 import de.noctivag.skyblock.mobs.ZoneMob;
 import de.noctivag.skyblock.zones.*;
@@ -17,12 +17,12 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ZoneMobService {
 
-    private final SkyblockPluginRefactored plugin;
+    private final SkyblockPlugin plugin;
     private final Map<ZoneType, List<ZoneMob>> zoneMobs;
     private final Map<UUID, ZoneMob> activeMobs;
     private final Random random = new Random();
 
-    public ZoneMobService(SkyblockPluginRefactored plugin) {
+    public ZoneMobService(SkyblockPlugin plugin) {
         this.plugin = plugin;
         this.zoneMobs = new ConcurrentHashMap<>();
         this.activeMobs = new ConcurrentHashMap<>();
@@ -35,24 +35,24 @@ public class ZoneMobService {
      */
     private void initializeZoneMobs() {
         // Dwarven Mines Mobs
-        List<ZoneMob> dwarvenMinesMobs = Arrays.asList(
-            new IceWalker(),
-            new Goblin(plugin),
-            new PowderGhast()
-        );
+        List<ZoneMob> dwarvenMinesMobs = new ArrayList<>();
+        // TODO: Implement these mob classes
+        // new IceWalker(),
+        // new Goblin(plugin),
+        // new PowderGhast()
         zoneMobs.put(ZoneType.DWARVEN_MINES, dwarvenMinesMobs);
 
         // Crystal Hollows Mobs
-        List<ZoneMob> crystalHollowsMobs = Arrays.asList(
-            new TeamTreasurite(),
-            new Corleone()
-        );
+        List<ZoneMob> crystalHollowsMobs = new ArrayList<>();
+        // TODO: Implement these mob classes
+        // new TeamTreasurite(),
+        // new Corleone()
         zoneMobs.put(ZoneType.CRYSTAL_HOLLOWS, crystalHollowsMobs);
 
         // Crimson Isle Mobs
-        List<ZoneMob> crimsonIsleMobs = Arrays.asList(
-            new MagmaCubeBoss()
-        );
+        List<ZoneMob> crimsonIsleMobs = new ArrayList<>();
+        // TODO: Implement this mob class
+        // new MagmaCubeBoss()
         zoneMobs.put(ZoneType.CRIMSON_ISLE, crimsonIsleMobs);
 
         plugin.getLogger().info("ZoneMobService initialized with " + zoneMobs.size() + " zones");
@@ -74,11 +74,13 @@ public class ZoneMobService {
                 return null;
             }
 
-            // Spawn the mob
-            LivingEntity entity = selectedMob.spawn(location);
+            // Set spawn location and spawn the mob
+            selectedMob.setSpawnLocation(location);
+            selectedMob.spawn();
+            LivingEntity entity = selectedMob.getEntity();
             if (entity != null) {
                 activeMobs.put(entity.getUniqueId(), selectedMob);
-                
+
                 if (plugin.getSettingsConfig().isDebugMode()) {
                     plugin.getLogger().info("Spawned " + selectedMob.getName() + " in " + zone.getDisplayName());
                 }
@@ -107,13 +109,28 @@ public class ZoneMobService {
                 return null;
             }
 
-            LivingEntity entity = selectedMob.spawn(location);
+            selectedMob.setSpawnLocation(location);
+            selectedMob.spawn();
+            LivingEntity entity = selectedMob.getEntity();
             if (entity != null) {
                 activeMobs.put(entity.getUniqueId(), selectedMob);
             }
 
             return entity;
         });
+    }
+
+    /**
+     * Gets the zone type for a mob (helper method)
+     */
+    private String getZoneTypeForMob(ZoneMob mob) {
+        // Find which zone this mob belongs to
+        for (Map.Entry<ZoneType, List<ZoneMob>> entry : zoneMobs.entrySet()) {
+            if (entry.getValue().contains(mob)) {
+                return entry.getKey().name();
+            }
+        }
+        return "UNKNOWN";
     }
 
     /**
@@ -245,7 +262,7 @@ public class ZoneMobService {
             List<ZoneMob> mobs = entry.getValue();
             
             long activeCount = activeMobs.values().stream()
-                .filter(mob -> mob.getZone() == zone)
+                .filter(mob -> zone.equals(getZoneTypeForMob(mob)))
                 .count();
             
             stats.append("§7").append(zone.getDisplayName()).append(": ")

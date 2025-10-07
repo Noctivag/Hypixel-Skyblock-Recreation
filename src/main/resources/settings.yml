@@ -1,0 +1,68 @@
+# Skyblock Plugin Settings Configuration
+# This file contains all configuration options for the Skyblock plugin
+
+# Cache Configuration
+cache:
+  size: 1000
+  expiration: 300000  # 5 minutes in milliseconds
+
+# Logging Configuration
+logging:
+  verbose: true  # Enable verbose logging for debugging
+
+# Debug Configuration
+debug:
+  enabled: false  # Enable debug mode
+
+# World Management Configuration
+worlds:
+  auto-reset: true  # Enable automatic world reset system
+  reset-interval: 14400  # Reset interval in seconds (4 hours)
+
+# Rolling Restart Configuration
+rolling-restart:
+  enabled: true
+  interval: 14400  # 4 hours in seconds
+  worlds:
+    - hub
+    - gold_mine
+    - deep_caverns
+    - dwarven_mines
+    - crystal_hollows
+    - crimson_isle
+    - end
+    - park
+    - spiders_den
+    - dungeon_hub
+    - dungeon
+    - rift
+    - kuudra
+    - garden
+    - blazing_fortress
+
+# Multi-Server Configuration
+multiserver:
+  enabled: false
+  redis:
+    host: localhost
+    port: 6379
+    password: ""
+  mysql:
+    host: localhost
+    port: 3306
+    database: skyblock_network
+    username: root
+    password: password
+
+# Feature Toggles
+features:
+  rolling-restart: true
+  magical-power: true
+  bazaar: true
+  slayer: true
+  dungeons: true
+  custom-mobs: true
+  pets: true
+  minions: true
+  collections: true
+  skills: true

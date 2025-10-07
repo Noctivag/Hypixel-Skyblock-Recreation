@@ -40,44 +40,47 @@ public class WeaponAbilitySystem implements Service {
     }
     
     @Override
-    public CompletableFuture<Void> initialize() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.INITIALIZING;
-            
-            // Initialize all weapon abilities
-            initializeWeaponAbilities();
-            
-            status = SystemStatus.ENABLED;
-            SkyblockPlugin.getLogger().info("§a[WeaponAbilitySystem] Initialized " + abilities.size() + " weapon abilities");
-        });
+    public void initialize() {
+        status = SystemStatus.INITIALIZING;
+        
+        // Initialize all weapon abilities
+        initializeWeaponAbilities();
+        
+        status = SystemStatus.RUNNING;
+        SkyblockPlugin.getLogger().info("§a[WeaponAbilitySystem] Initialized " + abilities.size() + " weapon abilities");
     }
     
     @Override
-    public CompletableFuture<Void> shutdown() {
-        return CompletableFuture.runAsync(() -> {
-            status = SystemStatus.SHUTTING_DOWN;
-            status = SystemStatus.UNINITIALIZED;
-        });
+    public void shutdown() {
+        status = SystemStatus.SHUTTING_DOWN;
+        playerData.clear();
+        abilities.clear();
+        abilitiesByWeapon.clear();
+        status = SystemStatus.DISABLED;
     }
     
     @Override
-    public boolean isInitialized() {
-        return status == SystemStatus.ENABLED;
-    }
-    
-            @Override
-    public int getPriority() {
-        return 50;
+    public boolean isEnabled() {
+        return status == SystemStatus.RUNNING;
     }
     
     @Override
-    public boolean isRequired() {
-        return false;
+    public void setEnabled(boolean enabled) {
+        if (enabled && status != SystemStatus.RUNNING) {
+            initialize();
+        } else if (!enabled && status == SystemStatus.RUNNING) {
+            shutdown();
+        }
     }
     
     @Override
     public String getName() {
         return "WeaponAbilitySystem";
+    }
+    
+    @Override
+    public SystemStatus getStatus() {
+        return status;
     }
     
     /**

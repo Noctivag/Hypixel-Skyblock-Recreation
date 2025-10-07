@@ -54,28 +54,41 @@ public class CustomWorldGenerator extends ChunkGenerator {
         // No noise generation needed
     }
     
-    @Override
-    public void generateBase(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, ChunkData chunkData) {
+    // Note: The following methods were removed as they are not part of the ChunkGenerator interface
+    // Base generation, mobs, decorations, structures, and vegetation are handled elsewhere
+    
+    /**
+     * Generate base terrain (optional, for reference)
+     */
+    private void generateBase(org.bukkit.generator.WorldInfo worldInfo, Random random, int chunkX, int chunkZ, ChunkData chunkData) {
         // Base generation is handled in generateSurface
     }
     
-    @Override
-    public void generateMobs(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, ChunkData chunkData) {
+    /**
+     * Generate mobs (optional, for reference)
+     */
+    private void generateMobs(org.bukkit.generator.WorldInfo worldInfo, Random random, int chunkX, int chunkZ, ChunkData chunkData) {
         // No mob generation - handled by plugin
     }
     
-    @Override
-    public void generateDecorations(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, ChunkData chunkData) {
+    /**
+     * Generate decorations (optional, for reference)
+     */
+    private void generateDecorations(org.bukkit.generator.WorldInfo worldInfo, Random random, int chunkX, int chunkZ, ChunkData chunkData) {
         // No decorations - handled by plugin
     }
     
-    @Override
-    public void generateStructures(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, ChunkData chunkData) {
+    /**
+     * Generate structures (optional, for reference)
+     */
+    private void generateStructures(org.bukkit.generator.WorldInfo worldInfo, Random random, int chunkX, int chunkZ, ChunkData chunkData) {
         // No structures - handled by plugin
     }
     
-    @Override
-    public void generateVegetation(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, ChunkData chunkData) {
+    /**
+     * Generate vegetation (optional, for reference)
+     */
+    private void generateVegetation(org.bukkit.generator.WorldInfo worldInfo, Random random, int chunkX, int chunkZ, ChunkData chunkData) {
         // No vegetation in custom worlds
     }
     

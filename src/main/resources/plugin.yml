@@ -27,6 +27,11 @@ commands:
     usage: /<command> <player> or /<command> accept <player> or /<command> deny <player>
     permission: skyblock.trade
     aliases: [t]
+  arsenal:
+    description: Open the arsenal menu with all plugin items (OP only)
+    usage: /<command>
+    permission: skyblock.arsenal
+    aliases: [items, allitems]
 
 permissions:
   skyblock.hub:
@@ -43,4 +48,7 @@ permissions:
     default: true
   skyblock.admin:
     description: Allows access to admin commands
+    default: op
+  skyblock.arsenal:
+    description: Allows access to the arsenal menu with all plugin items
     default: op

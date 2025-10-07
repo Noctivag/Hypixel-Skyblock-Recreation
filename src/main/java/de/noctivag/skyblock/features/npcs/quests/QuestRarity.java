@@ -1,5 +1,4 @@
 package de.noctivag.skyblock.features.npcs.quests;
-import org.bukkit.inventory.ItemStack;
 
 public enum QuestRarity {
     COMMON("Common", "§f", 1.0),

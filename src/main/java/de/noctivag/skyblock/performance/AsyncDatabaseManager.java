@@ -182,7 +182,16 @@ public class AsyncDatabaseManager {
     private Connection getConnection(String threadId) {
         return connectionPool.computeIfAbsent(threadId, k -> {
             try {
-                return databaseManager.getConnection().get();
+                Object connectionObj = databaseManager.getConnection();
+                if (connectionObj instanceof CompletableFuture) {
+                    @SuppressWarnings("unchecked")
+                    CompletableFuture<Connection> future = (CompletableFuture<Connection>) connectionObj;
+                    return future.get();
+                } else if (connectionObj instanceof Connection) {
+                    return (Connection) connectionObj;
+                } else {
+                    throw new RuntimeException("Unexpected connection type: " + connectionObj.getClass().getName());
+                }
             } catch (Exception e) {
                 SkyblockPlugin.getLogger().log(Level.SEVERE, "Failed to get database connection", e);
                 throw new RuntimeException(e);

@@ -57,4 +57,41 @@ public class SettingsConfig {
     public boolean isDebugMode() {
         return config.getBoolean("debug.enabled", false);
     }
+    
+    // Feature toggle methods
+    public boolean isRollingRestartEnabled() {
+        return config.getBoolean("features.rolling-restart.enabled", true);
+    }
+    
+    public boolean isMagicalPowerEnabled() {
+        return config.getBoolean("features.magical-power.enabled", true);
+    }
+    
+    public boolean isBazaarEnabled() {
+        return config.getBoolean("features.bazaar.enabled", true);
+    }
+    
+    public boolean isSlayerEnabled() {
+        return config.getBoolean("features.slayer.enabled", true);
+    }
+    
+    public boolean isDungeonsEnabled() {
+        return config.getBoolean("features.dungeons.enabled", true);
+    }
+    
+    public boolean isCustomMobsEnabled() {
+        return config.getBoolean("features.custom-mobs.enabled", true);
+    }
+    
+    public boolean isRollingRestartSystemEnabled() {
+        return config.getBoolean("features.rolling-restart-system.enabled", true);
+    }
+    
+    public boolean isAutoWorldReset() {
+        return config.getBoolean("features.auto-world-reset.enabled", false);
+    }
+    
+    public long getWorldResetInterval() {
+        return config.getLong("features.auto-world-reset.interval-seconds", 3600); // Default: 1 hour
+    }
 }

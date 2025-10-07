@@ -3,7 +3,7 @@ package de.noctivag.skyblock.skills;
 import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.api.Service;
 import de.noctivag.skyblock.core.api.SystemStatus;
-import de.noctivag.skyblock.database.DatabaseManager;
+import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,11 +26,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SkillsSystem implements Service, Listener {
     
     private final SkyblockPlugin plugin;
-    private final DatabaseManager databaseManager;
+    private final MultiServerDatabaseManager databaseManager;
     private final Map<UUID, PlayerSkills> playerSkills;
     private SystemStatus status = SystemStatus.UNINITIALIZED;
 
-    public SkillsSystem(SkyblockPlugin plugin, DatabaseManager databaseManager) {
+    public SkillsSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
         this.plugin = plugin;
         this.databaseManager = databaseManager;
         this.playerSkills = new ConcurrentHashMap<>();
@@ -124,6 +124,23 @@ public class SkillsSystem implements Service, Listener {
         for (UUID playerId : playerSkills.keySet()) {
             savePlayerSkills(playerId);
         }
+    }
+    
+    /**
+     * Get or create player skills for UUID
+     */
+    public PlayerSkills getOrCreatePlayerSkills(UUID playerUUID) {
+        // TODO: Implement proper player skills management
+        return new PlayerSkills(playerUUID);
+    }
+
+    /**
+     * Add XP to player skill
+     */
+    public void addXP(Player player, String skillName, int xpAmount) {
+        PlayerSkills skills = getOrCreatePlayerSkills(player.getUniqueId());
+        // TODO: Implement proper XP addition based on skill name
+        plugin.getLogger().info("Added " + xpAmount + " XP to " + skillName + " for player " + player.getName());
     }
 
     /**

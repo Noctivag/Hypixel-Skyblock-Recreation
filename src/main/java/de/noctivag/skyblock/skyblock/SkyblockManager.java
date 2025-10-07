@@ -54,7 +54,9 @@ public class SkyblockManager {
         SkyblockProfile yamlProfile = SkyblockProfile.load(uuid);
         if (yamlProfile != null) return yamlProfile;
         // If nothing found, create new
-        return new SkyblockProfile(uuid, playerName);
+        SkyblockProfile profile = new SkyblockProfile(uuid);
+        profile.setPlayerName(playerName);
+        return profile;
     }
 
     private SkyblockIsland loadIsland(UUID owner) {
@@ -175,7 +177,7 @@ public class SkyblockManager {
                     SkyblockPlugin.getLogger().info("Creating starter island for new player: " + player.getName());
                     SkyblockIsland created = createIsland(player);
                     islands.put(uuid, created);
-                    profile.setFirstJoin(false);
+                    profile.setLastLogin(System.currentTimeMillis());
                     // Persist
                     profile.save();
                     SQLiteStorage.saveProfile(profile);

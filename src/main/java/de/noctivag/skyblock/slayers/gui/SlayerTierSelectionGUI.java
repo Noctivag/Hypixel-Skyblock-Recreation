@@ -17,15 +17,16 @@ public class SlayerTierSelectionGUI extends CustomGUI {
     
     private final SlayerService slayerService;
     private final String slayerType;
+    private final Player player;
     
     public SlayerTierSelectionGUI(Player player, SlayerService slayerService, String slayerType) {
-        super(player, "§cSelect " + slayerType + " Tier", 27);
+        super("§cSelect " + slayerType + " Tier", 27);
+        this.player = player;
         this.slayerService = slayerService;
         this.slayerType = slayerType;
     }
     
-    @Override
-    protected void setupItems() {
+    public void setupItems() {
         // Tier I
         ItemStack tier1Item = new ItemStack(Material.IRON_SWORD);
         ItemMeta tier1Meta = tier1Item.getItemMeta();

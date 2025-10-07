@@ -369,12 +369,34 @@ public class QuestSystem implements Service, Listener {
             // Give coins to player (implementation depends on economy system)
             player.sendMessage("§a+ " + coins + " coins");
         }
-        
+
         // Give XP
         if (rewards.containsKey("xp")) {
             double xp = ((Number) rewards.get("xp")).doubleValue();
             // Give XP to player (implementation depends on skill system)
             player.sendMessage("§a+ " + xp + " XP");
+        }
+
+        // Give items
+        if (rewards.containsKey("items")) {
+            @SuppressWarnings("unchecked")
+            List<String> items = (List<String>) rewards.get("items");
+            for (String item : items) {
+                // Give item to player (implementation depends on item system)
+                player.sendMessage("§a+ " + item);
+            }
+        }
+
+        // Give skill XP
+        if (rewards.containsKey("skill_xp")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Double> skillXp = (Map<String, Double>) rewards.get("skill_xp");
+            for (Map.Entry<String, Double> entry : skillXp.entrySet()) {
+                String skill = entry.getKey();
+                double xp = entry.getValue();
+                // Give skill XP to player (implementation depends on skill system)
+                player.sendMessage("§a+ " + xp + " " + skill + " XP");
+            }
         }
         
         // Add more reward types as needed

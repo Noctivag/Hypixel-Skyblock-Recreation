@@ -1,0 +1,4 @@
+<!-- Füge diese Konfiguration zu pom.xml hinzu, um Warnungen zu unterdrücken -->
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <parameter name="artifactId">maven-compiler-plugin

@@ -1,15 +1,15 @@
 package de.noctivag.skyblock.services;
 
-import de.noctivag.skyblock.SkyblockPluginRefactored;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.enums.DungeonClass;
-import de.noctivag.skyblock.models.PlayerProfile;
+import de.noctivag.skyblock.core.PlayerProfile;
 import org.bukkit.entity.Player;
 
 public class ClassManager {
 
-    private final SkyblockPluginRefactored plugin;
+    private final SkyblockPlugin plugin;
 
-    public ClassManager(SkyblockPluginRefactored plugin) {
+    public ClassManager(SkyblockPlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -18,13 +18,15 @@ public class ClassManager {
             return false;
         }
 
-        PlayerProfileService playerProfileService = plugin.getServiceManager().getService(PlayerProfileService.class);
-        if (playerProfileService == null) {
-            plugin.getLogger().warning("PlayerProfileService not available for class change.");
-            return false;
-        }
-
-        PlayerProfile profile = playerProfileService.getCachedProfile(player.getUniqueId());
+        // TODO: Implement proper service manager integration
+        // PlayerProfileService playerProfileService = plugin.getServiceManager().getService(PlayerProfileService.class);
+        // if (playerProfileService == null) {
+        //     plugin.getLogger().warning("PlayerProfileService not available for class change.");
+        //     return false;
+        // }
+        
+        // PlayerProfile profile = playerProfileService.getCachedProfile(player.getUniqueId());
+        PlayerProfile profile = null; // Placeholder
         if (profile == null) {
             plugin.getLogger().warning("Player profile not found for " + player.getName());
             return false;
@@ -50,12 +52,14 @@ public class ClassManager {
             return DungeonClass.ARCHER; // Default
         }
 
-        PlayerProfileService playerProfileService = plugin.getServiceManager().getService(PlayerProfileService.class);
-        if (playerProfileService == null) {
-            return DungeonClass.ARCHER; // Default
-        }
-
-        PlayerProfile profile = playerProfileService.getCachedProfile(player.getUniqueId());
+        // TODO: Implement proper service manager integration
+        // PlayerProfileService playerProfileService = plugin.getServiceManager().getService(PlayerProfileService.class);
+        // if (playerProfileService == null) {
+        //     return DungeonClass.ARCHER; // Default
+        // }
+        
+        // PlayerProfile profile = playerProfileService.getCachedProfile(player.getUniqueId());
+        PlayerProfile profile = null; // Placeholder
         if (profile == null) {
             return DungeonClass.ARCHER; // Default
         }

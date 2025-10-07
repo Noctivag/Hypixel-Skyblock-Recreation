@@ -1,10 +1,10 @@
 package de.noctivag.skyblock.services;
 
-import de.noctivag.skyblock.SkyblockPluginRefactored;
+import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.enums.CustomItemType;
 import de.noctivag.skyblock.enums.Rarity;
 import de.noctivag.skyblock.models.CustomItem;
-import de.noctivag.skyblock.models.PlayerProfile;
+import de.noctivag.skyblock.core.PlayerProfile;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -18,9 +18,9 @@ import java.util.concurrent.CompletableFuture;
  */
 public class CustomItemService {
 
-    private final SkyblockPluginRefactored plugin;
+    private final SkyblockPlugin plugin;
 
-    public CustomItemService(SkyblockPluginRefactored plugin) {
+    public CustomItemService(SkyblockPlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -100,9 +100,11 @@ public class CustomItemService {
         }
         
         // Add pet stats
-        PlayerProfileService playerProfileService = plugin.getServiceManager().getService(PlayerProfileService.class);
+        // TODO: Implement proper service manager integration
+        // PlayerProfileService playerProfileService = plugin.getServiceManager().getService(PlayerProfileService.class);
+        PlayerProfileService playerProfileService = null; // Placeholder
         if (playerProfileService != null) {
-            PlayerProfile profile = playerProfileService.loadProfile(player.getUniqueId()).join();
+            PlayerProfile profile = null; // Placeholder - playerProfileService.loadProfile(player.getUniqueId()).join();
             if (profile != null && profile.getPetBag() != null) {
                 Map<String, Double> petStats = profile.getPetBag().getTotalStatBonuses();
                 addStatsToTotal(totalStats, petStats);

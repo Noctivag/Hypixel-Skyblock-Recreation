@@ -1,7 +1,7 @@
 package de.noctivag.skyblock.services;
 
-import de.noctivag.skyblock.SkyblockPluginRefactored;
-import de.noctivag.skyblock.models.PlayerProfile;
+import de.noctivag.skyblock.SkyblockPlugin;
+import de.noctivag.skyblock.core.PlayerProfile;
 import de.noctivag.skyblock.models.SlayerQuest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,11 +16,11 @@ import java.util.concurrent.CompletableFuture;
 
 public class SlayerManager implements Listener {
 
-    private final SkyblockPluginRefactored plugin;
+    private final SkyblockPlugin plugin;
     private final PlayerProfileService playerProfileService;
     private final Map<String, Integer> slayerXPRequirements = new HashMap<>();
 
-    public SlayerManager(SkyblockPluginRefactored plugin, PlayerProfileService playerProfileService) {
+    public SlayerManager(SkyblockPlugin plugin, PlayerProfileService playerProfileService) {
         this.plugin = plugin;
         this.playerProfileService = playerProfileService;
         initializeSlayerRequirements();

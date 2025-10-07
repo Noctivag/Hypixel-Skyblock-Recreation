@@ -18,7 +18,7 @@ public abstract class CustomMob {
     
     protected final String mobId;
     protected final EntityType entityType;
-    protected final Location spawnLocation;
+    protected Location spawnLocation;
     protected final UUID uuid;
     
     // Custom stats
@@ -173,6 +173,8 @@ public abstract class CustomMob {
     public String getMobId() { return mobId; }
     public UUID getUuid() { return uuid; }
     public Location getSpawnLocation() { return spawnLocation; }
+
+    public void setSpawnLocation(Location spawnLocation) { this.spawnLocation = spawnLocation; }
     public double getMaxHealth() { return maxHealth; }
     public double getCurrentHealth() { return currentHealth; }
     public double getDamage() { return damage; }
