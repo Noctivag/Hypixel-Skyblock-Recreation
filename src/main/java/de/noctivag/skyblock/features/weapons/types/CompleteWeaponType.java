@@ -12,325 +12,401 @@ import java.util.Arrays;
  */
 public enum CompleteWeaponType implements Service {
     // SWORDS (35+ weapons)
-    WOODEN_SWORD("Wooden Sword", "⚔️", "Anfänger-Schwert"),
-    STONE_SWORD("Stone Sword", "⚔️", "Verbesserte Version"),
-    IRON_SWORD("Iron Sword", "⚔️", "Mittlere Stufe"),
-    GOLDEN_SWORD("Golden Sword", "⚔️", "Schnell aber schwach"),
-    DIAMOND_SWORD("Diamond Sword", "⚔️", "Hochwertig"),
-    NETHERITE_SWORD("Netherite Sword", "⚔️", "Höchste Basis-Stufe"),
-    ASPECT_OF_THE_END("Aspect of the End", "⚔️", "Teleportation"),
-    ASPECT_OF_THE_DRAGONS("Aspect of the Dragons", "🐉", "Dragon Rage Fähigkeit"),
-    PIGMAN_SWORD("Pigman Sword", "🐷", "Feuer-Effekte"),
-    MIDAS_SWORD("Midas' Sword", "💰", "Skaliert mit Coins (max 50M)"),
-    ASPECT_OF_THE_VOID("Aspect of the Void", "🌑", "Void-Fähigkeiten"),
-    HYPERION("Hyperion", "⚡", "Dungeon Mage-Schwert"),
-    SHADOW_FURY("Shadow Fury", "🌑", "Dungeon Berserker-Schwert"),
-    GIANTS_SWORD("Giant's Sword", "🗡️", "Extrem hoher Schaden"),
-    CLAYMORE("Claymore", "⚔️", "Zweihand-Schwert"),
-    DARK_CLAYMORE("Dark Claymore", "🌑", "Verstärkte Claymore"),
-    LIVID_DAGGER("Livid Dagger", "🗡️", "Hohe Angriffsgeschwindigkeit"),
-    FLOWER_OF_TRUTH("Flower of Truth", "🌸", "Lebenssteal-Fähigkeit"),
-    VALKYRIE("Valkyrie", "⚔️", "Dungeon Berserker-Schwert"),
-    SCYLLA("Scylla", "🌙", "Dungeon Archer-Schwert"),
-    ASTRAEA("Astraea", "⭐", "Dungeon Tank-Schwert"),
-    SILENT_DEATH("Silent Death", "🗡️", "Dungeon Assassin-Schwert"),
-    SOUL_WHIP("Soul Whip", "🌊", "Soul-Angriffe"),
-    LEAPING_SWORD("Leaping Sword", "🐸", "Sprung-Fähigkeit"),
-    EMBER_ROD("Ember Rod", "🔥", "Feuer-basiertes Schwert"),
-    FROZEN_SCYTHE("Frozen Scythe", "❄️", "Eis-basiertes Schwert"),
-    ARACHNES_SWORD("Arachne's Sword", "🕷️", "Drop von Arachne Boss"),
-    THICK_ASPECT_OF_THE_DRAGONS("Thick Aspect of the Dragons", "🐉", "Verstärkte Version des AOTD"),
-    PILLAGERS_AXE("Pillager's Axe", "🪓", "+15 Stärke pro Mining Collection"),
-    NEST_DISRUPTER("Nest Disrupter", "⚔️", "+80% Schaden vs Obsidian Defender"),
-    ASPECT_OF_THE_NEST("Aspect of the Nest", "🐉", "+150% Schaden im Dragon's Nest"),
-    SWORD_OF_HEAVENLY_LIGHT("Sword of Heavenly Light", "☀️", "Blinding-Fähigkeit, Thunderlord-Bonus"),
-    BLUE_STEEL_RAPIER("Blue Steel Rapier", "🗡️", "Erster Angriff: +22% Geschwindigkeit"),
-    WYRMIC_BLADE("Wyrmic Blade", "🐉", "+150% Schaden vs Endermen"),
-    ASPECT_OF_THE_UNDEAD("Aspect of the Undead", "💀", "+200 Schaden, +200 Stärke, +100% Crit Damage"),
-    LEGAL_GAVEL("Legal Gavel", "⚖️", "+0.5 Schaden pro Mob in 10 Blöcken"),
-    SLAYER_AXE("Slayer Axe", "🪓", "+10% Schaden pro Slayer Level"),
-    WITHERED_SCYTHE("Withered Scythe", "💀", "Aura: 15,000 Schaden/Sekunde"),
-    ASPECT_OF_THE_BEYOND("Aspect of the Beyond", "🌌", "Dritte Form des Aspect of the End"),
+    WOODEN_SWORD("Wooden Sword", "⚔️", "Anfänger-Schwert", 20, 0, 0, 0, 0, null),
+    STONE_SWORD("Stone Sword", "⚔️", "Verbesserte Version", 25, 0, 0, 0, 0, null),
+    IRON_SWORD("Iron Sword", "⚔️", "Mittlere Stufe", 30, 0, 0, 0, 0, null),
+    GOLDEN_SWORD("Golden Sword", "⚔️", "Schnell aber schwach", 25, 0, 0, 0, 0, null),
+    DIAMOND_SWORD("Diamond Sword", "⚔️", "Hochwertig", 35, 0, 0, 0, 0, null),
+    NETHERITE_SWORD("Netherite Sword", "⚔️", "Höchste Basis-Stufe", 40, 0, 0, 0, 0, null),
+    ASPECT_OF_THE_END("Aspect of the End", "⚔️", "Teleportation", 100, 0, 0, 100, 0, new WeaponAbility("Instant Transmission", "Teleportiert dich 8 Blöcke nach vorne.", 50, 0, false)),
+    ASPECT_OF_THE_DRAGONS("Aspect of the Dragons", "🐉", "Dragon Rage Fähigkeit", 225, 100, 0, 0, 0, new WeaponAbility("Dragon Rage", "Fügt Gegnern in der Nähe Schaden zu.", 0, 0, false)),
+    DUNGEON_ASPECT_OF_THE_DRAGONS("Dungeon Aspect of the Dragons", "🐉", "Dungeonized Version, Dragon Rage Fähigkeit", 225, 100, 0, 0, 0, new WeaponAbility("Dragon Rage", "Fügt Gegnern in der Nähe Schaden zu.", 0, 0, false)),
+    STARRED_ASPECT_OF_THE_DRAGONS("Starred Aspect of the Dragons", "⭐🐉", "Starred Dungeon Version, Dragon Rage Fähigkeit", 225, 100, 0, 0, 0, new WeaponAbility("Dragon Rage", "Fügt Gegnern in der Nähe Schaden zu.", 0, 0, false)),
+    RECOMBOBULATED_ASPECT_OF_THE_DRAGONS("Recombobulated Aspect of the Dragons", "🔄🐉", "Recombobulated Version, Dragon Rage Fähigkeit", 225, 100, 0, 0, 0, new WeaponAbility("Dragon Rage", "Fügt Gegnern in der Nähe Schaden zu.", 0, 0, false)),
+    PIGMAN_SWORD("Pigman Sword", "🐷", "Feuer-Effekte", 120, 100, 0, 0, 0, new WeaponAbility("Burning Souls", "Feuer-AoE um dich herum.", 150, 30, false)),
+    MIDAS_SWORD("Midas' Sword", "💰", "Skaliert mit Coins (max 50M)", 270, 120, 0, 0, 0, null),
+    GILDED_MIDAS_SWORD("Gilded Midas' Sword", "🥇💰", "Gilded Upgrade, max Damage", 270, 120, 0, 0, 0, null),
+    DUNGEON_MIDAS_SWORD("Dungeon Midas' Sword", "💰", "Dungeonized Version, max Damage", 270, 120, 0, 0, 0, null),
+    STARRED_MIDAS_SWORD("Starred Midas' Sword", "⭐💰", "Starred Dungeon Version, max Damage", 270, 120, 0, 0, 0, null),
+    RECOMBOBULATED_MIDAS_SWORD("Recombobulated Midas' Sword", "🔄💰", "Recombobulated Version, max Damage", 270, 120, 0, 0, 0, null),
+    ASPECT_OF_THE_VOID("Aspect of the Void", "🌑", "Void-Fähigkeiten", 205, 100, 0, 0, 0, new WeaponAbility("Void Transmission", "Teleportiert dich 10 Blöcke nach vorne.", 45, 0, false)),
+    HYPERION("Hyperion", "⚡", "Dungeon Mage-Schwert", 260, 150, 0, 350, 0, new WeaponAbility("Wither Impact", "Explosion, Teleport, Heilung.", 300, 0, false)),
+    WITHERED_HYPERION("Withered Hyperion", "⚡", "Withered Upgrade, Dungeon Mage-Schwert", 260, 150, 0, 350, 0, new WeaponAbility("Wither Impact", "Explosion, Teleport, Heilung.", 300, 0, false)),
+    FABLED_HYPERION("Fabled Hyperion", "✨⚡", "Fabled Upgrade, Dungeon Mage-Schwert", 260, 150, 0, 350, 0, new WeaponAbility("Wither Impact", "Explosion, Teleport, Heilung.", 300, 0, false)),
+    STARRED_HYPERION("Starred Hyperion", "⭐⚡", "Starred Dungeon Version, Mage-Schwert", 260, 150, 0, 350, 0, new WeaponAbility("Wither Impact", "Explosion, Teleport, Heilung.", 300, 0, false)),
+    RECOMBOBULATED_HYPERION("Recombobulated Hyperion", "🔄⚡", "Recombobulated Version, Mage-Schwert", 260, 150, 0, 350, 0, new WeaponAbility("Wither Impact", "Explosion, Teleport, Heilung.", 300, 0, false)),
+    SHADOW_FURY("Shadow Fury", "🌑", "Dungeon Berserker-Schwert", 310, 100, 0, 0, 0, new WeaponAbility("Shadow Fury", "Teleportiert zu Gegnern und greift sie an.", 150, 0, false)),
+    GIANTS_SWORD("Giant's Sword", "🗡️", "Extrem hoher Schaden", 500, 150, 0, 0, 0, null),
+    WITHERED_GIANTS_SWORD("Withered Giant's Sword", "🗡️", "Withered Upgrade, hoher Schaden", 500, 150, 0, 0, 0, null),
+    FABLED_GIANTS_SWORD("Fabled Giant's Sword", "✨🗡️", "Fabled Upgrade, hoher Schaden", 500, 150, 0, 0, 0, null),
+    STARRED_GIANTS_SWORD("Starred Giant's Sword", "⭐🗡️", "Starred Dungeon Version, hoher Schaden", 500, 150, 0, 0, 0, null),
+    RECOMBOBULATED_GIANTS_SWORD("Recombobulated Giant's Sword", "🔄🗡️", "Recombobulated Version, hoher Schaden", 500, 150, 0, 0, 0, null),
+    CLAYMORE("Claymore", "⚔️", "Zweihand-Schwert", 400, 0, 0, 0, 0, null),
+    DARK_CLAYMORE("Dark Claymore", "🌑", "Verstärkte Claymore", 450, 0, 0, 0, 0, null),
+    LIVID_DAGGER("Livid Dagger", "🗡️", "Hohe Angriffsgeschwindigkeit", 210, 60, 0, 0, 0, new WeaponAbility("Backstab", "100% Crit Chance von hinten.", 0, 0, true)),
+    FABLED_LIVID_DAGGER("Fabled Livid Dagger", "✨🗡️", "Fabled Upgrade, hohe Angriffsgeschwindigkeit", 210, 60, 0, 0, 0, new WeaponAbility("Backstab", "100% Crit Chance von hinten.", 0, 0, true)),
+    STARRED_LIVID_DAGGER("Starred Livid Dagger", "⭐🗡️", "Starred Dungeon Version, hohe Angriffsgeschwindigkeit", 210, 60, 0, 0, 0, new WeaponAbility("Backstab", "100% Crit Chance von hinten.", 0, 0, true)),
+    RECOMBOBULATED_LIVID_DAGGER("Recombobulated Livid Dagger", "🔄🗡️", "Recombobulated Version, hohe Angriffsgeschwindigkeit", 210, 60, 0, 0, 0, new WeaponAbility("Backstab", "100% Crit Chance von hinten.", 0, 0, true)),
+    FLOWER_OF_TRUTH("Flower of Truth", "🌸", "Lebenssteal-Fähigkeit", 180, 100, 0, 0, 0, new WeaponAbility("Flying Flower", "Wirft eine Blume, AoE Damage.", 70, 0, false)),
+    VALKYRIE("Valkyrie", "⚔️", "Dungeon Berserker-Schwert", 270, 60, 0, 0, 60, null),
+    SCYLLA("Scylla", "🌙", "Dungeon Archer-Schwert", 280, 0, 0, 350, 0, null),
+    ASTRAEA("Astraea", "⭐", "Dungeon Tank-Schwert", 250, 0, 0, 350, 0, null),
+    SILENT_DEATH("Silent Death", "🗡️", "Dungeon Assassin-Schwert", 220, 60, 0, 0, 0, null),
+    SOUL_WHIP("Soul Whip", "🌊", "Soul-Angriffe", 240, 100, 0, 0, 0, null),
+    LEAPING_SWORD("Leaping Sword", "🐸", "Sprung-Fähigkeit", 150, 100, 0, 0, 0, new WeaponAbility("Leap", "Springt zu Gegnern.", 50, 0, false)),
+    EMBER_ROD("Ember Rod", "🔥", "Feuer-basiertes Schwert", 120, 0, 0, 0, 0, new WeaponAbility("Ember Rain", "Feuerbälle regnen lassen.", 150, 30, false)),
+    FROZEN_SCYTHE("Frozen Scythe", "❄️", "Eis-basiertes Schwert", 140, 0, 0, 0, 0, new WeaponAbility("Ice Bolt", "Schießt Eissplitter.", 50, 0, false)),
+    ARACHNES_SWORD("Arachne's Sword", "🕷️", "Drop von Arachne Boss", 100, 0, 0, 0, 0, null),
+    THICK_ASPECT_OF_THE_DRAGONS("Thick Aspect of the Dragons", "🐉", "Verstärkte Version des AOTD", 250, 100, 0, 0, 0, null),
+    PILLAGERS_AXE("Pillager's Axe", "🪓", "+15 Stärke pro Mining Collection", 180, 0, 0, 0, 0, null),
+    NEST_DISRUPTER("Nest Disrupter", "⚔️", "+80% Schaden vs Obsidian Defender", 160, 0, 0, 0, 0, null),
+    ASPECT_OF_THE_NEST("Aspect of the Nest", "🐉", "+150% Schaden im Dragon's Nest", 200, 0, 0, 0, 0, null),
+    SWORD_OF_HEAVENLY_LIGHT("Sword of Heavenly Light", "☀️", "Blinding-Fähigkeit, Thunderlord-Bonus", 220, 0, 0, 0, 0, null),
+    BLUE_STEEL_RAPIER("Blue Steel Rapier", "🗡️", "Erster Angriff: +22% Geschwindigkeit", 170, 0, 0, 0, 0, null),
+    WYRMIC_BLADE("Wyrmic Blade", "🐉", "+150% Schaden vs Endermen", 190, 0, 0, 0, 0, null),
+    ASPECT_OF_THE_UNDEAD("Aspect of the Undead", "💀", "+200 Schaden, +200 Stärke, +100% Crit Damage", 300, 200, 100, 0, 0, null),
+    LEGAL_GAVEL("Legal Gavel", "⚖️", "+0.5 Schaden pro Mob in 10 Blöcken", 160, 0, 0, 0, 0, null),
+    SLAYER_AXE("Slayer Axe", "🪓", "+10% Schaden pro Slayer Level", 200, 0, 0, 0, 0, null),
+    WITHERED_SCYTHE("Withered Scythe", "💀", "Aura: 15,000 Schaden/Sekunde", 250, 0, 0, 0, 0, null),
+    ASPECT_OF_THE_BEYOND("Aspect of the Beyond", "🌌", "Dritte Form des Aspect of the End", 280, 0, 0, 0, 0, null),
     
     // BOWS (25+ weapons)
-    BOW("Bow", "🏹", "Standard-Bogen"),
-    RUNAANS_BOW("Runaan's Bow", "🏹", "3 Pfeile gleichzeitig"),
-    MOSQUITO_BOW("Mosquito Bow", "🦟", "Gesundheit-basierter Schaden"),
-    MAGMA_BOW("Magma Bow", "🔥", "Feuer-Schaden"),
-    SPIRIT_BOW("Spirit Bow", "👻", "Dungeon Bogen"),
-    ARTISANAL_SHORTBOW("Artisanal Shortbow", "🏹", "Schnelle Schussrate"),
-    HURRICANE_BOW("Hurricane Bow", "🌪️", "5 Pfeile im Bogen"),
-    EXPLOSIVE_BOW("Explosive Bow", "💥", "Explosionen"),
-    LAST_BREATH("Last Breath", "💀", "Debuff-Bogen"),
-    MACHINE_GUN_BOW("Machine Gun Bow", "🔫", "Sehr schnelle Schussrate"),
-    VENOMS_TOUCH("Venom's Touch", "🐍", "Gift-Effekte"),
-    SOULS_REBOUND("Soul's Rebound", "👻", "Soul-Pfeile"),
-    BONEMERANG("Bonemerang", "🦴", "Kehrt zurück"),
-    WITHER_BOW("Wither Bow", "💀", "Wither-Effekt"),
-    TERMINATOR("Terminator", "🏹", "Extreme Reichweite"),
-    JUJU_SHORTBOW("Juju Shortbow", "🏹", "Schnell und mächtig"),
-    PHOENIX_BOW("Phoenix Bow", "🔥", "Wiederbelebung nach Tod"),
-    WHISPER("Whisper", "💨", "Jeder 4. Schuss überladen"),
-    GRAPPLE_BOW("Grapple Bow", "🎣", "Enterhaken-Fähigkeit"),
-    PRECURSOR_EYE("Precursor Eye", "👁️", "Precursor-Effekte"),
-    SLAYER_BOW("Slayer Bow", "🏹", "+10% Schaden pro Slayer Level"),
-    DRAGON_BOW("Dragon Bow", "🐉", "+25% Schaden vs Dragons"),
-    END_BOW("End Bow", "🌑", "+50% Schaden im End"),
-    SPIDER_BOW("Spider Bow", "🕷️", "+30% Schaden vs Spiders"),
-    ZOMBIE_BOW("Zombie Bow", "🧟", "+30% Schaden vs Zombies"),
-    SKELETON_BOW("Skeleton Bow", "💀", "+30% Schaden vs Skeletons"),
-    CREEPER_BOW("Creeper Bow", "💥", "+30% Schaden vs Creepers"),
-    BLAZE_BOW("Blaze Bow", "🔥", "+50% Schaden vs Blazes"),
-    GHAST_BOW("Ghast Bow", "👻", "+50% Schaden vs Ghasts"),
-    WITHER_SKELETON_BOW("Wither Skeleton Bow", "💀", "+50% Schaden vs Wither Skeletons"),
-    ENDERMAN_BOW("Enderman Bow", "🌑", "+50% Schaden vs Endermen"),
+    BOW("Bow", "🏹", "Standard-Bogen", 20, 0, 0, 0, 0, null),
+    RUNAANS_BOW("Runaan's Bow", "🏹", "3 Pfeile gleichzeitig", 160, 0, 0, 0, 0, null),
+    SPIRITUAL_RUNAANS_BOW("Spiritual Runaan's Bow", "✨🏹", "Spiritual Upgrade, 3 Pfeile gleichzeitig", 160, 0, 0, 0, 0, null),
+    DUNGEON_RUNAANS_BOW("Dungeon Runaan's Bow", "🏹", "Dungeonized Version, 3 Pfeile gleichzeitig", 160, 0, 0, 0, 0, null),
+    STARRED_RUNAANS_BOW("Starred Runaan's Bow", "⭐🏹", "Starred Dungeon Version, 3 Pfeile gleichzeitig", 160, 0, 0, 0, 0, null),
+    RECOMBOBULATED_RUNAANS_BOW("Recombobulated Runaan's Bow", "🔄🏹", "Recombobulated Version, 3 Pfeile gleichzeitig", 160, 0, 0, 0, 0, null),
+    MOSQUITO_BOW("Mosquito Bow", "🦟", "Gesundheit-basierter Schaden", 200, 0, 0, 0, 0, null),
+    MAGMA_BOW("Magma Bow", "🔥", "Feuer-Schaden", 120, 0, 0, 0, 0, null),
+    SPIRIT_BOW("Spirit Bow", "👻", "Dungeon Bogen", 180, 0, 0, 0, 0, null),
+    ARTISANAL_SHORTBOW("Artisanal Shortbow", "🏹", "Schnelle Schussrate", 100, 0, 0, 0, 0, null),
+    HURRICANE_BOW("Hurricane Bow", "🌪️", "5 Pfeile im Bogen", 140, 0, 0, 0, 0, null),
+    EXPLOSIVE_BOW("Explosive Bow", "💥", "Explosionen", 160, 0, 0, 0, 0, null),
+    LAST_BREATH("Last Breath", "💀", "Debuff-Bogen", 220, 0, 0, 0, 0, null),
+    MACHINE_GUN_BOW("Machine Gun Bow", "🔫", "Sehr schnelle Schussrate", 150, 0, 0, 0, 0, null),
+    VENOMS_TOUCH("Venom's Touch", "🐍", "Gift-Effekte", 170, 0, 0, 0, 0, null),
+    SOULS_REBOUND("Soul's Rebound", "👻", "Soul-Pfeile", 200, 0, 0, 0, 0, null),
+    BONEMERANG("Bonemerang", "🦴", "Kehrt zurück", 240, 0, 0, 0, 0, null),
+    WITHER_BOW("Wither Bow", "💀", "Wither-Effekt", 260, 0, 0, 0, 0, null),
+    TERMINATOR("Terminator", "🏹", "Extreme Reichweite", 300, 0, 0, 0, 0, null),
+    JUJU_SHORTBOW("Juju Shortbow", "🏹", "Schnell und mächtig", 280, 0, 0, 0, 0, null),
+    SPIRITUAL_JUJU_SHORTBOW("Spiritual Juju Shortbow", "✨🏹", "Spiritual Upgrade, schnell und mächtig", 280, 0, 0, 0, 0, null),
+    STARRED_JUJU_SHORTBOW("Starred Juju Shortbow", "⭐🏹", "Starred Dungeon Version, schnell und mächtig", 280, 0, 0, 0, 0, null),
+    RECOMBOBULATED_JUJU_SHORTBOW("Recombobulated Juju Shortbow", "🔄🏹", "Recombobulated Version, schnell und mächtig", 280, 0, 0, 0, 0, null),
+    PHOENIX_BOW("Phoenix Bow", "🔥", "Wiederbelebung nach Tod", 250, 0, 0, 0, 0, null),
+    WHISPER("Whisper", "💨", "Jeder 4. Schuss überladen", 180, 0, 0, 0, 0, null),
+    GRAPPLE_BOW("Grapple Bow", "🎣", "Enterhaken-Fähigkeit", 160, 0, 0, 0, 0, null),
+    PRECURSOR_EYE("Precursor Eye", "👁️", "Precursor-Effekte", 290, 0, 0, 0, 0, null),
+    SLAYER_BOW("Slayer Bow", "🏹", "+10% Schaden pro Slayer Level", 200, 0, 0, 0, 0, null),
+    DRAGON_BOW("Dragon Bow", "🐉", "+25% Schaden vs Dragons", 170, 0, 0, 0, 0, null),
+    END_BOW("End Bow", "🌑", "+50% Schaden im End", 130, 0, 0, 0, 0, null),
+    SPIDER_BOW("Spider Bow", "🕷️", "+30% Schaden vs Spiders", 110, 0, 0, 0, 0, null),
+    ZOMBIE_BOW("Zombie Bow", "🧟", "+30% Schaden vs Zombies", 120, 0, 0, 0, 0, null),
+    SKELETON_BOW("Skeleton Bow", "💀", "+30% Schaden vs Skeletons", 115, 0, 0, 0, 0, null),
+    CREEPER_BOW("Creeper Bow", "💥", "+30% Schaden vs Creepers", 125, 0, 0, 0, 0, null),
+    BLAZE_BOW("Blaze Bow", "🔥", "+50% Schaden vs Blazes", 150, 0, 0, 0, 0, null),
+    GHAST_BOW("Ghast Bow", "👻", "+50% Schaden vs Ghasts", 155, 0, 0, 0, 0, null),
+    WITHER_SKELETON_BOW("Wither Skeleton Bow", "💀", "+50% Schaden vs Wither Skeletons", 165, 0, 0, 0, 0, null),
+    ENDERMAN_BOW("Enderman Bow", "🌑", "+50% Schaden vs Endermen", 175, 0, 0, 0, 0, null),
     
     // SPECIAL WEAPONS (20+ weapons)
-    DAGGER("Dagger", "🗡️", "Schnelle Angriffe"),
-    SPEAR("Spear", "🔱", "Große Reichweite"),
-    AXE("Axe", "🪓", "Doppelte Funktion"),
-    FISHING_ROD("Fishing Rod", "🎣", "Kann als Waffe verwendet werden"),
-    WAND("Wand", "🪄", "Magie-Waffen"),
-    GAUNTLET("Gauntlet", "🥊", "Mining-Waffe"),
-    STAFF_OF_DIVINITY("Staff of Divinity", "⭐", "Fliegen überall, Debuffs"),
-    STAFF_OF_THE_CRIMSON_REVENGE("Staff of the Crimson Revenge", "🔥", "Feuerbälle abfeuern"),
-    SCYTHE("Scythe", "🌾", "Bereichsangriffe"),
-    WHIP("Whip", "🪢", "Reichweitenangriffe"),
-    HAMMER("Hammer", "🔨", "Schwere Angriffe"),
-    MACE("Mace", "⚔️", "Stumpfe Angriffe"),
-    RAPIER("Rapier", "🗡️", "Durchbohrende Angriffe"),
-    KATANA("Katana", "🗾", "Schnelle Schnitte"),
-    SCIMITAR("Scimitar", "⚔️", "Bogenangriffe"),
-    FALCHION("Falchion", "⚔️", "Schwere Schnitte"),
-    BROADSWORD("Broadsword", "⚔️", "Breite Angriffe"),
-    LONGSWORD("Longsword", "⚔️", "Lange Reichweite"),
-    SHORTSWORD("Shortsword", "🗡️", "Schnelle Angriffe"),
-    ESTOC("Estoc", "🗡️", "Durchbohrende Stiche"),
+    DAGGER("Dagger", "🗡️", "Schnelle Angriffe", 80, 0, 0, 0, 0, null),
+    SPEAR("Spear", "🔱", "Große Reichweite", 120, 0, 0, 0, 0, null),
+    AXE("Axe", "🪓", "Doppelte Funktion", 100, 0, 0, 0, 0, null),
+    FISHING_ROD("Fishing Rod", "🎣", "Kann als Waffe verwendet werden", 10, 0, 0, 0, 0, null),
+    WAND("Wand", "🪄", "Magie-Waffen", 50, 0, 0, 0, 0, null),
+    GAUNTLET("Gauntlet", "🥊", "Mining-Waffe", 150, 0, 0, 0, 0, null),
+    STAFF_OF_DIVINITY("Staff of Divinity", "⭐", "Fliegen überall, Debuffs", 200, 0, 0, 0, 0, null),
+    STAFF_OF_THE_CRIMSON_REVENGE("Staff of the Crimson Revenge", "🔥", "Feuerbälle abfeuern", 180, 0, 0, 0, 0, null),
+    SCYTHE("Scythe", "🌾", "Bereichsangriffe", 160, 0, 0, 0, 0, null),
+    WHIP("Whip", "🪢", "Reichweitenangriffe", 140, 0, 0, 0, 0, null),
+    HAMMER("Hammer", "🔨", "Schwere Angriffe", 200, 0, 0, 0, 0, null),
+    MACE("Mace", "⚔️", "Stumpfe Angriffe", 180, 0, 0, 0, 0, null),
+    RAPIER("Rapier", "🗡️", "Durchbohrende Angriffe", 120, 0, 0, 0, 0, null),
+    KATANA("Katana", "🗾", "Schnelle Schnitte", 160, 0, 0, 0, 0, null),
+    SCIMITAR("Scimitar", "⚔️", "Bogenangriffe", 140, 0, 0, 0, 0, null),
+    FALCHION("Falchion", "⚔️", "Schwere Schnitte", 180, 0, 0, 0, 0, null),
+    BROADSWORD("Broadsword", "⚔️", "Breite Angriffe", 130, 0, 0, 0, 0, null),
+    LONGSWORD("Longsword", "⚔️", "Lange Reichweite", 150, 0, 0, 0, 0, null),
+    SHORTSWORD("Shortsword", "🗡️", "Schnelle Angriffe", 90, 0, 0, 0, 0, null),
+    ESTOC("Estoc", "🗡️", "Durchbohrende Stiche", 110, 0, 0, 0, 0, null),
     
     // STAVES & WANDS (15+ weapons)
-    MIDAS_STAFF("Midas' Staff", "💰", "Schaden basierend auf ausgegebenen Coins"),
-    SPIRIT_SCEPTRE("Spirit Sceptre", "👻", "Beschwört Geister"),
-    BONZOS_STAFF("Bonzo's Staff", "🎭", "Dungeon Utility-Stab"),
-    JERRY_CHINE_GUN("Jerry-chine Gun", "🎭", "Spaß-Waffe"),
-    INK_WAND("Ink Wand", "🖤", "Tintenexplosionen"),
-    YETI_SWORD("Yeti Sword", "❄️", "Eisblöcke schleudern"),
-    FROZEN_SCYTHE_STAFF("Frozen Scythe", "❄️", "Eis-basierter Stab"),
-    EMBER_ROD_STAFF("Ember Rod", "🔥", "Feuer-basierter Stab"),
-    MAGMA_ROD("Magma Rod", "🌋", "Magma-basierter Stab"),
-    FIRE_STAFF("Fire Staff", "🔥", "Feuer-Magie"),
-    ICE_STAFF("Ice Staff", "❄️", "Eis-Magie"),
-    LIGHTNING_STAFF("Lightning Staff", "⚡", "Blitz-Magie"),
-    EARTH_STAFF("Earth Staff", "🌍", "Erde-Magie"),
-    WATER_STAFF("Water Staff", "💧", "Wasser-Magie"),
-    AIR_STAFF("Air Staff", "💨", "Luft-Magie"),
-    SHADOW_STAFF("Shadow Staff", "🌑", "Schatten-Magie"),
-    LIGHT_STAFF("Light Staff", "☀️", "Licht-Magie"),
-    NECROMANCER_STAFF("Necromancer Staff", "💀", "Totenbeschwörung"),
-    SUMMONER_STAFF("Summoner Staff", "👻", "Beschwörungs-Magie"),
-    ILLUSION_STAFF("Illusion Staff", "🎭", "Illusions-Magie");
+    MIDAS_STAFF("Midas' Staff", "💰", "Schaden basierend auf ausgegebenen Coins", 200, 0, 0, 0, 0, null),
+    SPIRIT_SCEPTRE("Spirit Sceptre", "👻", "Beschwört Geister", 160, 0, 0, 0, 0, null),
+    BONZOS_STAFF("Bonzo's Staff", "🎭", "Dungeon Utility-Stab", 120, 0, 0, 0, 0, null),
+    JERRY_CHINE_GUN("Jerry-chine Gun", "🎭", "Spaß-Waffe", 100, 0, 0, 0, 0, null),
+    INK_WAND("Ink Wand", "🖤", "Tintenexplosionen", 130, 0, 0, 0, 0, null),
+    YETI_SWORD("Yeti Sword", "❄️", "Eisblöcke schleudern", 140, 0, 0, 0, 0, null),
+    FROZEN_SCYTHE_STAFF("Frozen Scythe", "❄️", "Eis-basierter Stab", 140, 0, 0, 0, 0, null),
+    EMBER_ROD_STAFF("Ember Rod", "🔥", "Feuer-basierter Stab", 120, 0, 0, 0, 0, null),
+    MAGMA_ROD("Magma Rod", "🌋", "Magma-basierter Stab", 160, 0, 0, 0, 0, null),
+    FIRE_STAFF("Fire Staff", "🔥", "Feuer-Magie", 150, 0, 0, 0, 0, null),
+    ICE_STAFF("Ice Staff", "❄️", "Eis-Magie", 140, 0, 0, 0, 0, null),
+    LIGHTNING_STAFF("Lightning Staff", "⚡", "Blitz-Magie", 180, 0, 0, 0, 0, null),
+    EARTH_STAFF("Earth Staff", "🌍", "Erde-Magie", 160, 0, 0, 0, 0, null),
+    WATER_STAFF("Water Staff", "💧", "Wasser-Magie", 130, 0, 0, 0, 0, null),
+    AIR_STAFF("Air Staff", "💨", "Luft-Magie", 120, 0, 0, 0, 0, null),
+    SHADOW_STAFF("Shadow Staff", "🌑", "Schatten-Magie", 170, 0, 0, 0, 0, null),
+    LIGHT_STAFF("Light Staff", "☀️", "Licht-Magie", 160, 0, 0, 0, 0, null),
+    NECROMANCER_STAFF("Necromancer Staff", "💀", "Totenbeschwörung", 190, 0, 0, 0, 0, null),
+    SUMMONER_STAFF("Summoner Staff", "👻", "Beschwörungs-Magie", 180, 0, 0, 0, 0, null),
+    ILLUSION_STAFF("Illusion Staff", "🎭", "Illusions-Magie", 150, 0, 0, 0, 0, null);
     
     private final String displayName;
     private final String icon;
     private final String description;
+    private final int baseDamage;
+    private final int strength;
+    private final int critDamage;
+    private final int intelligence;
+    private final int ferocity;
+    private final WeaponAbility ability;
     private SystemStatus status = SystemStatus.UNINITIALIZED;
-    
-    CompleteWeaponType(String displayName, String icon, String description) {
+
+    CompleteWeaponType(String displayName, String icon, String description, int baseDamage, int strength, int critDamage, int intelligence, int ferocity, WeaponAbility ability) {
         this.displayName = displayName;
         this.icon = icon;
         this.description = description;
+        this.baseDamage = baseDamage;
+        this.strength = strength;
+        this.critDamage = critDamage;
+        this.intelligence = intelligence;
+        this.ferocity = ferocity;
+        this.ability = ability;
     }
     
-    public String getDisplayName() {
-        return displayName;
-    }
-    
-    public String getIcon() {
-        return icon;
-    }
-    
-    public String getDescription() {
-        return description;
-    }
+    public String getDisplayName() { return displayName; }
+    public String getIcon() { return icon; }
+    public String getDescription() { return description; }
+    public int getBaseDamageStat() { return baseDamage; }
+    public int getStrength() { return strength; }
+    public int getCritDamage() { return critDamage; }
+    public int getIntelligence() { return intelligence; }
+    public int getFerocity() { return ferocity; }
+    public WeaponAbility getAbility() { return ability; }
     
     /**
      * Get weapon category
      */
     public WeaponCategory getCategory() {
-        return switch (this) {
-            case WOODEN_SWORD, STONE_SWORD, IRON_SWORD, GOLDEN_SWORD, DIAMOND_SWORD, NETHERITE_SWORD,
-                 ASPECT_OF_THE_END, ASPECT_OF_THE_DRAGONS, PIGMAN_SWORD, MIDAS_SWORD, ASPECT_OF_THE_VOID,
-                 HYPERION, SHADOW_FURY, GIANTS_SWORD, CLAYMORE, DARK_CLAYMORE, LIVID_DAGGER, FLOWER_OF_TRUTH,
-                 VALKYRIE, SCYLLA, ASTRAEA, SILENT_DEATH, SOUL_WHIP, LEAPING_SWORD, EMBER_ROD, FROZEN_SCYTHE,
-                 ARACHNES_SWORD, THICK_ASPECT_OF_THE_DRAGONS, PILLAGERS_AXE, NEST_DISRUPTER, ASPECT_OF_THE_NEST,
-                 SWORD_OF_HEAVENLY_LIGHT, BLUE_STEEL_RAPIER, WYRMIC_BLADE, ASPECT_OF_THE_UNDEAD, LEGAL_GAVEL,
-                 SLAYER_AXE, WITHERED_SCYTHE, ASPECT_OF_THE_BEYOND, DAGGER, SPEAR, AXE, SCYTHE, WHIP, HAMMER,
-                 MACE, RAPIER, KATANA, SCIMITAR, FALCHION, BROADSWORD, LONGSWORD, SHORTSWORD, ESTOC -> WeaponCategory.SPECIAL;
-            
-            case BOW, RUNAANS_BOW, MOSQUITO_BOW, MAGMA_BOW, SPIRIT_BOW, ARTISANAL_SHORTBOW, HURRICANE_BOW,
-                 EXPLOSIVE_BOW, LAST_BREATH, MACHINE_GUN_BOW, VENOMS_TOUCH, SOULS_REBOUND, BONEMERANG, WITHER_BOW,
-                 TERMINATOR, JUJU_SHORTBOW, PHOENIX_BOW, WHISPER, GRAPPLE_BOW, PRECURSOR_EYE, SLAYER_BOW,
-                 DRAGON_BOW, END_BOW, SPIDER_BOW, ZOMBIE_BOW, SKELETON_BOW, CREEPER_BOW, BLAZE_BOW, GHAST_BOW,
-                 WITHER_SKELETON_BOW, ENDERMAN_BOW -> WeaponCategory.BOW;
-            
-            case FISHING_ROD, WAND, GAUNTLET, STAFF_OF_DIVINITY, STAFF_OF_THE_CRIMSON_REVENGE, MIDAS_STAFF,
-                 SPIRIT_SCEPTRE, BONZOS_STAFF, JERRY_CHINE_GUN, INK_WAND, YETI_SWORD, FROZEN_SCYTHE_STAFF,
-                 EMBER_ROD_STAFF, MAGMA_ROD, FIRE_STAFF, ICE_STAFF, LIGHTNING_STAFF, EARTH_STAFF, WATER_STAFF,
-                 AIR_STAFF, SHADOW_STAFF, LIGHT_STAFF, NECROMANCER_STAFF, SUMMONER_STAFF, ILLUSION_STAFF -> WeaponCategory.SPECIAL;
-        };
+    switch (this) {
+            // Varianten auf Basistyp mappen
+            case DUNGEON_ASPECT_OF_THE_DRAGONS:
+            case STARRED_ASPECT_OF_THE_DRAGONS:
+            case RECOMBOBULATED_ASPECT_OF_THE_DRAGONS:
+                return ASPECT_OF_THE_DRAGONS.getCategory();
+            case GILDED_MIDAS_SWORD:
+            case DUNGEON_MIDAS_SWORD:
+            case STARRED_MIDAS_SWORD:
+            case RECOMBOBULATED_MIDAS_SWORD:
+                return MIDAS_SWORD.getCategory();
+            case WITHERED_HYPERION:
+            case FABLED_HYPERION:
+            case STARRED_HYPERION:
+            case RECOMBOBULATED_HYPERION:
+                return HYPERION.getCategory();
+            case WITHERED_GIANTS_SWORD:
+            case FABLED_GIANTS_SWORD:
+            case STARRED_GIANTS_SWORD:
+            case RECOMBOBULATED_GIANTS_SWORD:
+                return GIANTS_SWORD.getCategory();
+            case FABLED_LIVID_DAGGER:
+            case STARRED_LIVID_DAGGER:
+            case RECOMBOBULATED_LIVID_DAGGER:
+                return LIVID_DAGGER.getCategory();
+            case SPIRITUAL_RUNAANS_BOW:
+            case DUNGEON_RUNAANS_BOW:
+            case STARRED_RUNAANS_BOW:
+            case RECOMBOBULATED_RUNAANS_BOW:
+                return RUNAANS_BOW.getCategory();
+            case SPIRITUAL_JUJU_SHORTBOW:
+            case STARRED_JUJU_SHORTBOW:
+            case RECOMBOBULATED_JUJU_SHORTBOW:
+                return JUJU_SHORTBOW.getCategory();
+            // Standard Mapping
+            case WOODEN_SWORD: case STONE_SWORD: case IRON_SWORD: case GOLDEN_SWORD: case DIAMOND_SWORD: case NETHERITE_SWORD:
+            case ASPECT_OF_THE_END: case ASPECT_OF_THE_DRAGONS: case PIGMAN_SWORD: case MIDAS_SWORD: case ASPECT_OF_THE_VOID:
+            case HYPERION: case SHADOW_FURY: case GIANTS_SWORD: case CLAYMORE: case DARK_CLAYMORE: case LIVID_DAGGER: case FLOWER_OF_TRUTH:
+            case VALKYRIE: case SCYLLA: case ASTRAEA: case SILENT_DEATH: case SOUL_WHIP: case LEAPING_SWORD: case EMBER_ROD: case FROZEN_SCYTHE:
+            case ARACHNES_SWORD: case THICK_ASPECT_OF_THE_DRAGONS: case PILLAGERS_AXE: case NEST_DISRUPTER: case ASPECT_OF_THE_NEST:
+            case SWORD_OF_HEAVENLY_LIGHT: case BLUE_STEEL_RAPIER: case WYRMIC_BLADE: case ASPECT_OF_THE_UNDEAD: case LEGAL_GAVEL:
+            case SLAYER_AXE: case WITHERED_SCYTHE: case ASPECT_OF_THE_BEYOND: case DAGGER: case SPEAR: case AXE: case SCYTHE: case WHIP: case HAMMER:
+            case MACE: case RAPIER: case KATANA: case SCIMITAR: case FALCHION: case BROADSWORD: case LONGSWORD: case SHORTSWORD: case ESTOC:
+                return WeaponCategory.SPECIAL;
+            case BOW: case RUNAANS_BOW: case MOSQUITO_BOW: case MAGMA_BOW: case SPIRIT_BOW: case ARTISANAL_SHORTBOW: case HURRICANE_BOW:
+            case EXPLOSIVE_BOW: case LAST_BREATH: case MACHINE_GUN_BOW: case VENOMS_TOUCH: case SOULS_REBOUND: case BONEMERANG: case WITHER_BOW:
+            case TERMINATOR: case JUJU_SHORTBOW: case PHOENIX_BOW: case WHISPER: case GRAPPLE_BOW: case PRECURSOR_EYE: case SLAYER_BOW:
+            case DRAGON_BOW: case END_BOW: case SPIDER_BOW: case ZOMBIE_BOW: case SKELETON_BOW: case CREEPER_BOW: case BLAZE_BOW: case GHAST_BOW:
+            case WITHER_SKELETON_BOW: case ENDERMAN_BOW:
+                return WeaponCategory.BOW;
+            case FISHING_ROD: case WAND: case GAUNTLET: case STAFF_OF_DIVINITY: case STAFF_OF_THE_CRIMSON_REVENGE: case MIDAS_STAFF:
+            case SPIRIT_SCEPTRE: case BONZOS_STAFF: case JERRY_CHINE_GUN: case INK_WAND: case YETI_SWORD: case FROZEN_SCYTHE_STAFF:
+            case EMBER_ROD_STAFF: case MAGMA_ROD: case FIRE_STAFF: case ICE_STAFF: case LIGHTNING_STAFF: case EARTH_STAFF: case WATER_STAFF:
+            case AIR_STAFF: case SHADOW_STAFF: case LIGHT_STAFF: case NECROMANCER_STAFF: case SUMMONER_STAFF: case ILLUSION_STAFF:
+                return WeaponCategory.SPECIAL;
+            default:
+                throw new IllegalStateException("Unbekannter Waffentyp: " + this);
+        }
     }
     
     /**
      * Get weapon rarity
      */
     public WeaponRarity getRarity() {
-        return switch (this) {
-            case WOODEN_SWORD, STONE_SWORD, IRON_SWORD, GOLDEN_SWORD -> WeaponRarity.COMMON;
-            case DIAMOND_SWORD, NETHERITE_SWORD, ASPECT_OF_THE_END, PIGMAN_SWORD, ARACHNES_SWORD,
-                 BOW, FISHING_ROD -> WeaponRarity.UNCOMMON;
-            case LEAPING_SWORD, EMBER_ROD, FROZEN_SCYTHE, THICK_ASPECT_OF_THE_DRAGONS, PILLAGERS_AXE,
-                 NEST_DISRUPTER, BLUE_STEEL_RAPIER, LEGAL_GAVEL, SLAYER_AXE, RUNAANS_BOW, MOSQUITO_BOW,
-                 MAGMA_BOW, ARTISANAL_SHORTBOW, HURRICANE_BOW, EXPLOSIVE_BOW, MACHINE_GUN_BOW, VENOMS_TOUCH,
-                 WHISPER, GRAPPLE_BOW, SLAYER_BOW, DRAGON_BOW, END_BOW, SPIDER_BOW, ZOMBIE_BOW, SKELETON_BOW,
-                 CREEPER_BOW, BLAZE_BOW, GHAST_BOW, WITHER_SKELETON_BOW, ENDERMAN_BOW, DAGGER, SPEAR, AXE,
-                 WAND, GAUNTLET, STAFF_OF_THE_CRIMSON_REVENGE, SCYTHE, WHIP, HAMMER, MACE, RAPIER, KATANA,
-                 SCIMITAR, FALCHION, BROADSWORD, LONGSWORD, SHORTSWORD, ESTOC, SPIRIT_SCEPTRE, BONZOS_STAFF,
-                 INK_WAND, YETI_SWORD, FROZEN_SCYTHE_STAFF, EMBER_ROD_STAFF, MAGMA_ROD, FIRE_STAFF, ICE_STAFF,
-                 LIGHTNING_STAFF, EARTH_STAFF, WATER_STAFF, AIR_STAFF, SHADOW_STAFF, LIGHT_STAFF, NECROMANCER_STAFF,
-                 SUMMONER_STAFF, ILLUSION_STAFF -> WeaponRarity.EPIC;
-            
-            case ASPECT_OF_THE_DRAGONS, MIDAS_SWORD, ASPECT_OF_THE_VOID, HYPERION, SHADOW_FURY, GIANTS_SWORD,
-                 CLAYMORE, DARK_CLAYMORE, LIVID_DAGGER, FLOWER_OF_TRUTH, VALKYRIE, SCYLLA, ASTRAEA, SILENT_DEATH,
-                 SOUL_WHIP, ASPECT_OF_THE_NEST, SWORD_OF_HEAVENLY_LIGHT, WYRMIC_BLADE, ASPECT_OF_THE_UNDEAD,
-                 WITHERED_SCYTHE, ASPECT_OF_THE_BEYOND, SPIRIT_BOW, LAST_BREATH, SOULS_REBOUND, BONEMERANG,
-                 WITHER_BOW, TERMINATOR, JUJU_SHORTBOW, PHOENIX_BOW, PRECURSOR_EYE, MIDAS_STAFF, JERRY_CHINE_GUN,
-                 STAFF_OF_DIVINITY -> WeaponRarity.LEGENDARY;
-        };
+        switch (this) {
+            case DUNGEON_ASPECT_OF_THE_DRAGONS:
+            case STARRED_ASPECT_OF_THE_DRAGONS:
+            case RECOMBOBULATED_ASPECT_OF_THE_DRAGONS:
+                return ASPECT_OF_THE_DRAGONS.getRarity();
+            case GILDED_MIDAS_SWORD:
+            case DUNGEON_MIDAS_SWORD:
+            case STARRED_MIDAS_SWORD:
+            case RECOMBOBULATED_MIDAS_SWORD:
+                return MIDAS_SWORD.getRarity();
+            case WITHERED_HYPERION:
+            case FABLED_HYPERION:
+            case STARRED_HYPERION:
+            case RECOMBOBULATED_HYPERION:
+                return HYPERION.getRarity();
+            case WITHERED_GIANTS_SWORD:
+            case FABLED_GIANTS_SWORD:
+            case STARRED_GIANTS_SWORD:
+            case RECOMBOBULATED_GIANTS_SWORD:
+                return GIANTS_SWORD.getRarity();
+            case FABLED_LIVID_DAGGER:
+            case STARRED_LIVID_DAGGER:
+            case RECOMBOBULATED_LIVID_DAGGER:
+                return LIVID_DAGGER.getRarity();
+            case SPIRITUAL_RUNAANS_BOW:
+            case DUNGEON_RUNAANS_BOW:
+            case STARRED_RUNAANS_BOW:
+            case RECOMBOBULATED_RUNAANS_BOW:
+                return RUNAANS_BOW.getRarity();
+            case SPIRITUAL_JUJU_SHORTBOW:
+            case STARRED_JUJU_SHORTBOW:
+            case RECOMBOBULATED_JUJU_SHORTBOW:
+                return JUJU_SHORTBOW.getRarity();
+            // Standard Mapping
+            case WOODEN_SWORD:
+            case STONE_SWORD:
+            case IRON_SWORD:
+            case GOLDEN_SWORD:
+                return WeaponRarity.COMMON;
+            case DIAMOND_SWORD:
+            case NETHERITE_SWORD:
+            case ASPECT_OF_THE_END:
+            case PIGMAN_SWORD:
+            case ARACHNES_SWORD:
+            case BOW:
+            case FISHING_ROD:
+                return WeaponRarity.UNCOMMON;
+            case LEAPING_SWORD:
+            case EMBER_ROD:
+            case FROZEN_SCYTHE:
+            case THICK_ASPECT_OF_THE_DRAGONS:
+            case PILLAGERS_AXE:
+            case NEST_DISRUPTER:
+            case BLUE_STEEL_RAPIER:
+            case LEGAL_GAVEL:
+            case SLAYER_AXE:
+            case RUNAANS_BOW:
+            case MOSQUITO_BOW:
+            case MAGMA_BOW:
+            case ARTISANAL_SHORTBOW:
+            case HURRICANE_BOW:
+            case EXPLOSIVE_BOW:
+            case MACHINE_GUN_BOW:
+            case VENOMS_TOUCH:
+            case WHISPER:
+            case GRAPPLE_BOW:
+            case SLAYER_BOW:
+            case DRAGON_BOW:
+            case END_BOW:
+            case SPIDER_BOW:
+            case ZOMBIE_BOW:
+            case SKELETON_BOW:
+            case CREEPER_BOW:
+            case BLAZE_BOW:
+            case GHAST_BOW:
+            case WITHER_SKELETON_BOW:
+            case ENDERMAN_BOW:
+            case DAGGER:
+            case SPEAR:
+            case AXE:
+            case WAND:
+            case GAUNTLET:
+            case STAFF_OF_THE_CRIMSON_REVENGE:
+            case SCYTHE:
+            case WHIP:
+            case HAMMER:
+            case MACE:
+            case RAPIER:
+            case KATANA:
+            case SCIMITAR:
+            case FALCHION:
+            case BROADSWORD:
+            case LONGSWORD:
+            case SHORTSWORD:
+            case ESTOC:
+            case SPIRIT_SCEPTRE:
+            case BONZOS_STAFF:
+            case INK_WAND:
+            case YETI_SWORD:
+            case FROZEN_SCYTHE_STAFF:
+            case EMBER_ROD_STAFF:
+            case MAGMA_ROD:
+            case FIRE_STAFF:
+            case ICE_STAFF:
+            case LIGHTNING_STAFF:
+            case EARTH_STAFF:
+            case WATER_STAFF:
+            case AIR_STAFF:
+            case SHADOW_STAFF:
+            case LIGHT_STAFF:
+            case NECROMANCER_STAFF:
+            case SUMMONER_STAFF:
+            case ILLUSION_STAFF:
+                return WeaponRarity.EPIC;
+            case ASPECT_OF_THE_DRAGONS:
+            case MIDAS_SWORD:
+            case ASPECT_OF_THE_VOID:
+            case HYPERION:
+            case SHADOW_FURY:
+            case GIANTS_SWORD:
+            case CLAYMORE:
+            case DARK_CLAYMORE:
+            case LIVID_DAGGER:
+            case FLOWER_OF_TRUTH:
+            case VALKYRIE:
+            case SCYLLA:
+            case ASTRAEA:
+            case SILENT_DEATH:
+            case SOUL_WHIP:
+            case ASPECT_OF_THE_NEST:
+            case SWORD_OF_HEAVENLY_LIGHT:
+            case WYRMIC_BLADE:
+            case ASPECT_OF_THE_UNDEAD:
+            case WITHERED_SCYTHE:
+            case ASPECT_OF_THE_BEYOND:
+            case SPIRIT_BOW:
+            case LAST_BREATH:
+            case SOULS_REBOUND:
+            case BONEMERANG:
+            case WITHER_BOW:
+            case TERMINATOR:
+            case JUJU_SHORTBOW:
+            case PHOENIX_BOW:
+            case PRECURSOR_EYE:
+            case MIDAS_STAFF:
+            case JERRY_CHINE_GUN:
+            case STAFF_OF_DIVINITY:
+                return WeaponRarity.LEGENDARY;
+            default:
+                throw new IllegalStateException("Unbekannter Waffentyp: " + this);
+        }
     }
-    
-    /**
-     * Get weapon damage
-     */
-    public double getBaseDamage() {
-        return switch (this) {
-            case WOODEN_SWORD -> 20.0;
-            case STONE_SWORD -> 25.0;
-            case IRON_SWORD -> 30.0;
-            case GOLDEN_SWORD -> 25.0;
-            case DIAMOND_SWORD -> 35.0;
-            case NETHERITE_SWORD -> 40.0;
-            case ASPECT_OF_THE_END -> 100.0;
-            case ASPECT_OF_THE_DRAGONS -> 225.0;
-            case PIGMAN_SWORD -> 120.0;
-            case MIDAS_SWORD -> 270.0;
-            case ASPECT_OF_THE_VOID -> 205.0;
-            case HYPERION -> 260.0;
-            case SHADOW_FURY -> 310.0;
-            case GIANTS_SWORD -> 500.0;
-            case CLAYMORE -> 400.0;
-            case DARK_CLAYMORE -> 450.0;
-            case LIVID_DAGGER -> 210.0;
-            case FLOWER_OF_TRUTH -> 180.0;
-            case VALKYRIE -> 270.0;
-            case SCYLLA -> 280.0;
-            case ASTRAEA -> 250.0;
-            case SILENT_DEATH -> 220.0;
-            case SOUL_WHIP -> 240.0;
-            case LEAPING_SWORD -> 150.0;
-            case EMBER_ROD -> 120.0;
-            case FROZEN_SCYTHE -> 140.0;
-            case ARACHNES_SWORD -> 100.0;
-            case THICK_ASPECT_OF_THE_DRAGONS -> 250.0;
-            case PILLAGERS_AXE -> 180.0;
-            case NEST_DISRUPTER -> 160.0;
-            case ASPECT_OF_THE_NEST -> 200.0;
-            case SWORD_OF_HEAVENLY_LIGHT -> 220.0;
-            case BLUE_STEEL_RAPIER -> 170.0;
-            case WYRMIC_BLADE -> 190.0;
-            case ASPECT_OF_THE_UNDEAD -> 300.0;
-            case LEGAL_GAVEL -> 160.0;
-            case SLAYER_AXE -> 200.0;
-            case WITHERED_SCYTHE -> 250.0;
-            case ASPECT_OF_THE_BEYOND -> 280.0;
-            
-            // Bow damages
-            case BOW -> 20.0;
-            case RUNAANS_BOW -> 160.0;
-            case MOSQUITO_BOW -> 200.0;
-            case MAGMA_BOW -> 120.0;
-            case SPIRIT_BOW -> 180.0;
-            case ARTISANAL_SHORTBOW -> 100.0;
-            case HURRICANE_BOW -> 140.0;
-            case EXPLOSIVE_BOW -> 160.0;
-            case LAST_BREATH -> 220.0;
-            case MACHINE_GUN_BOW -> 150.0;
-            case VENOMS_TOUCH -> 170.0;
-            case SOULS_REBOUND -> 200.0;
-            case BONEMERANG -> 240.0;
-            case WITHER_BOW -> 260.0;
-            case TERMINATOR -> 300.0;
-            case JUJU_SHORTBOW -> 280.0;
-            case PHOENIX_BOW -> 250.0;
-            case WHISPER -> 180.0;
-            case GRAPPLE_BOW -> 160.0;
-            case PRECURSOR_EYE -> 290.0;
-            case SLAYER_BOW -> 200.0;
-            case DRAGON_BOW -> 170.0;
-            case END_BOW -> 130.0;
-            case SPIDER_BOW -> 110.0;
-            case ZOMBIE_BOW -> 120.0;
-            case SKELETON_BOW -> 115.0;
-            case CREEPER_BOW -> 125.0;
-            case BLAZE_BOW -> 150.0;
-            case GHAST_BOW -> 155.0;
-            case WITHER_SKELETON_BOW -> 165.0;
-            case ENDERMAN_BOW -> 175.0;
-            
-            // Special weapon damages
-            case DAGGER -> 80.0;
-            case SPEAR -> 120.0;
-            case AXE -> 100.0;
-            case FISHING_ROD -> 10.0;
-            case WAND -> 50.0;
-            case GAUNTLET -> 150.0;
-            case STAFF_OF_DIVINITY -> 200.0;
-            case STAFF_OF_THE_CRIMSON_REVENGE -> 180.0;
-            case SCYTHE -> 160.0;
-            case WHIP -> 140.0;
-            case HAMMER -> 200.0;
-            case MACE -> 180.0;
-            case RAPIER -> 120.0;
-            case KATANA -> 160.0;
-            case SCIMITAR -> 140.0;
-            case FALCHION -> 180.0;
-            case BROADSWORD -> 130.0;
-            case LONGSWORD -> 150.0;
-            case SHORTSWORD -> 90.0;
-            case ESTOC -> 110.0;
-            
-            // Staff damages
-            case MIDAS_STAFF -> 200.0;
-            case SPIRIT_SCEPTRE -> 160.0;
-            case BONZOS_STAFF -> 120.0;
-            case JERRY_CHINE_GUN -> 100.0;
-            case INK_WAND -> 130.0;
-            case YETI_SWORD -> 140.0;
-            case FROZEN_SCYTHE_STAFF -> 140.0;
-            case EMBER_ROD_STAFF -> 120.0;
-            case MAGMA_ROD -> 160.0;
-            case FIRE_STAFF -> 150.0;
-            case ICE_STAFF -> 140.0;
-            case LIGHTNING_STAFF -> 180.0;
-            case EARTH_STAFF -> 160.0;
-            case WATER_STAFF -> 130.0;
-            case AIR_STAFF -> 120.0;
-            case SHADOW_STAFF -> 170.0;
-            case LIGHT_STAFF -> 160.0;
-            case NECROMANCER_STAFF -> 190.0;
-            case SUMMONER_STAFF -> 180.0;
-            case ILLUSION_STAFF -> 150.0;
-        };
-    }
-    
     /**
      * Get weapons by category
      */

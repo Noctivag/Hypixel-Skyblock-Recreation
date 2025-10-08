@@ -51,34 +51,31 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
     
     @Override
     public void onEnable() {
+            getServer().getPluginManager().registerEvents(new de.noctivag.skyblock.listeners.AccessoryBagGUIListener(), this);
+            getServer().getPluginManager().registerEvents(new de.noctivag.skyblock.listeners.ItemAbilityListener(), this);
         instance = this;
         getLogger().info("Enabling Skyblock Plugin v" + getPluginMeta().getVersion());
 
         try {
             // 1. Folia detection
             detectFoliaServer();
-            
             // 2. Load default configuration
             saveDefaultConfig();
-
             // 3. Initialize core systems
             initializeCoreSystems();
-
             // 4. Register event listeners
             getServer().getPluginManager().registerEvents(this, this);
-
+            getServer().getPluginManager().registerEvents(new de.noctivag.skyblock.listeners.AdminGUIListener(), this);
+            getServer().getPluginManager().registerEvents(new de.noctivag.skyblock.listeners.StatsGUIListener(), this);
             // 5. Register commands
             registerCommands();
-
             // 6. Create hub world if not exists
             createHubWorld();
-
             getLogger().info("Skyblock Plugin successfully enabled!");
             getLogger().info("Features: Hub-System, Player-Handling, Event-System, Folia-Support");
             if (isFoliaServer) {
                 getLogger().info("Folia server detected - Using Folia-compatible features!");
             }
-
         } catch (Exception e) {
             getLogger().severe("Error during plugin startup: " + e.getMessage());
             e.printStackTrace();
@@ -220,11 +217,13 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
      * Register commands
      */
     private void registerCommands() {
+    getCommand("accessorybag").setExecutor(new de.noctivag.skyblock.commands.AccessoryBagCommand());
         // Register basic commands
-        getCommand("hub").setExecutor(this);
-        getCommand("skyblock").setExecutor(this);
-        getCommand("menu").setExecutor(new de.noctivag.skyblock.commands.MenuCommand(this));
-        getCommand("trade").setExecutor(new de.noctivag.skyblock.commands.TradeCommand(this, tradingSystem));
+    getCommand("hub").setExecutor(this);
+    getCommand("skyblock").setExecutor(this);
+    getCommand("menu").setExecutor(new de.noctivag.skyblock.commands.MenuCommand(this));
+    getCommand("trade").setExecutor(new de.noctivag.skyblock.commands.TradeCommand(this, tradingSystem));
+    getCommand("givesbitem").setExecutor(new de.noctivag.skyblock.commands.GiveSkyblockItemCommand());
     }
 
     /**

@@ -11,101 +11,64 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.util.UUID;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import de.noctivag.skyblock.core.stats.PlayerStatData;
 
 /**
  * Health and Mana System - Manages player health and mana
  */
 public class HealthManaSystem implements Listener {
-    
     private final SkyblockPlugin plugin;
     private final MultiServerDatabaseManager databaseManager;
-    private final Map<UUID, PlayerHealthMana> playerData = new ConcurrentHashMap<>();
-    
+    private final Map<UUID, PlayerStatData> playerStats = new ConcurrentHashMap<>();
+
     public HealthManaSystem(SkyblockPlugin plugin, MultiServerDatabaseManager databaseManager) {
         this.plugin = plugin;
         this.databaseManager = databaseManager;
     }
-    
+
     /**
-     * Initialize player health and mana
+     * Initialisiert Health/Mana Stats für einen Spieler
      */
     public void initializePlayer(Player player) {
         UUID playerId = player.getUniqueId();
-        
-        PlayerHealthMana data = playerData.computeIfAbsent(playerId, k -> 
-            new PlayerHealthMana(playerId));
-        
-        // Set initial health and mana
+        PlayerStatData stats = playerStats.computeIfAbsent(playerId, PlayerStatData::new);
+        // Setze Health/Mana auf Standardwerte (kann angepasst werden)
+        stats.setMaxHealth(100.0);
+        stats.setHealth(100.0);
+        stats.setMaxMana(100.0);
+        stats.setMana(100.0);
+        stats.setManaRegen(1.0);
+        // Setze Bukkit-Healthbar
         player.setHealth(20.0);
         player.setFoodLevel(20);
     }
-    
+
     /**
-     * Get player health and mana data
+     * Zugriff auf die Stat-Daten eines Spielers
      */
-    public PlayerHealthMana getPlayerData(UUID playerId) {
-        return playerData.get(playerId);
+    public PlayerStatData getPlayerStats(UUID playerId) {
+        return playerStats.get(playerId);
     }
-    
+
     /**
-     * Save player data
+     * Speichert die Stat-Daten eines Spielers (Platzhalter für DB)
      */
-    public void savePlayerData(UUID playerId) {
-        PlayerHealthMana data = playerData.get(playerId);
-        if (data != null) {
-            // Save to database
-            plugin.getLogger().info("Saved health/mana data for: " + playerId);
+    public void savePlayerStats(UUID playerId) {
+        PlayerStatData stats = playerStats.get(playerId);
+        if (stats != null) {
+            plugin.getLogger().info("Saved health/mana stats for: " + playerId);
         }
     }
-    
+
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         initializePlayer(player);
     }
-    
+
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        savePlayerData(player.getUniqueId());
-    }
-    
-    /**
-     * Player Health and Mana data
-     */
-    public static class PlayerHealthMana {
-        private final UUID playerId;
-        private double maxHealth;
-        private double currentHealth;
-        private double maxMana;
-        private double currentMana;
-        private double manaRegenRate;
-        
-        public PlayerHealthMana(UUID playerId) {
-            this.playerId = playerId;
-            this.maxHealth = 100.0;
-            this.currentHealth = 100.0;
-            this.maxMana = 100.0;
-            this.currentMana = 100.0;
-            this.manaRegenRate = 1.0;
-        }
-        
-        // Getters and setters
-        public UUID getPlayerId() { return playerId; }
-        
-        public double getMaxHealth() { return maxHealth; }
-        public void setMaxHealth(double maxHealth) { this.maxHealth = maxHealth; }
-        
-        public double getCurrentHealth() { return currentHealth; }
-        public void setCurrentHealth(double currentHealth) { this.currentHealth = currentHealth; }
-        
-        public double getMaxMana() { return maxMana; }
-        public void setMaxMana(double maxMana) { this.maxMana = maxMana; }
-        
-        public double getCurrentMana() { return currentMana; }
-        public void setCurrentMana(double currentMana) { this.currentMana = currentMana; }
-        
-        public double getManaRegenRate() { return manaRegenRate; }
-        public void setManaRegenRate(double manaRegenRate) { this.manaRegenRate = manaRegenRate; }
+        savePlayerStats(player.getUniqueId());
     }
 }

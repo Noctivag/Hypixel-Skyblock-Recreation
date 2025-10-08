@@ -115,8 +115,9 @@ public class AdvancedAuctionHouse implements Listener {
         private boolean isSold;
         private boolean isCancelled;
         private long lastUpdate;
-        
+
         public Auction(UUID id, UUID seller, ItemStack item, double startingBid, double binPrice) {
+            super(item.getType().name(), startingBid, item.getAmount());
             this.id = id;
             this.seller = seller;
             this.item = item;

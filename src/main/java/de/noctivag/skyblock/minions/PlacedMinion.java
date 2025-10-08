@@ -9,11 +9,8 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Represents a minion that has been placed in the world
  */
-public class PlacedMinion {
-    private final String minionId;
-    private final UUID ownerId;
+public class PlacedMinion extends BaseMinion {
     private final MinionTier minionTier;
-    private final Location location;
     private final long placedTime;
     private final Map<String, MinionUpgrade> upgrades;
     private final Map<Material, Integer> storage;
@@ -21,13 +18,10 @@ public class PlacedMinion {
     private final long lastActionTime;
     private final long totalActions;
     private final long totalProduction;
-    private final boolean isActive;
 
     public PlacedMinion(String minionId, UUID ownerId, MinionTier minionTier, Location location) {
-        this.minionId = minionId;
-        this.ownerId = ownerId;
+        super(minionId, ownerId, minionTier.getMinionType().name(), minionTier.getMinionType().getDisplayName(), minionTier.getMinionType().getMaterial(), minionTier.getTier(), true, location);
         this.minionTier = minionTier;
-        this.location = location.clone();
         this.placedTime = System.currentTimeMillis();
         this.upgrades = new ConcurrentHashMap<>();
         this.storage = new ConcurrentHashMap<>();
@@ -35,17 +29,14 @@ public class PlacedMinion {
         this.lastActionTime = System.currentTimeMillis();
         this.totalActions = 0;
         this.totalProduction = 0;
-        this.isActive = true;
     }
 
     public PlacedMinion(String minionId, UUID ownerId, MinionTier minionTier, Location location,
                        Map<String, MinionUpgrade> upgrades, Map<Material, Integer> storage,
                        List<MinionFuel> fuel, long lastActionTime, long totalActions, 
                        long totalProduction, boolean isActive) {
-        this.minionId = minionId;
-        this.ownerId = ownerId;
+        super(minionId, ownerId, minionTier.getMinionType().name(), minionTier.getMinionType().getDisplayName(), minionTier.getMinionType().getMaterial(), minionTier.getTier(), isActive, location);
         this.minionTier = minionTier;
-        this.location = location.clone();
         this.placedTime = System.currentTimeMillis();
         this.upgrades = new ConcurrentHashMap<>(upgrades);
         this.storage = new ConcurrentHashMap<>(storage);
@@ -53,7 +44,6 @@ public class PlacedMinion {
         this.lastActionTime = lastActionTime;
         this.totalActions = totalActions;
         this.totalProduction = totalProduction;
-        this.isActive = isActive;
     }
 
     // Getters

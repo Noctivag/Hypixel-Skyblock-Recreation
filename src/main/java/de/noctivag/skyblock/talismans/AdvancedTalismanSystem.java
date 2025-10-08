@@ -180,14 +180,15 @@ public class AdvancedTalismanSystem {
         private final TalismanRarity rarity;
         private final int level;
         private final double effectValue;
-        
-        public Talisman(String id, String name, String displayName, Material icon, 
+
+        public Talisman(String id, String name, String displayName, Material icon,
                        String description, String category, TalismanRarity rarity, int level, double effectValue) {
+            super(id, 0.0, 1); // Preis kann später gesetzt werden, Menge = 1
             this.id = id; this.name = name; this.displayName = displayName; this.icon = icon;
             this.description = description; this.category = category; this.rarity = rarity;
             this.level = level; this.effectValue = effectValue;
         }
-        
+
         public String getId() { return id; }
         public String getName() { return name; }
         public String getDisplayName() { return displayName; }
@@ -197,11 +198,11 @@ public class AdvancedTalismanSystem {
         public TalismanRarity getRarity() { return rarity; }
         public int getLevel() { return level; }
         public double getEffectValue() { return effectValue; }
-        
+
         public int getMagicalPower() {
             return rarity.getMagicalPowerValue();
         }
-        
+
         public boolean canBeEnriched() {
             return rarity == TalismanRarity.LEGENDARY || rarity == TalismanRarity.MYTHIC;
         }

@@ -700,7 +700,6 @@ public class BazaarSystem {
     
     // Bazaar Item Class
     public static class BazaarItem {
-        private final String itemId;
         private double instantBuyPrice;
         private double instantSellPrice;
         private double averagePrice;
@@ -709,46 +708,46 @@ public class BazaarSystem {
         private int totalVolume = 0;
         private double totalValue = 0.0;
         private String category = "GENERAL";
-        
+
         public BazaarItem(String itemId, double instantBuyPrice, double instantSellPrice, double averagePrice) {
-            this.itemId = itemId;
+            super(itemId, averagePrice, 0);
             this.instantBuyPrice = instantBuyPrice;
             this.instantSellPrice = instantSellPrice;
             this.averagePrice = averagePrice;
         }
-        
+
         public void addTrade(int volume, double price) {
             totalVolume += volume;
             totalValue += volume * price;
-            
+
             // Update price history
             priceHistory.add(price);
             volumeHistory.add(volume);
-            
+
             // Keep only last 100 entries
             if (priceHistory.size() > 100) {
                 priceHistory.remove(0);
                 volumeHistory.remove(0);
             }
         }
-        
+
         public void updatePrices() {
             if (priceHistory.isEmpty()) return;
-            
+
             // Calculate average price
             averagePrice = totalValue / totalVolume;
-            
+            this.price = averagePrice;
+
             // Update instant prices based on market depth
             instantBuyPrice = averagePrice * 1.05; // 5% markup
             instantSellPrice = averagePrice * 0.95; // 5% markdown
         }
-        
+
         // Getters
-        public String getItemId() { return itemId; }
+        public String getCategory() { return category; }
         public double getInstantBuyPrice() { return instantBuyPrice; }
         public double getInstantSellPrice() { return instantSellPrice; }
         public double getAveragePrice() { return averagePrice; }
-        public String getCategory() { return category; }
         public double getBuyPrice() { return instantBuyPrice; }
         public double getVolume() { return totalVolume; }
         public List<Double> getPriceHistory() { return new ArrayList<>(priceHistory); }
@@ -761,33 +760,22 @@ public class BazaarSystem {
     public static class BazaarOrder {
         private final UUID id;
         private final UUID playerId;
-        private final String itemId;
-        private int amount;
-        private final double price;
         private final OrderType type;
         private final long createdAt;
-        
+
         public BazaarOrder(UUID id, UUID playerId, String itemId, int amount, double price, OrderType type) {
+            super(itemId, price, amount);
             this.id = id;
             this.playerId = playerId;
-            this.itemId = itemId;
-            this.amount = amount;
-            this.price = price;
             this.type = type;
             this.createdAt = java.lang.System.currentTimeMillis();
         }
-        
-        // Getters and Setters
+
         public UUID getId() { return id; }
         public UUID getPlayerId() { return playerId; }
-        public String getItemId() { return itemId; }
-        public int getAmount() { return amount; }
-        public double getPrice() { return price; }
         public OrderType getType() { return type; }
         public long getCreatedAt() { return createdAt; }
-        
-        public void setAmount(int amount) { this.amount = amount; }
-        
+
         public enum OrderType {
             BUY, SELL
         }

@@ -291,20 +291,19 @@ public class MarketAnalyzer {
     
     // Market Data Class
     public static class MarketData {
-        private final String itemId;
         private double currentPrice;
         private double basePrice;
         private double previousPrice;
         private double priceChange;
-        private int currentVolume;
         private double volatility;
         private boolean anomalyDetected;
         private String anomalyType;
         private double anomalySeverity;
         private final long lastUpdated;
-        
+        private int currentVolume;
+
         public MarketData(String itemId) {
-            this.itemId = itemId;
+            super(itemId, 0.0, 0);
             this.currentPrice = 0.0;
             this.basePrice = 0.0;
             this.previousPrice = 0.0;

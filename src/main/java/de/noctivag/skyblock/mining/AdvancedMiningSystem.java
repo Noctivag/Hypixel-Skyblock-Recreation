@@ -467,47 +467,25 @@ public class AdvancedMiningSystem implements Listener {
         public List<String> getDrops() { return drops; }
     }
     
-    public static class PlayerMiningData {
-        private final UUID playerId;
-        private int miningLevel;
-        private int miningXP;
+    public static class PlayerMiningData extends de.noctivag.skyblock.core.skills.BaseSkillData {
         private final Map<MiningLocation, Integer> locationStats = new HashMap<>();
         private final Map<GemstoneType, Integer> gemstoneStats = new HashMap<>();
-        
+
         public PlayerMiningData(UUID playerId) {
-            this.playerId = playerId;
-            this.miningLevel = 1;
-            this.miningXP = 0;
+            super(playerId, 1);
         }
-        
-        public UUID getPlayerId() { return playerId; }
-        public int getMiningLevel() { return miningLevel; }
-        public int getMiningXP() { return miningXP; }
+
+        public int getMiningLevel() { return level; }
+        public int getMiningXP() { return xp; }
         public int getLocationStats(MiningLocation location) { return locationStats.getOrDefault(location, 0); }
         public int getGemstoneStats(GemstoneType type) { return gemstoneStats.getOrDefault(type, 0); }
-        
-        public void addMiningXP(int xp) {
-            this.miningXP += xp;
-            checkLevelUp();
-        }
-        
+
+        public void addMiningXP(int xp) { addXP(xp); }
         public void addLocationStat(MiningLocation location) {
             locationStats.put(location, locationStats.getOrDefault(location, 0) + 1);
         }
-        
         public void addGemstoneStat(GemstoneType type) {
             gemstoneStats.put(type, gemstoneStats.getOrDefault(type, 0) + 1);
-        }
-        
-        private void checkLevelUp() {
-            int requiredXP = getRequiredXP(miningLevel + 1);
-            if (miningXP >= requiredXP) {
-                miningLevel++;
-            }
-        }
-        
-        private int getRequiredXP(int level) {
-            return level * 1000;
         }
     }
 }

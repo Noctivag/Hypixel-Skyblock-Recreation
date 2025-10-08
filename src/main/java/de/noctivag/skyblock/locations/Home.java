@@ -6,39 +6,23 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Home implements ConfigurationSerializable {
-    private final String name;
+
+public class Home extends LocationPoint {
     private final String owner;
-    private Location location;
 
     public Home(String name, String owner, Location location) {
-        this.name = name;
+        super(name, location);
         this.owner = owner;
-        this.location = location;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public String getOwner() {
         return owner;
     }
 
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
     @Override
     public Map<String, Object> serialize() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("name", name);
+        Map<String, Object> map = super.serialize();
         map.put("owner", owner);
-        map.put("location", location);
         return map;
     }
 

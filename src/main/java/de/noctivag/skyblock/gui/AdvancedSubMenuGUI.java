@@ -531,20 +531,15 @@ public class AdvancedSubMenuGUI implements Listener {
             clickedItem.getType().name();
         
         if (itemName.contains("Skills")) {
-            player.sendMessage(ChatColor.GREEN + "Skills-Detailansicht wird geöffnet...");
-            // TODO: Implementiere Skills-Detailansicht
+            de.noctivag.skyblock.gui.details.SkillsDetailGUI.open(player);
         } else if (itemName.contains("Collections")) {
-            player.sendMessage(ChatColor.GREEN + "Collections-Detailansicht wird geöffnet...");
-            // TODO: Implementiere Collections-Detailansicht
+            de.noctivag.skyblock.gui.details.CollectionsDetailGUI.open(player);
         } else if (itemName.contains("Minions")) {
-            player.sendMessage(ChatColor.GREEN + "Minions-Detailansicht wird geöffnet...");
-            // TODO: Implementiere Minions-Detailansicht
+            de.noctivag.skyblock.gui.details.MinionsDetailGUI.open(player);
         } else if (itemName.contains("Pets")) {
-            player.sendMessage(ChatColor.GREEN + "Pets-Detailansicht wird geöffnet...");
-            // TODO: Implementiere Pets-Detailansicht
+            de.noctivag.skyblock.gui.details.PetsDetailGUI.open(player);
         } else if (itemName.contains("Dungeons")) {
-            player.sendMessage(ChatColor.GREEN + "Dungeons-Detailansicht wird geöffnet...");
-            // TODO: Implementiere Dungeons-Detailansicht
+            de.noctivag.skyblock.gui.details.DungeonsDetailGUI.open(player);
         }
     }
 }

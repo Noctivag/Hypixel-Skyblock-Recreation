@@ -582,34 +582,32 @@ public class AdvancedFishingSystem implements Listener {
         public void setCurrentHealth(int currentHealth) { this.currentHealth = currentHealth; }
     }
     
-    public static class PlayerFishingData {
-        private final UUID playerId;
-        private int totalXP;
-        private int level;
+    public static class PlayerFishingData extends de.noctivag.skyblock.core.skills.BaseSkillData {
         private final Map<SeaCreatureType, Integer> seaCreatureKills;
         private final Map<FishingLocation, Integer> locationStats;
-        
+
         public PlayerFishingData(UUID playerId) {
-            this.playerId = playerId;
-            this.totalXP = 0;
-            this.level = 1;
+            super(playerId, 1);
             this.seaCreatureKills = new HashMap<>();
             this.locationStats = new HashMap<>();
         }
-        
+
+        @Override
         public void addXP(int xp) {
-            this.totalXP += xp;
-            this.level = calculateLevel(totalXP);
+            this.xp += xp;
+            checkLevelUp();
         }
-        
+
+        @Override
+        protected void checkLevelUp() {
+            this.level = calculateLevel(this.xp);
+        }
+
         private int calculateLevel(int xp) {
             return Math.min(50, (int) Math.floor(Math.sqrt(xp / 100.0)) + 1);
         }
-        
-        // Getters
-        public UUID getPlayerId() { return playerId; }
-        public int getTotalXP() { return totalXP; }
-        public int getLevel() { return level; }
+
+        public int getTotalXP() { return xp; }
         public Map<SeaCreatureType, Integer> getSeaCreatureKills() { return seaCreatureKills; }
         public Map<FishingLocation, Integer> getLocationStats() { return locationStats; }
     }

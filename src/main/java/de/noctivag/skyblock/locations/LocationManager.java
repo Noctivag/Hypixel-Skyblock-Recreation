@@ -12,9 +12,16 @@ import net.kyori.adventure.text.Component;
 /**
  * Location Manager - Basic implementation
  */
+import java.util.*;
+
 public class LocationManager {
     private final SkyblockPlugin SkyblockPlugin;
     private final DatabaseManager databaseManager;
+
+    // Homes: Map<Player-UUID, Map<Home-Name, Home>>
+    private final Map<UUID, Map<String, Home>> playerHomes = new HashMap<>();
+    // Warps: Map<Warp-Name, Warp>
+    private final Map<String, Warp> warps = new HashMap<>();
 
     public LocationManager(SkyblockPlugin SkyblockPlugin, DatabaseManager databaseManager) {
         this.SkyblockPlugin = SkyblockPlugin;
@@ -32,81 +39,54 @@ public class LocationManager {
 
     // Persist locations to the database (basic stub to satisfy SkyblockPlugin auto-save call)
     public void saveLocations() {
-        // In the full implementation this would persist any cached locations to the database.
-        // For now we log a simple message to confirm the save was invoked.
         SkyblockPlugin.getLogger().info("LocationManager: saveLocations called (stub)");
+        // TODO: Persist playerHomes and warps to databaseManager
     }
-    
-    // Missing method implementations for compilation fixes
-    public de.noctivag.skyblock.locations.Warp getWarp(String warpName) {
-        return null; // Placeholder - warp not implemented
+
+    public Warp getWarp(String warpName) {
+        return warps.get(warpName.toLowerCase());
     }
-    
-    // Additional missing method implementations for compilation fixes
-    public java.util.Set<String> getHomeNames(org.bukkit.entity.Player player) {
-        return new java.util.HashSet<>(); // Placeholder - method not implemented
+
+    public Set<String> getHomeNames(Player player) {
+        Map<String, Home> homes = playerHomes.getOrDefault(player.getUniqueId(), Collections.emptyMap());
+        return new HashSet<>(homes.keySet());
     }
-    
-    public de.noctivag.skyblock.locations.Home getHome(org.bukkit.entity.Player player, String homeName) {
-        return null; // Placeholder - method not implemented
+
+    public Home getHome(Player player, String homeName) {
+        Map<String, Home> homes = playerHomes.get(player.getUniqueId());
+        if (homes == null) return null;
+        return homes.get(homeName.toLowerCase());
     }
-    
-    public int getPlayerHomeCount(org.bukkit.entity.Player player) {
-        return 0; // Placeholder - method not implemented
+
+    public int getPlayerHomeCount(Player player) {
+        Map<String, Home> homes = playerHomes.get(player.getUniqueId());
+        return homes != null ? homes.size() : 0;
     }
-    
+
     public int getMaxHomes() {
-        return 5; // Placeholder - method not implemented
+        return 5; // Kann konfigurierbar gemacht werden
     }
-    
-    public void setHome(org.bukkit.entity.Player player, String homeName, org.bukkit.Location location) {
-        // Placeholder - method not implemented
+
+    public void setHome(Player player, String homeName, org.bukkit.Location location) {
+        playerHomes.computeIfAbsent(player.getUniqueId(), k -> new HashMap<>())
+            .put(homeName.toLowerCase(), new Home(homeName, player.getName(), location));
     }
-    
+
     public void setWarp(String warpName, org.bukkit.Location location, String permission, String description) {
-        // Placeholder - method not implemented
+        warps.put(warpName.toLowerCase(), new Warp(warpName, location, permission, description));
     }
-    
-    // Additional missing method implementations for compilation fixes
-    public java.util.List<String> getWarpNames() {
-        return new java.util.ArrayList<>(); // Placeholder - method not implemented
+
+    public List<String> getWarpNames() {
+        return new ArrayList<>(warps.keySet());
     }
-    
-    public java.util.List<de.noctivag.skyblock.locations.EnhancedWarp> getWarpsByCategory(de.noctivag.skyblock.locations.EnhancedWarp.WarpCategory category) {
-        return new java.util.ArrayList<>(); // Placeholder - method not implemented
-    }
-    
-    // Missing class implementation for compilation fixes
-    public static class Home {
-        private String name;
-        private org.bukkit.Location location;
-        
-        public Home(String name, org.bukkit.Location location) {
-            this.name = name;
-            this.location = location;
+
+    public List<EnhancedWarp> getWarpsByCategory(EnhancedWarp.WarpCategory category) {
+        List<EnhancedWarp> result = new ArrayList<>();
+        for (Warp w : warps.values()) {
+            if (w instanceof EnhancedWarp ew && ew.getCategory() == category) {
+                result.add(ew);
+            }
         }
-        
-        public String getName() { return name; }
-        public org.bukkit.Location getLocation() { return location; }
-    }
-    
-    // Missing class implementation for compilation fixes
-    public static class Warp {
-        private String name;
-        private org.bukkit.Location location;
-        private String permission;
-        private String description;
-        
-        public Warp(String name, org.bukkit.Location location, String permission, String description) {
-            this.name = name;
-            this.location = location;
-            this.permission = permission;
-            this.description = description;
-        }
-        
-        public String getName() { return name; }
-        public org.bukkit.Location getLocation() { return location; }
-        public String getPermission() { return permission; }
-        public String getDescription() { return description; }
+        return result;
     }
 }

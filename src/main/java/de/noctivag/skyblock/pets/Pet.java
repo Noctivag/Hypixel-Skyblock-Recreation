@@ -7,45 +7,39 @@ import java.util.UUID;
 /**
  * Represents an individual pet instance
  */
-public class Pet {
-    private final String petId;
-    private final UUID ownerId;
+public class Pet extends BasePet {
     private final PetType petType;
-    private final int level;
     private final long xp;
-    private final boolean isActive;
     private final long createdAt;
     private final PetStats stats;
 
     public Pet(String petId, UUID ownerId, PetType petType, int level, long xp, boolean isActive) {
-        this.petId = petId;
-        this.ownerId = ownerId;
+        super(petId, ownerId, petType.name(), petType.getDisplayName(), petType.getMaterial(), Math.max(1, Math.min(level, petType.getMaxLevel())), isActive);
         this.petType = petType;
-        this.level = Math.max(1, Math.min(level, petType.getMaxLevel()));
         this.xp = Math.max(0, xp);
-        this.isActive = isActive;
         this.createdAt = System.currentTimeMillis();
         this.stats = new PetStats(this);
     }
 
     public Pet(String petId, UUID ownerId, PetType petType, int level, long xp, boolean isActive, long createdAt) {
-        this.petId = petId;
-        this.ownerId = ownerId;
+        super(petId, ownerId, petType.name(), petType.getDisplayName(), petType.getMaterial(), Math.max(1, Math.min(level, petType.getMaxLevel())), isActive);
         this.petType = petType;
-        this.level = Math.max(1, Math.min(level, petType.getMaxLevel()));
         this.xp = Math.max(0, xp);
-        this.isActive = isActive;
         this.createdAt = createdAt;
         this.stats = new PetStats(this);
     }
 
     // Getters
+    @Override
     public String getPetId() { return petId; }
+    @Override
     public UUID getOwnerId() { return ownerId; }
-    public PetType getPetType() { return petType; }
+    @Override
     public int getLevel() { return level; }
+    @Override
+    public boolean isActive() { return active; }
+    public PetType getPetType() { return petType; }
     public long getXp() { return xp; }
-    public boolean isActive() { return isActive; }
     public long getCreatedAt() { return createdAt; }
     public PetStats getStats() { return stats; }
 

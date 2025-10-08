@@ -282,19 +282,24 @@ public class EnhancedMainMenuGUI implements Listener {
             subMenuGUI.openPetsSubMenu(player);
         } else if (itemName.contains("Dungeons")) {
             subMenuGUI.openDungeonsSubMenu(player);
+        } else if (itemName.contains("Slayers")) {
+            de.noctivag.skyblock.gui.details.SlayersDetailGUI.open(player);
+        } else if (itemName.contains("Trading")) {
+            de.noctivag.skyblock.gui.details.TradingDetailGUI.open(player);
+        } else if (itemName.contains("Profile")) {
+            de.noctivag.skyblock.gui.details.ProfileDetailGUI.open(player);
+        } else if (itemName.contains("Settings")) {
+            de.noctivag.skyblock.gui.details.SettingsDetailGUI.open(player);
         } else if (itemName.contains("Arsenal")) {
             if (player.isOp()) {
-                // Öffne Arsenal-Menü
-                de.noctivag.skyblock.gui.ArsenalGUI arsenalGUI = new de.noctivag.skyblock.gui.ArsenalGUI(plugin);
-                arsenalGUI.openMenu(player);
+                de.noctivag.skyblock.gui.details.ArsenalDetailGUI.open(player);
             } else {
                 player.sendMessage(ChatColor.RED + "Du hast keine Berechtigung für das Arsenal!");
             }
         } else if (itemName.contains("Schließen")) {
             player.closeInventory();
         } else {
-            // Andere Kategorien
-            player.sendMessage(ChatColor.YELLOW + "Diese Kategorie wird noch implementiert: " + itemName);
+            player.sendMessage(ChatColor.YELLOW + "Unbekannte Kategorie: " + itemName);
         }
     }
 }

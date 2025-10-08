@@ -6,29 +6,15 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Warp implements ConfigurationSerializable {
-    private final String name;
-    private Location location;
+
+public class Warp extends LocationPoint {
     private String permission;
     private String description;
 
     public Warp(String name, Location location, String permission, String description) {
-        this.name = name;
-        this.location = location;
+        super(name, location);
         this.permission = permission != null ? permission : "";
         this.description = description != null ? description : "";
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
     }
 
     public String getPermission() {
@@ -49,9 +35,7 @@ public class Warp implements ConfigurationSerializable {
 
     @Override
     public Map<String, Object> serialize() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("name", name);
-        map.put("location", location);
+        Map<String, Object> map = super.serialize();
         map.put("permission", permission);
         map.put("description", description);
         return map;

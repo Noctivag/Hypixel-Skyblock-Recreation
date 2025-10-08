@@ -224,35 +224,13 @@ public class AdvancedForagingSystem implements Listener {
         public int getRequiredLevel() { return requiredLevel; }
     }
     
-    public static class PlayerForagingData {
-        private final UUID playerId;
-        private int foragingLevel;
-        private int foragingXP;
-        
+    public static class PlayerForagingData extends de.noctivag.skyblock.core.skills.BaseSkillData {
         public PlayerForagingData(UUID playerId) {
-            this.playerId = playerId;
-            this.foragingLevel = 1;
-            this.foragingXP = 0;
+            super(playerId, 1);
         }
-        
-        public UUID getPlayerId() { return playerId; }
-        public int getForagingLevel() { return foragingLevel; }
-        public int getForagingXP() { return foragingXP; }
-        
-        public void addForagingXP(int xp) {
-            this.foragingXP += xp;
-            checkLevelUp();
-        }
-        
-        private void checkLevelUp() {
-            int requiredXP = getRequiredXP(foragingLevel + 1);
-            if (foragingXP >= requiredXP) {
-                foragingLevel++;
-            }
-        }
-        
-        private int getRequiredXP(int level) {
-            return level * 1000;
-        }
+
+        public int getForagingLevel() { return level; }
+        public int getForagingXP() { return xp; }
+        public void addForagingXP(int xp) { addXP(xp); }
     }
 }

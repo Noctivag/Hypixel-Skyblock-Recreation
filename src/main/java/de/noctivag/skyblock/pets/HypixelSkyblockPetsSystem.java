@@ -574,25 +574,18 @@ public class HypixelSkyblockPetsSystem implements Listener {
         public double getMultiplier() { return multiplier; }
     }
     
-    public static class HypixelPet {
-        private final String id;
-        private final String name;
-        private final String displayName;
-        private final Material material;
+    public static class HypixelPet extends BasePet {
         private final PetRarity rarity;
         private final PetCategory category;
         private final String description;
         private final List<String> stats;
         private final List<String> abilities;
         private final List<String> craftingMaterials;
-        
+
         public HypixelPet(String id, String name, String displayName, Material material,
                          PetRarity rarity, PetCategory category, String description,
                          List<String> stats, List<String> abilities, List<String> craftingMaterials) {
-            this.id = id;
-            this.name = name;
-            this.displayName = displayName;
-            this.material = material;
+            super(id, null, name, displayName, material, 1, true);
             this.rarity = rarity;
             this.category = category;
             this.description = description;
@@ -600,10 +593,14 @@ public class HypixelSkyblockPetsSystem implements Listener {
             this.abilities = abilities;
             this.craftingMaterials = craftingMaterials;
         }
-        
-        public String getId() { return id; }
+
+        @Override
+        public String getPetId() { return petId; }
+        @Override
         public String getName() { return name; }
+        @Override
         public String getDisplayName() { return displayName; }
+        @Override
         public Material getMaterial() { return material; }
         public PetRarity getRarity() { return rarity; }
         public PetCategory getCategory() { return category; }

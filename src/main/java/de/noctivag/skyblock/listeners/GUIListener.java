@@ -211,6 +211,25 @@ public class GUIListener implements Listener {
     }
 
     private void handleMainMenuClick(int slot, Player player) {
+        // Integration mit neuem SkyblockMenuSystem für Untermenüs
+        var mainSystem = SkyblockPlugin.getSystemManager().getSystem(de.noctivag.skyblock.skyblock.SkyblockMainSystem.class);
+        if (mainSystem != null) {
+            var menuSystem = mainSystem.getMenuSystem();
+            if (menuSystem != null) {
+                // Slots für neue Untermenüs (siehe SkyblockMenuSystem)
+                switch (slot) {
+                    case 14: // Collections
+                    case 15: // Stats
+                    case 17: // Recipe Book
+                    case 19: // Leveling
+                        // Delegiere an das neue Menüsystem
+                        String menuId = "main_menu";
+                        menuSystem.handleMenuClick(player, menuId, slot);
+                        return;
+                }
+            }
+        }
+        // Fallback: bisherige Menüs
         switch (slot) {
             case 10 -> new CosmeticsMenu(SkyblockPlugin, SkyblockPlugin.getCosmeticsManager(), player).open();
             case 12 -> player.sendMessage("§cWarp GUI not implemented yet!");

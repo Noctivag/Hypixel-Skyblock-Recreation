@@ -30,6 +30,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Performance optimization
  */
 public class SkyblockMainSystem implements Listener {
+    public de.noctivag.skyblock.features.menu.SkyblockMenuSystem getMenuSystem() {
+        return menuSystem;
+    }
 
     private final SkyblockPlugin SkyblockPlugin;
     private final MultiServerDatabaseManager databaseManager;
@@ -407,31 +410,27 @@ class CombatCommand implements org.bukkit.command.CommandExecutor {
 
         Player player = (Player) sender;
 
-        if (args.length == 0) {
-            // Show combat stats
-            AdvancedCombatSystem.PlayerCombatData combatData = system.getCombatSystem().getPlayerCombatData(player.getUniqueId());
-            player.sendMessage(Component.text("§c§lCombat Statistics:"));
-            player.sendMessage("§7Damage Dealt: §e" + String.format("%.1f", combatData.getDamageDealt()));
-            player.sendMessage("§7Hits: §e" + combatData.getHits());
-            player.sendMessage("§7Kills: §e" + combatData.getKills());
-            player.sendMessage("§7Deaths: §e" + combatData.getDeaths());
+        if (args.length == 0 || args[0].equalsIgnoreCase("stats")) {
+            // Zeige vereinheitlichte Stats aus PlayerStatData
+            var statsSystem = system.healthManaSystem; // oder ein globales Stat-System
+            var stats = statsSystem.getPlayerStats(player.getUniqueId());
+            player.sendMessage(Component.text("§a§lSpieler-Statistiken:"));
+            player.sendMessage("§7Health: §c" + stats.getHealth() + "/" + stats.getMaxHealth());
+            player.sendMessage("§7Mana: §b" + stats.getMana() + "/" + stats.getMaxMana());
+            player.sendMessage("§7Defense: §a" + stats.getDefense());
+            player.sendMessage("§7Strength: §c" + stats.getStrength());
+            player.sendMessage("§7Speed: §f" + stats.getSpeed());
+            player.sendMessage("§7Crit Chance: §e" + stats.getCritChance() + "%");
+            player.sendMessage("§7Crit Damage: §e" + stats.getCritDamage() + "%");
+            player.sendMessage("§7Intelligence: §b" + stats.getIntelligence());
+            player.sendMessage("§7Ferocity: §d" + stats.getFerocity());
+            player.sendMessage("§7True Defense: §a" + stats.getTrueDefense());
+            player.sendMessage("§7Magic Find: §9" + stats.getMagicFind());
+            player.sendMessage("§7Pristine: §b" + stats.getPristine());
+            player.sendMessage("§7Fortune: §6" + stats.getFortune());
             return true;
         }
-
-        switch (args[0].toLowerCase()) {
-            case "stats":
-                AdvancedCombatSystem.PlayerCombatData combatData = system.getCombatSystem().getPlayerCombatData(player.getUniqueId());
-                player.sendMessage(Component.text("§c§lCombat Statistics:"));
-                player.sendMessage("§7Damage Dealt: §e" + String.format("%.1f", combatData.getDamageDealt()));
-                player.sendMessage("§7Hits: §e" + combatData.getHits());
-                player.sendMessage("§7Kills: §e" + combatData.getKills());
-                player.sendMessage("§7Deaths: §e" + combatData.getDeaths());
-                break;
-            default:
-                player.sendMessage(Component.text("§cUnknown subcommand! Use /combat stats"));
-                break;
-        }
-
+        player.sendMessage(Component.text("§cUnknown subcommand! Use /combat stats"));
         return true;
     }
     

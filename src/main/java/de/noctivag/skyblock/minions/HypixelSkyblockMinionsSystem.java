@@ -290,9 +290,9 @@ public class HypixelSkyblockMinionsSystem implements Listener {
         
         ItemMeta meta = item.getItemMeta();
         if (meta == null || !meta.hasDisplayName()) return;
-        
-        String displayName = meta.getDisplayName();
-        
+        // Adventure-Kompatibilität: displayName als Component holen
+        net.kyori.adventure.text.Component displayNameComponent = meta.displayName();
+        String displayName = displayNameComponent != null ? net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection().serialize(displayNameComponent) : "";
         if (displayName.contains("Minion") || displayName.contains("Hypixel")) {
             openMinionsGUI(player);
         }
@@ -366,33 +366,30 @@ public class HypixelSkyblockMinionsSystem implements Listener {
     }
     
     public static class HypixelMinion {
-        private final String id;
-        private final String name;
-        private final String displayName;
-        private final Material material;
         private final MinionRarity rarity;
         private final MinionCategory category;
         private final String description;
         private final List<String> levels;
         private final List<String> craftingMaterials;
-        
+
         public HypixelMinion(String id, String name, String displayName, Material material,
                             MinionRarity rarity, MinionCategory category, String description,
                             List<String> levels, List<String> craftingMaterials) {
-            this.id = id;
-            this.name = name;
-            this.displayName = displayName;
-            this.material = material;
+            super(id, null, name, displayName, material, 1, true, null);
             this.rarity = rarity;
             this.category = category;
             this.description = description;
             this.levels = levels;
             this.craftingMaterials = craftingMaterials;
         }
-        
-        public String getId() { return id; }
+
+        @Override
+        public String getMinionId() { return minionId; }
+        @Override
         public String getName() { return name; }
+        @Override
         public String getDisplayName() { return displayName; }
+        @Override
         public Material getMaterial() { return material; }
         public MinionRarity getRarity() { return rarity; }
         public MinionCategory getCategory() { return category; }

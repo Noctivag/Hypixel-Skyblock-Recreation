@@ -10,25 +10,17 @@ import java.util.UUID;
 /**
  * Dungeon Instance - Represents a dungeon instance
  */
-public class DungeonInstance {
+public class DungeonInstance extends de.noctivag.skyblock.dungeons.BaseDungeonGroup {
     
-    private final UUID instanceId;
-    private final String dungeonType;
-    private final List<UUID> players;
-    private final long startTime;
     private boolean active;
     private int currentFloor;
     private int maxFloors;
     
     public DungeonInstance(UUID instanceId, String dungeonType, Player creator) {
-        this.instanceId = instanceId;
-        this.dungeonType = dungeonType;
-        this.players = new ArrayList<>();
-        this.startTime = System.currentTimeMillis();
+        super(instanceId.toString(), dungeonType, System.currentTimeMillis(), new ArrayList<>(), "ACTIVE");
         this.active = true;
         this.currentFloor = 1;
         this.maxFloors = 5; // Default max floors
-        
         // Add creator to instance
         this.players.add(creator.getUniqueId());
     }
@@ -37,19 +29,20 @@ public class DungeonInstance {
      * Get the instance ID
      */
     public UUID getInstanceId() {
-        return instanceId;
+        return UUID.fromString(groupId);
     }
     
     /**
      * Get the dungeon type
      */
     public String getDungeonType() {
-        return dungeonType;
+        return groupType;
     }
     
     /**
      * Get the players in this instance
      */
+    @Override
     public List<UUID> getPlayers() {
         return new ArrayList<>(players);
     }
@@ -76,6 +69,7 @@ public class DungeonInstance {
     /**
      * Get the start time
      */
+    @Override
     public long getStartTime() {
         return startTime;
     }

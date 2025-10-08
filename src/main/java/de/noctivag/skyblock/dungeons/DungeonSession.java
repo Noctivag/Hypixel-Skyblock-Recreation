@@ -9,21 +9,20 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Represents a dungeon session with players and progress
  */
-public class DungeonSession {
+public class DungeonSession extends BaseDungeonGroup {
     private final String sessionId;
     private final DungeonFloor floor;
-    private final Map<UUID, DungeonPlayer> players;
+    private final Map<UUID, DungeonPlayer> playerMap;
     private final Location startLocation;
-    private final long startTime;
     private final DungeonSessionStatus status;
     private final Map<String, Object> sessionData;
 
     public DungeonSession(String sessionId, DungeonFloor floor, Location startLocation) {
+        super(sessionId, floor.getName(), System.currentTimeMillis(), new ArrayList<>(), DungeonSessionStatus.WAITING.name());
         this.sessionId = sessionId;
         this.floor = floor;
-        this.players = new ConcurrentHashMap<>();
+        this.playerMap = new ConcurrentHashMap<>();
         this.startLocation = startLocation.clone();
-        this.startTime = System.currentTimeMillis();
         this.status = DungeonSessionStatus.WAITING;
         this.sessionData = new ConcurrentHashMap<>();
     }
@@ -31,10 +30,14 @@ public class DungeonSession {
     // Getters
     public String getSessionId() { return sessionId; }
     public DungeonFloor getFloor() { return floor; }
-    public Map<UUID, DungeonPlayer> getPlayers() { return new HashMap<>(players); }
+    public Map<UUID, DungeonPlayer> getPlayerMap() { return new HashMap<>(playerMap); }
+    @Override
+    public List<UUID> getPlayers() { return new ArrayList<>(playerMap.keySet()); }
     public Location getStartLocation() { return startLocation.clone(); }
+    @Override
     public long getStartTime() { return startTime; }
-    public DungeonSessionStatus getStatus() { return status; }
+    @Override
+    public String getStatus() { return status.name(); }
     public Map<String, Object> getSessionData() { return new HashMap<>(sessionData); }
 
     /**
@@ -58,7 +61,7 @@ public class DungeonSession {
      * Remove player from session
      */
     public boolean removePlayer(UUID playerId) {
-        return players.remove(playerId) != null;
+        return playerMap.remove(playerId) != null;
     }
 
     /**

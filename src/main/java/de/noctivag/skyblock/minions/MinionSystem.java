@@ -32,8 +32,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MinionSystem {
     private final SkyblockPlugin SkyblockPlugin;
     private final CorePlatform corePlatform;
-    private final Map<UUID, List<Minion>> playerMinions = new ConcurrentHashMap<>();
-    private final Map<Location, Minion> placedMinions = new ConcurrentHashMap<>();
+    private final Map<UUID, List<BaseMinion>> playerMinions = new ConcurrentHashMap<>();
+    private final Map<Location, BaseMinion> placedMinions = new ConcurrentHashMap<>();
     private final Map<String, BukkitTask> minionTasks = new ConcurrentHashMap<>();
     
     public MinionSystem(SkyblockPlugin SkyblockPlugin, CorePlatform corePlatform) {
@@ -85,7 +85,7 @@ public class MinionSystem {
         player.sendMessage("§7Cost: §6" + cost + " coins");
     }
     
-    public void placeMinion(Player player, Location location, Minion minion) {
+    public void placeMinion(Player player, Location location, BaseMinion minion) {
         // Check if location is valid
         if (!isValidMinionLocation(location)) {
             player.sendMessage(Component.text("§cInvalid location for minion placement!"));
@@ -112,7 +112,7 @@ public class MinionSystem {
     }
     
     public void removeMinion(Player player, Location location) {
-        Minion minion = placedMinions.get(location);
+        BaseMinion minion = placedMinions.get(location);
         if (minion == null) {
             player.sendMessage(Component.text("§cNo minion found at this location!"));
             return;
@@ -138,7 +138,7 @@ public class MinionSystem {
         player.sendMessage("§7Level: §e" + 1);
     }
     
-    public void upgradeMinion(Player player, Minion minion) {
+    public void upgradeMinion(Player player, BaseMinion minion) {
         // Check if player has enough coins
         PlayerProfile profile = corePlatform.getPlayerProfile(player.getUniqueId());
         if (profile == null) return;

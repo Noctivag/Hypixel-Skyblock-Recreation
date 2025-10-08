@@ -17,7 +17,7 @@ import java.util.logging.Level;
 public class MinionManager implements Service {
     
     private final SkyblockPlugin plugin;
-    private final Map<UUID, Minion> minions = new HashMap<>();
+    private final Map<UUID, BaseMinion> minions = new HashMap<>();
     private final Map<String, MinionType> minionTypes = new HashMap<>();
     private final Map<String, MinionUpgradeType> upgradeTypes = new HashMap<>();
     private SystemStatus status = SystemStatus.DISABLED;
@@ -113,32 +113,29 @@ public class MinionManager implements Service {
             player.sendMessage("§cUnknown minion type: " + minionTypeName);
             return null;
         }
-        
         UUID minionId = UUID.randomUUID();
         Minion minion = new Minion(minionId, player.getUniqueId(), minionType, location);
-        
         minions.put(minionId, minion);
-        player.sendMessage("§aCreated " + "Minion" + "!");
-        plugin.getLogger().log(Level.INFO, "Player " + player.getName() + " created " + "Minion");
-        
+        player.sendMessage("§aCreated Minion!");
+        plugin.getLogger().log(Level.INFO, "Player " + player.getName() + " created Minion");
         return minion;
     }
     
     /**
      * Get a minion by ID
      */
-    public Minion getMinion(UUID minionId) {
+    public BaseMinion getMinion(UUID minionId) {
         return minions.get(minionId);
     }
     
     /**
      * Get all minions for a player
      */
-    public Map<UUID, Minion> getPlayerMinions(Player player) {
-        Map<UUID, Minion> playerMinions = new HashMap<>();
-        for (Minion minion : minions.values()) {
+    public Map<UUID, BaseMinion> getPlayerMinions(Player player) {
+        Map<UUID, BaseMinion> playerMinions = new HashMap<>();
+        for (BaseMinion minion : minions.values()) {
             if (minion.getOwnerId().equals(player.getUniqueId())) {
-                playerMinions.put(minion.getMinionId(), minion);
+                playerMinions.put(UUID.fromString(minion.getMinionId()), minion);
             }
         }
         return playerMinions;
@@ -148,7 +145,7 @@ public class MinionManager implements Service {
      * Remove a minion
      */
     public boolean removeMinion(UUID minionId) {
-        Minion minion = minions.remove(minionId);
+        BaseMinion minion = minions.remove(minionId);
         if (minion != null) {
             plugin.getLogger().log(Level.INFO, "Removed minion: " + minionId);
             return true;

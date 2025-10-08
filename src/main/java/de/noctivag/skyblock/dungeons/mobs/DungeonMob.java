@@ -7,10 +7,11 @@ import org.bukkit.entity.EntityType;
 /**
  * Dungeon Mob - Base class for all dungeon mobs
  */
-public class DungeonMob extends CustomMob {
+public class DungeonMob extends CustomMob implements de.noctivag.skyblock.dungeons.BaseDungeonEntity {
     
     private final String dungeonType;
     private final int floor;
+    private final java.util.UUID entityId;
     
     public DungeonMob(String mobId, Location spawnLocation, String dungeonType, int floor) {
         super(mobId, EntityType.ZOMBIE, spawnLocation, 
@@ -21,12 +22,20 @@ public class DungeonMob extends CustomMob {
         );
         this.dungeonType = dungeonType;
         this.floor = floor;
+        this.entityId = java.util.UUID.randomUUID();
     }
     
+    @Override
     @Override
     public String getName() {
         return "§cDungeon Mob";
     }
+    @Override
+    public java.util.UUID getEntityId() { return entityId; }
+    @Override
+    public String getType() { return "MOB"; }
+    @Override
+    public int getFloor() { return floor; }
     
     @Override
     public String getLootTableId() {
@@ -40,11 +49,5 @@ public class DungeonMob extends CustomMob {
         return dungeonType;
     }
     
-    /**
-     * Get the floor
-     */
-    public int getFloor() {
-        return floor;
-    }
 }
 

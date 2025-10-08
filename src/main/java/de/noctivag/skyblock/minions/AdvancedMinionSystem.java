@@ -575,7 +575,7 @@ public class AdvancedMinionSystem implements Listener {
 
     @SuppressWarnings("unused")
     public void openMinionUpgradeGUI(Player player, Minion minion) {
-        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§e§lMinion Upgrades - " + minion.getDisplayName()));
+    Inventory gui = Bukkit.createInventory(null, 54, Component.text().append(Component.text("§e§lMinion Upgrades - ")).append(Component.text(minion.getDisplayName())).build());
 
         // Current upgrades
         MinionUpgrade currentUpgrade = minionUpgrades.get(minion.getOwnerId());
@@ -609,7 +609,7 @@ public class AdvancedMinionSystem implements Listener {
 
     @SuppressWarnings("unused")
     public void openMinionFuelGUI(Player player, Minion minion) {
-        Inventory gui = Bukkit.createInventory(null, 54, Component.text("§c§lMinion Fuel - " + minion.getDisplayName()));
+    Inventory gui = Bukkit.createInventory(null, 54, Component.text().append(Component.text("§c§lMinion Fuel - ")).append(Component.text(minion.getDisplayName())).build());
 
         // Current fuel
         MinionFuel currentFuel = minionFuel.get(minion.getOwnerId());
@@ -766,45 +766,51 @@ public class AdvancedMinionSystem implements Listener {
         public Minion(String name, String displayName, Material material, String description,
                      MinionType type, MinionRarity rarity, int level, List<String> features,
                      List<String> resources, int maxStorage, double productionTime) {
-            this.id = UUID.randomUUID().toString();
-            this.name = name;
-            this.displayName = displayName;
-            this.material = material;
-            this.description = description;
-            this.type = type;
-            this.rarity = rarity;
-            this.level = level;
-            this.features = features;
-            this.resources = resources;
-            this.maxStorage = maxStorage;
-            this.productionTime = productionTime;
-            this.isActive = true;
-            this.lastAction = java.lang.System.currentTimeMillis();
-            this.autoSellEnabled = false;
+                        super(UUID.randomUUID().toString(), null, name, displayName, material, level, true, null);
+                        this.description = description;
+                        this.type = type;
+                        this.rarity = rarity;
+                        this.features = features;
+                        this.resources = resources;
+                        this.maxStorage = maxStorage;
+                        this.productionTime = productionTime;
+                        this.lastAction = java.lang.System.currentTimeMillis();
+                        this.autoSellEnabled = false;
         }
 
         public String getId() { return id; }
-        public String getName() { return name; }
-        public String getDisplayName() { return displayName; }
-        public Material getMaterial() { return material; }
+    @Override
+    public String getMinionId() { return minionId; }
+    @Override
+    public String getName() { return name; }
+    @Override
+    public String getDisplayName() { return displayName; }
+    @Override
+    public Material getMaterial() { return material; }
         public String getDescription() { return description; }
         public MinionType getType() { return type; }
         public MinionRarity getRarity() { return rarity; }
-        public int getLevel() { return level; }
+    // getLevel() wird von BaseMinion geerbt
         public List<String> getFeatures() { return features; }
         public List<String> getResources() { return resources; }
         public int getMaxStorage() { return maxStorage; }
         public double getProductionTime() { return productionTime; }
-        public boolean isActive() { return isActive; }
-        public void setActive(boolean active) { this.isActive = active; }
+    @Override
+    public int getLevel() { return level; }
+    @Override
+    public boolean isActive() { return active; }
+    @Override
+    public void setActive(boolean active) { this.active = active; }
         public long getLastAction() { return lastAction; }
         public void setLastAction(long lastAction) { this.lastAction = lastAction; }
         public boolean isAutoSellEnabled() { return autoSellEnabled; }
         @SuppressWarnings("unused")
         public void setAutoSellEnabled(boolean autoSellEnabled) { this.autoSellEnabled = autoSellEnabled; }
-        public UUID getOwnerId() { return ownerId; }
-        @SuppressWarnings("unused")
-        public void setOwnerId(UUID ownerId) { this.ownerId = ownerId; }
+    // getOwnerId() wird von BaseMinion geerbt
+    @Override
+    public UUID getOwnerId() { return ownerId; }
+    @SuppressWarnings("unused")
+    public void setOwnerId(UUID ownerId) { this.ownerId = ownerId; }
     }
 
     @SuppressWarnings("unused")

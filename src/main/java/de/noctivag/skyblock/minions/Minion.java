@@ -8,38 +8,30 @@ import java.util.UUID;
 /**
  * Minion - Represents a minion
  */
-public class Minion {
-    
-    private final UUID minionId;
-    private final UUID ownerId;
+public class Minion extends BaseMinion {
     private final MinionType minionType;
-    private final Location location;
-    private int level;
     private long lastActionTime;
     private int storedItems;
-    private boolean active;
-    
+
     public Minion(UUID minionId, UUID ownerId, MinionType minionType, Location location) {
-        this.minionId = minionId;
-        this.ownerId = ownerId;
+        super(minionId.toString(), ownerId, minionType.name(), minionType.getDisplayName(), minionType.getMaterial(), 1, true, location);
         this.minionType = minionType;
-        this.location = location;
-        this.level = 1;
         this.lastActionTime = System.currentTimeMillis();
         this.storedItems = 0;
-        this.active = true;
     }
     
     /**
      * Get the minion ID
      */
-    public UUID getMinionId() {
+    @Override
+    public String getMinionId() {
         return minionId;
     }
     
     /**
      * Get the owner ID
      */
+    @Override
     public UUID getOwnerId() {
         return ownerId;
     }
@@ -54,6 +46,7 @@ public class Minion {
     /**
      * Get the location
      */
+    @Override
     public Location getLocation() {
         return location;
     }
@@ -61,6 +54,7 @@ public class Minion {
     /**
      * Get the level
      */
+    @Override
     public int getLevel() {
         return level;
     }
@@ -68,6 +62,7 @@ public class Minion {
     /**
      * Set the level
      */
+    @Override
     public void setLevel(int level) {
         this.level = Math.max(1, Math.min(level, 100));
     }
@@ -117,6 +112,7 @@ public class Minion {
     /**
      * Check if the minion is active
      */
+    @Override
     public boolean isActive() {
         return active;
     }
@@ -124,6 +120,7 @@ public class Minion {
     /**
      * Set the minion as active
      */
+    @Override
     public void setActive(boolean active) {
         this.active = active;
     }

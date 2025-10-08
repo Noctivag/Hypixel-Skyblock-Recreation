@@ -8,28 +8,32 @@ import java.util.List;
  * All 72+ tool types from the comprehensive Hypixel SkyBlock programming guide
  */
 public enum CompleteToolType {
-    // ===== MINING TOOLS (25+) =====
+    CARROT_CANDY("Carrot Candy", "🥕", "Specialized for carrots"),
+    FUNGI_CUTTER("Fungi Cutter", "🍄", "Mushroom Farming"),
+    TREECAPITATOR("Treecapitator", "🪓", "Fells entire trees with one hit"),
+    // ===== MINING TOOLS (Hypixel SkyBlock, vollständig) =====
     WOODEN_PICKAXE("Wooden Pickaxe", "🪓", "Basic mining tool"),
     STONE_PICKAXE("Stone Pickaxe", "🪨", "Improved mining tool"),
     IRON_PICKAXE("Iron Pickaxe", "⚒️", "Good mining tool"),
     GOLDEN_PICKAXE("Golden Pickaxe", "🥇", "Fast but weak mining tool"),
     DIAMOND_PICKAXE("Diamond Pickaxe", "💎", "Standard mining tool"),
     NETHERITE_PICKAXE("Netherite Pickaxe", "⚡", "Best vanilla mining tool"),
-    
-    // Advanced Mining Tools
-    TREECAPITATOR("Treecapitator", "🪓", "Fells entire trees with one hit"),
+    LAPIS_PICKAXE("Lapis Pickaxe", "🔵", "Chance auf doppelte Lapis Drops, Early Game Mining"),
+    ZOMBIE_PICKAXE("Zombie Pickaxe", "�", "Mining, Early Game, aus Dungeons"),
     STONKS_PICKAXE("Stonks Pickaxe", "📈", "Specifically for Endstone"),
     GOLDEN_PICKAXE_REFORGED("Golden Pickaxe (Reforged)", "🥇", "Reforged golden pickaxe"),
     DIAMOND_PICKAXE_REFORGED("Diamond Pickaxe (Reforged)", "💎", "Reforged diamond pickaxe"),
-    
-    // Drills
+    PICKONIMBUS_2000("Pickonimbus 2000", "✨", "2000 Nutzungen, Mining, Crystal Hollows"),
+    FRACTURED_MITHRIL_PICKAXE("Fractured Mithril Pickaxe", "⛏️", "Mithril Mining, Early Game"),
+    BANDAGED_MITHRIL_PICKAXE("Bandaged Mithril Pickaxe", "⛏️", "Mithril Mining, Upgraded"),
+    MITHRIL_PICKAXE("Mithril Pickaxe", "⛏️", "Mithril Mining, Standard"),
+    TITANIUM_PICKAXE("Titanium Pickaxe", "⛏️", "Titanium Mining, Standard"),
+    DRILL("Drill", "🔩", "Basis Drill, Mining"),
     MITHRIL_DRILL("Mithril Drill", "⛏️", "Efficient mining"),
     TITANIUM_DRILL("Titanium Drill", "🔧", "High-quality mining tool"),
     GEMSTONE_DRILL("Gemstone Drill", "💎", "For Gemstone Mining"),
     DIVAN_DRILL("Divan's Drill", "💎", "Ultimate mining drill"),
     GEMSTONE_GAUNTLET("Gemstone Gauntlet", "👊", "Advanced mining gauntlet"),
-    
-    // Special Mining Tools
     ROCK_GEMSTONE_DRILL("Rock Gemstone Drill", "🪨", "Rock pet enhanced drill"),
     RUBY_DRILL("Ruby Drill", "💎", "Ruby-powered drill"),
     JASPER_DRILL("Jasper Drill", "💎", "Jasper-powered drill"),
@@ -38,8 +42,14 @@ public enum CompleteToolType {
     TOPAZ_DRILL("Topaz Drill", "💎", "Topaz-powered drill"),
     JADE_DRILL("Jade Drill", "💎", "Jade-powered drill"),
     AMBER_DRILL("Amber Drill", "💎", "Amber-powered drill"),
+    FLAME_BREAKER_PICKAXE("Flame Breaker Pickaxe", "🔥", "Mining, Nether, Lava Immunity"),
+    GLACIAL_SCYTHE("Glacial Scythe", "❄️", "Mining, Ice, AoE Slow"),
+    TITANIUM_SHOVEL("Titanium Shovel", "⛏️", "Titanium Mining, Shovel"),
+    ENDER_PICKAXE("Ender Pickaxe", "🟣", "Mining, End, Early Game"),
+    COBBLESTONE_MINER("Cobblestone Miner", "🪨", "Cobblestone Mining, Early Game"),
+    FARMERS_ROD("Farmer's Rod", "🌾", "Farming, Fishing, Hybrid Tool"),
     
-    // ===== FISHING TOOLS (15+) =====
+    // ===== FISHING TOOLS (vollständig) =====
     WOODEN_FISHING_ROD("Wooden Fishing Rod", "🎣", "Basic fishing rod"),
     FISHING_ROD("Fishing Rod", "🎣", "Standard fishing rod"),
     ENCHANTED_FISHING_ROD("Enchanted Fishing Rod", "🎣", "Enchanted fishing rod"),
@@ -55,21 +65,23 @@ public enum CompleteToolType {
     BLUE_WHALE_FISHING_ROD("Blue Whale Fishing Rod", "🐋", "Blue whale enhanced rod"),
     FLYING_FISH_FISHING_ROD("Flying Fish Fishing Rod", "🐟", "Flying fish enhanced rod"),
     GUARDIAN_FISHING_ROD("Guardian Fishing Rod", "🐟", "Guardian enhanced rod"),
+    ICE_ROD("Ice Rod", "❄️", "Fishing, Ice, Freezes Water"),
+    LAVA_ROD("Lava Rod", "🔥", "Fishing, Lava, Nether"),
+    WINTER_ROD("Winter Rod", "⛄", "Fishing, Winter Island"),
     
-    // ===== FARMING TOOLS (15+) =====
+    // ===== FARMING TOOLS (vollständig) =====
     WOODEN_HOE("Wooden Hoe", "🌾", "Basic farming tool"),
     STONE_HOE("Stone Hoe", "🪨", "Improved farming tool"),
     IRON_HOE("Iron Hoe", "⚒️", "Good farming tool"),
     GOLDEN_HOE("Golden Hoe", "🥇", "Fast but weak farming tool"),
     DIAMOND_HOE("Diamond Hoe", "💎", "Standard farming tool"),
     NETHERITE_HOE("Netherite Hoe", "⚡", "Best vanilla farming tool"),
-    
     FARMING_TOOL("Farming Tool", "🌾", "Standard farming tool"),
     SUGAR_CANE_HOE("Sugar Cane Hoe", "🎋", "Specialized for sugar cane"),
     CACTUS_KNIFE("Cactus Knife", "🌵", "Specialized for cactus"),
     MELON_DICER("Melon Dicer", "🍈", "Specialized for melons"),
     PUMPKIN_DICER("Pumpkin Dicer", "🎃", "Specialized for pumpkins"),
-    CARROT_CANDY("Carrot Candy", "🥕", "Specialized for carrots"),
+    
     POTATO_TALISMAN("Potato Talisman", "🥔", "Specialized for potatoes"),
     WHEAT_HOE("Wheat Hoe", "🌾", "Specialized for wheat"),
     NETHER_WART_HOE("Nether Wart Hoe", "🍄", "Specialized for nether wart"),
@@ -129,12 +141,12 @@ public enum CompleteToolType {
      */
     public static List<CompleteToolType> getMiningTools() {
         return Arrays.asList(
-            WOODEN_PICKAXE, STONE_PICKAXE, IRON_PICKAXE, GOLDEN_PICKAXE,
-            DIAMOND_PICKAXE, NETHERITE_PICKAXE, TREECAPITATOR, STONKS_PICKAXE,
-            GOLDEN_PICKAXE_REFORGED, DIAMOND_PICKAXE_REFORGED, MITHRIL_DRILL,
-            TITANIUM_DRILL, GEMSTONE_DRILL, DIVAN_DRILL, GEMSTONE_GAUNTLET,
-            ROCK_GEMSTONE_DRILL, RUBY_DRILL, JASPER_DRILL, SAPPHIRE_DRILL,
-            AMETHYST_DRILL, TOPAZ_DRILL, JADE_DRILL, AMBER_DRILL
+            WOODEN_PICKAXE, STONE_PICKAXE, IRON_PICKAXE, GOLDEN_PICKAXE, DIAMOND_PICKAXE, NETHERITE_PICKAXE,
+            LAPIS_PICKAXE, ZOMBIE_PICKAXE, STONKS_PICKAXE, GOLDEN_PICKAXE_REFORGED, DIAMOND_PICKAXE_REFORGED,
+            PICKONIMBUS_2000, FRACTURED_MITHRIL_PICKAXE, BANDAGED_MITHRIL_PICKAXE, MITHRIL_PICKAXE, TITANIUM_PICKAXE,
+            DRILL, MITHRIL_DRILL, TITANIUM_DRILL, GEMSTONE_DRILL, DIVAN_DRILL, GEMSTONE_GAUNTLET, ROCK_GEMSTONE_DRILL,
+            RUBY_DRILL, JASPER_DRILL, SAPPHIRE_DRILL, AMETHYST_DRILL, TOPAZ_DRILL, JADE_DRILL, AMBER_DRILL,
+            FLAME_BREAKER_PICKAXE, GLACIAL_SCYTHE, TITANIUM_SHOVEL, ENDER_PICKAXE, COBBLESTONE_MINER
         );
     }
     
@@ -156,10 +168,9 @@ public enum CompleteToolType {
      */
     public static List<CompleteToolType> getFarmingTools() {
         return Arrays.asList(
-            WOODEN_HOE, STONE_HOE, IRON_HOE, GOLDEN_HOE, DIAMOND_HOE,
-            NETHERITE_HOE, FARMING_TOOL, SUGAR_CANE_HOE, CACTUS_KNIFE,
-            MELON_DICER, PUMPKIN_DICER, CARROT_CANDY, POTATO_TALISMAN,
-            WHEAT_HOE, NETHER_WART_HOE, COCOA_CHOCOLATE
+            WOODEN_HOE, STONE_HOE, IRON_HOE, GOLDEN_HOE, DIAMOND_HOE, NETHERITE_HOE, FARMING_TOOL,
+            SUGAR_CANE_HOE, CACTUS_KNIFE, MELON_DICER, PUMPKIN_DICER, CARROT_CANDY, POTATO_TALISMAN,
+            WHEAT_HOE, NETHER_WART_HOE, COCOA_CHOCOLATE, FUNGI_CUTTER
         );
     }
     
@@ -168,9 +179,8 @@ public enum CompleteToolType {
      */
     public static List<CompleteToolType> getForagingTools() {
         return Arrays.asList(
-            WOODEN_AXE, STONE_AXE, IRON_AXE, GOLDEN_AXE, DIAMOND_AXE,
-            NETHERITE_AXE, JUNGLE_AXE, OAK_AXE, BIRCH_AXE,
-            SPRUCE_AXE, DARK_OAK_AXE, ACACIA_AXE
+            WOODEN_AXE, STONE_AXE, IRON_AXE, GOLDEN_AXE, DIAMOND_AXE, NETHERITE_AXE, JUNGLE_AXE, OAK_AXE,
+            BIRCH_AXE, SPRUCE_AXE, DARK_OAK_AXE, ACACIA_AXE, TREECAPITATOR
         );
     }
     

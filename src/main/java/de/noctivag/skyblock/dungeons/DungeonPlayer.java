@@ -9,17 +9,14 @@ import java.util.UUID;
 /**
  * Represents a player in a dungeon session
  */
-public class DungeonPlayer {
-    private final UUID playerId;
-    private final String playerName;
+public class DungeonPlayer extends BaseDungeonEntity {
     private final DungeonClass dungeonClass;
     private final long joinTime;
     private final Map<String, Object> playerData;
     private final DungeonPlayerStats stats;
 
     public DungeonPlayer(Player player, DungeonClass dungeonClass) {
-        this.playerId = player.getUniqueId();
-        this.playerName = player.getName();
+        super(player.getUniqueId(), player.getName(), "PLAYER", 0);
         this.dungeonClass = dungeonClass;
         this.joinTime = System.currentTimeMillis();
         this.playerData = new HashMap<>();
@@ -28,8 +25,7 @@ public class DungeonPlayer {
 
     public DungeonPlayer(UUID playerId, String playerName, DungeonClass dungeonClass, 
                         long joinTime, Map<String, Object> playerData) {
-        this.playerId = playerId;
-        this.playerName = playerName;
+        super(playerId, playerName, "PLAYER", 0);
         this.dungeonClass = dungeonClass;
         this.joinTime = joinTime;
         this.playerData = new HashMap<>(playerData);
@@ -37,8 +33,10 @@ public class DungeonPlayer {
     }
 
     // Getters
-    public UUID getPlayerId() { return playerId; }
-    public String getPlayerName() { return playerName; }
+    @Override
+    public UUID getEntityId() { return entityId; }
+    @Override
+    public String getName() { return name; }
     public DungeonClass getDungeonClass() { return dungeonClass; }
     public long getJoinTime() { return joinTime; }
     public Map<String, Object> getPlayerData() { return new HashMap<>(playerData); }
