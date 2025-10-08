@@ -2,10 +2,7 @@ package de.noctivag.skyblock.minions;
 
 import java.util.UUID;
 import de.noctivag.skyblock.SkyblockPlugin;
-import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
-
-import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import de.noctivag.skyblock.data.DatabaseManager;
 import org.bukkit.Bukkit;
@@ -766,10 +763,14 @@ public class AdvancedMinionSystem implements Listener {
         public Minion(String name, String displayName, Material material, String description,
                      MinionType type, MinionRarity rarity, int level, List<String> features,
                      List<String> resources, int maxStorage, double productionTime) {
-                        super(UUID.randomUUID().toString(), null, name, displayName, material, level, true, null);
+                        this.id = UUID.randomUUID().toString();
+                        this.name = name;
+                        this.displayName = displayName;
+                        this.material = material;
                         this.description = description;
                         this.type = type;
                         this.rarity = rarity;
+                        this.level = level;
                         this.features = features;
                         this.resources = resources;
                         this.maxStorage = maxStorage;
@@ -779,38 +780,28 @@ public class AdvancedMinionSystem implements Listener {
         }
 
         public String getId() { return id; }
-    @Override
-    public String getMinionId() { return minionId; }
-    @Override
-    public String getName() { return name; }
-    @Override
-    public String getDisplayName() { return displayName; }
-    @Override
-    public Material getMaterial() { return material; }
+        public String getMinionId() { return id; }
+        public String getName() { return name; }
+        public String getDisplayName() { return displayName; }
+        public Material getMaterial() { return material; }
         public String getDescription() { return description; }
         public MinionType getType() { return type; }
         public MinionRarity getRarity() { return rarity; }
-    // getLevel() wird von BaseMinion geerbt
         public List<String> getFeatures() { return features; }
         public List<String> getResources() { return resources; }
         public int getMaxStorage() { return maxStorage; }
         public double getProductionTime() { return productionTime; }
-    @Override
-    public int getLevel() { return level; }
-    @Override
-    public boolean isActive() { return active; }
-    @Override
-    public void setActive(boolean active) { this.active = active; }
+        public int getLevel() { return level; }
+        public boolean isActive() { return isActive; }
+        public void setActive(boolean active) { this.isActive = active; }
         public long getLastAction() { return lastAction; }
         public void setLastAction(long lastAction) { this.lastAction = lastAction; }
         public boolean isAutoSellEnabled() { return autoSellEnabled; }
         @SuppressWarnings("unused")
         public void setAutoSellEnabled(boolean autoSellEnabled) { this.autoSellEnabled = autoSellEnabled; }
-    // getOwnerId() wird von BaseMinion geerbt
-    @Override
-    public UUID getOwnerId() { return ownerId; }
-    @SuppressWarnings("unused")
-    public void setOwnerId(UUID ownerId) { this.ownerId = ownerId; }
+        public UUID getOwnerId() { return ownerId; }
+        @SuppressWarnings("unused")
+        public void setOwnerId(UUID ownerId) { this.ownerId = ownerId; }
     }
 
     @SuppressWarnings("unused")

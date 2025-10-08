@@ -700,6 +700,7 @@ public class BazaarSystem {
     
     // Bazaar Item Class
     public static class BazaarItem {
+        private final String itemId;
         private double instantBuyPrice;
         private double instantSellPrice;
         private double averagePrice;
@@ -710,7 +711,7 @@ public class BazaarSystem {
         private String category = "GENERAL";
 
         public BazaarItem(String itemId, double instantBuyPrice, double instantSellPrice, double averagePrice) {
-            super(itemId, averagePrice, 0);
+            this.itemId = itemId;
             this.instantBuyPrice = instantBuyPrice;
             this.instantSellPrice = instantSellPrice;
             this.averagePrice = averagePrice;
@@ -736,7 +737,6 @@ public class BazaarSystem {
 
             // Calculate average price
             averagePrice = totalValue / totalVolume;
-            this.price = averagePrice;
 
             // Update instant prices based on market depth
             instantBuyPrice = averagePrice * 1.05; // 5% markup
@@ -744,6 +744,7 @@ public class BazaarSystem {
         }
 
         // Getters
+        public String getItemId() { return itemId; }
         public String getCategory() { return category; }
         public double getInstantBuyPrice() { return instantBuyPrice; }
         public double getInstantSellPrice() { return instantSellPrice; }
@@ -760,19 +761,28 @@ public class BazaarSystem {
     public static class BazaarOrder {
         private final UUID id;
         private final UUID playerId;
+        private final String itemId;
+        private int amount;
+        private final double price;
         private final OrderType type;
         private final long createdAt;
 
         public BazaarOrder(UUID id, UUID playerId, String itemId, int amount, double price, OrderType type) {
-            super(itemId, price, amount);
             this.id = id;
             this.playerId = playerId;
+            this.itemId = itemId;
+            this.amount = amount;
+            this.price = price;
             this.type = type;
             this.createdAt = java.lang.System.currentTimeMillis();
         }
 
         public UUID getId() { return id; }
         public UUID getPlayerId() { return playerId; }
+        public String getItemId() { return itemId; }
+        public int getAmount() { return amount; }
+        public void setAmount(int amount) { this.amount = amount; }
+        public double getPrice() { return price; }
         public OrderType getType() { return type; }
         public long getCreatedAt() { return createdAt; }
 

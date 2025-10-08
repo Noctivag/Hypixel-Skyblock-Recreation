@@ -2,11 +2,10 @@ package de.noctivag.skyblock.bazaar;
 
 import java.util.UUID;
 import de.noctivag.skyblock.SkyblockPlugin;
-import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
-
-import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.CorePlatform;
+import de.noctivag.skyblock.bazaar.BazaarItem;
+import de.noctivag.skyblock.bazaar.BazaarStats;
 import de.noctivag.skyblock.core.PlayerProfile;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

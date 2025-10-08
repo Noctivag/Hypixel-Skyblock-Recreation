@@ -1,6 +1,7 @@
 package de.noctivag.skyblock.pets;
 
 import org.bukkit.Material;
+import de.noctivag.skyblock.features.pets.types.PetStats;
 
 import java.util.UUID;
 
@@ -100,10 +101,10 @@ public class Pet extends BasePet {
             "&a⚡ Speed: &a" + stats.getSpeed(),
             "&b🧠 Intelligence: &a" + stats.getIntelligence(),
             "",
-            "&7Status: " + (isActive ? "&aActive" : "&7Inactive"),
+            "&7Status: " + (this.isActive() ? "&aActive" : "&7Inactive"),
             "&7Created: &a" + getFormattedCreationTime(),
             "",
-            "&eClick to " + (isActive ? "deactivate" : "activate") + " pet"
+            "&eClick to " + (this.isActive() ? "deactivate" : "activate") + " pet"
         };
     }
 

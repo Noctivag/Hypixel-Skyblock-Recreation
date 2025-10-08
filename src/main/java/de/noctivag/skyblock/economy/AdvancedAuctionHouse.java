@@ -3,10 +3,7 @@ import net.kyori.adventure.text.Component;
 
 import java.util.UUID;
 import de.noctivag.skyblock.SkyblockPlugin;
-import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
-
-import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -117,7 +114,6 @@ public class AdvancedAuctionHouse implements Listener {
         private long lastUpdate;
 
         public Auction(UUID id, UUID seller, ItemStack item, double startingBid, double binPrice) {
-            super(item.getType().name(), startingBid, item.getAmount());
             this.id = id;
             this.seller = seller;
             this.item = item;

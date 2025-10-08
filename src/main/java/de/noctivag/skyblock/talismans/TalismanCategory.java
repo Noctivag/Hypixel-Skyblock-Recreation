@@ -1,25 +1,27 @@
 package de.noctivag.skyblock.talismans;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.Material;
 
 /**
  * Categories for talismans
  */
-public enum TalismanCategory {
-    COMBAT("Combat"),
-    SPECIAL("Special");
-    
-    private final String displayName;
-    
-    TalismanCategory(String displayName) {
-        this.displayName = displayName;
+public class TalismanCategory {
+
+    private final String name;
+    private final Material icon;
+    private final String description;
+
+    public TalismanCategory(String name, Material icon, String description) {
+        this.name = name;
+        this.icon = icon;
+        this.description = description;
     }
-    
-    public String getDisplayName() {
-        return displayName;
-    }
-    
+
+    public String getName() { return name; }
+    public Material getIcon() { return icon; }
+    public String getDescription() { return description; }
+
     @Override
     public String toString() {
-        return displayName;
+        return name;
     }
 }

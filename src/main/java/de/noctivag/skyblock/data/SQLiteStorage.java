@@ -11,14 +11,14 @@ import java.util.logging.Level;
  * SQLite storage implementation
  */
 public class SQLiteStorage {
-    
+
     private final SkyblockPlugin plugin;
     private Connection connection;
-    
+
     public SQLiteStorage(SkyblockPlugin plugin) {
         this.plugin = plugin;
     }
-    
+
     /**
      * Initialize the SQLite connection
      */
@@ -31,14 +31,14 @@ public class SQLiteStorage {
             plugin.getLogger().log(Level.SEVERE, "Failed to connect to SQLite database", e);
         }
     }
-    
+
     /**
      * Get the database connection
      */
     public Connection getConnection() {
         return connection;
     }
-    
+
     /**
      * Close the database connection
      */
@@ -51,5 +51,24 @@ public class SQLiteStorage {
                 plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection", e);
             }
         }
+    }
+
+    // Platzhalter für Profile laden
+    public static de.noctivag.skyblock.skyblock.SkyblockProfile loadProfile(java.util.UUID uuid) {
+        // TODO: Implementierung
+        return null;
+    }
+    // Platzhalter für Profile speichern
+    public static void saveProfile(de.noctivag.skyblock.skyblock.SkyblockProfile profile) {
+        // TODO: Implementierung
+    }
+    // Platzhalter für Insel laden
+    public static de.noctivag.skyblock.skyblock.SkyblockIsland loadIsland(java.util.UUID owner) {
+        // TODO: Implementierung
+        return null;
+    }
+    // Platzhalter für Insel speichern
+    public static void saveIsland(de.noctivag.skyblock.skyblock.SkyblockIsland island) {
+        // TODO: Implementierung
     }
 }

@@ -62,6 +62,13 @@ public class BazaarOrder {
     public double getPricePerUnit() {
         return pricePerUnit;
     }
+
+    /**
+     * Get the total price (amount * pricePerUnit)
+     */
+    public double getPrice() {
+        return getTotalPrice();
+    }
     
     /**
      * Get the order type

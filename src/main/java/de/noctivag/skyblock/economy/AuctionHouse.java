@@ -2,6 +2,7 @@ package de.noctivag.skyblock.economy;
 import net.kyori.adventure.text.Component;
 import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
+import de.noctivag.skyblock.economy.Auction;
 
 import de.noctivag.skyblock.core.PlayerProfile;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;

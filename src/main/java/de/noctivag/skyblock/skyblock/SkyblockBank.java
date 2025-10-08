@@ -85,4 +85,8 @@ public class SkyblockBank {
         
         return 0.0;
     }
+    
+    public void save() {
+        // Placeholder save method
+    }
 }

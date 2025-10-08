@@ -111,7 +111,7 @@ public class GUIListener implements Listener {
         }
 
         // existing CustomGUI handling
-        if (!(event.getInventory().getHolder() instanceof CustomGUI)) {
+        if (!(event.getInventory().getHolder() instanceof CustomGUI gui)) {
             return;
         }
 
@@ -212,34 +212,31 @@ public class GUIListener implements Listener {
 
     private void handleMainMenuClick(int slot, Player player) {
         // Integration mit neuem SkyblockMenuSystem für Untermenüs
-        var mainSystem = SkyblockPlugin.getSystemManager().getSystem(de.noctivag.skyblock.skyblock.SkyblockMainSystem.class);
-        if (mainSystem != null) {
-            var menuSystem = mainSystem.getMenuSystem();
-            if (menuSystem != null) {
-                // Slots für neue Untermenüs (siehe SkyblockMenuSystem)
-                switch (slot) {
-                    case 14: // Collections
-                    case 15: // Stats
-                    case 17: // Recipe Book
-                    case 19: // Leveling
-                        // Delegiere an das neue Menüsystem
-                        String menuId = "main_menu";
-                        menuSystem.handleMenuClick(player, menuId, slot);
-                        return;
-                }
+        var menuSystem = SkyblockPlugin.getMenuSystem();
+        if (menuSystem != null) {
+            // Slots für neue Untermenüs (siehe SkyblockMenuSystem)
+            switch (slot) {
+                case 14: // Collections
+                case 15: // Stats
+                case 17: // Recipe Book
+                case 19: // Leveling
+                    // Delegiere an das neue Menüsystem
+                    String menuId = "main_menu";
+                    menuSystem.handleMenuClick(player, menuId, slot);
+                    return;
             }
         }
         // Fallback: bisherige Menüs
         switch (slot) {
             case 10 -> new CosmeticsMenu(SkyblockPlugin, SkyblockPlugin.getCosmeticsManager(), player).open();
-            case 12 -> player.sendMessage("§cWarp GUI not implemented yet!");
+            case 12 -> new WarpGUI(SkyblockPlugin).openMainMenu(player);
             case 14 -> new DailyRewardGUI(SkyblockPlugin).open();
-            case 16 -> player.sendMessage("§cAchievement GUI not implemented yet!");
+            case 16 -> new AchievementGUI(SkyblockPlugin).openMainGUI(player);
             // case 19 -> new ProfileGUI(SkyblockPlugin).open(player); // Removed: ProfileGUI does not exist
             case 21 -> new de.noctivag.skyblock.gui.BasicCommandsGUI(SkyblockPlugin).openGUI(player);
             case 23 -> new de.noctivag.skyblock.gui.JoinMessageGUI(SkyblockPlugin).openGUI(player);
             case 25 -> new de.noctivag.skyblock.gui.FeatureBookGUI(SkyblockPlugin).open();
-            case 28 -> player.sendMessage("§cKit Shop GUI not implemented yet!");
+            case 28 -> new KitShopGUI(SkyblockPlugin).openGUI(player);
             case 30 -> new EventMenu(SkyblockPlugin, player).open();
             case 32 -> new MessagesMenu(SkyblockPlugin).open();
             case 34 -> new SettingsGUI(SkyblockPlugin, player).open();
@@ -252,7 +249,7 @@ public class GUIListener implements Listener {
             case 11 -> player.performCommand("privacy");
             case 12 -> player.performCommand("chatsettings");
             case 13 -> player.performCommand("notifications");
-            case 14 -> player.sendMessage("§cFeature Toggle GUI not implemented yet!");
+            case 14 -> new FeatureToggleGUI(SkyblockPlugin).open(player);
             case 15 -> new FriendsGUI(SkyblockPlugin, player).openGUI(player);
             case 16 -> new PartyGUI(SkyblockPlugin, player).openGUI(player);
             case 22 -> new MainMenu(SkyblockPlugin, player).open();
@@ -304,27 +301,27 @@ public class GUIListener implements Listener {
             case 10 -> {
                 // Show current custom message in chat (or default)
                 String message;
-                // TODO: Implement hasCustomMessage() and getJoinMessage() methods in SkyblockPlugin class
-                // if (SkyblockPlugin.hasCustomMessage(player.getName())) {
-                //     message = SkyblockPlugin.getJoinMessage(player);
-                // } else {
+                if (jm != null && jm.hasCustomMessage(player.getUniqueId())) {
+                    message = jm.getJoinMessage(player);
+                } else {
                     message = "&7[&a+&7] &e%player% &7hat den Server betreten"; // Placeholder
                     message = message.replace("%player%", player.getName());
-                // }
+                }
                 player.sendMessage("§eDeine aktuelle Join-Message: §r" + message);
             }
             case 13 -> {
                 // Toggle message enabled/disabled
-                // TODO: Implement isMessageDisabled() and setMessageEnabled() methods in SkyblockPlugin class
-                // boolean currentlyDisabled = SkyblockPlugin.isMessageDisabled(player.getName());
-                // SkyblockPlugin.setMessageEnabled(player.getName(), !currentlyDisabled);
-                boolean currentlyDisabled = false; // Placeholder
+                if (jm == null) return;
+                boolean currentlyDisabled = jm.isMessageDisabled(player.getUniqueId());
+                jm.setMessageEnabled(player.getUniqueId(), !currentlyDisabled);
                 player.sendMessage(!currentlyDisabled ? "§cJoin-Messages deaktiviert." : "§aJoin-Messages aktiviert.");
                 menu.open(); // refresh
             }
             case 16 -> {
                 // Clear custom message
-                // SkyblockPlugin.clearJoinMessage(player); // TODO: Implement method in SkyblockPlugin class
+                if (jm != null) {
+                    jm.clearJoinMessage(player.getUniqueId());
+                }
                 player.sendMessage(Component.text("§aDeine benutzerdefinierte Join-Message wurde entfernt."));
                 menu.open();
             }
@@ -339,7 +336,14 @@ public class GUIListener implements Listener {
         switch (slot) {
             case 11 ->
                 // toggle vanish for the admin
-                { if (!player.hasPermission("basics.vanish")) { player.sendMessage(Component.text("§cKeine Berechtigung.")); return; } /* SkyblockPlugin.toggleVanish(player); */ } // TODO: Implement method in SkyblockPlugin class
+                { if (!player.hasPermission("basics.vanish")) { player.sendMessage(Component.text("§cKeine Berechtigung.")); return; }
+                    var vanishManager = SkyblockPlugin.getVanishManager();
+                    if (vanishManager != null) {
+                        vanishManager.toggleVanish(player);
+                    } else {
+                        player.sendMessage("§cVanish-System nicht verfügbar.");
+                    }
+                }
             case 13 -> new PlayerSelectorMenu(SkyblockPlugin).open();
             case 15 -> new RanksGUI(SkyblockPlugin, player).open();
             case 17 -> new de.noctivag.skyblock.gui.CommandUsageGUI(SkyblockPlugin).open();
@@ -368,23 +372,27 @@ public class GUIListener implements Listener {
         switch (slot) {
             case 11 -> {
                 // Jump gadget
-                player.setVelocity(player.getVelocity().setY(1.2));
+                player.getScheduler().run(SkyblockPlugin, (task) -> {
+                    player.setVelocity(player.getVelocity().setY(1.2));
+                }, null);
                 player.sendMessage(Component.text("§aSprung!"));
             }
             case 15 -> {
                 // Firework gadget
                 var loc = player.getLocation();
-                player.getWorld().spawn(loc, org.bukkit.entity.Firework.class, fw -> {
-                    var meta = fw.getFireworkMeta();
-                    meta.addEffect(org.bukkit.FireworkEffect.builder()
-                        .withColor(org.bukkit.Color.AQUA)
-                        .with(org.bukkit.FireworkEffect.Type.BURST)
-                        .flicker(true)
-                        .trail(true)
-                        .build());
-                    meta.setPower(1);
-                    fw.setFireworkMeta(meta);
-                });
+                player.getScheduler().run(SkyblockPlugin, (task) -> {
+                    player.getWorld().spawn(loc, org.bukkit.entity.Firework.class, fw -> {
+                        var meta = fw.getFireworkMeta();
+                        meta.addEffect(org.bukkit.FireworkEffect.builder()
+                                .withColor(org.bukkit.Color.AQUA)
+                                .with(org.bukkit.FireworkEffect.Type.BURST)
+                                .flicker(true)
+                                .trail(true)
+                                .build());
+                        meta.setPower(1);
+                        fw.setFireworkMeta(meta);
+                    });
+                }, null);
                 player.sendMessage(Component.text("§bFeuerwerk gezündet!"));
             }
             case 22 -> new CosmeticsMenu(SkyblockPlugin, SkyblockPlugin.getCosmeticsManager(), player).open();
@@ -425,25 +433,25 @@ public class GUIListener implements Listener {
 
     private void handleJoinMessageClick(int slot, Player player) {
         var jm = SkyblockPlugin.getJoinMessageManager();
+        if (jm == null) {
+            player.sendMessage("§cJoin-Message-System nicht verfügbar.");
+            return;
+        }
         switch (slot) {
             case 10 -> {
-                // TODO: Implement hasCustomMessage() and getJoinMessage() methods in SkyblockPlugin class
-                // String message = SkyblockPlugin.hasCustomMessage(player.getName()) ? 
-                //     SkyblockPlugin.getJoinMessage(player) :
-                String message =  
-                    "&7[&a+&7] &e%player% &7hat den Server betreten"; // Placeholder
+                String message = jm.hasCustomMessage(player.getUniqueId()) ?
+                        jm.getJoinMessage(player) :
+                        "&7[&a+&7] &e%player% &7hat den Server betreten"; // Placeholder
                 player.sendMessage("§eDeine aktuelle Join-Message: §r" + message.replace("%player%", player.getName()));
             }
             case 13 -> {
-                // TODO: Implement isMessageDisabled() and setMessageEnabled() methods in SkyblockPlugin class
-                // boolean currentlyDisabled = SkyblockPlugin.isMessageDisabled(player.getName());
-                // SkyblockPlugin.setMessageEnabled(player.getName(), !currentlyDisabled);
-                boolean currentlyDisabled = false; // Placeholder
+                boolean currentlyDisabled = jm.isMessageDisabled(player.getUniqueId());
+                jm.setMessageEnabled(player.getUniqueId(), !currentlyDisabled);
                 player.sendMessage(!currentlyDisabled ? "§cJoin-Messages deaktiviert." : "§aJoin-Messages aktiviert.");
                 new de.noctivag.skyblock.gui.JoinMessageGUI(SkyblockPlugin).open();
             }
             case 16 -> {
-                // SkyblockPlugin.clearJoinMessage(player); // TODO: Implement method in SkyblockPlugin class
+                jm.clearJoinMessage(player.getUniqueId());
                 player.sendMessage(Component.text("§aDeine benutzerdefinierte Join-Message wurde entfernt."));
                 new de.noctivag.skyblock.gui.JoinMessageGUI(SkyblockPlugin).open();
             }
@@ -454,6 +462,10 @@ public class GUIListener implements Listener {
 
     private void handleJoinMessagePresetsClick(int slot, Player player) {
         var jm = SkyblockPlugin.getJoinMessageManager();
+        if (jm == null) {
+            player.sendMessage("§cJoin-Message-System nicht verfügbar.");
+            return;
+        }
         String[] presets = {
             "&7[&a+&7] &e%player% &7hat den Server betreten",
             "&7[&a+&7] &e%player% &7ist dem Server beigetreten",
@@ -464,11 +476,11 @@ public class GUIListener implements Listener {
             "&7[&a+&7] &e%player% &7hat den Server betreten",
             "&7[&a+&7] &e%player% &7ist online"
         };
-        
+
         if (slot >= 10 && slot <= 17) {
             int presetIndex = slot - 10;
             if (presetIndex < presets.length) {
-                // SkyblockPlugin.setJoinMessage(player, presets[presetIndex]); // TODO: Implement method in SkyblockPlugin class
+                jm.setJoinMessage(player.getUniqueId(), presets[presetIndex]);
                 player.sendMessage("§aJoin-Message auf Preset " + (presetIndex + 1) + " gesetzt!");
                 new de.noctivag.skyblock.gui.JoinMessageGUI(SkyblockPlugin).open();
             }
@@ -495,81 +507,88 @@ public class GUIListener implements Listener {
 
     private void handleAdvancedCosmeticsClick(int slot, Player player) {
         var cosmeticsManager = SkyblockPlugin.getCosmeticsManager();
-        var purchaseManager = SkyblockPlugin.getCosmeticsPurchaseManager(); // Cast from Object
-        
+        var purchaseManager = SkyblockPlugin.getCosmeticsPurchaseManager();
+
         switch (slot) {
             case 10 -> {
                 // Circle particles
-                // TODO: Implement particle system
+                if (cosmeticsManager != null) cosmeticsManager.setActiveShape(player, ParticleShape.CIRCLE);
                 player.sendMessage(Component.text("§aKreis-Partikel aktiviert!"));
             }
             case 11 -> {
                 // Spiral particles
-                // TODO: Implement particle system
+                if (cosmeticsManager != null) cosmeticsManager.setActiveShape(player, ParticleShape.SPIRAL);
                 player.sendMessage(Component.text("§aSpiral-Partikel aktiviert!"));
             }
             case 12 -> {
                 // Helix particles
-                // TODO: Implement particle system
+                if (cosmeticsManager != null) cosmeticsManager.setActiveShape(player, ParticleShape.HELIX);
                 player.sendMessage(Component.text("§aHelix-Partikel aktiviert!"));
             }
             case 13 -> {
                 // Heart particles
-                // TODO: Implement particle system
+                if (cosmeticsManager != null) cosmeticsManager.setActiveShape(player, ParticleShape.HEART);
                 player.sendMessage(Component.text("§aHerz-Partikel aktiviert!"));
             }
             case 14 -> {
                 // Star particles
-                // TODO: Implement particle system
+                if (cosmeticsManager != null) cosmeticsManager.setActiveShape(player, ParticleShape.STAR);
                 player.sendMessage(Component.text("§aStern-Partikel aktiviert!"));
             }
             case 15 -> {
                 // Crown particles
-                // TODO: Implement particle system
+                if (cosmeticsManager != null) cosmeticsManager.setActiveShape(player, de.noctivag.skyblock.cosmetics.ParticleShape.CROWN);
                 player.sendMessage(Component.text("§aKronen-Partikel aktiviert!"));
             }
             case 16 -> {
                 // Wings particles
-                // TODO: Implement particle system
+                if (cosmeticsManager != null) cosmeticsManager.setActiveShape(player, de.noctivag.skyblock.cosmetics.ParticleShape.WINGS);
                 player.sendMessage(Component.text("§aFlügel-Partikel aktiviert!"));
             }
             case 19 -> {
                 // Sound effects
-                if (((CosmeticsPurchaseManager) purchaseManager).hasPurchased(player, "sound_ambient")) {
-                    player.sendMessage(Component.text("§aAmbient-Sounds aktiviert!"));
-                } else {
-                    ((CosmeticsPurchaseManager) purchaseManager).purchaseCosmetic(player, "sound_ambient", 80.0);
+                if (purchaseManager != null) {
+                    if (purchaseManager.hasPurchased(player, "sound_ambient")) {
+                        player.sendMessage(Component.text("§aAmbient-Sounds aktiviert!"));
+                    } else {
+                        purchaseManager.purchaseCosmetic(player, "sound_ambient", 80.0);
+                    }
                 }
             }
             case 20 -> {
                 // Wings
-                if (((CosmeticsPurchaseManager) purchaseManager).hasPurchased(player, "wings_angel")) {
-                    player.sendMessage(Component.text("§aEngels-Flügel aktiviert!"));
-                } else {
-                    ((CosmeticsPurchaseManager) purchaseManager).purchaseCosmetic(player, "wings_angel", 500.0);
+                if (purchaseManager != null) {
+                    if (purchaseManager.hasPurchased(player, "wings_angel")) {
+                        player.sendMessage(Component.text("§aEngels-Flügel aktiviert!"));
+                    } else {
+                        purchaseManager.purchaseCosmetic(player, "wings_angel", 500.0);
+                    }
                 }
             }
             case 21 -> {
                 // Halo
-                if (((CosmeticsPurchaseManager) purchaseManager).hasPurchased(player, "halo_golden")) {
-                    player.sendMessage(Component.text("§aGoldener Heiligenschein aktiviert!"));
-                } else {
-                    ((CosmeticsPurchaseManager) purchaseManager).purchaseCosmetic(player, "halo_golden", 400.0);
+                if (purchaseManager != null) {
+                    if (purchaseManager.hasPurchased(player, "halo_golden")) {
+                        player.sendMessage(Component.text("§aGoldener Heiligenschein aktiviert!"));
+                    } else {
+                        purchaseManager.purchaseCosmetic(player, "halo_golden", 400.0);
+                    }
                 }
             }
             case 22 -> {
                 // Trails
-                if (((CosmeticsPurchaseManager) purchaseManager).hasPurchased(player, "trail_fire")) {
-                    player.sendMessage(Component.text("§aFeuer-Spur aktiviert!"));
-                } else {
-                    ((CosmeticsPurchaseManager) purchaseManager).purchaseCosmetic(player, "trail_fire", 200.0);
+                if (purchaseManager != null) {
+                    if (purchaseManager.hasPurchased(player, "trail_fire")) {
+                        player.sendMessage(Component.text("§aFeuer-Spur aktiviert!"));
+                    } else {
+                        purchaseManager.purchaseCosmetic(player, "trail_fire", 200.0);
+                    }
                 }
             }
             case 25 -> new de.noctivag.skyblock.gui.ParticleSettingsGUI(SkyblockPlugin, player).open();
             case 28 -> {
                 // Deactivate all
-                // TODO: Implement removePlayerEffects
-                player.sendMessage(Component.text("§aAlle Effekte entfernt!"));
+                if (cosmeticsManager != null) cosmeticsManager.removePlayerEffects(player);
                 player.sendMessage(Component.text("§cAlle Kosmetik-Effekte deaktiviert!"));
             }
             case 49 -> new MainMenu(SkyblockPlugin, player).open();
@@ -616,77 +635,77 @@ public class GUIListener implements Listener {
         switch (slot) {
             case 10 -> {
                 // Ender Dragon Event
-                if (((EventManager) eventManager).isPlayerInEvent(player)) {
+                if (eventManager.isPlayerInEvent(player)) {
                     player.sendMessage(Component.text("§cDu bist bereits in einem Event!"));
                     return;
                 }
-                ((EventManager) eventManager).joinEvent(player, "ender_dragon");
+                eventManager.joinEvent(player, "ender_dragon");
             }
             case 11 -> {
                 // Wither Boss Event
-                if (((EventManager) eventManager).isPlayerInEvent(player)) {
+                if (eventManager.isPlayerInEvent(player)) {
                     player.sendMessage(Component.text("§cDu bist bereits in einem Event!"));
                     return;
                 }
-                ((EventManager) eventManager).joinEvent(player, "wither");
+                eventManager.joinEvent(player, "wither");
             }
             case 12 -> {
                 // Titan Event
-                if (((EventManager) eventManager).isPlayerInEvent(player)) {
+                if (eventManager.isPlayerInEvent(player)) {
                     player.sendMessage(Component.text("§cDu bist bereits in einem Event!"));
                     return;
                 }
-                ((EventManager) eventManager).joinEvent(player, "custom_boss");
+                eventManager.joinEvent(player, "custom_boss");
             }
             case 13 -> {
                 // Elder Guardian Event
-                if (((EventManager) eventManager).isPlayerInEvent(player)) {
+                if (eventManager.isPlayerInEvent(player)) {
                     player.sendMessage(Component.text("§cDu bist bereits in einem Event!"));
                     return;
                 }
-                ((EventManager) eventManager).joinEvent(player, "elder_guardian");
+                eventManager.joinEvent(player, "elder_guardian");
             }
             case 14 -> {
                 // Ravager Event
-                if (((EventManager) eventManager).isPlayerInEvent(player)) {
+                if (eventManager.isPlayerInEvent(player)) {
                     player.sendMessage(Component.text("§cDu bist bereits in einem Event!"));
                     return;
                 }
-                ((EventManager) eventManager).joinEvent(player, "ravager");
+                eventManager.joinEvent(player, "ravager");
             }
             case 15 -> {
                 // Phantom King Event
-                if (((EventManager) eventManager).isPlayerInEvent(player)) {
+                if (eventManager.isPlayerInEvent(player)) {
                     player.sendMessage(Component.text("§cDu bist bereits in einem Event!"));
                     return;
                 }
-                ((EventManager) eventManager).joinEvent(player, "phantom_king");
+                eventManager.joinEvent(player, "phantom_king");
             }
             case 16 -> {
                 // Blaze King Event
-                if (((EventManager) eventManager).isPlayerInEvent(player)) {
+                if (eventManager.isPlayerInEvent(player)) {
                     player.sendMessage(Component.text("§cDu bist bereits in einem Event!"));
                     return;
                 }
-                ((EventManager) eventManager).joinEvent(player, "blaze_king");
+                eventManager.joinEvent(player, "blaze_king");
             }
             case 17 -> {
                 // Enderman Lord Event
-                if (((EventManager) eventManager).isPlayerInEvent(player)) {
+                if (eventManager.isPlayerInEvent(player)) {
                     player.sendMessage(Component.text("§cDu bist bereits in einem Event!"));
                     return;
                 }
-                ((EventManager) eventManager).joinEvent(player, "enderman_lord");
+                eventManager.joinEvent(player, "enderman_lord");
             }
             case 19 -> {
                 // Event Status
-                if (((EventManager) eventManager).isPlayerInEvent(player)) {
-                    String currentEvent = ((EventManager) eventManager).getPlayerEvent(player);
+                if (eventManager.isPlayerInEvent(player)) {
+                    String currentEvent = eventManager.getPlayerEvent(player);
                     player.sendMessage("§aDu bist im Event: §e" + currentEvent);
                     player.sendMessage(Component.text("§7Nutze §e/event leave §7um das Event zu verlassen."));
                 } else {
                     player.sendMessage(Component.text("§7Du bist in keinem Event."));
-                    player.sendMessage("§7Aktive Events: §e" + ((EventManager) eventManager).getAvailableEvents().size());
+                    player.sendMessage("§7Aktive Events: §e" + eventManager.getAvailableEvents().size());
                 }
             }
             case 28 -> {

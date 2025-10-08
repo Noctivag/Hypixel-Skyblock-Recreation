@@ -8,7 +8,7 @@ import org.bukkit.Material;
 public class SlayerTier {
     private final SlayerType slayerType;
     private final int tier;
-    
+
     // Tier-specific properties
     private final long requirement;
     private final long cost;
@@ -22,14 +22,14 @@ public class SlayerTier {
     public SlayerTier(SlayerType slayerType, int tier) {
         this.slayerType = slayerType;
         this.tier = tier;
-        
+
         // Calculate tier-specific properties
         this.requirement = slayerType.getTierRequirement(tier);
         this.cost = slayerType.getSlayerCost(tier);
         this.reward = slayerType.getSlayerReward(tier);
         this.xpReward = slayerType.getSlayerXPReward(tier);
         this.bossName = slayerType.getBossForTier(tier);
-        
+
         // Calculate boss stats based on tier
         this.health = calculateBossHealth(tier);
         this.damage = calculateBossDamage(tier);

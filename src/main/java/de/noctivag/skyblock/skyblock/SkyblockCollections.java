@@ -83,4 +83,27 @@ public class SkyblockCollections {
     public void setRewardClaimed(String itemName, boolean claimed) {
         rewards.put(itemName, claimed);
     }
+    
+    // Compatibility methods for SkyblockManager
+    public void addCollection(org.bukkit.Material material, int amount) {
+        addToCollection(material.name().toLowerCase(), amount);
+    }
+    
+    public int getCollection(org.bukkit.Material material) {
+        return getCollectionCount(material.name().toLowerCase());
+    }
+    
+    public boolean hasMilestone(org.bukkit.Material material, int milestone) {
+        String key = material.name().toLowerCase() + "_" + milestone;
+        return isRewardClaimed(key);
+    }
+    
+    public void addMilestone(org.bukkit.Material material, int milestone) {
+        String key = material.name().toLowerCase() + "_" + milestone;
+        setRewardClaimed(key, true);
+    }
+    
+    public void save() {
+        // Placeholder save method
+    }
 }

@@ -101,6 +101,16 @@ public class MultiServerDatabaseManager extends DatabaseManager {
         plugin.getLogger().log(Level.INFO, "Loading gemstone data for player: " + playerId);
         return new de.noctivag.skyblock.gemstones.PlayerGemstoneData();
     }
+
+    // Placeholder methods for travel system
+    public void savePlayerTravelData(UUID playerId, de.noctivag.skyblock.travel.PlayerTravelData data) {
+        plugin.getLogger().log(Level.INFO, "Saving travel data for player: " + playerId);
+    }
+
+    public de.noctivag.skyblock.travel.PlayerTravelData loadPlayerTravelData(UUID playerId) {
+        plugin.getLogger().log(Level.INFO, "Loading travel data for player: " + playerId);
+        return new de.noctivag.skyblock.travel.PlayerTravelData();
+    }
     
     /**
      * Save player reforge data

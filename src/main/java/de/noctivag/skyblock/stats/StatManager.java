@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * StatContainer import - now in separate file
+ */
+
+/**
  * API für das zentrale Stat-System (Spieler, Items, Buffs)
  */
 public class StatManager {

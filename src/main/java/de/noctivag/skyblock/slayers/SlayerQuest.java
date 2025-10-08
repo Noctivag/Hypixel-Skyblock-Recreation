@@ -37,7 +37,7 @@ public class SlayerQuest {
         this.status = status;
         this.progress = progress;
     }
-    
+
     // Getters
     public String getQuestId() { return questId; }
     public UUID getPlayerId() { return playerId; }
@@ -89,13 +89,20 @@ public class SlayerQuest {
     public String getFormattedDuration() {
         long minutes = getQuestDurationMinutes();
         long seconds = getQuestDurationSeconds() % 60;
-        
+
         if (minutes > 0) {
             return minutes + "m " + seconds + "s";
         } else {
             return seconds + "s";
         }
     }
+
+    // Placeholder methods for AdvancedSlayerSystem compatibility
+    public UUID getPlayerUuid() { return playerId; }
+    public int getTier() { return slayerTier != null ? slayerTier.getTier() : 1; }
+    public boolean isExpired() { return false; } // Placeholder
+    public long getTimeLimit() { return 600000; } // 10 minutes default
+    public long getTimeRemaining() { return Math.max(0, getTimeLimit() - getQuestDuration()); }
 
     /**
      * Get quest display name
@@ -183,10 +190,10 @@ public class SlayerQuest {
      */
     public long getEstimatedTimeRemaining() {
         if (isCompleted() || isFailed()) return 0;
-        
+
         int estimatedTotalTime = slayerTier.getEstimatedCompletionTime() * 60; // Convert to seconds
         long elapsedTime = getQuestDurationSeconds();
-        
+
         return Math.max(0, estimatedTotalTime - elapsedTime);
     }
 
@@ -197,7 +204,7 @@ public class SlayerQuest {
         long seconds = getEstimatedTimeRemaining();
         long minutes = seconds / 60;
         seconds = seconds % 60;
-        
+
         if (minutes > 0) {
             return minutes + "m " + seconds + "s";
         } else {
@@ -284,7 +291,7 @@ public class SlayerQuest {
             this.deaths = 0;
         }
 
-        public SlayerQuestProgress(int mobsKilled, int mobsRequired, boolean bossSpawned, 
+        public SlayerQuestProgress(int mobsKilled, int mobsRequired, boolean bossSpawned,
                                  boolean bossKilled, long damageDealt, long damageTaken, int deaths) {
             this.mobsKilled = mobsKilled;
             this.mobsRequired = mobsRequired;

@@ -2,10 +2,7 @@ package de.noctivag.skyblock.minions;
 
 import java.util.UUID;
 import de.noctivag.skyblock.SkyblockPlugin;
-import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
-
-import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -366,6 +363,10 @@ public class HypixelSkyblockMinionsSystem implements Listener {
     }
     
     public static class HypixelMinion {
+        private final String minionId;
+        private final String name;
+        private final String displayName;
+        private final Material material;
         private final MinionRarity rarity;
         private final MinionCategory category;
         private final String description;
@@ -375,7 +376,10 @@ public class HypixelSkyblockMinionsSystem implements Listener {
         public HypixelMinion(String id, String name, String displayName, Material material,
                             MinionRarity rarity, MinionCategory category, String description,
                             List<String> levels, List<String> craftingMaterials) {
-            super(id, null, name, displayName, material, 1, true, null);
+            this.minionId = id;
+            this.name = name;
+            this.displayName = displayName;
+            this.material = material;
             this.rarity = rarity;
             this.category = category;
             this.description = description;
@@ -383,13 +387,9 @@ public class HypixelSkyblockMinionsSystem implements Listener {
             this.craftingMaterials = craftingMaterials;
         }
 
-        @Override
         public String getMinionId() { return minionId; }
-        @Override
         public String getName() { return name; }
-        @Override
         public String getDisplayName() { return displayName; }
-        @Override
         public Material getMaterial() { return material; }
         public MinionRarity getRarity() { return rarity; }
         public MinionCategory getCategory() { return category; }

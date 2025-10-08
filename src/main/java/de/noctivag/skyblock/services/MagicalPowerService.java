@@ -146,7 +146,9 @@ public class MagicalPowerService {
             return;
         }
 
-        profile.getAccessoryBag().addAccessory(accessoryName, rarity);
+        // de.noctivag.skyblock.models.AccessoryBag has addAccessory(String, Rarity) method
+        de.noctivag.skyblock.models.AccessoryBag bag = profile.getAccessoryBag();
+        bag.addAccessory(accessoryName, rarity);
         
         if (plugin.getSettingsConfig().isDebugMode()) {
             plugin.getLogger().info("Added accessory " + accessoryName + " (" + rarity.name() + 

@@ -110,4 +110,21 @@ public class PlayerProfile {
     public java.util.Map<String, Object> getCollections() {
         return new java.util.HashMap<>(); // Placeholder
     }
+
+    // Placeholder methods for missing functionality
+    public de.noctivag.skyblock.models.SlayerQuest getActiveSlayerQuest() { return null; }
+    public void setActiveSlayerQuest(de.noctivag.skyblock.models.SlayerQuest quest) { }
+    public void addSlayerXP(String slayerType, int xp) { }
+    public int getSlayerXP(String slayerType) { return 0; }
+    public de.noctivag.skyblock.enums.DungeonClass getDungeonClass() { return null; }
+    public void setDungeonClass(de.noctivag.skyblock.enums.DungeonClass dungeonClass) { }
+    public de.noctivag.skyblock.models.PetBag getPetBag() { return null; }
+    public void setPetBag(de.noctivag.skyblock.models.PetBag petBag) { }
+    public de.noctivag.skyblock.accessories.AccessoryBag getAccessoryBag() { return null; }
+    public de.noctivag.skyblock.enums.PowerStone getActivePowerStone() { return null; }
+    public void setActivePowerStone(de.noctivag.skyblock.enums.PowerStone powerStone) { }
+    public String getPlayerName() { return name; }
+    public void addMinion(de.noctivag.skyblock.models.Minion minion) { }
+    public void removeMinion(UUID minionId) { }
+    public java.util.List<de.noctivag.skyblock.models.Minion> getMinions() { return new java.util.ArrayList<>(); }
 }

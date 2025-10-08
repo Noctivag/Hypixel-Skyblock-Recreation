@@ -18,6 +18,7 @@ public class TravelLocation {
     private final float pitch;
     private final boolean unlockedByDefault;
     
+    // Full constructor
     public TravelLocation(String id, String name, String color, String description, 
                          TravelCategory category, int travelCost, double x, double y, double z, 
                          float yaw, float pitch, boolean unlockedByDefault) {
@@ -33,6 +34,22 @@ public class TravelLocation {
         this.yaw = yaw;
         this.pitch = pitch;
         this.unlockedByDefault = unlockedByDefault;
+    }
+    
+    // Simple constructor for basic locations (used by AdvancedTravelScrollSystem)
+    public TravelLocation(String name, String worldName, double x, double y, double z, float yaw, float pitch) {
+        this.id = name.toLowerCase().replace(" ", "_");
+        this.name = name;
+        this.color = "§f";
+        this.description = "Travel location: " + name;
+        this.category = TravelCategory.HUB;
+        this.travelCost = 0;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.yaw = yaw;
+        this.pitch = pitch;
+        this.unlockedByDefault = true;
     }
     
     // Getters
@@ -77,4 +94,7 @@ public class TravelLocation {
             return "&7Requires unlocking";
         }
     }
+
+    // Placeholder method for AdvancedTravelScrollSystem compatibility
+    public String getWorldName() { return "world"; } // Default world name
 }

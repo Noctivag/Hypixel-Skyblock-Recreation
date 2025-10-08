@@ -79,4 +79,19 @@ public class SkyblockIsland {
         // TODO: Implement trust system
         return false;
     }
+    
+    /**
+     * Check if location is within island bounds
+     */
+    public boolean isWithinBounds(org.bukkit.Location location) {
+        if (spawnLocation == null || location == null) return false;
+        if (!location.getWorld().equals(spawnLocation.getWorld())) return false;
+        
+        double distance = location.distance(spawnLocation);
+        return distance <= size;
+    }
+    
+    public void save() {
+        // Placeholder save method
+    }
 }

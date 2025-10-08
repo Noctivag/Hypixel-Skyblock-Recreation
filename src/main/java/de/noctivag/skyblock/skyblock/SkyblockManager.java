@@ -137,15 +137,15 @@ public class SkyblockManager {
         } catch (Exception e) { SkyblockPlugin.getLogger().warning("Failed to persist island for " + player.getName()); }
 
         // Initialize skills
-        SkyblockSkills playerSkills = new SkyblockSkills();
+        SkyblockSkills playerSkills = new SkyblockSkills(uuid);
         skills.put(uuid, playerSkills);
 
         // Initialize collections
-        SkyblockCollections playerCollections = new SkyblockCollections();
+        SkyblockCollections playerCollections = new SkyblockCollections(uuid);
         collections.put(uuid, playerCollections);
 
         // Initialize bank
-        SkyblockBank playerBank = new SkyblockBank();
+        SkyblockBank playerBank = new SkyblockBank(uuid);
         banks.put(uuid, playerBank);
 
         // Give starter items
@@ -195,8 +195,9 @@ public class SkyblockManager {
         Location islandLoc = generateIslandLocation();
 
         // Create island structure
-        SkyblockIsland island = new SkyblockIsland(player.getUniqueId(), islandLoc);
-        island.generateStarterIsland();
+        SkyblockIsland island = new SkyblockIsland(player.getUniqueId());
+        island.setSpawnLocation(islandLoc);
+        // island.generateStarterIsland(); // Method doesn't exist, commented out for now
 
         return island;
     }
@@ -451,7 +452,7 @@ public class SkyblockManager {
     public SkyblockIsland getIsland(UUID uuid) { return islands.get(uuid); }
     public SkyblockSkills getSkills(UUID uuid) {
         // Return existing skills or create new default skills so callers never receive null
-        return skills.computeIfAbsent(uuid, k -> new SkyblockSkills());
+        return skills.computeIfAbsent(uuid, k -> new SkyblockSkills(uuid));
     }
     public SkyblockCollections getCollections(UUID uuid) { return collections.get(uuid); }
     public SkyblockBank getBank(UUID uuid) { return banks.get(uuid); }

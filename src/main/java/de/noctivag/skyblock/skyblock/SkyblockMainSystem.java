@@ -31,7 +31,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SkyblockMainSystem implements Listener {
     public de.noctivag.skyblock.features.menu.SkyblockMenuSystem getMenuSystem() {
-        return menuSystem;
+        // Return null for now as we're using the legacy skyblock.SkyblockMenuSystem
+        return null;
     }
 
     private final SkyblockPlugin SkyblockPlugin;
@@ -39,10 +40,9 @@ public class SkyblockMainSystem implements Listener {
 
     // Core systems
     private HealthManaSystem healthManaSystem;
-    private SkyblockMenuSystem menuSystem;
+    private SkyblockMenuSystem menuSystem; // Legacy menu system
     private AdvancedSkillsSystem skillsSystem;
     private CollectionsSystem collectionsSystem;
-    private AdvancedCombatSystem combatSystem;
     private PetSystem petSystem;
 
     // Player data management
@@ -74,7 +74,6 @@ public class SkyblockMainSystem implements Listener {
         // collectionsSystem = new CollectionsSystem(SkyblockPlugin, databaseManager, skillsSystem);
         // Initialize CollectionsSystem with the skyblock-specific implementation that only requires the SkyblockPlugin
         collectionsSystem = new CollectionsSystem(SkyblockPlugin);
-        combatSystem = new AdvancedCombatSystem(SkyblockPlugin, databaseManager);
         petSystem = new PetSystem(SkyblockPlugin, databaseManager);
         menuSystem = new SkyblockMenuSystem(SkyblockPlugin);
 
@@ -216,10 +215,6 @@ public class SkyblockMainSystem implements Listener {
 
     public CollectionsSystem getCollectionsSystem() {
         return collectionsSystem;
-    }
-
-    public AdvancedCombatSystem getCombatSystem() {
-        return combatSystem;
     }
 
     public PetSystem getPetSystem() {
@@ -412,7 +407,7 @@ class CombatCommand implements org.bukkit.command.CommandExecutor {
 
         if (args.length == 0 || args[0].equalsIgnoreCase("stats")) {
             // Zeige vereinheitlichte Stats aus PlayerStatData
-            var statsSystem = system.healthManaSystem; // oder ein globales Stat-System
+            var statsSystem = system.getHealthManaSystem(); // oder ein globales Stat-System
             var stats = statsSystem.getPlayerStats(player.getUniqueId());
             player.sendMessage(Component.text("§a§lSpieler-Statistiken:"));
             player.sendMessage("§7Health: §c" + stats.getHealth() + "/" + stats.getMaxHealth());
@@ -433,12 +428,12 @@ class CombatCommand implements org.bukkit.command.CommandExecutor {
         player.sendMessage(Component.text("§cUnknown subcommand! Use /combat stats"));
         return true;
     }
-    
+
     // Missing methods for IslandCommand and other systems
     public boolean hasProfile(UUID playerId) {
         return false; // playerData not available in this context
     }
-    
+
     public void createProfile(Player player) {
         if (!hasProfile(player.getUniqueId())) {
             PlayerSkyblockData data = new PlayerSkyblockData(player.getUniqueId());
@@ -449,46 +444,46 @@ class CombatCommand implements org.bukkit.command.CommandExecutor {
             // }
         }
     }
-    
+
     public void teleportToIsland(Player player) {
         // Placeholder implementation
         player.sendMessage(Component.text("§aTeleporting to your island..."));
         // TODO: Implement actual island teleportation
     }
-    
+
     public PlayerSkyblockData getProfile(UUID playerId) {
         return null; // playerData not available in this context
     }
-    
+
     public Object getIsland(UUID playerId) {
         // Placeholder implementation
         return new Object(); // TODO: Return actual island object
     }
-    
+
     public void teleportToHub(Player player) {
         // Placeholder implementation
         player.sendMessage(Component.text("§aTeleporting to hub..."));
         // TODO: Implement actual hub teleportation
     }
-    
+
     public Object getSkills(UUID playerId) {
         // Placeholder implementation
         return new Object(); // TODO: Return actual skills object
     }
-    
+
     public void addCollection(Player player, org.bukkit.Material material, int amount) {
         // Placeholder implementation
         // if (collectionsSystem != null) {
         //     // TODO: Implement actual collection addition
         // }
     }
-    
+
     public void addSkillXP(Player player, de.noctivag.skyblock.skyblock.SkyblockManager.SkyblockSkill skill, double xp) {
         // Placeholder implementation
         // if (skillsSystem != null) {
         //     // TODO: Implement actual skill XP addition
         // }
     }
-    
+
     // Missing method for MiningCommand and MiningAreaSystem
 }

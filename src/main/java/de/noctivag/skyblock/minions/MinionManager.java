@@ -17,7 +17,7 @@ import java.util.logging.Level;
 public class MinionManager implements Service {
     
     private final SkyblockPlugin plugin;
-    private final Map<UUID, BaseMinion> minions = new HashMap<>();
+    private final Map<UUID, Minion> minions = new HashMap<>();
     private final Map<String, MinionType> minionTypes = new HashMap<>();
     private final Map<String, MinionUpgradeType> upgradeTypes = new HashMap<>();
     private SystemStatus status = SystemStatus.DISABLED;

@@ -85,4 +85,35 @@ public class PetSystem {
             return new ConcurrentHashMap<>(pets);
         }
     }
+
+    // Pet inner class for compatibility
+    public static class Pet {
+        private final String name;
+        private final int level;
+
+        public Pet(String name, int level) {
+            this.name = name;
+            this.level = level;
+        }
+
+        public String getName() { return name; }
+        public int getLevel() { return level; }
+    }
+
+    // Compatibility methods
+    public java.util.List<Pet> getPlayerPets(Player player) {
+        PlayerPets pets = getPlayerPets(player.getUniqueId());
+        if (pets == null) return new java.util.ArrayList<>();
+        return pets.getAllPets().entrySet().stream()
+            .map(e -> new Pet(e.getKey(), e.getValue()))
+            .collect(java.util.stream.Collectors.toList());
+    }
+
+    public Pet getActivePet(Player player) {
+        PlayerPets pets = getPlayerPets(player.getUniqueId());
+        if (pets == null || pets.getActivePet() == null) return null;
+        String activePetName = pets.getActivePet();
+        int level = pets.getPetLevel(activePetName);
+        return new Pet(activePetName, level);
+    }
 }

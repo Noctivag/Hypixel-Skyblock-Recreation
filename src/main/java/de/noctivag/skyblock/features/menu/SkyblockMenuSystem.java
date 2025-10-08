@@ -49,34 +49,34 @@ public class SkyblockMenuSystem implements Service {
     private static final String STATS_MENU_ID = "stats_menu";
     private static final String RECIPE_BOOK_MENU_ID = "recipe_book_menu";
     private static final String LEVELING_MENU_ID = "leveling_menu";
-    
+
     @Override
     public void initialize() {
         status = SystemStatus.RUNNING;
         initializeAllMenus();
     }
-    
+
     @Override
     public void shutdown() {
         status = SystemStatus.UNINITIALIZED;
         menuConfigs.clear();
     }
-    
+
     @Override
     public String getName() {
         return "SkyblockMenuSystem";
     }
-    
+
     @Override
     public SystemStatus getStatus() {
         return status;
     }
-    
+
     @Override
     public boolean isEnabled() {
         return status == SystemStatus.RUNNING;
     }
-    
+
     @Override
     public void setEnabled(boolean enabled) {
         if (enabled) {
@@ -85,7 +85,7 @@ public class SkyblockMenuSystem implements Service {
             status = SystemStatus.UNINITIALIZED;
         }
     }
-    
+
     /**
      * Initialize all menu configurations based on Hypixel SkyBlock Wiki
      */
@@ -130,7 +130,7 @@ public class SkyblockMenuSystem implements Service {
             Arrays.asList("Swords menu"), new HashMap<>(), new ArrayList<>());
         menuConfigs.put("swords_menu", swordsMenu);
     }
-    
+
     /**
      * Open main menu for player
      */
@@ -140,11 +140,11 @@ public class SkyblockMenuSystem implements Service {
             player.sendMessage(Component.text("§cMenu not found!"));
             return;
         }
-        
+
         Inventory inventory = createInventoryFromConfig(menuConfig);
         player.openInventory(inventory);
     }
-    
+
     /**
      * Open profile menu for player
      */
@@ -154,11 +154,11 @@ public class SkyblockMenuSystem implements Service {
             player.sendMessage(Component.text("§cProfile menu not found!"));
             return;
         }
-        
+
         Inventory inventory = createInventoryFromConfig(menuConfig);
         player.openInventory(inventory);
     }
-    
+
     /**
      * Open weapons menu for player
      */
@@ -168,11 +168,11 @@ public class SkyblockMenuSystem implements Service {
             player.sendMessage(Component.text("§cWeapons menu not found!"));
             return;
         }
-        
+
         Inventory inventory = createInventoryFromConfig(menuConfig);
         player.openInventory(inventory);
     }
-    
+
     /**
      * Open swords menu for player
      */
@@ -182,17 +182,17 @@ public class SkyblockMenuSystem implements Service {
             player.sendMessage(Component.text("§cSwords menu not found!"));
             return;
         }
-        
+
         Inventory inventory = createInventoryFromConfig(menuConfig);
         player.openInventory(inventory);
     }
-    
+
     /**
      * Create inventory from menu configuration
      */
     private Inventory createInventoryFromConfig(MenuConfig config) {
         Inventory inventory = org.bukkit.Bukkit.createInventory(null, config.getSize(), config.getDisplayName());
-        
+
         // Add basic items based on menu type
         if (config.getId().equals("main_menu")) {
             // Profile button
@@ -291,6 +291,9 @@ public class SkyblockMenuSystem implements Service {
             dungeonsItem.setItemMeta(dungeonsMeta);
             inventory.setItem(46, dungeonsItem);
         }
+        return inventory;
+    }
+
     // Untermenü-Öffner
     public void openCollectionsMenu(Player player) {
         MenuConfig menuConfig = menuConfigs.get(COLLECTIONS_MENU_ID);
@@ -331,17 +334,14 @@ public class SkyblockMenuSystem implements Service {
         Inventory inventory = createInventoryFromConfig(menuConfig);
         player.openInventory(inventory);
     }
-        
-        return inventory;
-    }
-    
+
     /**
      * Get menu configuration by ID
      */
     public MenuConfig getMenuConfig(String id) {
         return menuConfigs.get(id);
     }
-    
+
     /**
      * Get all menu configurations
      */

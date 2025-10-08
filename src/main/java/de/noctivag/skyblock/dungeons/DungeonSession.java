@@ -13,6 +13,7 @@ public class DungeonSession extends BaseDungeonGroup {
     private final String sessionId;
     private final DungeonFloor floor;
     private final Map<UUID, DungeonPlayer> playerMap;
+    private final List<UUID> playerUuids;
     private final Location startLocation;
     private final DungeonSessionStatus status;
     private final Map<String, Object> sessionData;
@@ -22,6 +23,7 @@ public class DungeonSession extends BaseDungeonGroup {
         this.sessionId = sessionId;
         this.floor = floor;
         this.playerMap = new ConcurrentHashMap<>();
+        this.playerUuids = new ArrayList<>();
         this.startLocation = startLocation.clone();
         this.status = DungeonSessionStatus.WAITING;
         this.sessionData = new ConcurrentHashMap<>();
@@ -32,7 +34,7 @@ public class DungeonSession extends BaseDungeonGroup {
     public DungeonFloor getFloor() { return floor; }
     public Map<UUID, DungeonPlayer> getPlayerMap() { return new HashMap<>(playerMap); }
     @Override
-    public List<UUID> getPlayers() { return new ArrayList<>(playerMap.keySet()); }
+    public List<UUID> getPlayers() { return new ArrayList<>(playerUuids); }
     public Location getStartLocation() { return startLocation.clone(); }
     @Override
     public long getStartTime() { return startTime; }
@@ -44,16 +46,17 @@ public class DungeonSession extends BaseDungeonGroup {
      * Add player to session
      */
     public boolean addPlayer(Player player, DungeonClass dungeonClass) {
-        if (players.size() >= floor.getMaxPlayers()) {
+        if (playerMap.size() >= floor.getMaxPlayers()) {
             return false; // Session is full
         }
         
-        if (players.containsKey(player.getUniqueId())) {
+        if (playerMap.containsKey(player.getUniqueId())) {
             return false; // Player already in session
         }
-        
+
         DungeonPlayer dungeonPlayer = new DungeonPlayer(player, dungeonClass);
-        players.put(player.getUniqueId(), dungeonPlayer);
+        playerMap.put(player.getUniqueId(), dungeonPlayer);
+        playerUuids.add(player.getUniqueId());
         return true;
     }
 
@@ -61,35 +64,40 @@ public class DungeonSession extends BaseDungeonGroup {
      * Remove player from session
      */
     public boolean removePlayer(UUID playerId) {
-        return playerMap.remove(playerId) != null;
+        DungeonPlayer removed = playerMap.remove(playerId);
+        if (removed != null) {
+            playerUuids.remove(playerId);
+            return true;
+        }
+        return false;
     }
 
     /**
      * Get player from session
      */
     public DungeonPlayer getPlayer(UUID playerId) {
-        return players.get(playerId);
+        return playerMap.get(playerId);
     }
 
     /**
      * Get player count
      */
     public int getPlayerCount() {
-        return players.size();
+        return playerMap.size();
     }
 
     /**
      * Check if session is full
      */
     public boolean isFull() {
-        return players.size() >= floor.getMaxPlayers();
+        return playerMap.size() >= floor.getMaxPlayers();
     }
 
     /**
      * Check if session has minimum players
      */
     public boolean hasMinimumPlayers() {
-        return players.size() >= floor.getMinPlayers();
+        return playerMap.size() >= floor.getMinPlayers();
     }
 
     /**
@@ -147,7 +155,7 @@ public class DungeonSession extends BaseDungeonGroup {
      * Check if player is in session
      */
     public boolean containsPlayer(UUID playerId) {
-        return players.containsKey(playerId);
+        return playerMap.containsKey(playerId);
     }
 
     /**
@@ -155,7 +163,7 @@ public class DungeonSession extends BaseDungeonGroup {
      */
     public List<Player> getOnlinePlayers() {
         List<Player> onlinePlayers = new ArrayList<>();
-        for (DungeonPlayer dungeonPlayer : players.values()) {
+        for (DungeonPlayer dungeonPlayer : playerMap.values()) {
             Player player = dungeonPlayer.getPlayer();
             if (player != null && player.isOnline()) {
                 onlinePlayers.add(player);
@@ -170,7 +178,7 @@ public class DungeonSession extends BaseDungeonGroup {
     public Map<DungeonClass, List<DungeonPlayer>> getPlayersByClass() {
         Map<DungeonClass, List<DungeonPlayer>> playersByClass = new HashMap<>();
         
-        for (DungeonPlayer dungeonPlayer : players.values()) {
+        for (DungeonPlayer dungeonPlayer : playerMap.values()) {
             DungeonClass dungeonClass = dungeonPlayer.getDungeonClass();
             playersByClass.computeIfAbsent(dungeonClass, k -> new ArrayList<>()).add(dungeonPlayer);
         }
@@ -184,7 +192,7 @@ public class DungeonSession extends BaseDungeonGroup {
     public Map<DungeonClass, Integer> getClassDistribution() {
         Map<DungeonClass, Integer> distribution = new HashMap<>();
         
-        for (DungeonPlayer dungeonPlayer : players.values()) {
+        for (DungeonPlayer dungeonPlayer : playerMap.values()) {
             DungeonClass dungeonClass = dungeonPlayer.getDungeonClass();
             distribution.put(dungeonClass, distribution.getOrDefault(dungeonClass, 0) + 1);
         }

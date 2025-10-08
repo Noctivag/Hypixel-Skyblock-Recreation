@@ -58,7 +58,7 @@ public class PlacedMinion extends BaseMinion {
     public long getLastActionTime() { return lastActionTime; }
     public long getTotalActions() { return totalActions; }
     public long getTotalProduction() { return totalProduction; }
-    public boolean isActive() { return isActive; }
+    public boolean isActive() { return active; }
 
     /**
      * Get minion display name
@@ -92,7 +92,7 @@ public class PlacedMinion extends BaseMinion {
         lore.add("&7Placed: &a" + formatTimeAgo(placedTime));
         lore.add("&7Last Action: &a" + formatTimeAgo(lastActionTime));
         lore.add("");
-        lore.add(isActive ? "&a✓ Active" : "&c✗ Inactive");
+        lore.add(active ? "&a✓ Active" : "&c✗ Inactive");
         
         return lore.toArray(new String[0]);
     }
@@ -270,7 +270,7 @@ public class PlacedMinion extends BaseMinion {
      * Check if minion can perform action
      */
     public boolean canPerformAction() {
-        if (!isActive) return false;
+        if (!active) return false;
         if (isStorageFull()) return false;
         
         long currentTime = System.currentTimeMillis();
@@ -316,7 +316,7 @@ public class PlacedMinion extends BaseMinion {
      * Get minion status
      */
     public String getStatus() {
-        if (!isActive) return "&cInactive";
+        if (!active) return "&cInactive";
         if (isStorageFull()) return "&eStorage Full";
         if (canPerformAction()) return "&aReady";
         return "&7Working";

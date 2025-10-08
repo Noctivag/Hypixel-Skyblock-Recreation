@@ -34,22 +34,24 @@ public class FairySoulsSystem implements Service, Listener {
     }
 
     private void initializeFairySouls() {
+        // Beispiel-Standardwerte für Material, Kategorie, Beschreibung, experienceValue
+        Material defaultMaterial = Material.END_ROD;
+        FairySoulCategory defaultCategory = FairySoulCategory.HUB;
+        List<String> defaultDescription = Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses");
+        int defaultExp = 1;
         // Initialize fairy souls in different locations
-        addFairySoul("hub_1", new Location(Bukkit.getWorld("hub_a"), 10, 70, 10), "Hub Fairy Soul");
-        addFairySoul("hub_2", new Location(Bukkit.getWorld("hub_a"), -10, 70, -10), "Hidden Hub Fairy Soul");
-        addFairySoul("hub_3", new Location(Bukkit.getWorld("hub_a"), 0, 80, 0), "Sky Hub Fairy Soul");
-
-        addFairySoul("village_1", new Location(Bukkit.getWorld("hub_a"), 50, 65, 50), "Village Fairy Soul");
-        addFairySoul("village_2", new Location(Bukkit.getWorld("hub_a"), -50, 65, -50), "Village Cellar Fairy Soul");
-
-        addFairySoul("mountain_1", new Location(Bukkit.getWorld("hub_a"), 100, 100, 100), "Mountain Peak Fairy Soul");
-        addFairySoul("mountain_2", new Location(Bukkit.getWorld("hub_a"), -100, 120, -100), "Mountain Cave Fairy Soul");
-
+        addFairySoul("hub_1", "Hub Fairy Soul", defaultMaterial, defaultCategory, new Location(Bukkit.getWorld("hub_a"), 10, 70, 10), defaultDescription, defaultExp);
+        addFairySoul("hub_2", "Hidden Hub Fairy Soul", defaultMaterial, defaultCategory, new Location(Bukkit.getWorld("hub_a"), -10, 70, -10), defaultDescription, defaultExp);
+        addFairySoul("hub_3", "Sky Hub Fairy Soul", defaultMaterial, defaultCategory, new Location(Bukkit.getWorld("hub_a"), 0, 80, 0), defaultDescription, defaultExp);
+        addFairySoul("village_1", "Village Fairy Soul", defaultMaterial, defaultCategory, new Location(Bukkit.getWorld("hub_a"), 50, 65, 50), defaultDescription, defaultExp);
+        addFairySoul("village_2", "Village Cellar Fairy Soul", defaultMaterial, defaultCategory, new Location(Bukkit.getWorld("hub_a"), -50, 65, -50), defaultDescription, defaultExp);
+        addFairySoul("mountain_1", "Mountain Peak Fairy Soul", defaultMaterial, defaultCategory, new Location(Bukkit.getWorld("hub_a"), 100, 100, 100), defaultDescription, defaultExp);
+        addFairySoul("mountain_2", "Mountain Cave Fairy Soul", defaultMaterial, defaultCategory, new Location(Bukkit.getWorld("hub_a"), -100, 120, -100), defaultDescription, defaultExp);
         plugin.getLogger().info("FairySoulsSystem initialized with " + fairySouls.size() + " fairy souls.");
     }
 
-    private void addFairySoul(String id, Location location, String name) {
-        fairySouls.put(id, new FairySoul(id, location, name));
+    private void addFairySoul(String id, String name, Material material, FairySoulCategory category, Location location, List<String> description, int experienceValue) {
+        fairySouls.put(id, new FairySoul(id, name, material, category, location, description, experienceValue));
     }
 
     @Override
@@ -175,27 +177,5 @@ public class FairySoulsSystem implements Service, Listener {
         }
 
         return nearby;
-    }
-}
-
-class FairySoul {
-    private final String id;
-    private final Location location;
-    private final String name;
-
-    public FairySoul(String id, Location location, String name) {
-        this.id = id;
-        this.location = location;
-        this.name = name;
-    }
-
-    public String getId() { return id; }
-    public Location getLocation() { return location; }
-    public String getName() { return name; }
-
-    public ItemStack getDisplayItem() {
-        ItemStack item = new ItemStack(Material.END_CRYSTAL);
-        // TODO: Set item meta with fairy soul information
-        return item;
     }
 }

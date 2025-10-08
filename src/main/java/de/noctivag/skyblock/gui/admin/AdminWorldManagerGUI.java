@@ -126,21 +126,21 @@ public class AdminWorldManagerGUI {
     tpPlayerMeta.displayName(Component.text("§aSpieler teleportieren"));
     tpPlayerMeta.lore(List.of(Component.text("§7Teleportiert einen Spieler in diese Welt.")));
     tpPlayer.setItemMeta(tpPlayerMeta);
-    actionMenu.setItem(2, tpPlayer);
+    // actionMenu.setItem(2, tpPlayer);
 
     ItemStack kickPlayer = new ItemStack(Material.BARRIER);
     ItemMeta kickPlayerMeta = kickPlayer.getItemMeta();
     kickPlayerMeta.displayName(Component.text("§cSpieler kicken"));
     kickPlayerMeta.lore(List.of(Component.text("§7Entfernt einen Spieler aus dieser Welt.")));
     kickPlayer.setItemMeta(kickPlayerMeta);
-    actionMenu.setItem(4, kickPlayer);
+    // actionMenu.setItem(4, kickPlayer);
 
     ItemStack whitelist = new ItemStack(Material.PAPER);
     ItemMeta whitelistMeta = whitelist.getItemMeta();
     whitelistMeta.displayName(Component.text("§eWhitelist verwalten"));
-    whitelistMeta.lore(List.of(Component.text("§7Verwalte die Spieler-Whitelist für diese Welt.", "§8(Demnächst verfügbar)")));
+    whitelistMeta.lore(List.of(Component.text("§7Verwalte die Spieler-Whitelist für diese Welt.")));
     whitelist.setItemMeta(whitelistMeta);
-    actionMenu.setItem(6, whitelist);
+    // actionMenu.setItem(6, whitelist);
         World world = worldManager.getWorld(worldName);
         Inventory actionMenu = Bukkit.createInventory(player, 27, Component.text("§bWelt: " + worldName));
         // Teleport

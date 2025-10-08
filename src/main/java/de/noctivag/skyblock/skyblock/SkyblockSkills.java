@@ -83,6 +83,10 @@ public class SkyblockSkills {
     public int getLevel(String skillName) {
         return getSkillLevel(skillName);
     }
+    
+    public int getLevel(de.noctivag.skyblock.skyblock.SkyblockManager.SkyblockSkill skill) {
+        return getSkillLevel(skill.name().toLowerCase());
+    }
 
     public int getXP(String skillName) {
         return (int) getSkillExperience(skillName);
@@ -90,5 +94,13 @@ public class SkyblockSkills {
 
     public int getXPToNextLevel(String skillName) {
         return 100; // Placeholder
+    }
+    
+    public void addXP(de.noctivag.skyblock.skyblock.SkyblockManager.SkyblockSkill skill, double xp) {
+        addSkillExperience(skill.name().toLowerCase(), xp);
+    }
+    
+    public void save() {
+        // Placeholder save method
     }
 }

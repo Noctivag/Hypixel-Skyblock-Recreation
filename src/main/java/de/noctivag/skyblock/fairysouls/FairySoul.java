@@ -10,7 +10,8 @@ import java.util.List;
  * Represents a fairy soul with its properties
  */
 public class FairySoul {
-    
+
+    private final String id;
     private final String name;
     private final Material material;
     private final FairySoulCategory category;
@@ -18,7 +19,8 @@ public class FairySoul {
     private final List<String> description;
     private final int experienceValue;
     
-    public FairySoul(String name, Material material, FairySoulCategory category, Location location, List<String> description, int experienceValue) {
+    public FairySoul(String id, String name, Material material, FairySoulCategory category, Location location, List<String> description, int experienceValue) {
+        this.id = id;
         this.name = name;
         this.material = material;
         this.category = category;
@@ -27,6 +29,10 @@ public class FairySoul {
         this.experienceValue = experienceValue;
     }
     
+    public String getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
@@ -54,7 +60,8 @@ public class FairySoul {
     @Override
     public String toString() {
         return "FairySoul{" +
-                "name='" + name + '\'' +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
                 ", material=" + material +
                 ", category=" + category +
                 ", location=" + location +

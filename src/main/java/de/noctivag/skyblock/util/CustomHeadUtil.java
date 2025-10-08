@@ -22,6 +22,8 @@ public class CustomHeadUtil {
         SkullMeta meta = (SkullMeta) head.getItemMeta();
         meta.setDisplayName(name);
         // Setze Custom-Textur
+        // TODO: Re-enable when authlib dependency is added
+        /*
         try {
             java.lang.reflect.Field profileField = meta.getClass().getDeclaredField("profile");
             profileField.setAccessible(true);
@@ -32,6 +34,7 @@ public class CustomHeadUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        */
         head.setItemMeta(meta);
         return head;
     }

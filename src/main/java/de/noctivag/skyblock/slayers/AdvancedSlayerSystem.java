@@ -246,8 +246,14 @@ public class AdvancedSlayerSystem implements Service, Listener {
         double questCost = boss.getQuestCost() * tier;
         // Implementation would check player's coins and deduct them
         
-        // Create quest
-        SlayerQuest quest = new SlayerQuest(playerUuid, boss, tier);
+        // Create quest - need to find SlayerTier and create proper SlayerQuest
+        // For now, create a quest ID and use player location
+        String questId = "quest_" + playerUuid.toString().substring(0, 8) + "_" + System.currentTimeMillis();
+        org.bukkit.Location spawnLocation = player.getLocation();
+        
+        // Create a SlayerTier from boss and tier info (temporary solution)
+        SlayerTier slayerTier = createSlayerTierFromBoss(boss, tier);
+        SlayerQuest quest = new SlayerQuest(questId, playerUuid, slayerTier, spawnLocation);
         activeQuests.put(playerUuid, quest);
         
         // Start quest task
@@ -401,5 +407,33 @@ public class AdvancedSlayerSystem implements Service, Listener {
         if (activeQuests.containsKey(playerUuid)) {
             endSlayerQuest(playerUuid, false);
         }
+    }
+    
+    /**
+     * Create a SlayerTier from boss and tier info (temporary helper method)
+     */
+    private SlayerTier createSlayerTierFromBoss(SlayerBoss boss, int tier) {
+        // Create a temporary SlayerTier for compatibility
+        // This is a workaround - ideally SlayerTier should be properly loaded from configuration
+        SlayerType slayerType;
+        try {
+            slayerType = SlayerType.valueOf(boss.getType().name());
+        } catch (IllegalArgumentException e) {
+            slayerType = SlayerType.REVENANT_HORROR; // Default
+        }
+        
+        return new SlayerTier(
+            slayerType,
+            tier,
+            boss.getName() + " Tier " + tier,
+            boss.getName(),
+            (long) boss.getHealthForTier(tier),
+            (int) boss.getDamageForTier(tier),
+            (int) boss.getDefenseForTier(tier),
+            (int) boss.getCoinsForTier(tier),
+            (int) boss.getXpForTier(tier),
+            5, // default estimated completion time in minutes
+            slayerType.getSpawnLocation() // Use spawn location from SlayerType
+        );
     }
 }

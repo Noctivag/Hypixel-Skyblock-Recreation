@@ -2,10 +2,7 @@ package de.noctivag.skyblock.talismans;
 
 import java.util.UUID;
 import de.noctivag.skyblock.SkyblockPlugin;
-import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
-
-import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.database.MultiServerDatabaseManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -183,7 +180,6 @@ public class AdvancedTalismanSystem {
 
         public Talisman(String id, String name, String displayName, Material icon,
                        String description, String category, TalismanRarity rarity, int level, double effectValue) {
-            super(id, 0.0, 1); // Preis kann später gesetzt werden, Menge = 1
             this.id = id; this.name = name; this.displayName = displayName; this.icon = icon;
             this.description = description; this.category = category; this.rarity = rarity;
             this.level = level; this.effectValue = effectValue;

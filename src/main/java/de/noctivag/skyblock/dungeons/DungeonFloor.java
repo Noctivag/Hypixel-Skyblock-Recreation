@@ -47,6 +47,7 @@ public enum DungeonFloor {
     }
 
     public String getDisplayName() { return displayName; }
+    public String getName() { return displayName; }
     public String getColor() { return color; }
     public String getIcon() { return icon; }
     public String getDescription() { return description; }

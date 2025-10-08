@@ -56,7 +56,7 @@ public class AdminMainMenuGUI {
         event.setCancelled(true);
         int slot = event.getRawSlot();
         if (slot == 10) {
-            new AdminWorldManagerGUI((org.bukkit.plugin.java.JavaPlugin) Bukkit.getPluginManager().getPlugin("SkyblockPlugin"), player);
+            new AdminWorldManagerGUI((de.noctivag.skyblock.SkyblockPlugin) Bukkit.getPluginManager().getPlugin("SkyblockPlugin"), player);
         } else if (slot == 12) {
             player.performCommand("arsenal");
         } else if (slot == 14) {

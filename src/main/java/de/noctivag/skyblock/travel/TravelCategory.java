@@ -10,7 +10,10 @@ public enum TravelCategory {
     MINING("Mining", "&6", "&7Mining areas"),
     COMBAT("Combat", "&c", "&7Combat areas"),
     FARMING("Farming", "&a", "&7Farming and foraging areas"),
-    SPECIAL("Special", "&d", "&7Special locations");
+    SPECIAL("Special", "&d", "&7Special locations"),
+    END("End", "&5", "&7End dimension locations"),
+    FISHING("Fishing", "&b", "&7Fishing areas"),
+    DUNGEON("Dungeon", "&c", "&7Dungeon entrances");
     
     private final String displayName;
     private final String color;

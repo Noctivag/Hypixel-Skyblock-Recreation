@@ -8,23 +8,25 @@ import java.util.UUID;
 public class PlayerStatData extends BaseStatData {
     public PlayerStatData(UUID playerId) {
         super(playerId);
-    // Standardwerte für Health, Mana und weitere Skyblock-Stats
-    stats.put("health", 100.0);
-    stats.put("max_health", 100.0);
-    stats.put("mana", 100.0);
-    stats.put("max_mana", 100.0);
-    stats.put("mana_regen", 1.0);
-    stats.put("defense", 0.0);
-    stats.put("strength", 0.0);
-    stats.put("speed", 100.0);
-    stats.put("crit_chance", 30.0);
-    stats.put("crit_damage", 50.0);
-    stats.put("intelligence", 0.0);
-    stats.put("ferocity", 0.0);
-    stats.put("true_defense", 0.0);
-    stats.put("magic_find", 0.0);
-    stats.put("pristine", 0.0);
-    stats.put("fortune", 0.0);
+        // Standardwerte für Health, Mana und weitere Skyblock-Stats
+        stats.put("health", 100.0);
+        stats.put("max_health", 100.0);
+        stats.put("mana", 100.0);
+        stats.put("max_mana", 100.0);
+        stats.put("mana_regen", 1.0);
+        stats.put("defense", 0.0);
+        stats.put("strength", 0.0);
+        stats.put("speed", 100.0);
+        stats.put("crit_chance", 30.0);
+        stats.put("crit_damage", 50.0);
+        stats.put("intelligence", 0.0);
+        stats.put("ferocity", 0.0);
+        stats.put("true_defense", 0.0);
+        stats.put("magic_find", 0.0);
+        stats.put("pristine", 0.0);
+        stats.put("fortune", 0.0);
+    }
+
     // Getter/Setter für Defense
     public double getDefense() { return stats.getOrDefault("defense", 0.0); }
     public void setDefense(double value) { stats.put("defense", value); }
@@ -68,7 +70,6 @@ public class PlayerStatData extends BaseStatData {
     // Getter/Setter für Fortune
     public double getFortune() { return stats.getOrDefault("fortune", 0.0); }
     public void setFortune(double value) { stats.put("fortune", value); }
-    }
 
     // Getter/Setter für Health
     public double getHealth() { return stats.getOrDefault("health", 0.0); }

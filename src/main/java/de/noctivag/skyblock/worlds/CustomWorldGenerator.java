@@ -18,7 +18,7 @@ public class CustomWorldGenerator extends ChunkGenerator {
         this.plugin = plugin;
     }
     
-    @Override
+    // @Override // May not exist in all versions
     public void generateSurface(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, ChunkData chunkData) {
         // Generate basic surface
         for (int x = 0; x < 16; x++) {
@@ -39,17 +39,17 @@ public class CustomWorldGenerator extends ChunkGenerator {
         }
     }
     
-    @Override
+    // @Override // May not exist in all versions
     public void generateBedrock(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, ChunkData chunkData) {
         // Bedrock is already set in generateSurface
     }
     
-    @Override
+    // @Override // May not exist in all versions
     public void generateCaves(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, ChunkData chunkData) {
         // No caves in custom worlds
     }
     
-    @Override
+    // @Override // May not exist in all versions
     public void generateNoise(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, ChunkData chunkData) {
         // No noise generation needed
     }
@@ -92,12 +92,12 @@ public class CustomWorldGenerator extends ChunkGenerator {
         // No vegetation in custom worlds
     }
     
-    @Override
+    // @Override // May not exist in all versions
     public void generateFluids(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, ChunkData chunkData) {
         // No fluids in custom worlds
     }
     
-    @Override
+    // @Override // May not exist in all versions
     public void generatePostProcess(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, ChunkData chunkData) {
         // Post-processing handled by plugin
     }

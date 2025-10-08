@@ -45,8 +45,9 @@ public class AdvancedFairySoulsSystem {
     private void initializeFairySouls() {
         // Hub Fairy Souls
         fairySouls.put("hub_soul_1", new FairySoul(
-            "Hub Fairy Soul #1", 
-            Material.END_ROD, 
+            "hub_soul_1",
+            "Hub Fairy Soul #1",
+            Material.END_ROD,
             FairySoulCategory.HUB,
             new Location(Bukkit.getWorld("hub_world"), 100, 70, 100),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
@@ -54,8 +55,9 @@ public class AdvancedFairySoulsSystem {
         ));
         
         fairySouls.put("hub_soul_2", new FairySoul(
-            "Hub Fairy Soul #2", 
-            Material.END_ROD, 
+            "hub_soul_2",
+            "Hub Fairy Soul #2",
+            Material.END_ROD,
             FairySoulCategory.HUB,
             new Location(Bukkit.getWorld("hub_world"), 200, 80, 200),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
@@ -63,8 +65,9 @@ public class AdvancedFairySoulsSystem {
         ));
         
         fairySouls.put("hub_soul_3", new FairySoul(
-            "Hub Fairy Soul #3", 
-            Material.END_ROD, 
+            "hub_soul_3",
+            "Hub Fairy Soul #3",
+            Material.END_ROD,
             FairySoulCategory.HUB,
             new Location(Bukkit.getWorld("hub_world"), 300, 90, 300),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
@@ -72,8 +75,9 @@ public class AdvancedFairySoulsSystem {
         ));
         
         fairySouls.put("hub_soul_4", new FairySoul(
-            "Hub Fairy Soul #4", 
-            Material.END_ROD, 
+            "hub_soul_4",
+            "Hub Fairy Soul #4",
+            Material.END_ROD,
             FairySoulCategory.HUB,
             new Location(Bukkit.getWorld("hub_world"), 400, 100, 400),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
@@ -81,8 +85,9 @@ public class AdvancedFairySoulsSystem {
         ));
         
         fairySouls.put("hub_soul_5", new FairySoul(
-            "Hub Fairy Soul #5", 
-            Material.END_ROD, 
+            "hub_soul_5",
+            "Hub Fairy Soul #5",
+            Material.END_ROD,
             FairySoulCategory.HUB,
             new Location(Bukkit.getWorld("hub_world"), 500, 110, 500),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
@@ -91,8 +96,9 @@ public class AdvancedFairySoulsSystem {
         
         // Mining Islands Fairy Souls
         fairySouls.put("gold_mine_soul_1", new FairySoul(
-            "Gold Mine Fairy Soul #1", 
-            Material.END_ROD, 
+            "gold_mine_soul_1",
+            "Gold Mine Fairy Soul #1",
+            Material.END_ROD,
             FairySoulCategory.MINING,
             new Location(Bukkit.getWorld("mining_world"), 150, 60, 150),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
@@ -100,8 +106,9 @@ public class AdvancedFairySoulsSystem {
         ));
         
         fairySouls.put("gold_mine_soul_2", new FairySoul(
-            "Gold Mine Fairy Soul #2", 
-            Material.END_ROD, 
+            "gold_mine_soul_2",
+            "Gold Mine Fairy Soul #2",
+            Material.END_ROD,
             FairySoulCategory.MINING,
             new Location(Bukkit.getWorld("mining_world"), 250, 70, 250),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
@@ -109,17 +116,19 @@ public class AdvancedFairySoulsSystem {
         ));
         
         fairySouls.put("deep_caverns_soul_1", new FairySoul(
-            "Deep Caverns Fairy Soul #1", 
-            Material.END_ROD, 
+            "deep_caverns_soul_1",
+            "Deep Caverns Fairy Soul #1",
+            Material.END_ROD,
             FairySoulCategory.MINING,
             new Location(Bukkit.getWorld("mining_world"), 350, 40, 350),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
             3
         ));
-        
+
         fairySouls.put("deep_caverns_soul_2", new FairySoul(
-            "Deep Caverns Fairy Soul #2", 
-            Material.END_ROD, 
+            "deep_caverns_soul_2",
+            "Deep Caverns Fairy Soul #2",
+            Material.END_ROD,
             FairySoulCategory.MINING,
             new Location(Bukkit.getWorld("mining_world"), 450, 30, 450),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
@@ -127,8 +136,9 @@ public class AdvancedFairySoulsSystem {
         ));
         
         fairySouls.put("dwarven_mines_soul_1", new FairySoul(
-            "Dwarven Mines Fairy Soul #1", 
-            Material.END_ROD, 
+            "dwarven_mines_soul_1",
+            "Dwarven Mines Fairy Soul #1",
+            Material.END_ROD,
             FairySoulCategory.MINING,
             new Location(Bukkit.getWorld("mining_world"), 550, 20, 550),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
@@ -136,26 +146,29 @@ public class AdvancedFairySoulsSystem {
         ));
         
         fairySouls.put("dwarven_mines_soul_2", new FairySoul(
-            "Dwarven Mines Fairy Soul #2", 
-            Material.END_ROD, 
+            "dwarven_mines_soul_2",
+            "Dwarven Mines Fairy Soul #2",
+            Material.END_ROD,
             FairySoulCategory.MINING,
             new Location(Bukkit.getWorld("mining_world"), 650, 10, 650),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
             4
         ));
-        
+
         fairySouls.put("crystal_hollows_soul_1", new FairySoul(
-            "Crystal Hollows Fairy Soul #1", 
-            Material.END_ROD, 
+            "crystal_hollows_soul_1",
+            "Crystal Hollows Fairy Soul #1",
+            Material.END_ROD,
             FairySoulCategory.MINING,
             new Location(Bukkit.getWorld("mining_world"), 750, 5, 750),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
             5
         ));
-        
+
         fairySouls.put("crystal_hollows_soul_2", new FairySoul(
-            "Crystal Hollows Fairy Soul #2", 
-            Material.END_ROD, 
+            "crystal_hollows_soul_2",
+            "Crystal Hollows Fairy Soul #2",
+            Material.END_ROD,
             FairySoulCategory.MINING,
             new Location(Bukkit.getWorld("mining_world"), 850, 5, 850),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
@@ -164,8 +177,9 @@ public class AdvancedFairySoulsSystem {
         
         // Farming Islands Fairy Souls
         fairySouls.put("barn_soul_1", new FairySoul(
-            "Barn Fairy Soul #1", 
-            Material.END_ROD, 
+            "barn_soul_1",
+            "Barn Fairy Soul #1",
+            Material.END_ROD,
             FairySoulCategory.FARMING,
             new Location(Bukkit.getWorld("farming_world"), 100, 80, 100),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
@@ -173,26 +187,29 @@ public class AdvancedFairySoulsSystem {
         ));
         
         fairySouls.put("barn_soul_2", new FairySoul(
-            "Barn Fairy Soul #2", 
-            Material.END_ROD, 
+            "barn_soul_2",
+            "Barn Fairy Soul #2",
+            Material.END_ROD,
             FairySoulCategory.FARMING,
             new Location(Bukkit.getWorld("farming_world"), 200, 90, 200),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
             2
         ));
-        
+
         fairySouls.put("mushroom_desert_soul_1", new FairySoul(
-            "Mushroom Desert Fairy Soul #1", 
-            Material.END_ROD, 
+            "mushroom_desert_soul_1",
+            "Mushroom Desert Fairy Soul #1",
+            Material.END_ROD,
             FairySoulCategory.FARMING,
             new Location(Bukkit.getWorld("farming_world"), 300, 70, 300),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
             3
         ));
-        
+
         fairySouls.put("mushroom_desert_soul_2", new FairySoul(
-            "Mushroom Desert Fairy Soul #2", 
-            Material.END_ROD, 
+            "mushroom_desert_soul_2",
+            "Mushroom Desert Fairy Soul #2",
+            Material.END_ROD,
             FairySoulCategory.FARMING,
             new Location(Bukkit.getWorld("farming_world"), 400, 80, 400),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
@@ -200,35 +217,39 @@ public class AdvancedFairySoulsSystem {
         ));
         
         fairySouls.put("spiders_den_soul_1", new FairySoul(
-            "Spider's Den Fairy Soul #1", 
-            Material.END_ROD, 
+            "spiders_den_soul_1",
+            "Spider's Den Fairy Soul #1",
+            Material.END_ROD,
             FairySoulCategory.FARMING,
             new Location(Bukkit.getWorld("farming_world"), 500, 60, 500),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
             4
         ));
-        
+
         fairySouls.put("spiders_den_soul_2", new FairySoul(
-            "Spider's Den Fairy Soul #2", 
-            Material.END_ROD, 
+            "spiders_den_soul_2",
+            "Spider's Den Fairy Soul #2",
+            Material.END_ROD,
             FairySoulCategory.FARMING,
             new Location(Bukkit.getWorld("farming_world"), 600, 70, 600),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
             4
         ));
-        
+
         fairySouls.put("blazing_fortress_soul_1", new FairySoul(
-            "Blazing Fortress Fairy Soul #1", 
-            Material.END_ROD, 
+            "blazing_fortress_soul_1",
+            "Blazing Fortress Fairy Soul #1",
+            Material.END_ROD,
             FairySoulCategory.FARMING,
             new Location(Bukkit.getWorld("nether_world"), 100, 50, 100),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
             5
         ));
-        
+
         fairySouls.put("blazing_fortress_soul_2", new FairySoul(
-            "Blazing Fortress Fairy Soul #2", 
-            Material.END_ROD, 
+            "blazing_fortress_soul_2",
+            "Blazing Fortress Fairy Soul #2",
+            Material.END_ROD,
             FairySoulCategory.FARMING,
             new Location(Bukkit.getWorld("nether_world"), 200, 60, 200),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
@@ -236,17 +257,19 @@ public class AdvancedFairySoulsSystem {
         ));
         
         fairySouls.put("end_soul_1", new FairySoul(
-            "End Fairy Soul #1", 
-            Material.END_ROD, 
+            "end_soul_1",
+            "End Fairy Soul #1",
+            Material.END_ROD,
             FairySoulCategory.FARMING,
             new Location(Bukkit.getWorld("end_world"), 0, 70, 0),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
             6
         ));
-        
+
         fairySouls.put("end_soul_2", new FairySoul(
-            "End Fairy Soul #2", 
-            Material.END_ROD, 
+            "end_soul_2",
+            "End Fairy Soul #2",
+            Material.END_ROD,
             FairySoulCategory.FARMING,
             new Location(Bukkit.getWorld("end_world"), 100, 80, 100),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
@@ -255,35 +278,39 @@ public class AdvancedFairySoulsSystem {
         
         // Fishing Islands Fairy Souls
         fairySouls.put("fishing_soul_1", new FairySoul(
-            "Fishing Fairy Soul #1", 
-            Material.END_ROD, 
+            "fishing_soul_1",
+            "Fishing Fairy Soul #1",
+            Material.END_ROD,
             FairySoulCategory.FISHING,
             new Location(Bukkit.getWorld("fishing_world"), 50, 60, 50),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
             2
         ));
-        
+
         fairySouls.put("fishing_soul_2", new FairySoul(
-            "Fishing Fairy Soul #2", 
-            Material.END_ROD, 
+            "fishing_soul_2",
+            "Fishing Fairy Soul #2",
+            Material.END_ROD,
             FairySoulCategory.FISHING,
             new Location(Bukkit.getWorld("fishing_world"), 150, 70, 150),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
             2
         ));
-        
+
         fairySouls.put("fishing_harbor_soul_1", new FairySoul(
-            "Fishing Harbor Fairy Soul #1", 
-            Material.END_ROD, 
+            "fishing_harbor_soul_1",
+            "Fishing Harbor Fairy Soul #1",
+            Material.END_ROD,
             FairySoulCategory.FISHING,
             new Location(Bukkit.getWorld("fishing_world"), 250, 80, 250),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
             3
         ));
-        
+
         fairySouls.put("fishing_harbor_soul_2", new FairySoul(
-            "Fishing Harbor Fairy Soul #2", 
-            Material.END_ROD, 
+            "fishing_harbor_soul_2",
+            "Fishing Harbor Fairy Soul #2",
+            Material.END_ROD,
             FairySoulCategory.FISHING,
             new Location(Bukkit.getWorld("fishing_world"), 350, 90, 350),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
@@ -292,36 +319,40 @@ public class AdvancedFairySoulsSystem {
         
         // Dungeon Fairy Souls
         fairySouls.put("catacombs_soul_1", new FairySoul(
-            "Catacombs Fairy Soul #1", 
-            Material.END_ROD, 
+            "catacombs_soul_1",
+            "Catacombs Fairy Soul #1",
+            Material.END_ROD,
             FairySoulCategory.DUNGEON,
             new Location(Bukkit.getWorld("dungeon_world"), 0, 50, 0),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
             7
         ));
-        
+
         fairySouls.put("catacombs_soul_2", new FairySoul(
-            "Catacombs Fairy Soul #2", 
-            Material.END_ROD, 
+            "catacombs_soul_2",
+            "Catacombs Fairy Soul #2",
+            Material.END_ROD,
             FairySoulCategory.DUNGEON,
             new Location(Bukkit.getWorld("dungeon_world"), 100, 60, 100),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
             7
         ));
-        
+
         // Special Fairy Souls
         fairySouls.put("special_soul_1", new FairySoul(
-            "Special Fairy Soul #1", 
-            Material.END_ROD, 
+            "special_soul_1",
+            "Special Fairy Soul #1",
+            Material.END_ROD,
             FairySoulCategory.SPECIAL,
             new Location(Bukkit.getWorld("hub_world"), 0, 100, 0),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),
             10
         ));
-        
+
         fairySouls.put("special_soul_2", new FairySoul(
-            "Special Fairy Soul #2", 
-            Material.END_ROD, 
+            "special_soul_2",
+            "Special Fairy Soul #2",
+            Material.END_ROD,
             FairySoulCategory.SPECIAL,
             new Location(Bukkit.getWorld("hub_world"), 1000, 100, 1000),
             Arrays.asList("§7A magical fairy soul", "§7Provides permanent stat bonuses"),

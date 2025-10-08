@@ -220,7 +220,7 @@ public class DungeonsSystem implements Service, Listener {
         }
         
         // Remove all players from session
-        for (UUID playerId : session.getPlayers().keySet()) {
+        for (UUID playerId : session.getPlayers()) {
             playerSessions.remove(playerId);
         }
         

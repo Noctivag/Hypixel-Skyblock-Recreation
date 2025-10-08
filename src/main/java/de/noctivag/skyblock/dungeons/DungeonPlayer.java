@@ -9,23 +9,29 @@ import java.util.UUID;
 /**
  * Represents a player in a dungeon session
  */
-public class DungeonPlayer extends BaseDungeonEntity {
+public class DungeonPlayer {
+    private final UUID playerId;
+    private final String playerName;
+    private final String type = "PLAYER";
+    private final int floor = 0;
     private final DungeonClass dungeonClass;
     private final long joinTime;
     private final Map<String, Object> playerData;
     private final DungeonPlayerStats stats;
 
     public DungeonPlayer(Player player, DungeonClass dungeonClass) {
-        super(player.getUniqueId(), player.getName(), "PLAYER", 0);
+        this.playerId = player.getUniqueId();
+        this.playerName = player.getName();
         this.dungeonClass = dungeonClass;
         this.joinTime = System.currentTimeMillis();
         this.playerData = new HashMap<>();
         this.stats = new DungeonPlayerStats(this);
     }
 
-    public DungeonPlayer(UUID playerId, String playerName, DungeonClass dungeonClass, 
+    public DungeonPlayer(UUID playerId, String playerName, DungeonClass dungeonClass,
                         long joinTime, Map<String, Object> playerData) {
-        super(playerId, playerName, "PLAYER", 0);
+        this.playerId = playerId;
+        this.playerName = playerName;
         this.dungeonClass = dungeonClass;
         this.joinTime = joinTime;
         this.playerData = new HashMap<>(playerData);
@@ -33,10 +39,10 @@ public class DungeonPlayer extends BaseDungeonEntity {
     }
 
     // Getters
-    @Override
-    public UUID getEntityId() { return entityId; }
-    @Override
-    public String getName() { return name; }
+    public UUID getEntityId() { return playerId; }
+    public String getName() { return playerName; }
+    public String getType() { return type; }
+    public int getFloor() { return floor; }
     public DungeonClass getDungeonClass() { return dungeonClass; }
     public long getJoinTime() { return joinTime; }
     public Map<String, Object> getPlayerData() { return new HashMap<>(playerData); }
@@ -71,7 +77,7 @@ public class DungeonPlayer extends BaseDungeonEntity {
         long seconds = getTimeInSession() / 1000;
         long minutes = seconds / 60;
         seconds = seconds % 60;
-        
+
         if (minutes > 0) {
             return minutes + "m " + seconds + "s";
         } else {
@@ -171,7 +177,7 @@ public class DungeonPlayer extends BaseDungeonEntity {
 
         public DungeonPlayerStats(DungeonPlayer dungeonPlayer) {
             this.dungeonPlayer = dungeonPlayer;
-            
+
             // Initialize stats based on class
             DungeonClass.ClassStatistics classStats = dungeonPlayer.getDungeonClass().getClassStatistics();
             this.maxHealth = classStats.getBaseHealth();
@@ -180,7 +186,7 @@ public class DungeonPlayer extends BaseDungeonEntity {
             this.strength = classStats.getBaseStrength();
             this.speed = classStats.getBaseSpeed();
             this.intelligence = classStats.getBaseIntelligence();
-            
+
             // Initialize performance stats
             this.damageDealt = 0;
             this.damageTaken = 0;
