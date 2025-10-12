@@ -1,6 +1,7 @@
 package de.noctivag.skyblock.brewing.gui;
 import net.kyori.adventure.text.Component;
 
+import java.util.stream.Collectors;
 import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.inventory.ItemStack;
@@ -57,7 +58,7 @@ public class BrewingGUI {
     private void fillBorders(Inventory gui) {
         ItemStack border = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta borderMeta = border.getItemMeta();
-        borderMeta.setDisplayName(" ");
+        borderMeta.displayName(Component.text(" "));
         border.setItemMeta(borderMeta);
         
         // Top and bottom rows
@@ -82,7 +83,7 @@ public class BrewingGUI {
         // Player head
         ItemStack playerHead = new ItemStack(Material.PLAYER_HEAD);
         ItemMeta headMeta = playerHead.getItemMeta();
-        headMeta.setDisplayName("§6§l" + player.getName() + "'s Brewing Profile");
+        headMeta.displayName(Component.text("§6§l" + player.getName()) + "'s Brewing Profile");
         headMeta.lore(Arrays.asList(
             Component.text("§7Level: §a" + data.getLevel()),
             Component.text("§7Experience: §a" + data.getExperience() + "§7/§a" + (data.getLevel() + 1) * 1000),
@@ -156,8 +157,8 @@ public class BrewingGUI {
         // Back button
         ItemStack backButton = new ItemStack(Material.ARROW);
         ItemMeta backMeta = backButton.getItemMeta();
-        backMeta.setDisplayName("§c§l← Back");
-        backMeta.setLore(Arrays.asList("§7Return to the main menu"));
+        backMeta.displayName(Component.text("§c§l← Back"));
+        backMeta.lore(Arrays.asList("§7Return to the main menu").stream().map(Component::text).collect(Collectors.toList()));
         backButton.setItemMeta(backMeta);
         gui.setItem(49, backButton);
         
@@ -165,10 +166,10 @@ public class BrewingGUI {
         ItemStack stationButton = new ItemStack(Material.BREWING_STAND);
         ItemMeta stationMeta = stationButton.getItemMeta();
         stationMeta.displayName(Component.text("§6§lBrewing Station"));
-        stationMeta.setLore(Arrays.asList(
+        stationMeta.lore(Arrays.asList(
             "§7Open your personal brewing station",
             "§7to brew potions automatically"
-        ));
+        ).stream().map(Component::text).collect(Collectors.toList()));
         stationButton.setItemMeta(stationMeta);
         gui.setItem(50, stationButton);
         
@@ -214,7 +215,7 @@ public class BrewingGUI {
         // Station info
         ItemStack stationInfo = new ItemStack(Material.BREWING_STAND);
         ItemMeta infoMeta = stationInfo.getItemMeta();
-        infoMeta.setDisplayName("§6§lYour Brewing Station");
+        infoMeta.displayName(Component.text("§6§lYour Brewing Station"));
         infoMeta.lore(Arrays.asList(
             Component.text("§7Status: §aActive"),
             Component.text("§7Level: §a" + data.getLevel()),
@@ -257,8 +258,8 @@ public class BrewingGUI {
         // Back to main brewing GUI
         ItemStack backButton = new ItemStack(Material.ARROW);
         ItemMeta backMeta = backButton.getItemMeta();
-        backMeta.setDisplayName("§c§l← Back to Brewing");
-        backMeta.setLore(Arrays.asList("§7Return to the brewing menu"));
+        backMeta.displayName(Component.text("§c§l← Back to Brewing"));
+        backMeta.lore(Arrays.asList("§7Return to the brewing menu").stream().map(Component::text).collect(Collectors.toList()));
         backButton.setItemMeta(backMeta);
         gui.setItem(49, backButton);
         
@@ -266,10 +267,10 @@ public class BrewingGUI {
         ItemStack autoBrewButton = new ItemStack(Material.REDSTONE);
         ItemMeta autoBrewMeta = autoBrewButton.getItemMeta();
         autoBrewMeta.displayName(net.kyori.adventure.text.Component.text("§6§lAuto-Brew: §cDisabled"));
-        autoBrewMeta.setLore(Arrays.asList(
+        autoBrewMeta.lore(Arrays.asList(
             "§7Toggle automatic brewing",
             "§7when ingredients are available"
-        ));
+        ).stream().map(Component::text).collect(Collectors.toList()));
         autoBrewButton.setItemMeta(autoBrewMeta);
         gui.setItem(50, autoBrewButton);
     }
@@ -301,34 +302,33 @@ public class BrewingGUI {
         // Level statistic
         ItemStack levelStat = new ItemStack(Material.EXPERIENCE_BOTTLE);
         ItemMeta levelMeta = levelStat.getItemMeta();
-        levelMeta.setDisplayName("§a§lBrewing Level");
-        levelMeta.setLore(Arrays.asList(
+        levelMeta.displayName(Component.text("§a§lBrewing Level"));
+        levelMeta.lore(Arrays.asList(
             "§7Current Level: §a" + stats.get("level"),
             "§7Experience: §a" + stats.get("experience"),
-            "§7Total Experience: §a" + stats.get("total_experience")
-        ));
+            "§7Total Experience: §a" + stats.get("total_experience").stream().map(Component::text).collect(Collectors.toList())));
         levelStat.setItemMeta(levelMeta);
         gui.setItem(10, levelStat);
         
         // Coins statistic
         ItemStack coinsStat = new ItemStack(Material.GOLD_INGOT);
         ItemMeta coinsMeta = coinsStat.getItemMeta();
-        coinsMeta.setDisplayName("§6§lBrewing Coins");
-        coinsMeta.setLore(Arrays.asList(
+        coinsMeta.displayName(Component.text("§6§lBrewing Coins"));
+        coinsMeta.lore(Arrays.asList(
             "§7Current Coins: §a" + stats.get("coins"),
             "§7Use coins to brew potions"
-        ));
+        ).stream().map(Component::text).collect(Collectors.toList()));
         coinsStat.setItemMeta(coinsMeta);
         gui.setItem(12, coinsStat);
         
         // Brewed potions statistic
         ItemStack potionsStat = new ItemStack(Material.POTION);
         ItemMeta potionsMeta = potionsStat.getItemMeta();
-        potionsMeta.setDisplayName("§d§lBrewed Potions");
-        potionsMeta.setLore(Arrays.asList(
+        potionsMeta.displayName(Component.text("§d§lBrewed Potions"));
+        potionsMeta.lore(Arrays.asList(
             "§7Total Brewed: §a" + stats.get("brewed_potions"),
             "§7Keep brewing to increase this!"
-        ));
+        ).stream().map(Component::text).collect(Collectors.toList()));
         potionsStat.setItemMeta(potionsMeta);
         gui.setItem(14, potionsStat);
     }
@@ -340,8 +340,8 @@ public class BrewingGUI {
         // Back button
         ItemStack backButton = new ItemStack(Material.ARROW);
         ItemMeta backMeta = backButton.getItemMeta();
-        backMeta.setDisplayName("§c§l← Back to Brewing");
-        backMeta.setLore(Arrays.asList("§7Return to the brewing menu"));
+        backMeta.displayName(Component.text("§c§l← Back to Brewing"));
+        backMeta.lore(Arrays.asList("§7Return to the brewing menu").stream().map(Component::text).collect(Collectors.toList()));
         backButton.setItemMeta(backMeta);
         gui.setItem(49, backButton);
     }

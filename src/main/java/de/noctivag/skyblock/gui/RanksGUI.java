@@ -1,5 +1,7 @@
 package de.noctivag.skyblock.gui;
 
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -38,15 +40,15 @@ public class RanksGUI extends CustomGUI {
         // Add ranks
         ItemStack ranks = new ItemStack(Material.GOLD_INGOT);
         ItemMeta ranksMeta = ranks.getItemMeta();
-        ranksMeta.setDisplayName("§eRanks");
-        ranksMeta.setLore(Arrays.asList("§7Server ranks", "§7Click to view!"));
+        ranksMeta.displayName(Component.text("§eRanks"));
+        ranksMeta.lore(Arrays.asList("§7Server ranks", "§7Click to view!").stream().map(Component::text).collect(Collectors.toList()));
         ranks.setItemMeta(ranksMeta);
         inventory.setItem(22, ranks);
         
         // Close button
         ItemStack close = new ItemStack(Material.BARRIER);
         ItemMeta closeMeta = close.getItemMeta();
-        closeMeta.setDisplayName("§cClose");
+        closeMeta.displayName(Component.text("§cClose"));
         close.setItemMeta(closeMeta);
         inventory.setItem(49, close);
     }

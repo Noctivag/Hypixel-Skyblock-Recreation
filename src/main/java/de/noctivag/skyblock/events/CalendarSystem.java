@@ -390,8 +390,8 @@ public class CalendarSystem implements Listener {
         ItemMeta closeMeta = closeItem.getItemMeta();
         
         if (closeMeta != null) {
-            closeMeta.setDisplayName("§c§lClose");
-            closeMeta.setLore(Arrays.asList("§7Close calendar"));
+            closeMeta.displayName(Component.text("§c§lClose"));
+            closeMeta.lore(Arrays.asList(Component.text("§7Close calendar")));
             closeItem.setItemMeta(closeMeta);
         }
         

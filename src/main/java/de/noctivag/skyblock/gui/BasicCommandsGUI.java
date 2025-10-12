@@ -1,5 +1,7 @@
 package de.noctivag.skyblock.gui;
 
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -41,15 +43,15 @@ public class BasicCommandsGUI extends CustomGUI {
         // Add basic commands
         ItemStack commands = new ItemStack(Material.COMMAND_BLOCK);
         ItemMeta commandsMeta = commands.getItemMeta();
-        commandsMeta.setDisplayName("§aBasic Commands");
-        commandsMeta.setLore(Arrays.asList("§7Basic server commands", "§7Click to view!"));
+        commandsMeta.displayName(Component.text("§aBasic Commands"));
+        commandsMeta.lore(Arrays.asList("§7Basic server commands", "§7Click to view!").stream().map(Component::text).collect(Collectors.toList()));
         commands.setItemMeta(commandsMeta);
         inventory.setItem(22, commands);
         
         // Close button
         ItemStack close = new ItemStack(Material.BARRIER);
         ItemMeta closeMeta = close.getItemMeta();
-        closeMeta.setDisplayName("§cClose");
+        closeMeta.displayName(Component.text("§cClose"));
         close.setItemMeta(closeMeta);
         inventory.setItem(49, close);
     }

@@ -1,5 +1,6 @@
 package de.noctivag.skyblock.economy;
 import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 import de.noctivag.skyblock.economy.Auction;
@@ -399,7 +400,7 @@ public class AuctionHouse {
             ItemStack prevPage = new ItemStack(Material.ARROW);
             ItemMeta prevMeta = prevPage.getItemMeta();
             if (prevMeta != null) {
-                prevMeta.setDisplayName("§7Previous Page");
+                prevMeta.displayName(Component.text("§7Previous Page"));
                 prevPage.setItemMeta(prevMeta);
             }
             gui.setItem(45, prevPage);
@@ -408,7 +409,7 @@ public class AuctionHouse {
         ItemStack closeButton = new ItemStack(Material.BARRIER);
         ItemMeta closeMeta = closeButton.getItemMeta();
         if (closeMeta != null) {
-            closeMeta.setDisplayName("§cClose");
+            closeMeta.displayName(Component.text("§cClose"));
             closeButton.setItemMeta(closeMeta);
         }
         gui.setItem(49, closeButton);
@@ -417,7 +418,7 @@ public class AuctionHouse {
             ItemStack nextPage = new ItemStack(Material.ARROW);
             ItemMeta nextMeta = nextPage.getItemMeta();
             if (nextMeta != null) {
-                nextMeta.setDisplayName("§7Next Page");
+                nextMeta.displayName(Component.text("§7Next Page"));
                 nextPage.setItemMeta(nextMeta);
             }
             gui.setItem(53, nextPage);
@@ -427,8 +428,8 @@ public class AuctionHouse {
         ItemStack searchButton = new ItemStack(Material.COMPASS);
         ItemMeta searchMeta = searchButton.getItemMeta();
         if (searchMeta != null) {
-            searchMeta.setDisplayName("§aSearch Auctions");
-            searchMeta.setLore(Arrays.asList("§7Click to search for specific items"));
+            searchMeta.displayName(Component.text("§aSearch Auctions"));
+            searchMeta.lore(Arrays.asList("§7Click to search for specific items").stream().map(Component::text).collect(Collectors.toList()));
             searchButton.setItemMeta(searchMeta);
         }
         gui.setItem(47, searchButton);
@@ -436,8 +437,8 @@ public class AuctionHouse {
         ItemStack createAuction = new ItemStack(Material.EMERALD);
         ItemMeta createMeta = createAuction.getItemMeta();
         if (createMeta != null) {
-            createMeta.setDisplayName("§aCreate Auction");
-            createMeta.setLore(Arrays.asList("§7Click to create a new auction"));
+            createMeta.displayName(Component.text("§aCreate Auction"));
+            createMeta.lore(Arrays.asList("§7Click to create a new auction").stream().map(Component::text).collect(Collectors.toList()));
             createAuction.setItemMeta(createMeta);
         }
         gui.setItem(51, createAuction);

@@ -1,5 +1,6 @@
 package de.noctivag.skyblock.zones;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 
 import java.util.ArrayList;

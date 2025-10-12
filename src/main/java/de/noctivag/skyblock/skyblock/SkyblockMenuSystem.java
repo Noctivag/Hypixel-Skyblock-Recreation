@@ -1,5 +1,7 @@
 package de.noctivag.skyblock.skyblock;
 
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -88,32 +90,32 @@ public class SkyblockMenuSystem {
         // Mining Skill
         ItemStack mining = new ItemStack(Material.DIAMOND_PICKAXE);
         ItemMeta miningMeta = mining.getItemMeta();
-        miningMeta.setDisplayName("§bMining");
-        miningMeta.setLore(Arrays.asList("§7Mine ores and gems", "§7Level up your mining skill!"));
+        miningMeta.displayName(Component.text("§bMining"));
+        miningMeta.lore(Arrays.asList("§7Mine ores and gems", "§7Level up your mining skill!").stream().map(Component::text).collect(Collectors.toList()));
         mining.setItemMeta(miningMeta);
         menu.setItem(10, mining);
 
         // Farming Skill
         ItemStack farming = new ItemStack(Material.WHEAT);
         ItemMeta farmingMeta = farming.getItemMeta();
-        farmingMeta.setDisplayName("§aFarming");
-        farmingMeta.setLore(Arrays.asList("§7Grow crops and harvest", "§7Become a master farmer!"));
+        farmingMeta.displayName(Component.text("§aFarming"));
+        farmingMeta.lore(Arrays.asList("§7Grow crops and harvest", "§7Become a master farmer!").stream().map(Component::text).collect(Collectors.toList()));
         farming.setItemMeta(farmingMeta);
         menu.setItem(12, farming);
 
         // Combat Skill
         ItemStack combat = new ItemStack(Material.DIAMOND_SWORD);
         ItemMeta combatMeta = combat.getItemMeta();
-        combatMeta.setDisplayName("§cCombat");
-        combatMeta.setLore(Arrays.asList("§7Fight monsters and bosses", "§7Master the art of combat!"));
+        combatMeta.displayName(Component.text("§cCombat"));
+        combatMeta.lore(Arrays.asList("§7Fight monsters and bosses", "§7Master the art of combat!").stream().map(Component::text).collect(Collectors.toList()));
         combat.setItemMeta(combatMeta);
         menu.setItem(14, combat);
 
         // Fishing Skill
         ItemStack fishing = new ItemStack(Material.FISHING_ROD);
         ItemMeta fishingMeta = fishing.getItemMeta();
-        fishingMeta.setDisplayName("§bFishing");
-        fishingMeta.setLore(Arrays.asList("§7Catch fish and sea creatures", "§7Become a fishing master!"));
+        fishingMeta.displayName(Component.text("§bFishing"));
+        fishingMeta.lore(Arrays.asList("§7Catch fish and sea creatures", "§7Become a fishing master!").stream().map(Component::text).collect(Collectors.toList()));
         fishing.setItemMeta(fishingMeta);
         menu.setItem(16, fishing);
     }
@@ -125,32 +127,32 @@ public class SkyblockMenuSystem {
         // Mining Collections
         ItemStack mining = new ItemStack(Material.STONE_PICKAXE);
         ItemMeta miningMeta = mining.getItemMeta();
-        miningMeta.setDisplayName("§6Mining Collections");
-        miningMeta.setLore(Arrays.asList("§7Ores, gems, and minerals", "§7Track your mining progress!"));
+        miningMeta.displayName(Component.text("§6Mining Collections"));
+        miningMeta.lore(Arrays.asList("§7Ores, gems, and minerals", "§7Track your mining progress!").stream().map(Component::text).collect(Collectors.toList()));
         mining.setItemMeta(miningMeta);
         menu.setItem(10, mining);
 
         // Farming Collections
         ItemStack farming = new ItemStack(Material.WHEAT);
         ItemMeta farmingMeta = farming.getItemMeta();
-        farmingMeta.setDisplayName("§aFarming Collections");
-        farmingMeta.setLore(Arrays.asList("§7Crops and plants", "§7Track your farming progress!"));
+        farmingMeta.displayName(Component.text("§aFarming Collections"));
+        farmingMeta.lore(Arrays.asList("§7Crops and plants", "§7Track your farming progress!").stream().map(Component::text).collect(Collectors.toList()));
         farming.setItemMeta(farmingMeta);
         menu.setItem(12, farming);
 
         // Combat Collections
         ItemStack combat = new ItemStack(Material.IRON_SWORD);
         ItemMeta combatMeta = combat.getItemMeta();
-        combatMeta.setDisplayName("§cCombat Collections");
-        combatMeta.setLore(Arrays.asList("§7Monster drops and loot", "§7Track your combat progress!"));
+        combatMeta.displayName(Component.text("§cCombat Collections"));
+        combatMeta.lore(Arrays.asList("§7Monster drops and loot", "§7Track your combat progress!").stream().map(Component::text).collect(Collectors.toList()));
         combat.setItemMeta(combatMeta);
         menu.setItem(14, combat);
 
         // Fishing Collections
         ItemStack fishing = new ItemStack(Material.FISHING_ROD);
         ItemMeta fishingMeta = fishing.getItemMeta();
-        fishingMeta.setDisplayName("§bFishing Collections");
-        fishingMeta.setLore(Arrays.asList("§7Fish and sea creatures", "§7Track your fishing progress!"));
+        fishingMeta.displayName(Component.text("§bFishing Collections"));
+        fishingMeta.lore(Arrays.asList("§7Fish and sea creatures", "§7Track your fishing progress!").stream().map(Component::text).collect(Collectors.toList()));
         fishing.setItemMeta(fishingMeta);
         menu.setItem(16, fishing);
     }
@@ -162,36 +164,35 @@ public class SkyblockMenuSystem {
         // Player Stats
         ItemStack stats = new ItemStack(Material.PLAYER_HEAD);
         ItemMeta statsMeta = stats.getItemMeta();
-        statsMeta.setDisplayName("§ePlayer Statistics");
-        statsMeta.setLore(Arrays.asList(
+        statsMeta.displayName(Component.text("§ePlayer Statistics"));
+        statsMeta.lore(Arrays.asList(
             "§7Level: §f" + getPlayerLevel(player),
             "§7Coins: §f" + getPlayerCoins(player),
-            "§7Playtime: §f" + getPlayerPlaytime(player)
-        ));
+            "§7Playtime: §f" + getPlayerPlaytime(player).stream().map(Component::text).collect(Collectors.toList())));
         stats.setItemMeta(statsMeta);
         menu.setItem(13, stats);
 
         // Inventory
         ItemStack inventory = new ItemStack(Material.CHEST);
         ItemMeta inventoryMeta = inventory.getItemMeta();
-        inventoryMeta.setDisplayName("§aInventory");
-        inventoryMeta.setLore(Arrays.asList("§7View your items", "§7Click to open!"));
+        inventoryMeta.displayName(Component.text("§aInventory"));
+        inventoryMeta.lore(Arrays.asList("§7View your items", "§7Click to open!").stream().map(Component::text).collect(Collectors.toList()));
         inventory.setItemMeta(inventoryMeta);
         menu.setItem(21, inventory);
 
         // Ender Chest
         ItemStack enderChest = new ItemStack(Material.ENDER_CHEST);
         ItemMeta enderChestMeta = enderChest.getItemMeta();
-        enderChestMeta.setDisplayName("§5Ender Chest");
-        enderChestMeta.setLore(Arrays.asList("§7Access your ender chest", "§7Click to open!"));
+        enderChestMeta.displayName(Component.text("§5Ender Chest"));
+        enderChestMeta.lore(Arrays.asList("§7Access your ender chest", "§7Click to open!").stream().map(Component::text).collect(Collectors.toList()));
         enderChest.setItemMeta(enderChestMeta);
         menu.setItem(23, enderChest);
 
         // Settings
         ItemStack settings = new ItemStack(Material.REDSTONE_TORCH);
         ItemMeta settingsMeta = settings.getItemMeta();
-        settingsMeta.setDisplayName("§cSettings");
-        settingsMeta.setLore(Arrays.asList("§7Configure your preferences", "§7Click to open!"));
+        settingsMeta.displayName(Component.text("§cSettings"));
+        settingsMeta.lore(Arrays.asList("§7Configure your preferences", "§7Click to open!").stream().map(Component::text).collect(Collectors.toList()));
         settings.setItemMeta(settingsMeta);
         menu.setItem(31, settings);
     }
@@ -203,32 +204,32 @@ public class SkyblockMenuSystem {
         // Hub
         ItemStack hub = new ItemStack(Material.NETHER_STAR);
         ItemMeta hubMeta = hub.getItemMeta();
-        hubMeta.setDisplayName("§eHub");
-        hubMeta.setLore(Arrays.asList("§7Return to the main hub", "§7Click to travel!"));
+        hubMeta.displayName(Component.text("§eHub"));
+        hubMeta.lore(Arrays.asList("§7Return to the main hub", "§7Click to travel!").stream().map(Component::text).collect(Collectors.toList()));
         hub.setItemMeta(hubMeta);
         menu.setItem(10, hub);
 
         // Your Island
         ItemStack island = new ItemStack(Material.GRASS_BLOCK);
         ItemMeta islandMeta = island.getItemMeta();
-        islandMeta.setDisplayName("§aYour Island");
-        islandMeta.setLore(Arrays.asList("§7Visit your private island", "§7Click to travel!"));
+        islandMeta.displayName(Component.text("§aYour Island"));
+        islandMeta.lore(Arrays.asList("§7Visit your private island", "§7Click to travel!").stream().map(Component::text).collect(Collectors.toList()));
         island.setItemMeta(islandMeta);
         menu.setItem(12, island);
 
         // Mining Area
         ItemStack mining = new ItemStack(Material.STONE_PICKAXE);
         ItemMeta miningMeta = mining.getItemMeta();
-        miningMeta.setDisplayName("§7Mining Area");
-        miningMeta.setLore(Arrays.asList("§7Mine ores and explore", "§7Click to travel!"));
+        miningMeta.displayName(Component.text("§7Mining Area"));
+        miningMeta.lore(Arrays.asList("§7Mine ores and explore", "§7Click to travel!").stream().map(Component::text).collect(Collectors.toList()));
         mining.setItemMeta(miningMeta);
         menu.setItem(14, mining);
 
         // Farming Area
         ItemStack farming = new ItemStack(Material.WHEAT);
         ItemMeta farmingMeta = farming.getItemMeta();
-        farmingMeta.setDisplayName("§aFarming Area");
-        farmingMeta.setLore(Arrays.asList("§7Grow crops and farm", "§7Click to travel!"));
+        farmingMeta.displayName(Component.text("§aFarming Area"));
+        farmingMeta.lore(Arrays.asList("§7Grow crops and farm", "§7Click to travel!").stream().map(Component::text).collect(Collectors.toList()));
         farming.setItemMeta(farmingMeta);
         menu.setItem(16, farming);
     }
@@ -258,39 +259,39 @@ public class SkyblockMenuSystem {
         // Skills
         ItemStack skills = new ItemStack(Material.DIAMOND_PICKAXE);
         ItemMeta skillsMeta = skills.getItemMeta();
-        skillsMeta.setDisplayName("§bSkills");
-        skillsMeta.setLore(Arrays.asList("§7View and manage your skills", "§7Click to open!"));
+        skillsMeta.displayName(Component.text("§bSkills"));
+        skillsMeta.lore(Arrays.asList("§7View and manage your skills", "§7Click to open!").stream().map(Component::text).collect(Collectors.toList()));
         skills.setItemMeta(skillsMeta);
         menu.setItem(10, skills);
         
         // Collections
         ItemStack collections = new ItemStack(Material.CHEST);
         ItemMeta collectionsMeta = collections.getItemMeta();
-        collectionsMeta.setDisplayName("§aCollections");
-        collectionsMeta.setLore(Arrays.asList("§7View your item collections", "§7Click to open!"));
+        collectionsMeta.displayName(Component.text("§aCollections"));
+        collectionsMeta.lore(Arrays.asList("§7View your item collections", "§7Click to open!").stream().map(Component::text).collect(Collectors.toList()));
         collections.setItemMeta(collectionsMeta);
         menu.setItem(12, collections);
         
         // Bank
         ItemStack bank = new ItemStack(Material.GOLD_INGOT);
         ItemMeta bankMeta = bank.getItemMeta();
-        bankMeta.setDisplayName("§6Bank");
-        bankMeta.setLore(Arrays.asList("§7Manage your coins", "§7Click to open!"));
+        bankMeta.displayName(Component.text("§6Bank"));
+        bankMeta.lore(Arrays.asList("§7Manage your coins", "§7Click to open!").stream().map(Component::text).collect(Collectors.toList()));
         bank.setItemMeta(bankMeta);
         menu.setItem(14, bank);
         
         // Pets
         ItemStack pets = new ItemStack(Material.BONE);
         ItemMeta petsMeta = pets.getItemMeta();
-        petsMeta.setDisplayName("§dPets");
-        petsMeta.setLore(Arrays.asList("§7Manage your pets", "§7Click to open!"));
+        petsMeta.displayName(Component.text("§dPets"));
+        petsMeta.lore(Arrays.asList("§7Manage your pets", "§7Click to open!").stream().map(Component::text).collect(Collectors.toList()));
         pets.setItemMeta(petsMeta);
         menu.setItem(16, pets);
         
         // Close button
         ItemStack close = new ItemStack(Material.BARRIER);
         ItemMeta closeMeta = close.getItemMeta();
-        closeMeta.setDisplayName("§cClose");
+        closeMeta.displayName(Component.text("§cClose"));
         close.setItemMeta(closeMeta);
         menu.setItem(49, close);
     }
