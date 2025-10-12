@@ -1,5 +1,7 @@
 package de.noctivag.skyblock.gui;
 
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -43,15 +45,15 @@ public class EventMenu extends CustomGUI {
         // Add events
         ItemStack events = new ItemStack(Material.FIREWORK_ROCKET);
         ItemMeta eventsMeta = events.getItemMeta();
-        eventsMeta.setDisplayName("§cEvents");
-        eventsMeta.setLore(Arrays.asList("§7Server events", "§7Click to view!"));
+        eventsMeta.displayName(Component.text("§cEvents"));
+        eventsMeta.lore(Arrays.asList("§7Server events", "§7Click to view!").stream().map(Component::text).collect(Collectors.toList()));
         events.setItemMeta(eventsMeta);
         inventory.setItem(22, events);
         
         // Close button
         ItemStack close = new ItemStack(Material.BARRIER);
         ItemMeta closeMeta = close.getItemMeta();
-        closeMeta.setDisplayName("§cClose");
+        closeMeta.displayName(Component.text("§cClose"));
         close.setItemMeta(closeMeta);
         inventory.setItem(49, close);
     }

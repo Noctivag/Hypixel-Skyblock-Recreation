@@ -1,5 +1,7 @@
 package de.noctivag.skyblock.gui;
 
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -31,8 +33,8 @@ public class RankPermissionsGUI extends CustomGUI {
         // Add rank permissions
         ItemStack permissions = new ItemStack(Material.GOLD_INGOT);
         ItemMeta permissionsMeta = permissions.getItemMeta();
-        permissionsMeta.setDisplayName("§eRank Permissions");
-        permissionsMeta.setLore(Arrays.asList("§7Manage rank permissions", "§7Click to configure!"));
+        permissionsMeta.displayName(Component.text("§eRank Permissions"));
+        permissionsMeta.lore(Arrays.asList("§7Manage rank permissions", "§7Click to configure!").stream().map(Component::text).collect(Collectors.toList()));
         // Note: Using deprecated methods - consider updating to Adventure API
         permissions.setItemMeta(permissionsMeta);
         inventory.setItem(22, permissions);
@@ -40,7 +42,7 @@ public class RankPermissionsGUI extends CustomGUI {
         // Close button
         ItemStack close = new ItemStack(Material.BARRIER);
         ItemMeta closeMeta = close.getItemMeta();
-        closeMeta.setDisplayName("§cClose");
+        closeMeta.displayName(Component.text("§cClose"));
         // Note: Using deprecated methods - consider updating to Adventure API
         close.setItemMeta(closeMeta);
         inventory.setItem(49, close);

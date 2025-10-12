@@ -1,5 +1,7 @@
 package de.noctivag.skyblock.gui;
 
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -43,15 +45,15 @@ public class MainMenu extends CustomGUI {
         // Add main menu items
         ItemStack menu = new ItemStack(Material.NETHER_STAR);
         ItemMeta menuMeta = menu.getItemMeta();
-        menuMeta.setDisplayName("§6Main Menu");
-        menuMeta.setLore(Arrays.asList("§7Main server menu", "§7Click to navigate!"));
+        menuMeta.displayName(Component.text("§6Main Menu"));
+        menuMeta.lore(Arrays.asList("§7Main server menu", "§7Click to navigate!").stream().map(Component::text).collect(Collectors.toList()));
         menu.setItemMeta(menuMeta);
         inventory.setItem(22, menu);
         
         // Close button
         ItemStack close = new ItemStack(Material.BARRIER);
         ItemMeta closeMeta = close.getItemMeta();
-        closeMeta.setDisplayName("§cClose");
+        closeMeta.displayName(Component.text("§cClose"));
         close.setItemMeta(closeMeta);
         inventory.setItem(49, close);
     }

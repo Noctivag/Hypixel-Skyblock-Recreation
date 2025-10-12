@@ -1,6 +1,7 @@
 package de.noctivag.skyblock.features.menu;
 import net.kyori.adventure.text.Component;
 
+import java.util.stream.Collectors;
 import de.noctivag.skyblock.core.api.Service;
 import de.noctivag.skyblock.core.api.SystemStatus;
 import de.noctivag.skyblock.features.menu.config.MenuConfig;
@@ -198,96 +199,96 @@ public class SkyblockMenuSystem implements Service {
             // Profile button
             ItemStack profileItem = new ItemStack(Material.PLAYER_HEAD);
             ItemMeta profileMeta = profileItem.getItemMeta();
-            profileMeta.setDisplayName("§6§lIhr SkyBlock-Profil");
-            profileMeta.setLore(Arrays.asList("§7Zeigen Sie Ihre Skills, Stats", "§7und Collections an"));
+            profileMeta.displayName(Component.text("§6§lIhr SkyBlock-Profil"));
+            profileMeta.lore(Arrays.asList("§7Zeigen Sie Ihre Skills, Stats", "§7und Collections an").stream().map(Component::text).collect(Collectors.toList()));
             profileItem.setItemMeta(profileMeta);
             inventory.setItem(10, profileItem);
 
             // Skills button
             ItemStack skillsItem = new ItemStack(Material.EXPERIENCE_BOTTLE);
             ItemMeta skillsMeta = skillsItem.getItemMeta();
-            skillsMeta.setDisplayName("§a§lSkills");
-            skillsMeta.setLore(Arrays.asList("§7Zeigen Sie Ihre Skill-Level", "§7und Fortschritte an"));
+            skillsMeta.displayName(Component.text("§a§lSkills"));
+            skillsMeta.lore(Arrays.asList("§7Zeigen Sie Ihre Skill-Level", "§7und Fortschritte an").stream().map(Component::text).collect(Collectors.toList()));
             skillsItem.setItemMeta(skillsMeta);
             inventory.setItem(12, skillsItem);
 
             // Collections button (klickbar)
             ItemStack collectionsItem = new ItemStack(Material.BOOK);
             ItemMeta collectionsMeta = collectionsItem.getItemMeta();
-            collectionsMeta.setDisplayName("§e§lCollections");
-            collectionsMeta.setLore(Arrays.asList("§7Zeigen Sie Ihre Collections", "§7und Fortschritte an", "§e§oKlicken zum Öffnen!"));
+            collectionsMeta.displayName(Component.text("§e§lCollections"));
+            collectionsMeta.lore(Arrays.asList("§7Zeigen Sie Ihre Collections", "§7und Fortschritte an", "§e§oKlicken zum Öffnen!").stream().map(Component::text).collect(Collectors.toList()));
             collectionsItem.setItemMeta(collectionsMeta);
             inventory.setItem(14, collectionsItem);
 
             // Stats button (klickbar)
             ItemStack statsItem = new ItemStack(Material.PAPER);
             ItemMeta statsMeta = statsItem.getItemMeta();
-            statsMeta.setDisplayName("§a§lStats");
-            statsMeta.setLore(Arrays.asList("§7Zeigen Sie Ihre Statistiken", "§a§oKlicken zum Öffnen!"));
+            statsMeta.displayName(Component.text("§a§lStats"));
+            statsMeta.lore(Arrays.asList("§7Zeigen Sie Ihre Statistiken", "§a§oKlicken zum Öffnen!").stream().map(Component::text).collect(Collectors.toList()));
             statsItem.setItemMeta(statsMeta);
             inventory.setItem(15, statsItem);
 
             // Recipe Book button (klickbar)
             ItemStack recipeBookItem = new ItemStack(Material.CRAFTING_TABLE);
             ItemMeta recipeBookMeta = recipeBookItem.getItemMeta();
-            recipeBookMeta.setDisplayName("§b§lRecipe Book");
-            recipeBookMeta.setLore(Arrays.asList("§7Alle freigeschalteten Rezepte", "§b§oKlicken zum Öffnen!"));
+            recipeBookMeta.displayName(Component.text("§b§lRecipe Book"));
+            recipeBookMeta.lore(Arrays.asList("§7Alle freigeschalteten Rezepte", "§b§oKlicken zum Öffnen!").stream().map(Component::text).collect(Collectors.toList()));
             recipeBookItem.setItemMeta(recipeBookMeta);
             inventory.setItem(17, recipeBookItem);
 
             // Leveling button (klickbar)
             ItemStack levelingItem = new ItemStack(Material.EXPERIENCE_BOTTLE);
             ItemMeta levelingMeta = levelingItem.getItemMeta();
-            levelingMeta.setDisplayName("§6§lLeveling");
-            levelingMeta.setLore(Arrays.asList("§7Leveling Übersicht", "§6§oKlicken zum Öffnen!"));
+            levelingMeta.displayName(Component.text("§6§lLeveling"));
+            levelingMeta.lore(Arrays.asList("§7Leveling Übersicht", "§6§oKlicken zum Öffnen!").stream().map(Component::text).collect(Collectors.toList()));
             levelingItem.setItemMeta(levelingMeta);
             inventory.setItem(19, levelingItem);
 
             // Pets button
             ItemStack petsItem = new ItemStack(Material.BONE);
             ItemMeta petsMeta = petsItem.getItemMeta();
-            petsMeta.setDisplayName("§d§lPets");
-            petsMeta.setLore(Arrays.asList("§7Verwalten Sie Ihre Pets"));
+            petsMeta.displayName(Component.text("§d§lPets"));
+            petsMeta.lore(Arrays.asList("§7Verwalten Sie Ihre Pets").stream().map(Component::text).collect(Collectors.toList()));
             petsItem.setItemMeta(petsMeta);
             inventory.setItem(16, petsItem);
 
             // Weapons button
             ItemStack weaponsItem = new ItemStack(Material.DIAMOND_SWORD);
             ItemMeta weaponsMeta = weaponsItem.getItemMeta();
-            weaponsMeta.setDisplayName("§c§lWaffen");
-            weaponsMeta.setLore(Arrays.asList("§7Zeigen Sie Ihre Waffen", "§7und Rüstungen an"));
+            weaponsMeta.displayName(Component.text("§c§lWaffen"));
+            weaponsMeta.lore(Arrays.asList("§7Zeigen Sie Ihre Waffen", "§7und Rüstungen an").stream().map(Component::text).collect(Collectors.toList()));
             weaponsItem.setItemMeta(weaponsMeta);
             inventory.setItem(28, weaponsItem);
 
             // Island button
             ItemStack islandItem = new ItemStack(Material.GRASS_BLOCK);
             ItemMeta islandMeta = islandItem.getItemMeta();
-            islandMeta.setDisplayName("§2§lInsel");
-            islandMeta.setLore(Arrays.asList("§7Verwalten Sie Ihre Insel"));
+            islandMeta.displayName(Component.text("§2§lInsel"));
+            islandMeta.lore(Arrays.asList("§7Verwalten Sie Ihre Insel").stream().map(Component::text).collect(Collectors.toList()));
             islandItem.setItemMeta(islandMeta);
             inventory.setItem(30, islandItem);
 
             // Minions button
             ItemStack minionsItem = new ItemStack(Material.VILLAGER_SPAWN_EGG);
             ItemMeta minionsMeta = minionsItem.getItemMeta();
-            minionsMeta.setDisplayName("§b§lMinions");
-            minionsMeta.setLore(Arrays.asList("§7Verwalten Sie Ihre Minions"));
+            minionsMeta.displayName(Component.text("§b§lMinions"));
+            minionsMeta.lore(Arrays.asList("§7Verwalten Sie Ihre Minions").stream().map(Component::text).collect(Collectors.toList()));
             minionsItem.setItemMeta(minionsMeta);
             inventory.setItem(32, minionsItem);
 
             // Slayer button
             ItemStack slayerItem = new ItemStack(Material.ROTTEN_FLESH);
             ItemMeta slayerMeta = slayerItem.getItemMeta();
-            slayerMeta.setDisplayName("§4§lSlayer");
-            slayerMeta.setLore(Arrays.asList("§7Slayer Quests und Bosse"));
+            slayerMeta.displayName(Component.text("§4§lSlayer"));
+            slayerMeta.lore(Arrays.asList("§7Slayer Quests und Bosse").stream().map(Component::text).collect(Collectors.toList()));
             slayerItem.setItemMeta(slayerMeta);
             inventory.setItem(34, slayerItem);
 
             // Dungeons button
             ItemStack dungeonsItem = new ItemStack(Material.STONE_BRICKS);
             ItemMeta dungeonsMeta = dungeonsItem.getItemMeta();
-            dungeonsMeta.setDisplayName("§5§lDungeons");
-            dungeonsMeta.setLore(Arrays.asList("§7Dungeon Runs und Bosse"));
+            dungeonsMeta.displayName(Component.text("§5§lDungeons"));
+            dungeonsMeta.lore(Arrays.asList("§7Dungeon Runs und Bosse").stream().map(Component::text).collect(Collectors.toList()));
             dungeonsItem.setItemMeta(dungeonsMeta);
             inventory.setItem(46, dungeonsItem);
         }

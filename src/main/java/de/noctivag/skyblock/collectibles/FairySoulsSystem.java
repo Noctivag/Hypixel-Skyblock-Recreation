@@ -364,7 +364,7 @@ public class FairySoulsSystem implements Listener {
 
     private void playFairySoulEffects(Player player, Location location) {
         // Particle effects
-        player.getWorld().spawnParticle(Particle.valueOf("ENCHANTMENT_TABLE"), location, 50, 0.5, 0.5, 0.5, 0.3);
+        player.getWorld().spawnParticle(Particle.ENCHANT, location, 50, 0.5, 0.5, 0.5, 0.3);
         player.getWorld().spawnParticle(Particle.HEART, location.clone().add(0, 1, 0), 20, 0.5, 0.5, 0.5, 0.1);
 
         // Sound effects

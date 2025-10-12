@@ -1,5 +1,7 @@
 package de.noctivag.skyblock.dungeons.classes;
 
+import java.util.stream.Collectors;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -68,15 +70,15 @@ public class DungeonClass {
         ItemStack item = new ItemStack(icon);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName("§c" + name);
-            meta.setLore(Arrays.asList(
+            meta.displayName(Component.text("§c" + name));
+            meta.lore(Arrays.asList(
                 "§7" + description,
                 "",
                 "§7Abilities:",
                 "§7- " + String.join("\n§7- ", abilities),
                 "",
                 "§eClick to select this class"
-            ));
+            ).stream().map(Component::text).collect(Collectors.toList()));
             item.setItemMeta(meta);
         }
         return item;

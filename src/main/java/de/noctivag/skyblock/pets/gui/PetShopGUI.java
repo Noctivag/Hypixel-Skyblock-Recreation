@@ -1,5 +1,7 @@
 package de.noctivag.skyblock.pets.gui;
 
+import java.util.stream.Collectors;
+import net.kyori.adventure.text.Component;
 import de.noctivag.skyblock.gui.CustomGUI;
 import de.noctivag.skyblock.pets.PetType;
 import de.noctivag.skyblock.pets.PetService;
@@ -39,8 +41,8 @@ public class PetShopGUI extends CustomGUI {
             ItemStack petItem = new ItemStack(org.bukkit.Material.BONE);
             ItemMeta petMeta = petItem.getItemMeta();
             if (petMeta != null) {
-                petMeta.setDisplayName("§c" + "Pet");
-                petMeta.setLore(Arrays.asList(
+                petMeta.displayName(Component.text("§c" + "Pet"));
+                petMeta.lore(Arrays.asList(
                     "§7" + "A loyal companion",
                     "",
                     "§7Max Level: §c" + 100,
@@ -50,7 +52,7 @@ public class PetShopGUI extends CustomGUI {
                     "",
                     "§7Price: §e1,000 coins",
                     "§eClick to purchase"
-                ));
+                ).stream().map(Component::text).collect(Collectors.toList()));
                 petItem.setItemMeta(petMeta);
             }
             inventory.setItem(slot, petItem);
@@ -67,7 +69,7 @@ public class PetShopGUI extends CustomGUI {
         ItemStack closeItem = new ItemStack(Material.BARRIER);
         ItemMeta closeMeta = closeItem.getItemMeta();
         if (closeMeta != null) {
-            closeMeta.setDisplayName("§cClose");
+            closeMeta.displayName(Component.text("§cClose"));
             closeItem.setItemMeta(closeMeta);
         }
         inventory.setItem(49, closeItem);

@@ -468,7 +468,7 @@ public class PlayerBasedNPC {
     
     public void update() {
         if (npcPlayer != null && npcPlayer.isOnline()) {
-            npcPlayer.setDisplayName(displayName);
+            npcPlayer.displayName(Component.text(displayName));
         }
     }
     
@@ -486,7 +486,7 @@ public class PlayerBasedNPC {
     public void updateDisplayName(String newDisplayName) {
         this.displayName = newDisplayName;
         if (npcPlayer != null && npcPlayer.isOnline()) {
-            npcPlayer.setDisplayName(newDisplayName);
+            npcPlayer.displayName(Component.text(newDisplayName));
         }
     }
     

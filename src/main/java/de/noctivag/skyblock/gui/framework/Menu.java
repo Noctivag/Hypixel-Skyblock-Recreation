@@ -1,5 +1,7 @@
 package de.noctivag.skyblock.gui.framework;
 
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.utils.ItemBuilder;
 import org.bukkit.Bukkit;
@@ -77,9 +79,9 @@ public abstract class Menu implements InventoryHolder, Listener {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(name);
+            meta.displayName(Component.text(name));
             if (lore.length > 0) {
-                meta.setLore(Arrays.asList(lore));
+                meta.lore(Arrays.asList(lore).stream().map(Component::text).collect(Collectors.toList()));
             }
             item.setItemMeta(meta);
         }
@@ -93,9 +95,9 @@ public abstract class Menu implements InventoryHolder, Listener {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(name);
+            meta.displayName(Component.text(name));
             if (lore != null && !lore.isEmpty()) {
-                meta.setLore(lore);
+                meta.lore(lore.stream().map(Component::text).collect(Collectors.toList()));
             }
             item.setItemMeta(meta);
         }

@@ -1,5 +1,7 @@
 package de.noctivag.skyblock.gui.details;
 
+import java.util.stream.Collectors;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -16,13 +18,13 @@ public class ArsenalDetailGUI {
         Inventory inv = Bukkit.createInventory(null, 54, "§cArsenal-Details");
         ItemStack info = new ItemStack(Material.NETHER_STAR);
         ItemMeta meta = info.getItemMeta();
-        meta.setDisplayName("§aArsenal-Detailübersicht");
-        meta.setLore(Arrays.asList("§7Hier werden alle Arsenal-Items im Detail angezeigt.", "§7(Platzhalter-Ansicht)"));
+        meta.displayName(Component.text("§aArsenal-Detailübersicht"));
+        meta.lore(Arrays.asList("§7Hier werden alle Arsenal-Items im Detail angezeigt.", "§7(Platzhalter-Ansicht)").stream().map(Component::text).collect(Collectors.toList()));
         info.setItemMeta(meta);
         inv.setItem(22, info);
         ItemStack close = new ItemStack(Material.BARRIER);
         ItemMeta closeMeta = close.getItemMeta();
-        closeMeta.setDisplayName("§cSchließen");
+        closeMeta.displayName(Component.text("§cSchließen"));
         close.setItemMeta(closeMeta);
         inv.setItem(49, close);
         player.openInventory(inv);

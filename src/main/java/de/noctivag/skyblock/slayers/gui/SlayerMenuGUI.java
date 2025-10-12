@@ -1,5 +1,7 @@
 package de.noctivag.skyblock.slayers.gui;
 
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 import de.noctivag.skyblock.gui.CustomGUI;
 import de.noctivag.skyblock.slayers.SlayerService;
 import de.noctivag.skyblock.slayers.quests.SlayerQuest;
@@ -34,11 +36,11 @@ public class SlayerMenuGUI extends CustomGUI {
             ItemStack activeQuestItem = new ItemStack(Material.ZOMBIE_HEAD);
             ItemMeta meta = activeQuestItem.getItemMeta();
             if (meta != null) {
-                meta.setDisplayName("§cActive Slayer Quest");
-                meta.setLore(Arrays.asList(
+                meta.displayName(Component.text("§cActive Slayer Quest"));
+                meta.lore(Arrays.asList(
                     "§7Type: §c" + activeQuest.getSlayerType(),
                     "§7Tier: §c" + activeQuest.getTier(),
-                    "§7Time Remaining: §c" + formatTime(activeQuest.getRemainingTime()),
+                    "§7Time Remaining: §c" + formatTime(activeQuest.getRemainingTime().stream().map(Component::text).collect(Collectors.toList())),
                     "",
                     "§eClick to cancel quest"
                 ));
@@ -59,13 +61,13 @@ public class SlayerMenuGUI extends CustomGUI {
         ItemStack revenantItem = new ItemStack(Material.ROTTEN_FLESH);
         ItemMeta revenantMeta = revenantItem.getItemMeta();
         if (revenantMeta != null) {
-            revenantMeta.setDisplayName("§cRevenant Horror");
-            revenantMeta.setLore(Arrays.asList(
+            revenantMeta.displayName(Component.text("§cRevenant Horror"));
+            revenantMeta.lore(Arrays.asList(
                 "§7Undead slayer boss",
                 "§7Drops: Rotten Flesh, Revenant Viscera",
                 "",
                 "§eClick to start quest"
-            ));
+            ).stream().map(Component::text).collect(Collectors.toList()));
             revenantItem.setItemMeta(revenantMeta);
         }
         inventory.setItem(20, revenantItem);
@@ -74,13 +76,13 @@ public class SlayerMenuGUI extends CustomGUI {
         ItemStack tarantulaItem = new ItemStack(Material.SPIDER_EYE);
         ItemMeta tarantulaMeta = tarantulaItem.getItemMeta();
         if (tarantulaMeta != null) {
-            tarantulaMeta.setDisplayName("§cTarantula Broodmother");
-            tarantulaMeta.setLore(Arrays.asList(
+            tarantulaMeta.displayName(Component.text("§cTarantula Broodmother"));
+            tarantulaMeta.lore(Arrays.asList(
                 "§7Spider slayer boss",
                 "§7Drops: Spider Eye, Tarantula Web",
                 "",
                 "§eClick to start quest"
-            ));
+            ).stream().map(Component::text).collect(Collectors.toList()));
             tarantulaItem.setItemMeta(tarantulaMeta);
         }
         inventory.setItem(22, tarantulaItem);
@@ -89,13 +91,13 @@ public class SlayerMenuGUI extends CustomGUI {
         ItemStack svenItem = new ItemStack(Material.WOLF_SPAWN_EGG);
         ItemMeta svenMeta = svenItem.getItemMeta();
         if (svenMeta != null) {
-            svenMeta.setDisplayName("§cSven Packmaster");
-            svenMeta.setLore(Arrays.asList(
+            svenMeta.displayName(Component.text("§cSven Packmaster"));
+            svenMeta.lore(Arrays.asList(
                 "§7Wolf slayer boss",
                 "§7Drops: Wolf Tooth, Sven Packmaster Fur",
                 "",
                 "§eClick to start quest"
-            ));
+            ).stream().map(Component::text).collect(Collectors.toList()));
             svenItem.setItemMeta(svenMeta);
         }
         inventory.setItem(24, svenItem);
@@ -106,7 +108,7 @@ public class SlayerMenuGUI extends CustomGUI {
         ItemStack closeItem = new ItemStack(Material.BARRIER);
         ItemMeta closeMeta = closeItem.getItemMeta();
         if (closeMeta != null) {
-            closeMeta.setDisplayName("§cClose");
+            closeMeta.displayName(Component.text("§cClose"));
             closeItem.setItemMeta(closeMeta);
         }
         inventory.setItem(49, closeItem);

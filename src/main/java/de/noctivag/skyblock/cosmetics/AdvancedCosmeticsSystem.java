@@ -1,5 +1,7 @@
 package de.noctivag.skyblock.cosmetics;
 
+import java.util.stream.Collectors;
+import net.kyori.adventure.text.Component;
 import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.api.Service;
 import de.noctivag.skyblock.core.api.SystemStatus;
@@ -233,13 +235,13 @@ public class AdvancedCosmeticsSystem implements Service, Listener {
                 rarity = Cosmetic.Rarity.COMMON;
             }
             
-            meta.setDisplayName(rarity.getColoredName() + " " + name);
-            meta.setLore(Arrays.asList(
+            meta.displayName(Component.text(rarity.getColoredName()) + " " + name);
+            meta.lore(Arrays.asList(
                 "§7" + description,
                 "",
                 "§7Rarity: " + rarity.getColoredName(),
                 "§7Click to equip!"
-            ));
+            ).stream().map(Component::text).collect(Collectors.toList()));
             item.setItemMeta(meta);
         }
         

@@ -1,5 +1,7 @@
 package de.noctivag.skyblock.gui;
 
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -28,15 +30,15 @@ public class NPCManagementGUI extends CustomGUI {
         // Add NPC management items
         ItemStack npc = new ItemStack(Material.VILLAGER_SPAWN_EGG);
         ItemMeta npcMeta = npc.getItemMeta();
-        npcMeta.setDisplayName("§eCreate NPC");
-        npcMeta.setLore(Arrays.asList("§7Create a new NPC", "§7Click to create!"));
+        npcMeta.displayName(Component.text("§eCreate NPC"));
+        npcMeta.lore(Arrays.asList("§7Create a new NPC", "§7Click to create!").stream().map(Component::text).collect(Collectors.toList()));
         npc.setItemMeta(npcMeta);
         inventory.setItem(22, npc);
         
         // Close button
         ItemStack close = new ItemStack(Material.BARRIER);
         ItemMeta closeMeta = close.getItemMeta();
-        closeMeta.setDisplayName("§cClose");
+        closeMeta.displayName(Component.text("§cClose"));
         close.setItemMeta(closeMeta);
         inventory.setItem(49, close);
     }

@@ -1,5 +1,6 @@
 package de.noctivag.skyblock.utils;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -15,6 +16,7 @@ import org.bukkit.plugin.Plugin;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Advanced ItemBuilder utility for creating complex ItemStacks with fluent API
@@ -66,7 +68,7 @@ public class ItemBuilder {
      */
     public ItemBuilder name(String name) {
         if (itemMeta != null) {
-            itemMeta.setDisplayName(parseColors(name));
+            itemMeta.displayName(Component.text(parseColors(name)));
         }
         return this;
     }
@@ -76,11 +78,11 @@ public class ItemBuilder {
      */
     public ItemBuilder lore(String... lore) {
         if (itemMeta != null) {
-            List<String> loreList = new ArrayList<>();
+            List<Component> loreList = new ArrayList<>();
             for (String line : lore) {
-                loreList.add(parseColors(line));
+                loreList.add(Component.text(parseColors(line)));
             }
-            itemMeta.setLore(loreList);
+            itemMeta.lore(loreList);
         }
         return this;
     }
@@ -90,11 +92,10 @@ public class ItemBuilder {
      */
     public ItemBuilder lore(List<String> lore) {
         if (itemMeta != null) {
-            List<String> loreList = new ArrayList<>();
-            for (String line : lore) {
-                loreList.add(parseColors(line));
-            }
-            itemMeta.setLore(loreList);
+            List<Component> loreList = lore.stream()
+                .map(line -> Component.text(parseColors(line)))
+                .collect(Collectors.toList());
+            itemMeta.lore(loreList);
         }
         return this;
     }
@@ -104,12 +105,12 @@ public class ItemBuilder {
      */
     public ItemBuilder addLore(String line) {
         if (itemMeta != null) {
-            List<String> lore = itemMeta.getLore();
+            List<Component> lore = itemMeta.lore();
             if (lore == null) {
                 lore = new ArrayList<>();
             }
-            lore.add(parseColors(line));
-            itemMeta.setLore(lore);
+            lore.add(Component.text(parseColors(line)));
+            itemMeta.lore(lore);
         }
         return this;
     }
@@ -119,14 +120,14 @@ public class ItemBuilder {
      */
     public ItemBuilder addLore(String... lines) {
         if (itemMeta != null) {
-            List<String> lore = itemMeta.getLore();
+            List<Component> lore = itemMeta.lore();
             if (lore == null) {
                 lore = new ArrayList<>();
             }
             for (String line : lines) {
-                lore.add(parseColors(line));
+                lore.add(Component.text(parseColors(line)));
             }
-            itemMeta.setLore(lore);
+            itemMeta.lore(lore);
         }
         return this;
     }

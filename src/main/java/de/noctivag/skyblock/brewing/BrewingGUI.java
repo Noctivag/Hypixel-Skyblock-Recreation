@@ -1,5 +1,7 @@
 package de.noctivag.skyblock.brewing;
 
+import java.util.stream.Collectors;
+import net.kyori.adventure.text.Component;
 import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.gui.CustomGUI;
 import org.bukkit.Material;
@@ -35,14 +37,14 @@ public class BrewingGUI extends CustomGUI {
             ItemMeta meta = item.getItemMeta();
             
             if (meta != null) {
-                meta.setDisplayName("§e" + recipe.getName());
-                meta.setLore(Arrays.asList(
+                meta.displayName(Component.text("§e" + recipe.getName()));
+                meta.lore(Arrays.asList(
                     "§7ID: " + recipe.getId(),
                     "§7Brewing Time: " + recipe.getBrewingTime() + " ticks",
                     "§7Experience: " + recipe.getExperience(),
                     "",
                     "§aClick to start brewing!"
-                ));
+                ).stream().map(Component::text).collect(Collectors.toList()));
                 item.setItemMeta(meta);
             }
             
@@ -54,7 +56,7 @@ public class BrewingGUI extends CustomGUI {
         ItemStack closeButton = new ItemStack(Material.BARRIER);
         ItemMeta closeMeta = closeButton.getItemMeta();
         if (closeMeta != null) {
-            closeMeta.setDisplayName("§cClose");
+            closeMeta.displayName(Component.text("§cClose"));
             closeButton.setItemMeta(closeMeta);
         }
         inventory.setItem(53, closeButton);

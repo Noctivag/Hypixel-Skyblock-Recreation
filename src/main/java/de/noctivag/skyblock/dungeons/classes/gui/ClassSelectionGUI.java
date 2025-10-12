@@ -1,5 +1,6 @@
 package de.noctivag.skyblock.dungeons.classes.gui;
 
+import net.kyori.adventure.text.Component;
 import de.noctivag.skyblock.gui.CustomGUI;
 import de.noctivag.skyblock.dungeons.classes.ClassManager;
 import de.noctivag.skyblock.dungeons.classes.DungeonClass;
@@ -45,7 +46,7 @@ public class ClassSelectionGUI extends CustomGUI {
         ItemStack closeItem = new ItemStack(org.bukkit.Material.BARRIER);
         org.bukkit.inventory.meta.ItemMeta closeMeta = closeItem.getItemMeta();
         if (closeMeta != null) {
-            closeMeta.setDisplayName("§cClose");
+            closeMeta.displayName(Component.text("§cClose"));
             closeItem.setItemMeta(closeMeta);
         }
         inventory.setItem(49, closeItem);

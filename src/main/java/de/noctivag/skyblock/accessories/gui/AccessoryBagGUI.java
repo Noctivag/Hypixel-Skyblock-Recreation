@@ -1,5 +1,7 @@
 package de.noctivag.skyblock.accessories.gui;
 
+import java.util.stream.Collectors;
+import net.kyori.adventure.text.Component;
 import de.noctivag.skyblock.gui.CustomGUI;
 import de.noctivag.skyblock.accessories.Accessory;
 import de.noctivag.skyblock.accessories.AccessoryBag;
@@ -37,13 +39,13 @@ public class AccessoryBagGUI extends CustomGUI {
         ItemStack powerItem = new ItemStack(Material.NETHER_STAR);
         ItemMeta powerMeta = powerItem.getItemMeta();
         if (powerMeta != null) {
-            powerMeta.setDisplayName("§cMagical Power");
-            powerMeta.setLore(Arrays.asList(
+            powerMeta.displayName(Component.text("§cMagical Power"));
+            powerMeta.lore(Arrays.asList(
                 "§7Current Power: §c" + String.format("%.1f", magicalPower),
                 "",
                 "§7Magical Power increases your",
                 "§7stat bonuses from accessories"
-            ));
+            ).stream().map(Component::text).collect(Collectors.toList()));
             powerItem.setItemMeta(powerMeta);
         }
         inventory.setItem(4, powerItem);
@@ -66,8 +68,8 @@ public class AccessoryBagGUI extends CustomGUI {
             ItemStack accessoryItem = new ItemStack(accessory.getMaterial());
             ItemMeta accessoryMeta = accessoryItem.getItemMeta();
             if (accessoryMeta != null) {
-                accessoryMeta.setDisplayName(accessory.getName());
-                accessoryMeta.setLore(Arrays.asList(
+                accessoryMeta.displayName(Component.text(accessory.getName()));
+                accessoryMeta.lore(Arrays.asList(
                     "§7" + accessory.getDescription(),
                     "",
                     "§7Rarity: §c" + accessory.getRarity().name(),
@@ -75,7 +77,7 @@ public class AccessoryBagGUI extends CustomGUI {
                     "§7- " + accessory.getStatType().name() + ": §c+" + accessory.getStatValue(),
                     "",
                     "§eClick to remove"
-                ));
+                ).stream().map(Component::text).collect(Collectors.toList()));
                 accessoryItem.setItemMeta(accessoryMeta);
             }
             inventory.setItem(slot, accessoryItem);
@@ -89,7 +91,7 @@ public class AccessoryBagGUI extends CustomGUI {
         ItemStack closeItem = new ItemStack(Material.BARRIER);
         ItemMeta closeMeta = closeItem.getItemMeta();
         if (closeMeta != null) {
-            closeMeta.setDisplayName("§cClose");
+            closeMeta.displayName(Component.text("§cClose"));
             closeItem.setItemMeta(closeMeta);
         }
         inventory.setItem(49, closeItem);

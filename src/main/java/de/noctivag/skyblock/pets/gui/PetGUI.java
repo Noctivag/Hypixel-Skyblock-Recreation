@@ -1,5 +1,7 @@
 package de.noctivag.skyblock.pets.gui;
 
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 import de.noctivag.skyblock.gui.CustomGUI;
 import de.noctivag.skyblock.pets.Pet;
 import de.noctivag.skyblock.pets.PetBag;
@@ -50,8 +52,8 @@ public class PetGUI extends CustomGUI {
         ItemStack activePetItem = new ItemStack(org.bukkit.Material.BONE);
         ItemMeta activePetMeta = activePetItem.getItemMeta();
         if (activePetMeta != null) {
-            activePetMeta.setDisplayName("§cActive Pet: " + "Pet");
-            activePetMeta.setLore(Arrays.asList(
+            activePetMeta.displayName(Component.text("§cActive Pet: " + "Pet"));
+            activePetMeta.lore(Arrays.asList(
                 "§7Level: §c" + activePet.getLevel(),
                 "§7Experience: §c" + String.format("%.1f", 50.0),
                 "§7Health: §c" + String.format("%.1f", 100.0),
@@ -59,7 +61,7 @@ public class PetGUI extends CustomGUI {
                 "§7Defense: §c" + String.format("%.1f", 15.0),
                 "",
                 "§eClick to deactivate"
-            ));
+            ).stream().map(Component::text).collect(Collectors.toList()));
             activePetItem.setItemMeta(activePetMeta);
         }
         inventory.setItem(4, activePetItem);
@@ -69,13 +71,13 @@ public class PetGUI extends CustomGUI {
         ItemStack noActivePetItem = new ItemStack(Material.BARRIER);
         ItemMeta noActivePetMeta = noActivePetItem.getItemMeta();
         if (noActivePetMeta != null) {
-            noActivePetMeta.setDisplayName("§cNo Active Pet");
-            noActivePetMeta.setLore(Arrays.asList(
+            noActivePetMeta.displayName(Component.text("§cNo Active Pet"));
+            noActivePetMeta.lore(Arrays.asList(
                 "§7You don't have an active pet",
                 "§7Select a pet from your collection below",
                 "",
                 "§eClick to view pet collection"
-            ));
+            ).stream().map(Component::text).collect(Collectors.toList()));
             noActivePetItem.setItemMeta(noActivePetMeta);
         }
         inventory.setItem(4, noActivePetItem);
@@ -92,8 +94,8 @@ public class PetGUI extends CustomGUI {
             ItemStack petItem = new ItemStack(org.bukkit.Material.BONE);
             ItemMeta petMeta = petItem.getItemMeta();
             if (petMeta != null) {
-                petMeta.setDisplayName("§c" + "Pet");
-                petMeta.setLore(Arrays.asList(
+                petMeta.displayName(Component.text("§c" + "Pet"));
+                petMeta.lore(Arrays.asList(
                     "§7Level: §c" + pet.getLevel(),
                     "§7Experience: §c" + String.format("%.1f", 50.0),
                     "§7Health: §c" + String.format("%.1f", 100.0),
@@ -101,7 +103,7 @@ public class PetGUI extends CustomGUI {
                     "§7Defense: §c" + String.format("%.1f", 15.0),
                     "",
                     pet.isActive() ? "§aCurrently Active" : "§eClick to activate"
-                ));
+                ).stream().map(Component::text).collect(Collectors.toList()));
                 petItem.setItemMeta(petMeta);
             }
             inventory.setItem(slot, petItem);
@@ -115,7 +117,7 @@ public class PetGUI extends CustomGUI {
         ItemStack closeItem = new ItemStack(Material.BARRIER);
         ItemMeta closeMeta = closeItem.getItemMeta();
         if (closeMeta != null) {
-            closeMeta.setDisplayName("§cClose");
+            closeMeta.displayName(Component.text("§cClose"));
             closeItem.setItemMeta(closeMeta);
         }
         inventory.setItem(49, closeItem);

@@ -1,5 +1,6 @@
 package de.noctivag.skyblock.util;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -20,7 +21,7 @@ public class CustomHeadUtil {
     public static ItemStack getCustomHead(String name, String base64) {
         ItemStack head = new ItemStack(Material.PLAYER_HEAD, 1);
         SkullMeta meta = (SkullMeta) head.getItemMeta();
-        meta.setDisplayName(name);
+        meta.displayName(Component.text(name));
         // Setze Custom-Textur
         // TODO: Re-enable when authlib dependency is added
         /*

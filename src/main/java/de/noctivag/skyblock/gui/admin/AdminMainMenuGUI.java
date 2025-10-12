@@ -1,5 +1,7 @@
 package de.noctivag.skyblock.gui.admin;
 
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -26,26 +28,26 @@ public class AdminMainMenuGUI {
         // Weltverwaltung
         ItemStack worldManager = new ItemStack(Material.COMPASS);
         ItemMeta wmMeta = worldManager.getItemMeta();
-        wmMeta.setDisplayName("§bWeltverwaltung");
-        wmMeta.setLore(List.of("§7Verwalte alle Welten und Statistiken."));
+        wmMeta.displayName(Component.text("§bWeltverwaltung"));
+        wmMeta.lore(List.of("§7Verwalte alle Welten und Statistiken.").stream().map(Component::text).collect(Collectors.toList()));
         worldManager.setItemMeta(wmMeta);
         gui.setItem(10, worldManager);
         // Arsenal
         ItemStack arsenal = new ItemStack(Material.NETHERITE_SWORD);
         ItemMeta arsenalMeta = arsenal.getItemMeta();
-        arsenalMeta.setDisplayName("§cArsenal");
-        arsenalMeta.setLore(List.of("§7Verwalte Admin-Waffen und Tools."));
+        arsenalMeta.displayName(Component.text("§cArsenal"));
+        arsenalMeta.lore(List.of("§7Verwalte Admin-Waffen und Tools.").stream().map(Component::text).collect(Collectors.toList()));
         arsenal.setItemMeta(arsenalMeta);
         gui.setItem(12, arsenal);
         // Weitere Admin-Funktionen (Platzhalter)
         ItemStack more = new ItemStack(Material.BOOK);
         ItemMeta moreMeta = more.getItemMeta();
-        moreMeta.setDisplayName("§eWeitere Admin-Funktionen");
+        moreMeta.displayName(Component.text("§eWeitere Admin-Funktionen"));
         List<String> lore = new ArrayList<>();
         lore.add("§7- Spieler verwalten");
         lore.add("§7- Servereinstellungen");
         lore.add("§7- ...");
-        moreMeta.setLore(lore);
+        moreMeta.lore(lore.stream().map(Component::text).collect(Collectors.toList()));
         more.setItemMeta(moreMeta);
         gui.setItem(14, more);
         player.openInventory(gui);
