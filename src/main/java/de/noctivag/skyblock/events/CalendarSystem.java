@@ -366,8 +366,8 @@ public class CalendarSystem implements Listener {
         ItemMeta prevMeta = prevItem.getItemMeta();
         
         if (prevMeta != null) {
-            prevMeta.setDisplayName("§7§l← Previous Day");
-            prevMeta.setLore(Arrays.asList("§7Go to previous day"));
+            prevMeta.displayName(Component.text("§7§l← Previous Day"));
+            prevMeta.lore(Arrays.asList(Component.text("§7Go to previous day")));
             prevItem.setItemMeta(prevMeta);
         }
         
@@ -378,8 +378,8 @@ public class CalendarSystem implements Listener {
         ItemMeta nextMeta = nextItem.getItemMeta();
         
         if (nextMeta != null) {
-            nextMeta.setDisplayName("§7§lNext Day →");
-            nextMeta.setLore(Arrays.asList("§7Go to next day"));
+            nextMeta.displayName(Component.text("§7§lNext Day →"));
+            nextMeta.lore(Arrays.asList(Component.text("§7Go to next day")));
             nextItem.setItemMeta(nextMeta);
         }
         
@@ -416,8 +416,8 @@ public class CalendarSystem implements Listener {
         ItemMeta closeMeta = closeItem.getItemMeta();
         
         if (closeMeta != null) {
-            closeMeta.setDisplayName("§c§lClose");
-            closeMeta.setLore(Arrays.asList("§7Close calendar"));
+            closeMeta.displayName(Component.text("§c§lClose"));
+            closeMeta.lore(Arrays.asList(Component.text("§7Close calendar")));
             closeItem.setItemMeta(closeMeta);
         }
         
