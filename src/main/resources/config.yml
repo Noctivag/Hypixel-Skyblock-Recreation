@@ -1,50 +1,746 @@
-# Plugin Hauptkonfiguration
+# ====================================
+# HYPIXEL SKYBLOCK RECREATION CONFIG
+# Ultimate Configuration System
+# Every feature is toggleable and configurable
+# ====================================
 
-# Allgemeine Einstellungen
-settings:
-  language: de_DE
-  auto-save-interval: 300 # Sekunden
+# =====================================
+# GENERAL SETTINGS
+# =====================================
+general:
+  # Plugin language (en_US or de_DE)
+  language: en_US
+  # Auto-save player data interval (seconds)
+  auto-save-interval: 300
+  # Enable debug logging
   debug-mode: false
-  check-player-exists: true # Prüft ob Spieler existiert bei /joinmessage set
+  # Plugin prefix for messages
+  plugin-prefix: "&8[&6SkyBlock&8] &7"
 
-# Join-Message Einstellungen
+# =====================================
+# FEATURE TOGGLES
+# Enable/disable entire systems
+# =====================================
+features:
+  # Core gameplay systems
+  skills-system: true
+  collections-system: true
+  minions-system: true
+  pets-system: true
+
+  # Combat systems
+  slayers-system: true
+  dungeons-system: true
+  combat-enhancements: true
+  custom-damage-system: true
+
+  # Economy & Trading
+  bazaar-system: true
+  auction-house: true
+  banking-system: true
+  player-trading: true
+
+  # Progression systems
+  recipe-book: true
+  achievements: true
+  bestiary-system: true
+  calendar-system: true
+  daily-rewards: true
+
+  # Quality of life
+  fast-travel: true
+  wardrobe-system: true
+  accessory-bag: true
+
+  # Advanced features
+  custom-enchantments: true
+  reforge-system: true
+  brewing-system: true
+
+  # World features
+  custom-islands: true
+  zone-system: true
+  custom-mobs: true
+  npc-system: true
+
+  # Social features
+  friends-system: false # Not implemented yet
+  guild-system: false # Not implemented yet
+  party-system: true
+
+  # Cosmetics
+  particle-effects: true
+  chat-cosmetics: true
+
+# =====================================
+# SKILLS SYSTEM
+# =====================================
+skills:
+  enabled: true
+  # Maximum skill level for each skill
+  max-levels:
+    combat: 60
+    mining: 60
+    farming: 60
+    foraging: 60
+    fishing: 50
+    enchanting: 60
+    alchemy: 50
+    carpentry: 50
+    runecrafting: 25
+    taming: 50
+    social: 25
+    dungeoneering: 50
+
+  # XP multipliers (1.0 = normal)
+  xp-multipliers:
+    combat: 1.0
+    mining: 1.0
+    farming: 1.0
+    foraging: 1.0
+    fishing: 1.0
+    enchanting: 1.0
+    alchemy: 1.0
+    carpentry: 1.0
+    runecrafting: 1.0
+    taming: 1.0
+    social: 1.0
+    dungeoneering: 1.0
+
+  # Enable skill-based stat bonuses
+  stat-bonuses-enabled: true
+  # Announce skill level-ups in chat
+  announce-levelups: true
+  # Show XP gain messages
+  show-xp-messages: true
+  # XP message threshold (only show if XP > this value)
+  xp-message-threshold: 1.0
+
+# =====================================
+# COLLECTIONS SYSTEM
+# =====================================
+collections:
+  enabled: true
+  # Enable collection multipliers
+  multipliers-enabled: true
+  # Default multiplier
+  default-multiplier: 1.0
+  # Announce collection milestones
+  announce-milestones: true
+  # Show collection gain messages
+  show-collection-messages: false
+  # Auto-unlock recipes when reaching milestones
+  auto-unlock-recipes: true
+
+# =====================================
+# MINIONS SYSTEM
+# =====================================
+minions:
+  enabled: true
+  # Maximum minions per player
+  max-minions-per-player: 30
+  # Minion collection speed multiplier
+  speed-multiplier: 1.0
+  # Enable minion upgrades
+  allow-upgrades: true
+  # Enable minion fuel system
+  fuel-system-enabled: true
+  # Minion storage capacity multiplier
+  storage-multiplier: 1.0
+  # Allow automated selling
+  auto-sell-enabled: true
+  # Minion placement restrictions
+  placement:
+    require-island: true
+    check-distance: true
+    min-distance-between: 3
+
+# =====================================
+# PETS SYSTEM
+# =====================================
+pets:
+  enabled: true
+  # Maximum pet level
+  max-level: 100
+  # Enable legendary pets
+  allow-legendary: true
+  # Enable mythic pets
+  allow-mythic: true
+  # Pet XP multiplier
+  xp-multiplier: 1.0
+  # Auto-pickup pet drops
+  auto-pickup: true
+  # Enable pet abilities
+  abilities-enabled: true
+  # Pet item drops
+  pet-drops-enabled: true
+
+# =====================================
+# SLAYERS SYSTEM
+# =====================================
+slayers:
+  enabled: true
+  # Enable individual slayer types
+  types:
+    zombie: true # Revenant Horror
+    spider: true # Tarantula Broodfather
+    wolf: true # Sven Packmaster
+    enderman: true # Voidgloom Seraph
+    blaze: true # Inferno Demonlord
+    vampire: true # Riftstalker Bloodfiend
+
+  # XP multiplier for slayer kills
+  xp-multiplier: 1.0
+  # Boss spawn delay (seconds)
+  boss-spawn-delay: 5
+  # Enable slayer drops
+  drops-enabled: true
+  # Slayer drop rate multiplier
+  drop-rate-multiplier: 1.0
+  # Require quest to spawn boss
+  require-quest: true
+
+# =====================================
+# DUNGEONS SYSTEM
+# =====================================
+dungeons:
+  enabled: true
+  # Enable specific dungeon types
+  types:
+    catacombs: true
+    master-mode: true
+
+  # Maximum floor unlocked by default (0 = entrance, 7 = floor 7)
+  default-max-floor: 0
+  # Party size (1-5)
+  max-party-size: 5
+  # Require full party
+  require-full-party: false
+  # Enable dungeon classes
+  classes-enabled: true
+  # Available classes
+  classes:
+    healer: true
+    mage: true
+    berserk: true
+    archer: true
+    tank: true
+
+  # Dungeon rewards
+  rewards:
+    # Loot multiplier
+    loot-multiplier: 1.0
+    # Enable essence drops
+    essence-enabled: true
+    # Enable dungeon stars
+    stars-enabled: true
+
+  # Dungeon mechanics
+  mechanics:
+    # Enable secrets
+    secrets-enabled: true
+    # Enable puzzle rooms
+    puzzles-enabled: true
+    # Blood room enabled
+    blood-room-enabled: true
+    # Boss mechanics enabled
+    boss-mechanics-enabled: true
+
+# =====================================
+# COMBAT SYSTEM
+# =====================================
+combat:
+  enabled: true
+  # Custom damage calculation
+  custom-damage-enabled: true
+  # Enable defense system
+  defense-system: true
+  # Enable critical hits
+  critical-hits: true
+  # Enable strength scaling
+  strength-scaling: true
+  # Enable combat abilities
+  abilities-enabled: true
+  # Enable weapon abilities
+  weapon-abilities: true
+  # Enable armor set bonuses
+  armor-set-bonuses: true
+  # Health regeneration
+  health-regen:
+    enabled: true
+    amount-per-tick: 0.5
+    delay-after-damage: 60 # ticks
+  # Mana system
+  mana:
+    enabled: true
+    max-default: 100
+    regen-per-tick: 1.0
+    cost-multiplier: 1.0
+
+# =====================================
+# ECONOMY SYSTEM
+# =====================================
+economy:
+  enabled: true
+  # Starting balance
+  starting-balance: 100.0
+  # Currency settings
+  currency:
+    name: "Coins"
+    symbol: "⛃"
+    plural: "Coins"
+
+  # Bazaar settings
+  bazaar:
+    enabled: true
+    # Tax on sales (percentage)
+    sales-tax: 1.0
+    # Update interval (ticks)
+    update-interval: 100
+    # Allow instant buy/sell
+    instant-transactions: true
+
+  # Auction house
+  auction-house:
+    enabled: true
+    # Listing fee (percentage)
+    listing-fee: 1.0
+    # Maximum auction duration (hours)
+    max-duration: 48
+    # Enable BIN (Buy It Now)
+    bin-enabled: true
+
+  # Banking system
+  banking:
+    enabled: true
+    # Enable interest
+    interest-enabled: true
+    # Interest rate (percentage per day)
+    interest-rate: 0.1
+    # Maximum bank balance
+    max-balance: 1000000000.0
+
+# =====================================
+# ITEMS SYSTEM
+# =====================================
+items:
+  # Enable custom items
+  custom-items-enabled: true
+  # Enable item abilities
+  abilities-enabled: true
+  # Enable item stats
+  stats-enabled: true
+  # Enable item rarity system
+  rarity-system: true
+  # Enable reforging
+  reforging-enabled: true
+  # Enable recombobulation
+  recombobulator-enabled: true
+  # Enable gemstone system
+  gemstones-enabled: true
+  # Enable dungeon stars
+  dungeon-stars-enabled: true
+
+  # Weapon settings
+  weapons:
+    abilities-enabled: true
+    cooldowns-enabled: true
+    mana-costs-enabled: true
+
+  # Armor settings
+  armor:
+    set-bonuses-enabled: true
+    full-set-bonus-only: false
+
+  # Tool settings
+  tools:
+    efficiency-scaling: true
+    fortune-enabled: true
+
+# =====================================
+# ENCHANTMENTS SYSTEM
+# =====================================
+enchantments:
+  enabled: true
+  # Enable custom enchantments
+  custom-enchants: true
+  # Maximum enchant level multiplier
+  max-level-multiplier: 1.0
+  # Enchanting costs
+  costs:
+    # Base XP cost multiplier
+    xp-multiplier: 1.0
+    # Enable lapis cost
+    lapis-required: true
+  # Available custom enchantments
+  custom:
+    # Ultimate enchantments
+    ultimate-enchants: true
+    # Combat enchants
+    big-brain: true
+    combo: true
+    critical: true
+    cubism: true
+    dragon-hunter: true
+    ender-slayer: true
+    execute: true
+    first-strike: true
+    giant-killer: true
+    impaling: true
+    lethality: true
+    life-steal: true
+    looting: true
+    luck: true
+    prosecute: true
+    scavenger: true
+    smite: true
+    thunderlord: true
+    vampirism: true
+    venomous: true
+    # Mining enchants
+    compact: true
+    efficiency: true
+    fortune: true
+    pristine: true
+    smelting-touch: true
+    # Farming enchants
+    cultivating: true
+    harvesting: true
+    replenish: true
+    turbo: true
+    # Fishing enchants
+    angler: true
+    blessing: true
+    caster: true
+    frail: true
+    luck-of-the-sea: true
+    lure: true
+    magnet: true
+    # Defense enchants
+    bank: true
+    big-brain-defense: true
+    counter-strike: true
+    growth: true
+    mending: true
+    protection: true
+    rejuvenate: true
+    respite: true
+    smarty-pants: true
+    sugar-rush: true
+    true-protection: true
+
+# =====================================
+# RECIPE BOOK SYSTEM
+# =====================================
+recipe-book:
+  enabled: true
+  # Auto-unlock recipes from collections
+  auto-unlock-from-collections: true
+  # Auto-unlock from achievements
+  auto-unlock-from-achievements: true
+  # Show recipe requirements
+  show-requirements: true
+  # Allow crafting from recipe book
+  quick-craft-enabled: true
+
+# =====================================
+# ACHIEVEMENTS & BESTIARY
+# =====================================
+achievements:
+  enabled: true
+  # Announce achievement completion
+  announce-completion: true
+  # Give rewards for achievements
+  rewards-enabled: true
+
+bestiary:
+  enabled: true
+  # Track mob kills
+  track-kills: true
+  # Give rewards for milestones
+  milestone-rewards: true
+  # Show bestiary in menu
+  show-in-menu: true
+
+# =====================================
+# WORLD & ISLANDS
+# =====================================
+worlds:
+  # Enable custom islands
+  custom-islands: true
+  # Auto-create islands
+  auto-create-islands: true
+
+  # Hub world
+  hub:
+    enabled: true
+    world-name: "skyblock_hub"
+    spawn-location:
+      x: 0
+      y: 100
+      z: 0
+
+  # Private islands
+  private-island:
+    enabled: true
+    # Size of private islands (radius)
+    island-size: 100
+    # Enable island expansion
+    allow-expansion: true
+
+  # Mining islands
+  gold-mine:
+    enabled: true
+    required-level: 1
+
+  deep-caverns:
+    enabled: true
+    required-level: 5
+
+  dwarven-mines:
+    enabled: true
+    required-level: 12
+
+  crystal-hollows:
+    enabled: false # Not fully implemented
+    required-level: 12
+
+  # Farming islands
+  barn:
+    enabled: true
+    required-level: 1
+
+  mushroom-desert:
+    enabled: true
+    required-level: 5
+
+  # Combat islands
+  crimson-isle:
+    enabled: false # Not implemented
+    required-level: 22
+
+  # Special islands
+  the-park:
+    enabled: true
+    required-level: 0
+
+  the-rift:
+    enabled: false # Partially implemented
+    required-level: 12
+
+  jerry-workshop:
+    enabled: false # Not implemented
+    seasonal: true
+
+# =====================================
+# MOBS & SPAWNING
+# =====================================
+mobs:
+  # Enable custom mob spawning
+  custom-spawning: true
+  # Custom mob AI
+  custom-ai-enabled: true
+  # Mob spawn rate multiplier
+  spawn-rate-multiplier: 1.0
+  # Enable boss mobs
+  bosses-enabled: true
+  # Boss spawn notification
+  boss-spawn-notification: true
+  # Custom mob drops
+  custom-drops-enabled: true
+  # Drop rate multiplier
+  drop-rate-multiplier: 1.0
+
+# =====================================
+# NPCS SYSTEM
+# =====================================
+npcs:
+  enabled: true
+  # Enable NPC dialogue
+  dialogue-enabled: true
+  # Enable NPC shops
+  shops-enabled: true
+  # Enable NPC quests
+  quests-enabled: true
+  # Enable banker NPCs
+  bankers-enabled: true
+  # Custom NPC skins
+  custom-skins-enabled: true
+
+# =====================================
+# COSMETICS & VISUAL
+# =====================================
+cosmetics:
+  # Particle effects
+  particles:
+    enabled: true
+    update-interval: 5 # ticks
+    max-particles: 10
+    allow-in-combat: false
+
+  # Chat cosmetics
+  chat:
+    # Custom prefixes
+    prefixes-enabled: true
+    # Nickname system
+    nicknames-enabled: true
+    # Color codes
+    allow-colors: true
+
+  # Hats/helmets
+  hats:
+    enabled: true
+    # Allow hat overwrites
+    override-helmet: false
+
+# =====================================
+# CALENDAR & EVENTS
+# =====================================
+calendar:
+  enabled: true
+  # In-game time scale (1.0 = real-time)
+  time-scale: 1.0
+  # Enable special events
+  special-events: true
+  # Events
+  events:
+    spooky-festival: true
+    jerry-workshop: true
+    season-of-jerry: true
+    dark-auction: true
+    traveling-zoo: true
+
+# =====================================
+# DAILY REWARDS
+# =====================================
+daily-rewards:
+  enabled: true
+  # Reset time (hour in UTC)
+  reset-hour: 0
+  # Enable streak system
+  streak-system: true
+  # Bonus for streak
+  streak-multiplier: 1.1
+
+# =====================================
+# FAST TRAVEL
+# =====================================
+fast-travel:
+  enabled: true
+  # Cost per warp
+  cost-per-warp: 0
+  # Cooldown (seconds)
+  cooldown: 0
+  # Allow warping in combat
+  allow-in-combat: false
+
+# =====================================
+# DATABASE SETTINGS
+# =====================================
+database:
+  # Database type (sqlite, mysql, mariadb)
+  type: sqlite
+  # MySQL/MariaDB settings
+  mysql:
+    enabled: false
+    host: "127.0.0.1"
+    port: 3306
+    database: "skyblock"
+    username: "root"
+    password: "password"
+    max-pool-size: 10
+    connection-timeout: 30000
+    use-ssl: false
+
+  # SQLite settings (automatically used if MySQL disabled)
+  sqlite:
+    file: "skyblock.db"
+
+  # Redis for multi-server sync
+  redis:
+    enabled: false
+    host: "localhost"
+    port: 6379
+    password: ""
+    timeout: 2000
+
+# =====================================
+# MULTI-SERVER SETTINGS
+# =====================================
+multi-server:
+  enabled: false
+  server-id: "server-1"
+  sync-interval-ms: 5000
+  redis-channel: "skyblock:sync"
+
+# =====================================
+# PERFORMANCE SETTINGS
+# =====================================
+performance:
+  # Enable async operations
+  async-enabled: true
+  # Thread pool size
+  thread-pool-size: 8
+  # TPS monitoring
+  monitor-tps: true
+  tps-sample-interval: 5
+  # Chunk loading
+  async-chunk-loading: true
+  # Database operations
+  batch-size: 100
+  # Cache settings
+  cache:
+    player-data-cache-size: 500
+    item-cache-size: 1000
+    collection-cache-minutes: 10
+
+# =====================================
+# DEBUG & ADMIN
+# =====================================
+debug:
+  # Enable debug messages
+  enabled: false
+  # Log database queries
+  log-queries: false
+  # Log item creation
+  log-items: false
+  # Log skill XP
+  log-skill-xp: false
+  # Performance monitoring
+  performance-monitoring: true
+
+# =====================================
+# MESSAGES & LOCALIZATION
+# =====================================
+messages:
+  # Message files are loaded from messages_en_US.yml and messages_de_DE.yml
+  # Format settings
+  prefix: "&8[&6SkyBlock&8] &7"
+  error-prefix: "&8[&cError&8] &7"
+  success-prefix: "&8[&a✓&8] &7"
+
+  # Join/quit messages
+  join-message: "&7[&a+&7] &e%player%"
+  quit-message: "&7[&c-&7] &e%player%"
+
+  # Permission denied
+  no-permission: "&cYou don't have permission to do that!"
+
+# =====================================
+# BACKWARD COMPATIBILITY
+# =====================================
+# Old config sections preserved for compatibility
 join-messages:
-  default-message: "&7[&a+&7] &e%player% &7hat den Server betreten"
+  default-message: "&7[&a+&7] &e%player% &7joined"
   format:
     prefix: "&8[&6Server&8] "
     allow-colors: true
     max-length: 100
-  examples:
-    - "&7[&a+&7] &e%player%"
-    - "&8[&6★&8] &6%player%"
-    - "&#FF0000[VIP] &e%player%"
 
-# Event-Einstellungen
-events:
-  dragon:
-    interval: 7200 # Alle 2 Stunden
-    duration: 900 # 15 Minuten
-    min-players: 3
-    rewards:
-      points: 500
-      items:
-        - DRAGON_EGG
-        - ELYTRA
-  wither:
-    interval: 3600 # Jede Stunde
-    duration: 600 # 10 Minuten
-    min-players: 2
-    rewards:
-      points: 300
-      items:
-        - NETHER_STAR
-        - BEACON
-
-# Command-Einstellungen
 commands:
   heal:
-    cooldown: 300 # 5 Minuten
-    cost: 100 # Economy-Kosten
+    cooldown: 300
+    cost: 100
   nick:
     min-length: 3
     max-length: 16
@@ -54,114 +750,7 @@ commands:
       - Owner
       - Staff
 
-# Partikel-Effekte
-particles:
-  update-interval: 5 # Ticks
-  max-particles: 10
-  effects:
-    HEART:
-      permission: "cosmetics.hearts"
-      cost: 1000
-    FLAME:
-      permission: "cosmetics.flame"
-      cost: 1500
-    PORTAL:
-      permission: "cosmetics.portal"
-      cost: 2000
-
-# Nachrichten-Einstellungen
-messages:
-  prefix: "&8[&6Server&8] "
-  join-message: "&7[&a+&7] &e%player%"
-  quit-message: "&7[&c-&7] &e%player%"
-  no-permission: "&cDu hast keine Berechtigung für diese Aktion!"
-
-# Cosmetics-Einstellungen
-cosmetics:
-  particle-effects:
-    update-interval: 5 # Ticks zwischen Partikel-Updates
-    allowed-in-combat: false
-    disabled-worlds:
-      - world_nether
-      - world_the_end
-  restrictions:
-    min-distance-between-players: 3
-
-# Workbench-Einstellungen
-workbench:
-  cooldown:
-    enabled: true
-    duration: 60 # Sekunden zwischen Nutzungen
-  restrictions:
-    disabled-worlds:
-      - world_pvp
-    disabled-in-combat: true
-
-# Chat und Namen
-chat:
-  prefix:
-    max-length: 16
-    min-length: 2
-    allow-colors: true
-    blocked-words: []
-  nick:
-    max-length: 16
-    min-length: 3
-    allow-colors: false
-    preserve-case: true
-
-# Economy-Einstellungen
-economy:
-  starting-balance: 100.0
-  enabled: true
-  currency:
-    name: "Coins"
-    symbol: "⛃"
-  command-costs:
-    nick: 100.0
-    prefix: 200.0
-  rewards:
-    kill:
-      player: 10.0
-      monster: 5.0
-    mining:
-      DIAMOND_ORE: 20.0
-      EMERALD_ORE: 15.0
-  exempt-ranks: []
-
-# Database settings (MySQL / MariaDB) - used by DatabaseManager and multi-server features
-database:
-  enabled: false
-  type: mysql # mysql or mariadb
-  host: 127.0.0.1
-  port: 3306
-  database: basics_plugin
-  username: root
-  password: password
-  max-pool-size: 10
-  connection-timeout: 30000
-  use-ssl: false
-
-# Redis settings (used for network sync / multi-server messaging)
-redis:
-  enabled: false
-  host: localhost
-  port: 6379
-  password: ""
-  timeout: 2000
-
-# Multi-server / network settings
-multiserver:
-  enabled: false
-  server-id: "server-1"
-  sync-interval-ms: 5000
-  redis-channel: "basics:sync"
-
-# Performance / Threading
-performance:
-  async-enabled: true
-  thread-pool-size: 8
-  monitor-tps: true
-  tps-sample-interval-seconds: 5
-
-# Note: Vault integration removed - plugin uses internal economy implementation by default
+# =====================================
+# VERSION INFO
+# =====================================
+config-version: 2.0

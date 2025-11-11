@@ -146,6 +146,7 @@
                     <argLine>-Xmx1024m -Dfile.encoding=UTF-8</argLine>
                 </configuration>
             </plugin>
+            <!-- Temporarily disabled due to network issues
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
@@ -162,6 +163,7 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
