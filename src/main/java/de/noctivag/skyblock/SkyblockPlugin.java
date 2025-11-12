@@ -51,6 +51,10 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
     private de.noctivag.skyblock.fishing.FishingSystem fishingSystem;
     private de.noctivag.skyblock.garden.GardenSystem gardenSystem;
     private de.noctivag.skyblock.reforge.ReforgeSystem reforgeSystem;
+    private de.noctivag.skyblock.enchants.EnchantingSystem enchantingSystem;
+    private de.noctivag.skyblock.auction.AuctionHouse auctionHouse;
+    private de.noctivag.skyblock.auction.Bazaar bazaar;
+    private de.noctivag.skyblock.bank.BankSystem bankSystem;
     
     @Override
     public void onEnable() {
@@ -235,6 +239,22 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
         // Initialize reforge system
         reforgeSystem = new de.noctivag.skyblock.reforge.ReforgeSystem(this);
         getLogger().info("Reforge system initialized with Malik the Blacksmith");
+
+        // Initialize enchanting system
+        enchantingSystem = new de.noctivag.skyblock.enchants.EnchantingSystem(this);
+        getLogger().info("Enchanting system initialized with 80+ custom enchantments");
+
+        // Initialize auction house
+        auctionHouse = new de.noctivag.skyblock.auction.AuctionHouse(this);
+        getLogger().info("Auction House initialized with bidding and BIN support");
+
+        // Initialize bazaar
+        bazaar = new de.noctivag.skyblock.auction.Bazaar(this);
+        getLogger().info("Bazaar initialized with 30+ commodity markets");
+
+        // Initialize bank system
+        bankSystem = new de.noctivag.skyblock.bank.BankSystem(this);
+        getLogger().info("Bank system initialized (personal & coop accounts)");
     }
 
     /**
