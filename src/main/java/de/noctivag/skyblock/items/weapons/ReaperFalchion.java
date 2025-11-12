@@ -1,0 +1,25 @@
+package de.noctivag.skyblock.items.weapons;
+
+import de.noctivag.skyblock.items.CustomItem;
+import org.bukkit.Material;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ReaperFalchion extends CustomItem {
+    public ReaperFalchion() {
+        super("REAPER_FALCHION", "Reaper Falchion", ItemRarity.LEGENDARY, ItemType.SWORD, Material.DIAMOND_SWORD);
+        setDamage(210);
+        setStrength(130);
+        setCritChance(15);
+        setIntelligence(75);
+    }
+
+    @Override
+    protected List<String> getAbilityLore() {
+        List<String> lore = new ArrayList<>();
+        lore.add("");
+        lore.add("§6Ability: Reap souls");
+        lore.add("§7Special weapon ability.");
+        return lore;
+    }
+}
