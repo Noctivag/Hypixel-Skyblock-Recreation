@@ -50,6 +50,7 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
     private de.noctivag.skyblock.rewards.DailyRewardManager dailyRewardManager;
     private de.noctivag.skyblock.fishing.FishingSystem fishingSystem;
     private de.noctivag.skyblock.garden.GardenSystem gardenSystem;
+    private de.noctivag.skyblock.reforge.ReforgeSystem reforgeSystem;
     
     @Override
     public void onEnable() {
@@ -66,6 +67,12 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
             // 3. Register all custom items
             de.noctivag.skyblock.items.ItemRegistry.registerAllItems();
             getLogger().info("Registered 119 custom items (59 weapons, 40 armor pieces, 20+ tools)");
+            // 3b. Register all accessories
+            de.noctivag.skyblock.items.accessories.AccessoryRegistry.registerAllAccessories();
+            getLogger().info("Registered 67+ accessories (talismans, rings, artifacts, relics)");
+            // 3c. Register all reforge stones
+            de.noctivag.skyblock.reforge.ReforgeRegistry.registerAllReforges();
+            getLogger().info("Registered 15 reforge stones (60+ total reforges)");
             // 4. Initialize core systems
             initializeCoreSystems();
             // 5. Register event listeners
@@ -224,6 +231,10 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
         // Initialize garden system
         gardenSystem = new de.noctivag.skyblock.garden.GardenSystem(this);
         getLogger().info("Garden system initialized with visitor mechanics");
+
+        // Initialize reforge system
+        reforgeSystem = new de.noctivag.skyblock.reforge.ReforgeSystem(this);
+        getLogger().info("Reforge system initialized with Malik the Blacksmith");
     }
 
     /**
