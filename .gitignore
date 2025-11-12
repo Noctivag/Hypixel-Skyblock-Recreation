@@ -1,6 +1,9 @@
 # Compiled class files
 *.class
 
+# Java compiler arguments
+javac.*.args
+
 # Log files
 *.log
 logs/
