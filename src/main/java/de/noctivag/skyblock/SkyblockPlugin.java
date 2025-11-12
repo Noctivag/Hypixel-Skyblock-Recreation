@@ -48,6 +48,8 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
     private de.noctivag.skyblock.slayers.SlayersSystem slayersSystem;
     private de.noctivag.skyblock.pets.PetsSystem petsSystem;
     private de.noctivag.skyblock.rewards.DailyRewardManager dailyRewardManager;
+    private de.noctivag.skyblock.fishing.FishingSystem fishingSystem;
+    private de.noctivag.skyblock.garden.GardenSystem gardenSystem;
     
     @Override
     public void onEnable() {
@@ -61,15 +63,18 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
             detectFoliaServer();
             // 2. Load default configuration
             saveDefaultConfig();
-            // 3. Initialize core systems
+            // 3. Register all custom items
+            de.noctivag.skyblock.items.ItemRegistry.registerAllItems();
+            getLogger().info("Registered 119 custom items (59 weapons, 40 armor pieces, 20+ tools)");
+            // 4. Initialize core systems
             initializeCoreSystems();
-            // 4. Register event listeners
+            // 5. Register event listeners
             getServer().getPluginManager().registerEvents(this, this);
             getServer().getPluginManager().registerEvents(new de.noctivag.skyblock.listeners.AdminGUIListener(), this);
             getServer().getPluginManager().registerEvents(new de.noctivag.skyblock.listeners.StatsGUIListener(), this);
-            // 5. Register commands
+            // 6. Register commands
             registerCommands();
-            // 6. Create hub world if not exists
+            // 7. Create hub world if not exists
             createHubWorld();
             getLogger().info("Skyblock Plugin successfully enabled!");
             getLogger().info("Features: Hub-System, Player-Handling, Event-System, Folia-Support");
@@ -211,6 +216,14 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
         // Initialize pets system
         petsSystem = new de.noctivag.skyblock.pets.PetsSystem(this, databaseManager);
         petsSystem.initialize();
+
+        // Initialize fishing system
+        fishingSystem = new de.noctivag.skyblock.fishing.FishingSystem(this, databaseManager);
+        getLogger().info("Fishing system initialized with 20+ sea creatures");
+
+        // Initialize garden system
+        gardenSystem = new de.noctivag.skyblock.garden.GardenSystem(this);
+        getLogger().info("Garden system initialized with visitor mechanics");
     }
 
     /**
@@ -492,10 +505,17 @@ public class SkyblockPlugin extends JavaPlugin implements Listener {
     }
 
     /**
-     * Get fishing system (placeholder)
+     * Get fishing system
      */
-    public Object getFishingSystem() {
-        return null; // Placeholder
+    public de.noctivag.skyblock.fishing.FishingSystem getFishingSystem() {
+        return fishingSystem;
+    }
+
+    /**
+     * Get garden system
+     */
+    public de.noctivag.skyblock.garden.GardenSystem getGardenSystem() {
+        return gardenSystem;
     }
 
     /**
