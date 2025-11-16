@@ -1,5 +1,6 @@
 package de.noctivag.skyblock.economy;
 import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
@@ -652,7 +653,7 @@ public class BazaarSystem {
             ItemStack prevPage = new ItemStack(Material.ARROW);
             ItemMeta prevMeta = prevPage.getItemMeta();
             if (prevMeta != null) {
-                prevMeta.setDisplayName("§7Previous Page");
+                prevMeta.displayName(Component.text("§7Previous Page"));
                 prevPage.setItemMeta(prevMeta);
             }
             gui.setItem(45, prevPage);
@@ -661,7 +662,7 @@ public class BazaarSystem {
         ItemStack closeButton = new ItemStack(Material.BARRIER);
         ItemMeta closeMeta = closeButton.getItemMeta();
         if (closeMeta != null) {
-            closeMeta.setDisplayName("§cClose");
+            closeMeta.displayName(Component.text("§cClose"));
             closeButton.setItemMeta(closeMeta);
         }
         gui.setItem(49, closeButton);
@@ -670,7 +671,7 @@ public class BazaarSystem {
             ItemStack nextPage = new ItemStack(Material.ARROW);
             ItemMeta nextMeta = nextPage.getItemMeta();
             if (nextMeta != null) {
-                nextMeta.setDisplayName("§7Next Page");
+                nextMeta.displayName(Component.text("§7Next Page"));
                 nextPage.setItemMeta(nextMeta);
             }
             gui.setItem(53, nextPage);
@@ -680,8 +681,8 @@ public class BazaarSystem {
         ItemStack myOrders = new ItemStack(Material.BOOK);
         ItemMeta ordersMeta = myOrders.getItemMeta();
         if (ordersMeta != null) {
-            ordersMeta.setDisplayName("§aMy Orders");
-            ordersMeta.setLore(Arrays.asList("§7View and manage your orders"));
+            ordersMeta.displayName(Component.text("§aMy Orders"));
+            ordersMeta.lore(Arrays.asList("§7View and manage your orders").stream().map(Component::text).collect(Collectors.toList()));
             myOrders.setItemMeta(ordersMeta);
         }
         gui.setItem(47, myOrders);
@@ -689,8 +690,8 @@ public class BazaarSystem {
         ItemStack marketOverview = new ItemStack(Material.COMPASS);
         ItemMeta marketMeta = marketOverview.getItemMeta();
         if (marketMeta != null) {
-            marketMeta.setDisplayName("§bMarket Overview");
-            marketMeta.setLore(Arrays.asList("§7View market trends and statistics"));
+            marketMeta.displayName(Component.text("§bMarket Overview"));
+            marketMeta.lore(Arrays.asList("§7View market trends and statistics").stream().map(Component::text).collect(Collectors.toList()));
             marketOverview.setItemMeta(marketMeta);
         }
         gui.setItem(51, marketOverview);

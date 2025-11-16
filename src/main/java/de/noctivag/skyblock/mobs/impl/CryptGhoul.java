@@ -1,5 +1,6 @@
 package de.noctivag.skyblock.mobs.impl;
 
+import net.kyori.adventure.text.Component;
 import de.noctivag.skyblock.mobs.CustomMob;
 import de.noctivag.skyblock.mobs.abilities.ExplodeAbility;
 import org.bukkit.Location;
@@ -70,7 +71,7 @@ public class CryptGhoul extends CustomMob {
     private ItemStack createCryptHelmet() {
         ItemStack helmet = new ItemStack(Material.LEATHER_HELMET);
         ItemMeta meta = helmet.getItemMeta();
-        meta.setDisplayName("§8Crypt Helmet");
+        meta.displayName(Component.text("§8Crypt Helmet"));
         helmet.setItemMeta(meta);
         return helmet;
     }
@@ -81,7 +82,7 @@ public class CryptGhoul extends CustomMob {
     private ItemStack createCryptChestplate() {
         ItemStack chestplate = new ItemStack(Material.LEATHER_CHESTPLATE);
         ItemMeta meta = chestplate.getItemMeta();
-        meta.setDisplayName("§8Crypt Chestplate");
+        meta.displayName(Component.text("§8Crypt Chestplate"));
         chestplate.setItemMeta(meta);
         return chestplate;
     }
@@ -92,7 +93,7 @@ public class CryptGhoul extends CustomMob {
     private ItemStack createCryptLeggings() {
         ItemStack leggings = new ItemStack(Material.LEATHER_LEGGINGS);
         ItemMeta meta = leggings.getItemMeta();
-        meta.setDisplayName("§8Crypt Leggings");
+        meta.displayName(Component.text("§8Crypt Leggings"));
         leggings.setItemMeta(meta);
         return leggings;
     }
@@ -103,7 +104,7 @@ public class CryptGhoul extends CustomMob {
     private ItemStack createCryptBoots() {
         ItemStack boots = new ItemStack(Material.LEATHER_BOOTS);
         ItemMeta meta = boots.getItemMeta();
-        meta.setDisplayName("§8Crypt Boots");
+        meta.displayName(Component.text("§8Crypt Boots"));
         boots.setItemMeta(meta);
         return boots;
     }
@@ -114,7 +115,7 @@ public class CryptGhoul extends CustomMob {
     private ItemStack createCryptSword() {
         ItemStack sword = new ItemStack(Material.STONE_SWORD);
         ItemMeta meta = sword.getItemMeta();
-        meta.setDisplayName("§8Crypt Sword");
+        meta.displayName(Component.text("§8Crypt Sword"));
         sword.setItemMeta(meta);
         return sword;
     }

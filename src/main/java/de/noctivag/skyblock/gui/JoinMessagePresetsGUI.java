@@ -1,5 +1,7 @@
 package de.noctivag.skyblock.gui;
 
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -37,15 +39,15 @@ public class JoinMessagePresetsGUI extends CustomGUI {
         // Add join message presets
         ItemStack presets = new ItemStack(Material.BOOK);
         ItemMeta presetsMeta = presets.getItemMeta();
-        presetsMeta.setDisplayName("§bJoin Message Presets");
-        presetsMeta.setLore(Arrays.asList("§7Pre-made join messages", "§7Click to choose!"));
+        presetsMeta.displayName(Component.text("§bJoin Message Presets"));
+        presetsMeta.lore(Arrays.asList("§7Pre-made join messages", "§7Click to choose!").stream().map(Component::text).collect(Collectors.toList()));
         presets.setItemMeta(presetsMeta);
         inventory.setItem(22, presets);
         
         // Close button
         ItemStack close = new ItemStack(Material.BARRIER);
         ItemMeta closeMeta = close.getItemMeta();
-        closeMeta.setDisplayName("§cClose");
+        closeMeta.displayName(Component.text("§cClose"));
         close.setItemMeta(closeMeta);
         inventory.setItem(49, close);
     }

@@ -1,5 +1,7 @@
 package de.noctivag.skyblock.gui;
 
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -37,8 +39,8 @@ public class CommandUsageGUI extends CustomGUI {
         // Add command usage info
         ItemStack usage = new ItemStack(Material.BOOK);
         ItemMeta usageMeta = usage.getItemMeta();
-        usageMeta.setDisplayName("§eCommand Usage");
-        usageMeta.setLore(Arrays.asList("§7How to use commands", "§7Click to view!"));
+        usageMeta.displayName(Component.text("§eCommand Usage"));
+        usageMeta.lore(Arrays.asList("§7How to use commands", "§7Click to view!").stream().map(Component::text).collect(Collectors.toList()));
         // Note: Using deprecated methods - consider updating to Adventure API
         usage.setItemMeta(usageMeta);
         inventory.setItem(22, usage);
@@ -46,7 +48,7 @@ public class CommandUsageGUI extends CustomGUI {
         // Close button
         ItemStack close = new ItemStack(Material.BARRIER);
         ItemMeta closeMeta = close.getItemMeta();
-        closeMeta.setDisplayName("§cClose");
+        closeMeta.displayName(Component.text("§cClose"));
         // Note: Using deprecated methods - consider updating to Adventure API
         close.setItemMeta(closeMeta);
         inventory.setItem(49, close);

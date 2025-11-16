@@ -1,5 +1,7 @@
 package de.noctivag.skyblock.dungeons.gui;
 
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 import de.noctivag.skyblock.gui.CustomGUI;
 import de.noctivag.skyblock.dungeons.DungeonManager;
 import de.noctivag.skyblock.dungeons.instances.DungeonInstance;
@@ -47,12 +49,12 @@ public class AdvancedDungeonGUI extends CustomGUI {
         ItemStack dungeonInfoItem = new ItemStack(Material.BOOK);
         ItemMeta dungeonInfoMeta = dungeonInfoItem.getItemMeta();
         if (dungeonInfoMeta != null) {
-            dungeonInfoMeta.setDisplayName("§cCurrent Dungeon Information");
-            dungeonInfoMeta.setLore(Arrays.asList(
+            dungeonInfoMeta.displayName(Component.text("§cCurrent Dungeon Information"));
+            dungeonInfoMeta.lore(Arrays.asList(
                 "§7Type: §c" + instance.getDungeonType(),
                 "§7Floor: §c" + instance.getCurrentFloor() + "/" + instance.getMaxFloors(),
                 "§7Players: §c" + instance.getPlayers().size(),
-                "§7Time: §c" + formatTime(instance.getElapsedTime()),
+                "§7Time: §c" + formatTime(instance.getElapsedTime().stream().map(Component::text).collect(Collectors.toList())),
                 "§7Status: §a" + (instance.isActive() ? "Active" : "Inactive"),
                 "",
                 "§eClick to view details"
@@ -65,13 +67,13 @@ public class AdvancedDungeonGUI extends CustomGUI {
         ItemStack leaveItem = new ItemStack(Material.BARRIER);
         ItemMeta leaveMeta = leaveItem.getItemMeta();
         if (leaveMeta != null) {
-            leaveMeta.setDisplayName("§cLeave Dungeon");
-            leaveMeta.setLore(Arrays.asList(
+            leaveMeta.displayName(Component.text("§cLeave Dungeon"));
+            leaveMeta.lore(Arrays.asList(
                 "§7Leave the current dungeon",
                 "§7Warning: This will forfeit all progress!",
                 "",
                 "§eClick to leave"
-            ));
+            ).stream().map(Component::text).collect(Collectors.toList()));
             leaveItem.setItemMeta(leaveMeta);
         }
         inventory.setItem(40, leaveItem);
@@ -82,15 +84,15 @@ public class AdvancedDungeonGUI extends CustomGUI {
         ItemStack catacombsItem = new ItemStack(Material.SKELETON_SKULL);
         ItemMeta catacombsMeta = catacombsItem.getItemMeta();
         if (catacombsMeta != null) {
-            catacombsMeta.setDisplayName("§cCatacombs");
-            catacombsMeta.setLore(Arrays.asList(
+            catacombsMeta.displayName(Component.text("§cCatacombs"));
+            catacombsMeta.lore(Arrays.asList(
                 "§7Undead dungeon",
                 "§7Floors: 5",
                 "§7Difficulty: Medium",
                 "§7Recommended Level: 20+",
                 "",
                 "§eClick to enter"
-            ));
+            ).stream().map(Component::text).collect(Collectors.toList()));
             catacombsItem.setItemMeta(catacombsMeta);
         }
         inventory.setItem(20, catacombsItem);
@@ -99,15 +101,15 @@ public class AdvancedDungeonGUI extends CustomGUI {
         ItemStack m7Item = new ItemStack(Material.WITHER_SKELETON_SKULL);
         ItemMeta m7Meta = m7Item.getItemMeta();
         if (m7Meta != null) {
-            m7Meta.setDisplayName("§cM7 (Coming Soon)");
-            m7Meta.setLore(Arrays.asList(
+            m7Meta.displayName(Component.text("§cM7 (Coming Soon))");
+            m7Meta.lore(Arrays.asList(
                 "§7Master Mode Floor 7",
                 "§7Floors: 7",
                 "§7Difficulty: Extreme",
                 "§7Recommended Level: 50+",
                 "",
                 "§cComing Soon"
-            ));
+            ).stream().map(Component::text).collect(Collectors.toList()));
             m7Item.setItemMeta(m7Meta);
         }
         inventory.setItem(22, m7Item);
@@ -118,7 +120,7 @@ public class AdvancedDungeonGUI extends CustomGUI {
         ItemStack closeItem = new ItemStack(Material.BARRIER);
         ItemMeta closeMeta = closeItem.getItemMeta();
         if (closeMeta != null) {
-            closeMeta.setDisplayName("§cClose");
+            closeMeta.displayName(Component.text("§cClose"));
             closeItem.setItemMeta(closeMeta);
         }
         inventory.setItem(49, closeItem);

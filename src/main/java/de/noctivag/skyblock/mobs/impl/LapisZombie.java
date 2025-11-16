@@ -1,5 +1,6 @@
 package de.noctivag.skyblock.mobs.impl;
 
+import net.kyori.adventure.text.Component;
 import de.noctivag.skyblock.mobs.CustomMob;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -66,7 +67,7 @@ public class LapisZombie extends CustomMob {
     private ItemStack createLapisHelmet() {
         ItemStack helmet = new ItemStack(Material.LEATHER_HELMET);
         ItemMeta meta = helmet.getItemMeta();
-        meta.setDisplayName("§9Lapis Helmet");
+        meta.displayName(Component.text("§9Lapis Helmet"));
         helmet.setItemMeta(meta);
         return helmet;
     }
@@ -77,7 +78,7 @@ public class LapisZombie extends CustomMob {
     private ItemStack createLapisChestplate() {
         ItemStack chestplate = new ItemStack(Material.LEATHER_CHESTPLATE);
         ItemMeta meta = chestplate.getItemMeta();
-        meta.setDisplayName("§9Lapis Chestplate");
+        meta.displayName(Component.text("§9Lapis Chestplate"));
         chestplate.setItemMeta(meta);
         return chestplate;
     }
@@ -88,7 +89,7 @@ public class LapisZombie extends CustomMob {
     private ItemStack createLapisLeggings() {
         ItemStack leggings = new ItemStack(Material.LEATHER_LEGGINGS);
         ItemMeta meta = leggings.getItemMeta();
-        meta.setDisplayName("§9Lapis Leggings");
+        meta.displayName(Component.text("§9Lapis Leggings"));
         leggings.setItemMeta(meta);
         return leggings;
     }
@@ -99,7 +100,7 @@ public class LapisZombie extends CustomMob {
     private ItemStack createLapisBoots() {
         ItemStack boots = new ItemStack(Material.LEATHER_BOOTS);
         ItemMeta meta = boots.getItemMeta();
-        meta.setDisplayName("§9Lapis Boots");
+        meta.displayName(Component.text("§9Lapis Boots"));
         boots.setItemMeta(meta);
         return boots;
     }
@@ -110,7 +111,7 @@ public class LapisZombie extends CustomMob {
     private ItemStack createLapisPickaxe() {
         ItemStack pickaxe = new ItemStack(Material.STONE_PICKAXE);
         ItemMeta meta = pickaxe.getItemMeta();
-        meta.setDisplayName("§9Lapis Pickaxe");
+        meta.displayName(Component.text("§9Lapis Pickaxe"));
         pickaxe.setItemMeta(meta);
         return pickaxe;
     }

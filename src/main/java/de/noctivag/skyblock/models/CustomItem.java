@@ -2,6 +2,7 @@ package de.noctivag.skyblock.models;
 
 import de.noctivag.skyblock.enums.CustomItemType;
 import de.noctivag.skyblock.enums.Rarity;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Repräsentiert ein Custom Item mit Stats und Fähigkeiten
@@ -184,7 +186,7 @@ public class CustomItem {
         
         if (meta != null) {
             // Set display name
-            meta.setDisplayName(itemType.getDisplayName());
+            meta.displayName(Component.text(itemType.getDisplayName()));
             
             // Create lore
             List<String> lore = new ArrayList<>();
@@ -212,7 +214,7 @@ public class CustomItem {
             // Add rarity
             lore.add(itemType.getRarity().getColorCode() + itemType.getRarity().getGermanName().toUpperCase());
             
-            meta.setLore(lore);
+            meta.lore(lore.stream().map(Component::text).collect(Collectors.toList()));
             item.setItemMeta(meta);
         }
         

@@ -1,5 +1,7 @@
 package de.noctivag.skyblock.gui;
 
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -42,15 +44,15 @@ public class PlayerSelectorMenu extends CustomGUI {
         // Add player selector
         ItemStack selector = new ItemStack(Material.PLAYER_HEAD);
         ItemMeta selectorMeta = selector.getItemMeta();
-        selectorMeta.setDisplayName("§bPlayer Selector");
-        selectorMeta.setLore(Arrays.asList("§7Select a player", "§7Click to choose!"));
+        selectorMeta.displayName(Component.text("§bPlayer Selector"));
+        selectorMeta.lore(Arrays.asList("§7Select a player", "§7Click to choose!").stream().map(Component::text).collect(Collectors.toList()));
         selector.setItemMeta(selectorMeta);
         inventory.setItem(22, selector);
         
         // Close button
         ItemStack close = new ItemStack(Material.BARRIER);
         ItemMeta closeMeta = close.getItemMeta();
-        closeMeta.setDisplayName("§cClose");
+        closeMeta.displayName(Component.text("§cClose"));
         close.setItemMeta(closeMeta);
         inventory.setItem(49, close);
     }

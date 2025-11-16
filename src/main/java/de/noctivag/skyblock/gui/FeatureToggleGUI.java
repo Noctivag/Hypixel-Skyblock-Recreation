@@ -1,5 +1,7 @@
 package de.noctivag.skyblock.gui;
 
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 import de.noctivag.skyblock.SkyblockPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -28,15 +30,15 @@ public class FeatureToggleGUI extends CustomGUI {
         // Add feature toggle items
         ItemStack features = new ItemStack(Material.REDSTONE);
         ItemMeta featuresMeta = features.getItemMeta();
-        featuresMeta.setDisplayName("§aToggle Features");
-        featuresMeta.setLore(Arrays.asList("§7Enable/disable features", "§7Click to toggle!"));
+        featuresMeta.displayName(Component.text("§aToggle Features"));
+        featuresMeta.lore(Arrays.asList("§7Enable/disable features", "§7Click to toggle!").stream().map(Component::text).collect(Collectors.toList()));
         features.setItemMeta(featuresMeta);
         inventory.setItem(22, features);
         
         // Close button
         ItemStack close = new ItemStack(Material.BARRIER);
         ItemMeta closeMeta = close.getItemMeta();
-        closeMeta.setDisplayName("§cClose");
+        closeMeta.displayName(Component.text("§cClose"));
         close.setItemMeta(closeMeta);
         inventory.setItem(49, close);
     }

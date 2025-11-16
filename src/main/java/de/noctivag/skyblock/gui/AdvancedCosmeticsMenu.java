@@ -1,5 +1,7 @@
 package de.noctivag.skyblock.gui;
 
+import net.kyori.adventure.text.Component;
+import java.util.stream.Collectors;
 import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.cosmetics.ParticleShape;
 import org.bukkit.Material;
@@ -39,15 +41,15 @@ public class AdvancedCosmeticsMenu extends CustomGUI {
         // Add advanced cosmetics items
         ItemStack cosmetics = new ItemStack(Material.NETHER_STAR);
         ItemMeta cosmeticsMeta = cosmetics.getItemMeta();
-        cosmeticsMeta.setDisplayName("§dAdvanced Cosmetics");
-        cosmeticsMeta.setLore(Arrays.asList("§7Advanced cosmetic options", "§7Click to open!"));
+        cosmeticsMeta.displayName(Component.text("§dAdvanced Cosmetics"));
+        cosmeticsMeta.lore(Arrays.asList("§7Advanced cosmetic options", "§7Click to open!").stream().map(Component::text).collect(Collectors.toList()));
         cosmetics.setItemMeta(cosmeticsMeta);
         inventory.setItem(22, cosmetics);
         
         // Close button
         ItemStack close = new ItemStack(Material.BARRIER);
         ItemMeta closeMeta = close.getItemMeta();
-        closeMeta.setDisplayName("§cClose");
+        closeMeta.displayName(Component.text("§cClose"));
         close.setItemMeta(closeMeta);
         inventory.setItem(49, close);
     }

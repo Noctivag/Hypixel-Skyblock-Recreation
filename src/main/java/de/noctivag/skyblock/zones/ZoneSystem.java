@@ -1,5 +1,6 @@
 package de.noctivag.skyblock.zones;
 
+import net.kyori.adventure.text.Component;
 import de.noctivag.skyblock.SkyblockPlugin;
 import de.noctivag.skyblock.core.api.Service;
 import de.noctivag.skyblock.core.api.SystemStatus;
@@ -138,7 +139,7 @@ public class ZoneSystem implements Service {
         Zone zone = new Zone(worldName, zoneName);
         
         // Load zone properties
-        zone.setDisplayName(zoneSection.getString("display_name", zoneName));
+        zone.displayName(Component.text(zoneSection.getString("display_name", zoneName)));
         zone.setDescription(zoneSection.getString("description", ""));
         zone.setMinLevel(zoneSection.getInt("min_level", 1));
         zone.setMaxLevel(zoneSection.getInt("max_level", 100));
